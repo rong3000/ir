@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intelligent_receipt/pages/home_page.dart';
+import 'package:intelligent_receipt/pages/search_bar.dart';
 import 'package:intelligent_receipt/pages/settings_page.dart';
 import 'package:intelligent_receipt/pages/receipts_page.dart';
 import 'package:intelligent_receipt/pages/reports_page.dart';
@@ -20,6 +21,9 @@ class _TabNavigatorState extends State<TabNavigator> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: SearchBar(),
+      ),
       body: PageView(
         controller: _controller,
         children: <Widget>[
