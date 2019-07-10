@@ -17,6 +17,7 @@ class _HomePageState extends State<HomePage> {
             context: context,
             child: Text('Home'),
           ),
+          Text('xxxxxxxxxx'),
         ],
       ),
     );

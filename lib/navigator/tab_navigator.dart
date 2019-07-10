@@ -72,6 +72,27 @@ class _TabNavigatorState extends State<TabNavigator> {
                       color: _currentIndex != 3 ? _defaultColor : _activeColor),
                 )),
           ]),
+      drawer: Drawer(
+        child: ListView(
+          children: <Widget>[
+            DrawerHeader(
+              child: Text('Drawer Header'),
+            ),
+            ListTile(
+              title: Text('Item 1'),
+            ),
+            ListTile(
+              title: Text('Item 2'),
+            ),
+            ListTile(
+              title: Text('Item 3'),
+            ),
+            ListTile(
+              title: Text('Item 4'),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
