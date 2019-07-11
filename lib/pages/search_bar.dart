@@ -6,11 +6,11 @@ class SearchBar extends StatefulWidget {
 }
 
 class _SearchBarState extends State<SearchBar> {
-  final myController = TextEditingController();
+  final TextEditingController _controller = new TextEditingController();
 
   @override
   void dispose(){
-    myController.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -18,21 +18,24 @@ class _SearchBarState extends State<SearchBar> {
   Widget build(BuildContext context) {
     return Container(
       child: Row(children: <Widget>[
-//        Icon(
-//          Icons.search,
-//        ),
         Text('Superior Tech'),
-        TextField(
-          controller: myController,
-          decoration: InputDecoration(hintText: "This is a hint"),
+        Expanded(
+          flex: 1,
+          child: TextField(
+            controller: _controller,
+            decoration: new InputDecoration(
+              hintText: 'Start search',
+              icon: Icon(Icons.search),
+            ),
+          ),
         ),
         RaisedButton(
           onPressed: () {
-            print('clicked');
+            print(_controller.text);
           },
           child: Text('Search'),
 
-        )
+        ),
       ],
       ),
     );
