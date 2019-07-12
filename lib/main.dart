@@ -2,9 +2,15 @@ import 'package:flutter/material.dart';
 
 import 'navigator/tab_navigator.dart';
 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
