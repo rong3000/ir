@@ -1,34 +1,50 @@
 import 'package:flutter/material.dart';
+import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intelligent_receipt/authentication_bloc/bloc.dart';
+import 'package:intelligent_receipt/user_repository.dart';
+import 'package:intelligent_receipt/home_screen.dart';
+import 'package:intelligent_receipt/login/login.dart';
+import 'package:intelligent_receipt/splash_screen.dart';
+import 'package:intelligent_receipt/simple_bloc_delegate.dart';
 
-import 'navigator/tab_navigator.dart';
+void main() {
+  BlocSupervisor.delegate = SimpleBlocDelegate();
+  final UserRepository userRepository = UserRepository();
+  runApp(
+    BlocProvider(
+      builder: (context) => AuthenticationBloc(userRepository: userRepository)
+        ..dispatch(AppStarted()),
+      child: App(userRepository: userRepository),
+    ),
+  );
+}
 
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+class App extends StatelessWidget {
+  final UserRepository _userRepository;
 
-void main() => runApp(MyApp());
+  App({Key key, @required UserRepository userRepository})
+      : assert(userRepository != null),
+        _userRepository = userRepository,
+        super(key: key);
 
-class MyApp extends StatelessWidget {
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
+      home: BlocBuilder(
+        bloc: BlocProvider.of<AuthenticationBloc>(context),
+        builder: (BuildContext context, AuthenticationState state) {
+          if (state is Uninitialized) {
+            return SplashScreen();
+          }
+          if (state is Unauthenticated) {
+            return LoginScreen(userRepository: _userRepository);
+          }
+          if (state is Authenticated) {
+            return HomeScreen(name: state.displayName);
+          }
+        },
       ),
-      home: TabNavigator(),
     );
   }
 }
