@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:intelligent_receipt/authentication_bloc/bloc.dart';
 import 'package:intelligent_receipt/pages/home_page.dart';
 import 'package:intelligent_receipt/pages/search_bar.dart';
 import 'package:intelligent_receipt/pages/settings_page.dart';
 import 'package:intelligent_receipt/pages/receipts_page.dart';
 import 'package:intelligent_receipt/pages/reports_page.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class TabNavigator extends StatefulWidget {
+class HomeScreen extends StatefulWidget {
+  final String name;
+  HomeScreen({Key key, @required this.name}) : super(key: key);
   @override
-  _TabNavigatorState createState() => _TabNavigatorState();
+  _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _TabNavigatorState extends State<TabNavigator> {
+class _HomeScreenState extends State<HomeScreen> {
   final _defaultColor = Colors.grey;
   final _activeColor = Colors.blue;
   int _currentIndex = 0;
@@ -18,11 +22,13 @@ class _TabNavigatorState extends State<TabNavigator> {
     initialPage: 0,
   );
 
+  get name => widget.name;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: SearchBar(),
+        title: SearchBar(name: name),
       ),
       body: PageView(
         controller: _controller,
@@ -86,7 +92,12 @@ class _TabNavigatorState extends State<TabNavigator> {
               title: Text('Item 1'),
             ),
             ListTile(
-              title: Text('Item 2'),
+              title: Text('Logout'),
+              onTap: () {
+                BlocProvider.of<AuthenticationBloc>(context).dispatch(
+                  LoggedOut(),
+                );
+              },
             ),
             ListTile(
               title: Text('Item 3'),
