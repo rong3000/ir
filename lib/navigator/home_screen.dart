@@ -1,15 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:intelligent_receipt/authentication_bloc/bloc.dart';
+import 'package:intelligent_receipt/login/login.dart';
 import 'package:intelligent_receipt/pages/home_page.dart';
 import 'package:intelligent_receipt/pages/search_bar.dart';
 import 'package:intelligent_receipt/pages/settings_page.dart';
 import 'package:intelligent_receipt/pages/receipts_page.dart';
 import 'package:intelligent_receipt/pages/reports_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intelligent_receipt/user_repository.dart';
 
 class HomeScreen extends StatefulWidget {
+  final UserRepository _userRepository;
+
   final String name;
-  HomeScreen({Key key, @required this.name}) : super(key: key);
+  HomeScreen({Key key, @required UserRepository userRepository, @required this.name})
+      : assert(userRepository != null),
+        _userRepository = userRepository,
+        super(key: key);
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -22,6 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
     initialPage: 0,
   );
 
+  UserRepository get _userRepository => widget._userRepository;
   get name => widget.name;
 
   @override
@@ -89,10 +98,17 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Text('Drawer Header'),
             ),
             ListTile(
-              title: Text('Item 1'),
+              title: Text('Log In'),
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) {
+                    return LoginScreen(userRepository: _userRepository);
+                  }),
+                );
+              },
             ),
             ListTile(
-              title: Text('Logout'),
+              title: Text('Log Out'),
               onTap: () {
                 BlocProvider.of<AuthenticationBloc>(context).dispatch(
                   LoggedOut(),
