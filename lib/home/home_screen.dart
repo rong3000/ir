@@ -5,8 +5,9 @@ import 'package:intelligent_receipt/home/home.dart';
 
 class HomeScreen extends StatelessWidget {
   final UserRepository _userRepository;
+  final String name;
 
-  HomeScreen({Key key, @required UserRepository userRepository})
+  HomeScreen({Key key, @required UserRepository userRepository, @required this.name})
       : assert(userRepository != null),
         _userRepository = userRepository,
         super(key: key);
