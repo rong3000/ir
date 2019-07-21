@@ -21,7 +21,7 @@ class _HomePageState extends State<HomePage> {
     return BlocListener(
         bloc: _homeBloc,
         listener: (BuildContext context, HomeState state) {
-          if (state.State1) {
+          if (state is State1) {
             Scaffold.of(context)
               ..hideCurrentSnackBar()
               ..showSnackBar(
@@ -36,7 +36,9 @@ class _HomePageState extends State<HomePage> {
                 ),
               );
           }
-          if (state.State2) {}
+          if (state is State2) {
+            _ackAlert(context);
+          }
         },
         child: BlocBuilder(
             bloc: _homeBloc,
@@ -46,17 +48,51 @@ class _HomePageState extends State<HomePage> {
                   MediaQuery.removePadding(
                     removeTop: true,
                     context: context,
-                    child: Text('home'),
+                    child: Text(state.toString()),
                   ),
                   RaisedButton(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30.0),
                     ),
                     onPressed: () => {_homeBloc.dispatch(Event1())},
-                    child: Text('Home Button 1'),
-                  )
+                    child: Text('Event 1'),
+                  ),
+                  RaisedButton(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30.0),
+                    ),
+                    onPressed: () => {_homeBloc.dispatch(Event2())},
+                    child: Text('Event 2'),
+                  ),
+                  RaisedButton(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30.0),
+                    ),
+                    onPressed: () => {_homeBloc.dispatch(Event3())},
+                    child: Text('Event 3'),
+                  ),
                 ],
               );
             }));
+  }
+
+  Future<void> _ackAlert(BuildContext context) {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Not in stock'),
+          content: const Text('This item is no longer available'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Ok'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }

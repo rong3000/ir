@@ -5,10 +5,6 @@ import 'package:meta/meta.dart';
 abstract class HomeState extends Equatable {
   HomeState([List props = const []]) : super(props);
 
-  bool get State1 => State1;
-
-  bool get State2 => State2;
-  bool get State3 => State3;
 }
 
 class State1 extends HomeState {
