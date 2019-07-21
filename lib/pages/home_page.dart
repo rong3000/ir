@@ -18,6 +18,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final Orientation orientation = MediaQuery.of(context).orientation;
     return BlocListener(
         bloc: _homeBloc,
         listener: (BuildContext context, HomeState state) {
@@ -70,6 +71,43 @@ class _HomePageState extends State<HomePage> {
                     ),
                     onPressed: () => {_homeBloc.dispatch(Event3())},
                     child: Text('Event 3'),
+                  ),
+                  Expanded(
+                    child: SafeArea(
+                      top: true,
+                      bottom: true,
+                      child: GridView.count(
+                        crossAxisCount: (orientation == Orientation.portrait) ? 2 : 3,
+                        mainAxisSpacing: 4.0,
+                        crossAxisSpacing: 4.0,
+                        padding: const EdgeInsets.all(4.0),
+                        childAspectRatio: (orientation == Orientation.portrait) ? 1.0 : 1.3,
+                        children: <Widget>[
+                          Text('Add Your (First) Receipt'),
+                          Text('Manually Add Your (First) Receipt'),
+                          Text('View Imported Receipts'),
+                          Text('View Reports'),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: SafeArea(
+                      top: false,
+                      bottom: false,
+                      child: GridView.count(
+                        crossAxisCount: (orientation == Orientation.portrait) ? 1 : 1,
+                        mainAxisSpacing: 4.0,
+                        crossAxisSpacing: 4.0,
+                        padding: const EdgeInsets.all(4.0),
+                        childAspectRatio: (orientation == Orientation.portrait) ? 2 : 2,
+                        children: <Widget>[
+                          Text('Intelligent Receipt'),
+                          Text('Intelligent Receipt'),
+                          Text('Intelligent Receipt'),
+                        ],
+                      ),
+                    ),
                   ),
                 ],
               );
