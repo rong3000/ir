@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intelligent_receipt/authentication_bloc/bloc.dart';
+import 'package:intelligent_receipt/navigator/navigator_screen.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 import 'package:intelligent_receipt/home/home_screen.dart';
 import 'package:intelligent_receipt/login/login.dart';
@@ -41,7 +42,7 @@ class App extends StatelessWidget {
             return LoginScreen(userRepository: _userRepository);
           }
           if (state is Authenticated) {
-            return HomeScreen(userRepository: _userRepository, name: state.displayName);
+            return NavigatorScreen(userRepository: _userRepository, name: state.displayName);
           }
         },
       ),

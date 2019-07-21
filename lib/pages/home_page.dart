@@ -9,29 +9,54 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   HomeBloc _homeBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    _homeBloc = BlocProvider.of<HomeBloc>(context);
+  }
+
   @override
   Widget build(BuildContext context) {
-    BlocBuilder(
+    return BlocListener(
         bloc: _homeBloc,
-        builder: (BuildContext context, HomeState state) {
-          return Scaffold(
-            body: Stack(
-              children: <Widget>[
-                MediaQuery.removePadding(
-                  removeTop: true,
-                  context: context,
-                  child: Text('Home'),
-                ),
-                RaisedButton(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30.0),
+        listener: (BuildContext context, HomeState state) {
+          if (state.State1) {
+            Scaffold.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                SnackBar(
+                  content: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('State1...'),
+                      CircularProgressIndicator(),
+                    ],
                   ),
-                  onPressed: () => {_homeBloc.dispatch(Event1())},
-                  child: Text('Home Button 1'),
-                )
-              ],
-            ),
-          );
-        });
+                ),
+              );
+          }
+          if (state.State2) {}
+        },
+        child: BlocBuilder(
+            bloc: _homeBloc,
+            builder: (BuildContext context, HomeState state) {
+              return Column(
+                children: <Widget>[
+                  MediaQuery.removePadding(
+                    removeTop: true,
+                    context: context,
+                    child: Text('home'),
+                  ),
+                  RaisedButton(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30.0),
+                    ),
+                    onPressed: () => {_homeBloc.dispatch(Event1())},
+                    child: Text('Home Button 1'),
+                  )
+                ],
+              );
+            }));
   }
 }

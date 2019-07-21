@@ -8,6 +8,7 @@ abstract class HomeState extends Equatable {
   bool get State1 => State1;
 
   bool get State2 => State2;
+  bool get State3 => State3;
 }
 
 class State1 extends HomeState {
