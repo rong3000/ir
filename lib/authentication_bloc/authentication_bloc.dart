@@ -35,10 +35,11 @@ class AuthenticationBloc
         final name = await _userRepository.getUser();
         yield Authenticated(name);
       } else {
-        yield Unauthenticated();
+	    final name = 'Trial User';
+        yield Unauthenticated(name);
       }
     } catch (_) {
-      yield Unauthenticated();
+      yield Unauthenticated('Trial User');
     }
   }
 
@@ -47,7 +48,7 @@ class AuthenticationBloc
   }
 
   Stream<AuthenticationState> _mapLoggedOutToState() async* {
-    yield Unauthenticated();
+    yield Unauthenticated('Trial User');
     _userRepository.signOut();
   }
 }

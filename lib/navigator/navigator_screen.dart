@@ -121,6 +121,7 @@ class _NavigatorScreenState extends State<NavigatorScreen> {
                   BlocProvider.of<AuthenticationBloc>(context).dispatch(
                     LoggedOut(),
                   );
+				  Navigator.pop(context);
                 },
               ),
               ListTile(

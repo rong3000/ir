@@ -21,6 +21,10 @@ class Authenticated extends AuthenticationState {
 }
 
 class Unauthenticated extends AuthenticationState {
+  final String displayName;
+
+  Unauthenticated(this.displayName) : super([displayName]);
+
   @override
-  String toString() => 'Unauthenticated';
+  String toString() => 'Unauthenticated { displayName: $displayName }';
 }
