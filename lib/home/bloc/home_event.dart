@@ -6,33 +6,17 @@ abstract class HomeEvent extends Equatable {
   HomeEvent([List props = const []]) : super(props);
 }
 
-class EmailChanged extends HomeEvent {
-  final String email;
-
-  EmailChanged({@required this.email}) : super([email]);
-
+class Event1 extends HomeEvent {
   @override
-  String toString() => 'EmailChanged { email :$email }';
+  String toString() => 'Event1';
 }
 
-class PasswordChanged extends HomeEvent {
-  final String password;
-
-  PasswordChanged({@required this.password}) : super([password]);
-
+class Event2 extends HomeEvent {
   @override
-  String toString() => 'PasswordChanged { password: $password }';
+  String toString() => 'Event2';
 }
 
-class Submitted extends HomeEvent {
-  final String email;
-  final String password;
-
-  Submitted({@required this.email, @required this.password})
-      : super([email, password]);
-
+class Event3 extends HomeEvent {
   @override
-  String toString() {
-    return 'Submitted { email: $email, password: $password }';
-  }
+  String toString() => 'Event3';
 }

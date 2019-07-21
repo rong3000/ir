@@ -47,7 +47,7 @@ class _NavigatorScreenState extends State<NavigatorScreen> {
     return BlocListener(
       bloc: _homeBloc,
       listener: (BuildContext context, HomeState state) {
-        if (state.button1Pressed) {
+        if (state.State1) {
           Scaffold.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
@@ -62,7 +62,7 @@ class _NavigatorScreenState extends State<NavigatorScreen> {
               ),
             );
         }
-        if (state.isSuccess) {
+        if (state.State2) {
           // BlocProvider.of<AuthenticationBloc>(context).dispatch(LoggedIn());
           // Navigator.of(context).pop();
         }

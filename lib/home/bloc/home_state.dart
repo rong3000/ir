@@ -1,101 +1,30 @@
+import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
 @immutable
-class HomeState {
-  final bool isEmailValid;
-  final bool isPasswordValid;
-  final bool isSubmitting;
-  final bool isSuccess;
-  final bool isFailure;
+abstract class HomeState extends Equatable {
+  HomeState([List props = const []]) : super(props);
 
-  bool get isFormValid => isEmailValid && isPasswordValid;
+  bool get State1 => State1;
 
-  HomeState({
-    @required this.isEmailValid,
-    @required this.isPasswordValid,
-    @required this.isSubmitting,
-    @required this.isSuccess,
-    @required this.isFailure,
-  });
+  bool get State2 => State2;
+}
 
-  factory HomeState.empty() {
-    return HomeState(
-      isEmailValid: true,
-      isPasswordValid: true,
-      isSubmitting: false,
-      isSuccess: false,
-      isFailure: false,
-    );
-  }
+class State1 extends HomeState {
+  @override
+  String toString() => 'State1';
+}
 
-  factory HomeState.loading() {
-    return HomeState(
-      isEmailValid: true,
-      isPasswordValid: true,
-      isSubmitting: true,
-      isSuccess: false,
-      isFailure: false,
-    );
-  }
+class State2 extends HomeState {
+  final String displayName;
 
-  factory HomeState.failure() {
-    return HomeState(
-      isEmailValid: true,
-      isPasswordValid: true,
-      isSubmitting: false,
-      isSuccess: false,
-      isFailure: true,
-    );
-  }
-
-  factory HomeState.success() {
-    return HomeState(
-      isEmailValid: true,
-      isPasswordValid: true,
-      isSubmitting: false,
-      isSuccess: true,
-      isFailure: false,
-    );
-  }
-
-  HomeState update({
-    bool isEmailValid,
-    bool isPasswordValid,
-  }) {
-    return copyWith(
-      isEmailValid: isEmailValid,
-      isPasswordValid: isPasswordValid,
-      isSubmitting: false,
-      isSuccess: false,
-      isFailure: false,
-    );
-  }
-
-  HomeState copyWith({
-    bool isEmailValid,
-    bool isPasswordValid,
-    bool isSubmitEnabled,
-    bool isSubmitting,
-    bool isSuccess,
-    bool isFailure,
-  }) {
-    return HomeState(
-      isEmailValid: isEmailValid ?? this.isEmailValid,
-      isPasswordValid: isPasswordValid ?? this.isPasswordValid,
-      isSubmitting: isSubmitting ?? this.isSubmitting,
-      isSuccess: isSuccess ?? this.isSuccess,
-      isFailure: isFailure ?? this.isFailure,
-    );
-  }
+  State2(this.displayName) : super([displayName]);
 
   @override
-  String toString() {
-    return '''HomeState {
-      isEmailValid: $isEmailValid,
-      isPasswordValid: $isPasswordValid,      
-      isSubmitting: $isSubmitting,
-      isSuccess: $isSuccess,
-      isFailure: $isFailure,
-    }''';
-  }
+  String toString() => 'State2 { displayName: $displayName }';
+}
+
+class State3 extends HomeState {
+  @override
+  String toString() => 'State3';
 }
