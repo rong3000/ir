@@ -32,13 +32,7 @@ class HomeBloc
 
   Stream<HomeState> _mapEvent1ToState() async* {
     try {
-      final isSignedIn = await _userRepository.isSignedIn();
-      if (isSignedIn) {
-        final name = await _userRepository.getUser();
-        yield State2(name);
-      } else {
-        yield State3();
-      }
+      yield State1();
     } catch (_) {
       yield State3();
     }
@@ -50,6 +44,5 @@ class HomeBloc
 
   Stream<HomeState> _mapEvent3ToState() async* {
     yield State3();
-    _userRepository.signOut();
   }
 }

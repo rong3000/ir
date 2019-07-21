@@ -77,10 +77,22 @@ class _NavigatorScreenState extends State<NavigatorScreen> {
             body: PageView(
               controller: _controller,
               children: <Widget>[
-                HomePage(),
-                ReceiptsPage(),
-                ReportsPage(),
-                SettingsPage(),
+                BlocProvider<HomeBloc>(
+                  builder: (context) => HomeBloc(userRepository: _userRepository),
+                  child: HomePage(),
+                ),
+                BlocProvider<HomeBloc>(
+                  builder: (context) => HomeBloc(userRepository: _userRepository),
+                  child: ReceiptsPage(),
+                ),
+                BlocProvider<HomeBloc>(
+                  builder: (context) => HomeBloc(userRepository: _userRepository),
+                  child: ReportsPage(),
+                ),
+                BlocProvider<HomeBloc>(
+                  builder: (context) => HomeBloc(userRepository: _userRepository),
+                  child: SettingsPage(),
+                ),
               ],
             ),
             bottomNavigationBar: BottomNavigationBar(
