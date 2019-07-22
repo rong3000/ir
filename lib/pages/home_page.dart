@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intelligent_receipt/home/bloc/bloc.dart';
+import 'package:intelligent_receipt/main_screen/bloc/bloc.dart';
 
 class HomePage extends StatefulWidget {
   @override

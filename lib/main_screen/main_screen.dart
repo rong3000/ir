@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intelligent_receipt/authentication_bloc/bloc.dart';
-import 'package:intelligent_receipt/home/bloc/bloc.dart';
+import 'package:intelligent_receipt/main_screen/bloc/bloc.dart';
 import 'package:intelligent_receipt/login/login.dart';
 import 'package:intelligent_receipt/pages/home_page.dart';
 import 'package:intelligent_receipt/pages/search_bar.dart';

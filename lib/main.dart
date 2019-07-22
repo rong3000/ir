@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intelligent_receipt/authentication_bloc/bloc.dart';
-import 'package:intelligent_receipt/home/home_screen.dart';
+import 'package:intelligent_receipt/main_screen/main_screen.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 import 'package:intelligent_receipt/login/login.dart';
 import 'package:intelligent_receipt/splash_screen.dart';

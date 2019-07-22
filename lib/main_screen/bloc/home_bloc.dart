@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:intelligent_receipt/home/bloc/home_event.dart';
-import 'package:intelligent_receipt/home/bloc/home_state.dart';
+import 'package:intelligent_receipt/main_screen/bloc/home_event.dart';
+import 'package:intelligent_receipt/main_screen/bloc/home_state.dart';
 import 'package:meta/meta.dart';
 import 'package:intelligent_receipt/authentication_bloc/bloc.dart';
 import 'package:intelligent_receipt/user_repository.dart';
