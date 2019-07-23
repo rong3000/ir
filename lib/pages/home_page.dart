@@ -51,62 +51,88 @@ class _HomePageState extends State<HomePage> {
                     context: context,
                     child: Text(state.toString()),
                   ),
-                  RaisedButton(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0),
-                    ),
-                    onPressed: () => {_homeBloc.dispatch(Event1())},
-                    child: Text('Event 1'),
-                  ),
-                  RaisedButton(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0),
-                    ),
-                    onPressed: () => {_homeBloc.dispatch(Event2())},
-                    child: Text('Event 2'),
-                  ),
-                  RaisedButton(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0),
-                    ),
-                    onPressed: () => {_homeBloc.dispatch(Event3())},
-                    child: Text('Event 3'),
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        child:
+                        RaisedButton(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30.0),
+                          ),
+                          onPressed: () => {_homeBloc.dispatch(Event1())},
+                          child: Text('Event 1'),
+                        ),
+                      ),
+                      Expanded(
+                        child:
+                        RaisedButton(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30.0),
+                          ),
+                          onPressed: () => {_homeBloc.dispatch(Event2())},
+                          child: Text('Event 2'),
+                        ),
+                      ),
+                      Expanded(
+                        child:
+                        RaisedButton(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30.0),
+                          ),
+                          onPressed: () => {_homeBloc.dispatch(Event3())},
+                          child: Text('Event 3'),
+                        ),
+                      ),
+                    ],
                   ),
                   Expanded(
-                    child: SafeArea(
-                      top: true,
-                      bottom: true,
-                      child: GridView.count(
-                        crossAxisCount: (orientation == Orientation.portrait) ? 2 : 3,
-                        mainAxisSpacing: 4.0,
-                        crossAxisSpacing: 4.0,
-                        padding: const EdgeInsets.all(4.0),
-                        childAspectRatio: (orientation == Orientation.portrait) ? 1.0 : 1.3,
-                        children: <Widget>[
-                          Text('Add Your (First) Receipt'),
-                          Text('Manually Add Your (First) Receipt'),
-                          Text('View Imported Receipts'),
-                          Text('View Reports'),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: SafeArea(
-                      top: false,
-                      bottom: false,
-                      child: GridView.count(
-                        crossAxisCount: (orientation == Orientation.portrait) ? 1 : 1,
-                        mainAxisSpacing: 4.0,
-                        crossAxisSpacing: 4.0,
-                        padding: const EdgeInsets.all(4.0),
-                        childAspectRatio: (orientation == Orientation.portrait) ? 2 : 2,
-                        children: <Widget>[
-                          Text('Intelligent Receipt'),
-                          Text('Intelligent Receipt'),
-                          Text('Intelligent Receipt'),
-                        ],
-                      ),
+                    child: Column(
+                      children: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: Container(
+                                height: 100.0,
+                                color: Colors.blue,
+                                margin: EdgeInsets.all(5),
+                                child:
+                                Text('Add Your (First) Receipt'),
+                              ),
+                            ),
+                            Expanded(
+                              child: Container(
+                                height: 100.0,
+                                color: Colors.red,
+                                margin: EdgeInsets.all(5),
+                                child:
+                                Text('Manually Add Your (First) Receipt'),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: Container(
+                                height: 100.0,
+                                color: Colors.amber,
+                                margin: EdgeInsets.all(5),
+                                child:
+                                Text('View Imported Receipts'),
+                              ),
+                            ),
+                            Expanded(
+                              child: Container(
+                                height: 100.0,
+                                color: Colors.pink,
+                                margin: EdgeInsets.all(5),
+                                child:
+                                Text('View Reports'),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
                 ],
