@@ -46,6 +46,90 @@ class _HomePageState extends State<HomePage> {
             builder: (BuildContext context, HomeState state) {
               return Column(
                 children: <Widget>[
+                  Expanded(
+                    flex: 10,
+                    child: Column(
+                      children: <Widget>[
+                        Expanded(
+                          child: Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: FractionallySizedBox(
+                                  heightFactor: 1,
+                                  child: Card(
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: <Widget>[
+                                        const ListTile(
+                                          leading: Icon(Icons.album),
+                                          title: Text('Add Your (First) Receipt'),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: FractionallySizedBox(
+                                  heightFactor: 1,
+                                  child: Card(
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: <Widget>[
+                                        const ListTile(
+                                          leading: Icon(Icons.album),
+                                          title: Text(
+                                              'Manually Add Your (First) Receipt'),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          child: Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: FractionallySizedBox(
+                                  heightFactor: 1,
+                                  child: Card(
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: <Widget>[
+                                        const ListTile(
+                                          leading: Icon(Icons.album),
+                                          title: Text('View Imported Receipts'),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: FractionallySizedBox(
+                                  heightFactor: 1,
+                                  child: Card(
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: <Widget>[
+                                        const ListTile(
+                                          leading: Icon(Icons.album),
+                                          title: Text('View Reports'),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
 //                  MediaQuery.removePadding(
 //                    removeTop: true,
 //                    context: context,
@@ -85,9 +169,10 @@ class _HomePageState extends State<HomePage> {
 //                      ),
 //                    ],
 //                  ),
-                  Column(children: <Widget>[
 
-                    Row(
+                  Expanded(
+                    flex: 10,
+                    child: Column(
                       children: <Widget>[
                         Expanded(
                           child: Card(
@@ -96,12 +181,13 @@ class _HomePageState extends State<HomePage> {
                               children: <Widget>[
                                 const ListTile(
                                   leading: Icon(Icons.album),
-                                  title: Text('Add Your (First) Receipt'),
+                                  title: Text('Intelligent Receipt'),
+                                  subtitle: Text(
+                                      'Invite your friends to join IR then receive more free automatically scans'),
                                 ),
                               ],
                             ),
                           ),
-
                         ),
                         Expanded(
                           child: Card(
@@ -110,105 +196,32 @@ class _HomePageState extends State<HomePage> {
                               children: <Widget>[
                                 const ListTile(
                                   leading: Icon(Icons.album),
-                                  title: Text('Manually Add Your (First) Receipt'),
+                                  title: Text('Intelligent Receipt'),
+                                  subtitle:
+                                      Text('Get unlimited automatically scans'),
                                 ),
                               ],
                             ),
                           ),
-
+                        ),
+                        Expanded(
+                          child: Card(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                const ListTile(
+                                  leading: Icon(Icons.album),
+                                  title: Text('Intelligent Receipt'),
+                                  subtitle: Text(
+                                      'We have sent you an email, please click confirm'),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       ],
                     ),
-
-                    Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Card(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                const ListTile(
-                                  leading: Icon(Icons.album),
-                                  title: Text('View Imported Receipts'),
-                                ),
-                              ],
-                            ),
-                          ),
-
-                        ),
-                        Expanded(
-                          child: Card(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                const ListTile(
-                                  leading: Icon(Icons.album),
-                                  title: Text('View Reports'),
-                                ),
-                              ],
-                            ),
-                          ),
-
-                        ),
-                      ],
-                    ),
-                  ],),
-                  Expanded(child:
-                  Column(
-                    children: <Widget>[
-                      Container(
-                        color: Colors.pink,
-                        margin: EdgeInsets.all(5),
-                        child:Card(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              const ListTile(
-                                leading: Icon(Icons.album),
-                                title: Text('Intelligent Receipt'),
-                                subtitle:
-                                Text('Invite your friends to join IR then receive more free automatically scans'),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Container(
-                        color: Colors.pink,
-                        margin: EdgeInsets.all(5),
-                        child:Card(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              const ListTile(
-                                leading: Icon(Icons.album),
-                                title: Text('Intelligent Receipt'),
-                                subtitle:
-                                Text('Get unlimited automatically scans'),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Container(
-                        color: Colors.pink,
-                        margin: EdgeInsets.all(5),
-                        child:Card(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              const ListTile(
-                                leading: Icon(Icons.album),
-                                title: Text('Intelligent Receipt'),
-                                subtitle:
-                                Text('We have sent you an email, please click confirm'),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),),
+                  ),
                 ],
               );
             }));
