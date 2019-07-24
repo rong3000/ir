@@ -46,95 +46,169 @@ class _HomePageState extends State<HomePage> {
             builder: (BuildContext context, HomeState state) {
               return Column(
                 children: <Widget>[
-                  MediaQuery.removePadding(
-                    removeTop: true,
-                    context: context,
-                    child: Text(state.toString()),
-                  ),
-                  Row(
-                    children: <Widget>[
-                      Expanded(
-                        child:
-                        RaisedButton(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30.0),
-                          ),
-                          onPressed: () => {_homeBloc.dispatch(Event1())},
-                          child: Text('Event 1'),
-                        ),
-                      ),
-                      Expanded(
-                        child:
-                        RaisedButton(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30.0),
-                          ),
-                          onPressed: () => {_homeBloc.dispatch(Event2())},
-                          child: Text('Event 2'),
-                        ),
-                      ),
-                      Expanded(
-                        child:
-                        RaisedButton(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30.0),
-                          ),
-                          onPressed: () => {_homeBloc.dispatch(Event3())},
-                          child: Text('Event 3'),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Expanded(
-                    child: Column(
+//                  MediaQuery.removePadding(
+//                    removeTop: true,
+//                    context: context,
+//                    child: Text(state.toString()),
+//                  ),
+//                  Row(
+//                    children: <Widget>[
+//                      Expanded(
+//                        child:
+//                        RaisedButton(
+//                          shape: RoundedRectangleBorder(
+//                            borderRadius: BorderRadius.circular(30.0),
+//                          ),
+//                          onPressed: () => {_homeBloc.dispatch(Event1())},
+//                          child: Text('Event 1'),
+//                        ),
+//                      ),
+//                      Expanded(
+//                        child:
+//                        RaisedButton(
+//                          shape: RoundedRectangleBorder(
+//                            borderRadius: BorderRadius.circular(30.0),
+//                          ),
+//                          onPressed: () => {_homeBloc.dispatch(Event2())},
+//                          child: Text('Event 2'),
+//                        ),
+//                      ),
+//                      Expanded(
+//                        child:
+//                        RaisedButton(
+//                          shape: RoundedRectangleBorder(
+//                            borderRadius: BorderRadius.circular(30.0),
+//                          ),
+//                          onPressed: () => {_homeBloc.dispatch(Event3())},
+//                          child: Text('Event 3'),
+//                        ),
+//                      ),
+//                    ],
+//                  ),
+                  Column(children: <Widget>[
+
+                    Row(
                       children: <Widget>[
-                        Row(
-                          children: <Widget>[
-                            Expanded(
-                              child: Container(
-                                height: 100.0,
-                                color: Colors.blue,
-                                margin: EdgeInsets.all(5),
-                                child:
-                                Text('Add Your (First) Receipt'),
-                              ),
+                        Expanded(
+                          child: Card(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                const ListTile(
+                                  leading: Icon(Icons.album),
+                                  title: Text('Add Your (First) Receipt'),
+                                ),
+                              ],
                             ),
-                            Expanded(
-                              child: Container(
-                                height: 100.0,
-                                color: Colors.red,
-                                margin: EdgeInsets.all(5),
-                                child:
-                                Text('Manually Add Your (First) Receipt'),
-                              ),
-                            ),
-                          ],
+                          ),
+
                         ),
-                        Row(
-                          children: <Widget>[
-                            Expanded(
-                              child: Container(
-                                height: 100.0,
-                                color: Colors.amber,
-                                margin: EdgeInsets.all(5),
-                                child:
-                                Text('View Imported Receipts'),
-                              ),
+                        Expanded(
+                          child: Card(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                const ListTile(
+                                  leading: Icon(Icons.album),
+                                  title: Text('Manually Add Your (First) Receipt'),
+                                ),
+                              ],
                             ),
-                            Expanded(
-                              child: Container(
-                                height: 100.0,
-                                color: Colors.pink,
-                                margin: EdgeInsets.all(5),
-                                child:
-                                Text('View Reports'),
-                              ),
-                            ),
-                          ],
+                          ),
+
                         ),
                       ],
                     ),
-                  ),
+
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: Card(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                const ListTile(
+                                  leading: Icon(Icons.album),
+                                  title: Text('View Imported Receipts'),
+                                ),
+                              ],
+                            ),
+                          ),
+
+                        ),
+                        Expanded(
+                          child: Card(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                const ListTile(
+                                  leading: Icon(Icons.album),
+                                  title: Text('View Reports'),
+                                ),
+                              ],
+                            ),
+                          ),
+
+                        ),
+                      ],
+                    ),
+                  ],),
+                  Expanded(child:
+                  Column(
+                    children: <Widget>[
+                      Container(
+                        color: Colors.pink,
+                        margin: EdgeInsets.all(5),
+                        child:Card(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              const ListTile(
+                                leading: Icon(Icons.album),
+                                title: Text('Intelligent Receipt'),
+                                subtitle:
+                                Text('Invite your friends to join IR then receive more free automatically scans'),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Container(
+                        color: Colors.pink,
+                        margin: EdgeInsets.all(5),
+                        child:Card(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              const ListTile(
+                                leading: Icon(Icons.album),
+                                title: Text('Intelligent Receipt'),
+                                subtitle:
+                                Text('Get unlimited automatically scans'),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Container(
+                        color: Colors.pink,
+                        margin: EdgeInsets.all(5),
+                        child:Card(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              const ListTile(
+                                leading: Icon(Icons.album),
+                                title: Text('Intelligent Receipt'),
+                                subtitle:
+                                Text('We have sent you an email, please click confirm'),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),),
                 ],
               );
             }));
