@@ -46,11 +46,11 @@ class _HomePageState extends State<HomePage> {
             builder: (BuildContext context, HomeState state) {
               return Column(
                 children: <Widget>[
-                  Expanded(
-                    flex: 10,
+                  Flexible(
+                    flex: 1,
                     child: Column(
                       children: <Widget>[
-                        Expanded(
+                        Flexible(
                           child: Row(
                             children: <Widget>[
                               Expanded(
@@ -89,7 +89,7 @@ class _HomePageState extends State<HomePage> {
                             ],
                           ),
                         ),
-                        Expanded(
+                        Flexible(
                           child: Row(
                             children: <Widget>[
                               Expanded(
@@ -170,11 +170,11 @@ class _HomePageState extends State<HomePage> {
 //                    ],
 //                  ),
 
-                  Expanded(
-                    flex: 10,
+                  Flexible(
+                    flex: 1,
                     child: Column(
                       children: <Widget>[
-                        Expanded(
+                        Flexible(
                           child: Card(
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
@@ -189,7 +189,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                         ),
-                        Expanded(
+                        Flexible(
                           child: Card(
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
@@ -204,7 +204,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                         ),
-                        Expanded(
+                        Flexible(
                           child: Card(
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
