@@ -33,6 +33,7 @@ dependencies:
   equatable: ^0.2.6
   meta: ^1.1.6
   font_awesome_flutter: ^8.4.0
+  auto_size_text: ^2.0.2+1
 
 dev_dependencies:
   flutter_test:

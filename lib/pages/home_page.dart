@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intelligent_receipt/main_screen/bloc/bloc.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -111,14 +112,26 @@ class _HomePageState extends State<HomePage> {
                                 FractionallySizedBox(
                                   widthFactor: orientation == Orientation.portrait ? 1: 0.33,
                                   child: Container(
-                                    height: MediaQuery.of(context).size.height * (orientation == Orientation.portrait ? 0.1: 0.2),
+                                    height: MediaQuery.of(context).size.height * (orientation == Orientation.portrait ? 0.125: 0.32),
                                     child:
                                     Card(
                                       child: ListTile(
                                         leading: Icon(Icons.album),
-                                        title: Text('Intelligent Receipt'),
-                                        subtitle: Text(
-                                            'Invite your friends to join IR then receive more free automatically scans'),
+                                        title: AutoSizeText(
+                                          'Intelligent Receipt',
+                                          style: TextStyle(fontSize: 18),
+                                          minFontSize: 8,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        subtitle: AutoSizeText(
+                                          'Invite your friends to join IR then receive more free automatically scans',
+                                          style: TextStyle(fontSize: 18),
+                                          minFontSize: 8,
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+
                                       ),
                                     ),
                                   ),
@@ -126,7 +139,7 @@ class _HomePageState extends State<HomePage> {
                                 FractionallySizedBox(
                                   widthFactor: orientation == Orientation.portrait ? 1: 0.33,
                                   child: Container(
-                                    height: MediaQuery.of(context).size.height * (orientation == Orientation.portrait ? 0.1: 0.2),
+                                    height: MediaQuery.of(context).size.height * (orientation == Orientation.portrait ? 0.125: 0.32),
                                     child:
                                     Card(
                                       child: ListTile(
@@ -141,7 +154,7 @@ class _HomePageState extends State<HomePage> {
                                 FractionallySizedBox(
                                   widthFactor: orientation == Orientation.portrait ? 1: 0.33,
                                   child: Container(
-                                    height: MediaQuery.of(context).size.height * (orientation == Orientation.portrait ? 0.1: 0.2),
+                                    height: MediaQuery.of(context).size.height * (orientation == Orientation.portrait ? 0.125: 0.32),
                                     child:
                                     Card(
                                       child: ListTile(
