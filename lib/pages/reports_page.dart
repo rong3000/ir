@@ -18,9 +18,11 @@ class _ReportsPageState extends State<ReportsPage> {
                 child: Wrap(
                   children: <Widget>[
                     FractionallySizedBox(
-                      child: FractionallySizedBox(
-                        widthFactor: orientation == Orientation.portrait ? 0.5: 0.25,
-                        child: Card(
+                      widthFactor: orientation == Orientation.portrait ? 0.5: 0.25,
+                      child: Container(
+                        height: MediaQuery.of(context).size.height * (orientation == Orientation.portrait ? 0.2: 0.4),
+                        child:
+                        Card(
                           child: ListTile(
                             title: Text('Add Your (First) Receipt'),
                           ),
@@ -29,25 +31,37 @@ class _ReportsPageState extends State<ReportsPage> {
                     ),
                     FractionallySizedBox(
                       widthFactor: orientation == Orientation.portrait ? 0.5: 0.25,
-                      child: Card(
-                        child: ListTile(
-                          title: Text('Add Your (First) Receipt'),
+                      child: Container(
+                        height: MediaQuery.of(context).size.height * (orientation == Orientation.portrait ? 0.2: 0.4),
+                        child:
+                        Card(
+                          child: ListTile(
+                            title: Text('Manually Add Your (First) Receipt'),
+                          ),
                         ),
                       ),
                     ),
                     FractionallySizedBox(
                       widthFactor: orientation == Orientation.portrait ? 0.5: 0.25,
-                      child: Card(
-                        child: ListTile(
-                          title: Text('Add Your (First) Receipt'),
+                      child: Container(
+                        height: MediaQuery.of(context).size.height * (orientation == Orientation.portrait ? 0.2: 0.4),
+                        child:
+                        Card(
+                          child: ListTile(
+                            title: Text('View Imported Receipts'),
+                          ),
                         ),
                       ),
                     ),
                     FractionallySizedBox(
                       widthFactor: orientation == Orientation.portrait ? 0.5: 0.25,
-                      child: Card(
-                        child: ListTile(
-                          title: Text('Add Your (First) Receipt'),
+                      child: Container(
+                        height: MediaQuery.of(context).size.height * (orientation == Orientation.portrait ? 0.2: 0.4),
+                        child:
+                        Card(
+                          child: ListTile(
+                            title: Text('Add Your (First) Receipt'),
+                          ),
                         ),
                       ),
                     ),
@@ -60,92 +74,55 @@ class _ReportsPageState extends State<ReportsPage> {
                     children: <Widget>[
                       FractionallySizedBox(
                         widthFactor: orientation == Orientation.portrait ? 1: 0.33,
-                        child: Card(
-                          child: ListTile(
-                            title: Text('Add Your (First) Receipt'),
+                        child: Container(
+                          height: MediaQuery.of(context).size.height * (orientation == Orientation.portrait ? 0.1: 0.2),
+                          child:
+                          Card(
+                            child: ListTile(
+                              leading: Icon(Icons.album),
+                              title: Text('Intelligent Receipt'),
+                              subtitle: Text(
+                                  'Invite your friends to join IR then receive more free automatically scans'),
+                            ),
                           ),
                         ),
                       ),
                       FractionallySizedBox(
                         widthFactor: orientation == Orientation.portrait ? 1: 0.33,
-                        child: Card(
-                          child: ListTile(
-                            title: Text('Add Your (First) Receipt'),
+                        child: Container(
+                          height: MediaQuery.of(context).size.height * (orientation == Orientation.portrait ? 0.1: 0.2),
+                          child:
+                          Card(
+                            child: ListTile(
+                              leading: Icon(Icons.album),
+                              title: Text('Intelligent Receipt'),
+                              subtitle:
+                              Text('Get unlimited automatically scans'),
+                            ),
                           ),
                         ),
                       ),
                       FractionallySizedBox(
                         widthFactor: orientation == Orientation.portrait ? 1: 0.33,
-                        child: Card(
-                          child: ListTile(
-                            title: Text('Add Your (First) Receipt'),
+                        child: Container(
+                          height: MediaQuery.of(context).size.height * (orientation == Orientation.portrait ? 0.1: 0.2),
+                          child:
+                          Card(
+                            child: ListTile(
+                              leading: Icon(Icons.album),
+                              title: Text('Intelligent Receipt'),
+                              subtitle: Text(
+                                  'We have sent you an email, please click confirm'),
+                            ),
                           ),
                         ),
                       ),
                     ],
                   )
               ),
-
-//          Flexible(
-//            flex: 10,
-//            fit: FlexFit.tight,
-//            child: Column(
-//              children: <Widget>[
-//                Flexible(
-//                  fit: FlexFit.tight,
-//                  child: Card(
-//                    child: Column(
-//                      mainAxisSize: MainAxisSize.min,
-//                      children: <Widget>[
-//                        const ListTile(
-//                          leading: Icon(Icons.album),
-//                          title: Text('Intelligent Receipt'),
-//                          subtitle: Text(
-//                              'Invite your friends to join IR then receive more free automatically scans'),
-//                        ),
-//                      ],
-//                    ),
-//                  ),
-//                ),
-//                Flexible(
-//                  fit: FlexFit.tight,
-//                  child: Card(
-//                    child: Column(
-//                      mainAxisSize: MainAxisSize.min,
-//                      children: <Widget>[
-//                        const ListTile(
-//                          leading: Icon(Icons.album),
-//                          title: Text('Intelligent Receipt'),
-//                          subtitle:
-//                          Text('Get unlimited automatically scans'),
-//                        ),
-//                      ],
-//                    ),
-//                  ),
-//                ),
-//                Flexible(
-//                  fit: FlexFit.tight,
-//                  child: Card(
-//                    child: Column(
-//                      mainAxisSize: MainAxisSize.min,
-//                      children: <Widget>[
-//                        const ListTile(
-//                          leading: Icon(Icons.album),
-//                          title: Text('Intelligent Receipt'),
-//                          subtitle: Text(
-//                              'We have sent you an email, please click confirm'),
-//                        ),
-//                      ],
-//                    ),
-//                  ),
-//                ),
-//              ],
-//            ),
-//          ),
             ],
           );
       }),
-
     );
   }
 }

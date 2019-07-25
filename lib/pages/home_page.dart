@@ -44,44 +44,59 @@ class _HomePageState extends State<HomePage> {
         child: BlocBuilder(
             bloc: _homeBloc,
             builder: (BuildContext context, HomeState state) {
-              return Column(
-                children: <Widget>[
-                  Flexible(
-                    flex: 1,
-                    child: Column(
+              return Scaffold(
+                body: OrientationBuilder(builder: (context, orientation){
+                  return
+                    Column(
                       children: <Widget>[
                         Flexible(
-                          child: Row(
+                          fit: FlexFit.tight,
+                          child: Wrap(
                             children: <Widget>[
-                              Expanded(
-                                child: FractionallySizedBox(
-                                  heightFactor: 1,
-                                  child: Card(
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: <Widget>[
-                                        const ListTile(
-                                          leading: Icon(Icons.album),
-                                          title: Text('Add Your (First) Receipt'),
-                                        ),
-                                      ],
+                              FractionallySizedBox(
+                                widthFactor: orientation == Orientation.portrait ? 0.5: 0.25,
+                                child: Container(
+                                  height: MediaQuery.of(context).size.height * (orientation == Orientation.portrait ? 0.2: 0.4),
+                                  child:
+                                  Card(
+                                    child: ListTile(
+                                      title: Text('Add Your (First) Receipt'),
                                     ),
                                   ),
                                 ),
                               ),
-                              Expanded(
-                                child: FractionallySizedBox(
-                                  heightFactor: 1,
-                                  child: Card(
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: <Widget>[
-                                        const ListTile(
-                                          leading: Icon(Icons.album),
-                                          title: Text(
-                                              'Manually Add Your (First) Receipt'),
-                                        ),
-                                      ],
+                              FractionallySizedBox(
+                                widthFactor: orientation == Orientation.portrait ? 0.5: 0.25,
+                                child: Container(
+                                  height: MediaQuery.of(context).size.height * (orientation == Orientation.portrait ? 0.2: 0.4),
+                                  child:
+                                  Card(
+                                    child: ListTile(
+                                      title: Text('Manually Add Your (First) Receipt'),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              FractionallySizedBox(
+                                widthFactor: orientation == Orientation.portrait ? 0.5: 0.25,
+                                child: Container(
+                                  height: MediaQuery.of(context).size.height * (orientation == Orientation.portrait ? 0.2: 0.4),
+                                  child:
+                                  Card(
+                                    child: ListTile(
+                                      title: Text('View Imported Receipts'),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              FractionallySizedBox(
+                                widthFactor: orientation == Orientation.portrait ? 0.5: 0.25,
+                                child: Container(
+                                  height: MediaQuery.of(context).size.height * (orientation == Orientation.portrait ? 0.2: 0.4),
+                                  child:
+                                  Card(
+                                    child: ListTile(
+                                      title: Text('Add Your (First) Receipt'),
                                     ),
                                   ),
                                 ),
@@ -90,139 +105,60 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                         Flexible(
-                          child: Row(
-                            children: <Widget>[
-                              Expanded(
-                                child: FractionallySizedBox(
-                                  heightFactor: 1,
-                                  child: Card(
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: <Widget>[
-                                        const ListTile(
-                                          leading: Icon(Icons.album),
-                                          title: Text('View Imported Receipts'),
-                                        ),
-                                      ],
+                            fit: FlexFit.tight,
+                            child: Wrap(
+                              children: <Widget>[
+                                FractionallySizedBox(
+                                  widthFactor: orientation == Orientation.portrait ? 1: 0.33,
+                                  child: Container(
+                                    height: MediaQuery.of(context).size.height * (orientation == Orientation.portrait ? 0.1: 0.2),
+                                    child:
+                                    Card(
+                                      child: ListTile(
+                                        leading: Icon(Icons.album),
+                                        title: Text('Intelligent Receipt'),
+                                        subtitle: Text(
+                                            'Invite your friends to join IR then receive more free automatically scans'),
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              Expanded(
-                                child: FractionallySizedBox(
-                                  heightFactor: 1,
-                                  child: Card(
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: <Widget>[
-                                        const ListTile(
-                                          leading: Icon(Icons.album),
-                                          title: Text('View Reports'),
-                                        ),
-                                      ],
+                                FractionallySizedBox(
+                                  widthFactor: orientation == Orientation.portrait ? 1: 0.33,
+                                  child: Container(
+                                    height: MediaQuery.of(context).size.height * (orientation == Orientation.portrait ? 0.1: 0.2),
+                                    child:
+                                    Card(
+                                      child: ListTile(
+                                        leading: Icon(Icons.album),
+                                        title: Text('Intelligent Receipt'),
+                                        subtitle:
+                                        Text('Get unlimited automatically scans'),
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
+                                FractionallySizedBox(
+                                  widthFactor: orientation == Orientation.portrait ? 1: 0.33,
+                                  child: Container(
+                                    height: MediaQuery.of(context).size.height * (orientation == Orientation.portrait ? 0.1: 0.2),
+                                    child:
+                                    Card(
+                                      child: ListTile(
+                                        leading: Icon(Icons.album),
+                                        title: Text('Intelligent Receipt'),
+                                        subtitle: Text(
+                                            'We have sent you an email, please click confirm'),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            )
                         ),
                       ],
-                    ),
-                  ),
-//                  MediaQuery.removePadding(
-//                    removeTop: true,
-//                    context: context,
-//                    child: Text(state.toString()),
-//                  ),
-//                  Row(
-//                    children: <Widget>[
-//                      Expanded(
-//                        child:
-//                        RaisedButton(
-//                          shape: RoundedRectangleBorder(
-//                            borderRadius: BorderRadius.circular(30.0),
-//                          ),
-//                          onPressed: () => {_homeBloc.dispatch(Event1())},
-//                          child: Text('Event 1'),
-//                        ),
-//                      ),
-//                      Expanded(
-//                        child:
-//                        RaisedButton(
-//                          shape: RoundedRectangleBorder(
-//                            borderRadius: BorderRadius.circular(30.0),
-//                          ),
-//                          onPressed: () => {_homeBloc.dispatch(Event2())},
-//                          child: Text('Event 2'),
-//                        ),
-//                      ),
-//                      Expanded(
-//                        child:
-//                        RaisedButton(
-//                          shape: RoundedRectangleBorder(
-//                            borderRadius: BorderRadius.circular(30.0),
-//                          ),
-//                          onPressed: () => {_homeBloc.dispatch(Event3())},
-//                          child: Text('Event 3'),
-//                        ),
-//                      ),
-//                    ],
-//                  ),
-
-                  Flexible(
-                    flex: 1,
-                    child: Column(
-                      children: <Widget>[
-                        Flexible(
-                          child: Card(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                const ListTile(
-                                  leading: Icon(Icons.album),
-                                  title: Text('Intelligent Receipt'),
-                                  subtitle: Text(
-                                      'Invite your friends to join IR then receive more free automatically scans'),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Flexible(
-                          child: Card(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                const ListTile(
-                                  leading: Icon(Icons.album),
-                                  title: Text('Intelligent Receipt'),
-                                  subtitle:
-                                      Text('Get unlimited automatically scans'),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Flexible(
-                          child: Card(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                const ListTile(
-                                  leading: Icon(Icons.album),
-                                  title: Text('Intelligent Receipt'),
-                                  subtitle: Text(
-                                      'We have sent you an email, please click confirm'),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+                    );
+                }),
               );
             }));
   }
