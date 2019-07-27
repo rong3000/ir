@@ -5,7 +5,8 @@ import 'package:google_sign_in/google_sign_in.dart';
 class UserRepository {
   final FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn;
-  String uid;
+  String userGuid;
+  int userId = 1; // The id stored in our service database
 
   UserRepository({FirebaseAuth firebaseAuth, GoogleSignIn googleSignin})
       : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
@@ -21,7 +22,7 @@ class UserRepository {
     );
     await _firebaseAuth.signInWithCredential(credential);
     FirebaseUser currentUser = await _firebaseAuth.currentUser();
-    uid = currentUser?.uid;
+    userGuid = currentUser?.uid;
     return currentUser;
   }
 
@@ -30,7 +31,7 @@ class UserRepository {
       email: email,
       password: password,
     );
-    uid = currentUser?.uid;
+    userGuid = currentUser?.uid;
   }
 
   Future<void> signUp({String email, String password}) async {
@@ -38,11 +39,11 @@ class UserRepository {
       email: email,
       password: password,
     );
-    uid = currentUser?.uid;
+    userGuid = currentUser?.uid;
   }
 
   Future<void> signOut() async {
-    uid = "";
+    userGuid = "";
     return Future.wait([
       _firebaseAuth.signOut(),
       _googleSignIn.signOut(),
@@ -51,7 +52,7 @@ class UserRepository {
 
   Future<bool> isSignedIn() async {
     final currentUser = await _firebaseAuth.currentUser();
-    uid = currentUser?.uid;
+    userGuid = currentUser?.uid;
     return currentUser != null;
   }
 
@@ -61,7 +62,7 @@ class UserRepository {
 
   Future<String> getUID() async {
     FirebaseUser currentUser = await _firebaseAuth.currentUser();
-    uid = currentUser?.uid;
-    return uid;
+    userGuid = currentUser?.uid;
+    return userGuid;
   }
 }

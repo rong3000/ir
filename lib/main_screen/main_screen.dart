@@ -9,19 +9,25 @@ import 'package:intelligent_receipt/pages/receipts_page.dart';
 import 'package:intelligent_receipt/pages/reports_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intelligent_receipt/user_repository.dart';
+import 'package:intelligent_receipt/common/receipt_repository.dart';
 
 class HomeScreen extends StatefulWidget {
   final UserRepository _userRepository;
+  ReceiptRepository _receiptRepository;
 
   final String name;
   HomeScreen(
       {Key key, @required UserRepository userRepository, @required this.name})
       : assert(userRepository != null),
         _userRepository = userRepository,
-        super(key: key);
+        super(key: key) {
+    _receiptRepository = new ReceiptRepository(_userRepository);
+    _receiptRepository.GetReceiptsFromServer();
+  }
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
+
 }
 
 class _HomeScreenState extends State<HomeScreen> {

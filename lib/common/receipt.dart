@@ -1,23 +1,27 @@
 
 // Used for receipt list
-class ReceiptCommon {
+class ReceiptListItem {
   int id;
-  DateTime summittedTime;
-  double amount;
-  String company;
+  int statusId;
   int categoryId;
+  DateTime uploadDatetime;
+  DateTime receiptDatatime;
+  double totalAmount;
+  String companyName;
 
-  ReceiptCommon();
+  ReceiptListItem();
 
-  ReceiptCommon.fromJason(Map json)
+  ReceiptListItem.fromJason(Map json)
       : id = json['id'],
-        summittedTime = json['summittedTime'],
-        amount = json['amount'],
-        company = json['company'],
+        statusId = json['id'],
+        uploadDatetime = DateTime.parse(json['uploadDatetime']),
+        receiptDatatime = DateTime.parse(json['receiptDatatime']),
+        totalAmount = json['totalAmount'],
+        companyName = json['companyName'],
         categoryId = json['categoryId'];
 }
 
-class Receipt extends ReceiptCommon {
+class Receipt extends ReceiptListItem {
   bool hasWarranty = false;
 
   Receipt() : super();

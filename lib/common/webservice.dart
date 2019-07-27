@@ -1,19 +1,30 @@
 import 'dart:async';
 import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class Urls {
-  static String ServiceBaseUrl = "http://localhost:3001/";
+  static String ServiceBaseUrl = "http://10.1.1.218:3001/";
 
   // Receipt related APIs
-  static String GetReceipts = ServiceBaseUrl + "ReceiptTab/GetReceiptsByCompanyId/";
+  static String GetReceipts = ServiceBaseUrl + "Receipt/GetReceipts/";
+  static String GetReceipt = ServiceBaseUrl + "Receipt/GetReceiptByReceiptId/";
 }
-
 
 class WebServiceResult
 {
   bool success = false;
-  String response;
-  WebServiceResult(this.success, this.response);
+  int messageCode;
+  String message;
+  Object jasonObj;
+
+  WebServiceResult(this.success, this.message);
+
+  WebServiceResult.fromJason(Map json)
+      : success = json['isSuccess'],
+        messageCode = json['messageCode'],
+        message = json['message'],
+        jasonObj = json['obj'];
+
 }
 
 /// Url: webservice URL
@@ -22,7 +33,7 @@ class WebServiceResult
 Future<WebServiceResult> webservicePost(String url, String token, String body) async
 {
   final headers = {
-    "Authorization": "Bearer " + token,
+//    "Authorization": "Bearer " + token,
     "accept": "application/json",
     "Content-type": "application/json",
   };
@@ -30,14 +41,14 @@ Future<WebServiceResult> webservicePost(String url, String token, String body) a
   try {
     http.Response  response = await http.post(url, headers: headers, body: body);
     if (response.statusCode == 200) {
-      return WebServiceResult(true, response.body);
+      return WebServiceResult.fromJason(json.decode(response.body));
     } else {
       // Log an error
-      return WebServiceResult(false, response.body);
+      return WebServiceResult(false, response.statusCode.toString());
     }
   } catch (e) {
     // Log an error
-    return WebServiceResult(false, "");
+    return WebServiceResult(false, e.toString());
   }
 }
 
@@ -55,14 +66,14 @@ Future<WebServiceResult> webservicePut(String url, String token, String body) as
   try {
     http.Response  response = await http.put(url, headers: headers, body: body);
     if (response.statusCode == 200) {
-      return WebServiceResult(true, response.body);
+      return WebServiceResult.fromJason(json.decode(response.body));
     } else {
       // Log an error
-      return WebServiceResult(false, response.body);
+      return WebServiceResult(false, response.statusCode.toString());
     }
   } catch (e) {
     // Log an error
-    return WebServiceResult(false, "");
+    return WebServiceResult(false, e.toString());
   }
 }
 
@@ -72,7 +83,7 @@ Future<WebServiceResult> webservicePut(String url, String token, String body) as
 Future<WebServiceResult> webserviceGet(String url, String token) async
 {
   final headers = {
-    "Authorization": "Bearer " + token,
+    //"Authorization": "Bearer " + token,
     "accept": "application/json",
     "Content-type": "application/json",
   };
@@ -80,13 +91,13 @@ Future<WebServiceResult> webserviceGet(String url, String token) async
   try {
     http.Response  response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
-      return WebServiceResult(true, response.body);
+      return WebServiceResult.fromJason(json.decode(response.body));
     } else {
       // Log an error
-      return WebServiceResult(false, response.body);
+      return WebServiceResult(false, response.statusCode.toString());
     }
   } catch (e) {
     // Log an error
-    return WebServiceResult(false, "");
+    return WebServiceResult(false, e.toString());
   }
 }
