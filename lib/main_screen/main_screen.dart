@@ -22,7 +22,7 @@ class HomeScreen extends StatefulWidget {
         _userRepository = userRepository,
         super(key: key) {
     _receiptRepository = new ReceiptRepository(_userRepository);
-    _receiptRepository.GetReceiptsFromServer();
+    _receiptRepository.getReceiptsFromServer();
   }
 
   @override

@@ -1,8 +1,8 @@
 import "receipt.dart";
 import "webservice.dart";
 import "../user_repository.dart";
-import "package:quiver/strings.dart";
-import 'dart:convert';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 
 class ReceiptRepository {
   List<ReceiptListItem> receipts;
@@ -13,7 +13,9 @@ class ReceiptRepository {
     _userRepository = userRepository;
   }
 
-  Future<bool> GetReceiptsFromServer({bool forceRefresh = false}) async {
+  Future<bool> getReceiptsFromServer({bool forceRefresh = false}) async {
+    //var image = await ImagePicker.pickImage(source: ImageSource.camera);
+    //await this.uploadReceiptFile(image);
     if (_dataFetched && !forceRefresh) {
       return true;
     }
@@ -31,6 +33,22 @@ class ReceiptRepository {
     }
 
     _dataFetched = result.success;
+    return result.success;
+  }
+
+  Future<bool> uploadReceiptFile(File imageFile) async {
+    if ((_userRepository == null) || (_userRepository.userId <= 0))
+    {
+      // Log an error
+      return false;
+    }
+
+    WebServiceResult result = await uploadFile(Urls.UploadReceiptImages + _userRepository.userId.toString(), "", imageFile);
+    if (result.success) {
+      var jasonObj = result.jasonObj;
+      //receipts = l.map((model) => ReceiptListItem.fromJason(model)).toList();
+    }
+
     return result.success;
   }
 }

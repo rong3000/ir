@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:path/path.dart';
+import 'package:async/async.dart';
+import 'dart:io';
 
 class Urls {
   static String ServiceBaseUrl = "http://10.1.1.218:3001/";
@@ -8,6 +11,7 @@ class Urls {
   // Receipt related APIs
   static String GetReceipts = ServiceBaseUrl + "Receipt/GetReceipts/";
   static String GetReceipt = ServiceBaseUrl + "Receipt/GetReceiptByReceiptId/";
+  static String UploadReceiptImages = ServiceBaseUrl + "Receipt/UploadReceiptImages/1/";
 }
 
 class WebServiceResult
@@ -92,6 +96,33 @@ Future<WebServiceResult> webserviceGet(String url, String token) async
     http.Response  response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
       return WebServiceResult.fromJason(json.decode(response.body));
+    } else {
+      // Log an error
+      return WebServiceResult(false, response.statusCode.toString());
+    }
+  } catch (e) {
+    // Log an error
+    return WebServiceResult(false, e.toString());
+  }
+}
+
+Future<WebServiceResult> uploadFile(String url, String token, File imageFile) async {
+  try {
+    var stream = new http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
+    var length = await imageFile.length();
+
+    var uri = Uri.parse(url);
+
+    var request = new http.MultipartRequest("POST", uri);
+    var multipartFile = new http.MultipartFile('file', stream, length,
+        filename: basename(imageFile.path));
+    //contentType: new MediaType('image', 'png'));
+
+    request.files.add(multipartFile);
+    var response = await request.send();
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      return WebServiceResult.fromJason(json.decode(await response.stream.bytesToString()));
     } else {
       // Log an error
       return WebServiceResult(false, response.statusCode.toString());
