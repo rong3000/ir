@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intelligent_receipt/main_screen/bloc/bloc.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -44,72 +45,133 @@ class _HomePageState extends State<HomePage> {
         child: BlocBuilder(
             bloc: _homeBloc,
             builder: (BuildContext context, HomeState state) {
-              return Column(
-                children: <Widget>[
-                  MediaQuery.removePadding(
-                    removeTop: true,
-                    context: context,
-                    child: Text(state.toString()),
-                  ),
-                  RaisedButton(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0),
-                    ),
-                    onPressed: () => {_homeBloc.dispatch(Event1())},
-                    child: Text('Event 1'),
-                  ),
-                  RaisedButton(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0),
-                    ),
-                    onPressed: () => {_homeBloc.dispatch(Event2())},
-                    child: Text('Event 2'),
-                  ),
-                  RaisedButton(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0),
-                    ),
-                    onPressed: () => {_homeBloc.dispatch(Event3())},
-                    child: Text('Event 3'),
-                  ),
-                  Expanded(
-                    child: SafeArea(
-                      top: true,
-                      bottom: true,
-                      child: GridView.count(
-                        crossAxisCount: (orientation == Orientation.portrait) ? 2 : 3,
-                        mainAxisSpacing: 4.0,
-                        crossAxisSpacing: 4.0,
-                        padding: const EdgeInsets.all(4.0),
-                        childAspectRatio: (orientation == Orientation.portrait) ? 1.0 : 1.3,
-                        children: <Widget>[
-                          Text('Add Your (First) Receipt'),
-                          Text('Manually Add Your (First) Receipt'),
-                          Text('View Imported Receipts'),
-                          Text('View Reports'),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: SafeArea(
-                      top: false,
-                      bottom: false,
-                      child: GridView.count(
-                        crossAxisCount: (orientation == Orientation.portrait) ? 1 : 1,
-                        mainAxisSpacing: 4.0,
-                        crossAxisSpacing: 4.0,
-                        padding: const EdgeInsets.all(4.0),
-                        childAspectRatio: (orientation == Orientation.portrait) ? 2 : 2,
-                        children: <Widget>[
-                          Text('Intelligent Receipt'),
-                          Text('Intelligent Receipt'),
-                          Text('Intelligent Receipt'),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
+              return Scaffold(
+                body: OrientationBuilder(builder: (context, orientation){
+                  return
+                    Column(
+                      children: <Widget>[
+                        Flexible(
+                          fit: FlexFit.tight,
+                          child: Wrap(
+                            children: <Widget>[
+                              FractionallySizedBox(
+                                widthFactor: orientation == Orientation.portrait ? 0.5: 0.25,
+                                child: Container(
+                                  height: MediaQuery.of(context).size.height * (orientation == Orientation.portrait ? 0.2: 0.4),
+                                  child:
+                                  Card(
+                                    child: ListTile(
+                                      title: Text('Add Your (First) Receipt'),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              FractionallySizedBox(
+                                widthFactor: orientation == Orientation.portrait ? 0.5: 0.25,
+                                child: Container(
+                                  height: MediaQuery.of(context).size.height * (orientation == Orientation.portrait ? 0.2: 0.4),
+                                  child:
+                                  Card(
+                                    child: ListTile(
+                                      title: Text('Manually Add Your (First) Receipt'),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              FractionallySizedBox(
+                                widthFactor: orientation == Orientation.portrait ? 0.5: 0.25,
+                                child: Container(
+                                  height: MediaQuery.of(context).size.height * (orientation == Orientation.portrait ? 0.2: 0.4),
+                                  child:
+                                  Card(
+                                    child: ListTile(
+                                      title: Text('View Imported Receipts'),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              FractionallySizedBox(
+                                widthFactor: orientation == Orientation.portrait ? 0.5: 0.25,
+                                child: Container(
+                                  height: MediaQuery.of(context).size.height * (orientation == Orientation.portrait ? 0.2: 0.4),
+                                  child:
+                                  Card(
+                                    child: ListTile(
+                                      title: Text('Add Your (First) Receipt'),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Flexible(
+                            fit: FlexFit.tight,
+                            child: Wrap(
+                              children: <Widget>[
+                                FractionallySizedBox(
+                                  widthFactor: orientation == Orientation.portrait ? 1: 0.33,
+                                  child: Container(
+                                    height: MediaQuery.of(context).size.height * (orientation == Orientation.portrait ? 0.125: 0.32),
+                                    child:
+                                    Card(
+                                      child: ListTile(
+                                        leading: Icon(Icons.album),
+                                        title: AutoSizeText(
+                                          'Intelligent Receipt',
+                                          style: TextStyle(fontSize: 18),
+                                          minFontSize: 8,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        subtitle: AutoSizeText(
+                                          'Invite your friends to join IR then receive more free automatically scans',
+                                          style: TextStyle(fontSize: 18),
+                                          minFontSize: 8,
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                FractionallySizedBox(
+                                  widthFactor: orientation == Orientation.portrait ? 1: 0.33,
+                                  child: Container(
+                                    height: MediaQuery.of(context).size.height * (orientation == Orientation.portrait ? 0.125: 0.32),
+                                    child:
+                                    Card(
+                                      child: ListTile(
+                                        leading: Icon(Icons.album),
+                                        title: Text('Intelligent Receipt'),
+                                        subtitle:
+                                        Text('Get unlimited automatically scans'),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                FractionallySizedBox(
+                                  widthFactor: orientation == Orientation.portrait ? 1: 0.33,
+                                  child: Container(
+                                    height: MediaQuery.of(context).size.height * (orientation == Orientation.portrait ? 0.125: 0.32),
+                                    child:
+                                    Card(
+                                      child: ListTile(
+                                        leading: Icon(Icons.album),
+                                        title: Text('Intelligent Receipt'),
+                                        subtitle: Text(
+                                            'We have sent you an email, please click confirm'),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            )
+                        ),
+                      ],
+                    );
+                }),
               );
             }));
   }

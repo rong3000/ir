@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 class ReportsPage extends StatefulWidget {
@@ -7,13 +6,123 @@ class ReportsPage extends StatefulWidget {
 }
 
 class _ReportsPageState extends State<ReportsPage> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Text('Reports'),
-      ),
+      body: OrientationBuilder(builder: (context, orientation){
+        return
+          Column(
+            children: <Widget>[
+              Flexible(
+                fit: FlexFit.tight,
+                child: Wrap(
+                  children: <Widget>[
+                    FractionallySizedBox(
+                      widthFactor: orientation == Orientation.portrait ? 0.5: 0.25,
+                      child: Container(
+                        height: MediaQuery.of(context).size.height * (orientation == Orientation.portrait ? 0.2: 0.4),
+                        child:
+                        Card(
+                          child: ListTile(
+                            title: Text('Add Your (First) Receipt'),
+                          ),
+                        ),
+                      ),
+                    ),
+                    FractionallySizedBox(
+                      widthFactor: orientation == Orientation.portrait ? 0.5: 0.25,
+                      child: Container(
+                        height: MediaQuery.of(context).size.height * (orientation == Orientation.portrait ? 0.2: 0.4),
+                        child:
+                        Card(
+                          child: ListTile(
+                            title: Text('Manually Add Your (First) Receipt'),
+                          ),
+                        ),
+                      ),
+                    ),
+                    FractionallySizedBox(
+                      widthFactor: orientation == Orientation.portrait ? 0.5: 0.25,
+                      child: Container(
+                        height: MediaQuery.of(context).size.height * (orientation == Orientation.portrait ? 0.2: 0.4),
+                        child:
+                        Card(
+                          child: ListTile(
+                            title: Text('View Imported Receipts'),
+                          ),
+                        ),
+                      ),
+                    ),
+                    FractionallySizedBox(
+                      widthFactor: orientation == Orientation.portrait ? 0.5: 0.25,
+                      child: Container(
+                        height: MediaQuery.of(context).size.height * (orientation == Orientation.portrait ? 0.2: 0.4),
+                        child:
+                        Card(
+                          child: ListTile(
+                            title: Text('Add Your (First) Receipt'),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Flexible(
+                  fit: FlexFit.tight,
+                  child: Wrap(
+                    children: <Widget>[
+                      FractionallySizedBox(
+                        widthFactor: orientation == Orientation.portrait ? 1: 0.33,
+                        child: Container(
+                          height: MediaQuery.of(context).size.height * (orientation == Orientation.portrait ? 0.1: 0.2),
+                          child:
+                          Card(
+                            child: ListTile(
+                              leading: Icon(Icons.album),
+                              title: Text('Intelligent Receipt'),
+                              subtitle: Text(
+                                  'Invite your friends to join IR then receive more free automatically scans'),
+                            ),
+                          ),
+                        ),
+                      ),
+                      FractionallySizedBox(
+                        widthFactor: orientation == Orientation.portrait ? 1: 0.33,
+                        child: Container(
+                          height: MediaQuery.of(context).size.height * (orientation == Orientation.portrait ? 0.1: 0.2),
+                          child:
+                          Card(
+                            child: ListTile(
+                              leading: Icon(Icons.album),
+                              title: Text('Intelligent Receipt'),
+                              subtitle:
+                              Text('Get unlimited automatically scans'),
+                            ),
+                          ),
+                        ),
+                      ),
+                      FractionallySizedBox(
+                        widthFactor: orientation == Orientation.portrait ? 1: 0.33,
+                        child: Container(
+                          height: MediaQuery.of(context).size.height * (orientation == Orientation.portrait ? 0.1: 0.2),
+                          child:
+                          Card(
+                            child: ListTile(
+                              leading: Icon(Icons.album),
+                              title: Text('Intelligent Receipt'),
+                              subtitle: Text(
+                                  'We have sent you an email, please click confirm'),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+              ),
+            ],
+          );
+      }),
     );
   }
 }
