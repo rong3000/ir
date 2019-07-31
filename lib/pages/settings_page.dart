@@ -1,5 +1,87 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+
+class Episode5 extends StatefulWidget {
+  @override
+  Episode5State createState() {
+    return new Episode5State();
+  }
+}
+
+class Episode5State extends State<Episode5> {
+  Widget bodyData() => DataTable(
+      onSelectAll: (b) {},
+      sortColumnIndex: 1,
+      sortAscending: true,
+      columns: <DataColumn>[
+        DataColumn(
+          label: Text("First Name"),
+          numeric: false,
+          onSort: (i, b) {
+            print("$i $b");
+            setState(() {
+              names.sort((a, b) => a.firstName.compareTo(b.firstName));
+            });
+          },
+          tooltip: "To display first name of the Name",
+        ),
+        DataColumn(
+          label: Text("Last Name"),
+          numeric: false,
+          onSort: (i, b) {
+            print("$i $b");
+            setState(() {
+              names.sort((a, b) => a.lastName.compareTo(b.lastName));
+            });
+          },
+          tooltip: "To display last name of the Name",
+        ),
+      ],
+      rows: names
+          .map(
+            (name) => DataRow(
+          cells: [
+            DataCell(
+              Text(name.firstName),
+              showEditIcon: true,
+              placeholder: false,
+            ),
+            DataCell(
+              Text(name.lastName),
+              showEditIcon: true,
+              placeholder: false,
+            )
+          ],
+        ),
+      )
+          .toList());
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Episode 5 - Data Table"),
+      ),
+      body: Container(
+        child: bodyData(),
+      ),
+    );
+  }
+}
+
+class Name {
+  String firstName;
+  String lastName;
+
+  Name({this.firstName, this.lastName});
+}
+
+var names = <Name>[
+  Name(firstName: "Pink", lastName: "Floyd"),
+  Name(firstName: "Jack", lastName: "Trevor"),
+  Name(firstName: "Ben", lastName: "Lincoln"),
+];
 
 class SettingsPage extends StatefulWidget {
   @override
@@ -13,154 +95,7 @@ class _SettingsPageState extends State<SettingsPage> {
     return Scaffold(
       body: OrientationBuilder(builder: (context, orientation){
         return
-          Column(
-            children: <Widget>[
-              Flexible(child: Row(
-                children: <Widget>[
-                  Expanded(
-                    child: FractionallySizedBox(
-                      child: FractionallySizedBox(
-                        widthFactor: orientation == Orientation.portrait ? 0.5: 0.25,
-                        child: Card(
-                          child: ListTile(
-                            title: Text('Add Your (First) Receipt'),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: FractionallySizedBox(
-                      child: FractionallySizedBox(
-                        widthFactor: orientation == Orientation.portrait ? 0.5: 0.25,
-                        child: Card(
-                          child: ListTile(
-                            title: Text('Add Your (First) Receipt'),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),),
-              Flexible(child: Row(
-                children: <Widget>[
-                  Expanded(
-                    child: FractionallySizedBox(
-                      child: FractionallySizedBox(
-                        widthFactor: orientation == Orientation.portrait ? 0.5: 0.25,
-                        child: Card(
-                          child: ListTile(
-                            title: Text('Add Your (First) Receipt'),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: FractionallySizedBox(
-                      child: FractionallySizedBox(
-                        widthFactor: orientation == Orientation.portrait ? 0.5: 0.25,
-                        child: Card(
-                          child: ListTile(
-                            title: Text('Add Your (First) Receipt'),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),),
-              Flexible(
-                  fit: FlexFit.tight,
-                  child: Wrap(
-                    children: <Widget>[
-                      FractionallySizedBox(
-                        widthFactor: orientation == Orientation.portrait ? 1: 0.33,
-                        child: Card(
-                          child: ListTile(
-                            title: Text('Add Your (First) Receipt'),
-                          ),
-                        ),
-                      ),
-                      FractionallySizedBox(
-                        widthFactor: orientation == Orientation.portrait ? 1: 0.33,
-                        child: Card(
-                          child: ListTile(
-                            title: Text('Add Your (First) Receipt'),
-                          ),
-                        ),
-                      ),
-                      FractionallySizedBox(
-                        widthFactor: orientation == Orientation.portrait ? 1: 0.33,
-                        child: Card(
-                          child: ListTile(
-                            title: Text('Add Your (First) Receipt'),
-                          ),
-                        ),
-                      ),
-                    ],
-                  )
-              ),
-
-//          Flexible(
-//            flex: 10,
-//            fit: FlexFit.tight,
-//            child: Column(
-//              children: <Widget>[
-//                Flexible(
-//                  fit: FlexFit.tight,
-//                  child: Card(
-//                    child: Column(
-//                      mainAxisSize: MainAxisSize.min,
-//                      children: <Widget>[
-//                        const ListTile(
-//                          leading: Icon(Icons.album),
-//                          title: Text('Intelligent Receipt'),
-//                          subtitle: Text(
-//                              'Invite your friends to join IR then receive more free automatically scans'),
-//                        ),
-//                      ],
-//                    ),
-//                  ),
-//                ),
-//                Flexible(
-//                  fit: FlexFit.tight,
-//                  child: Card(
-//                    child: Column(
-//                      mainAxisSize: MainAxisSize.min,
-//                      children: <Widget>[
-//                        const ListTile(
-//                          leading: Icon(Icons.album),
-//                          title: Text('Intelligent Receipt'),
-//                          subtitle:
-//                          Text('Get unlimited automatically scans'),
-//                        ),
-//                      ],
-//                    ),
-//                  ),
-//                ),
-//                Flexible(
-//                  fit: FlexFit.tight,
-//                  child: Card(
-//                    child: Column(
-//                      mainAxisSize: MainAxisSize.min,
-//                      children: <Widget>[
-//                        const ListTile(
-//                          leading: Icon(Icons.album),
-//                          title: Text('Intelligent Receipt'),
-//                          subtitle: Text(
-//                              'We have sent you an email, please click confirm'),
-//                        ),
-//                      ],
-//                    ),
-//                  ),
-//                ),
-//              ],
-//            ),
-//          ),
-            ],
-          );
+          Episode5();
       }),
     );
   }
