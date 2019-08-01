@@ -219,6 +219,7 @@ class _DataTableDemoState extends State<DataTableDemo> {
             PaginatedDataTable(
               header: const Text('Nutrition'),
               rowsPerPage: _rowsPerPage,
+              availableRowsPerPage: <int>[5, 10],
               onRowsPerPageChanged: (int value) { setState(() { _rowsPerPage = value; }); },
               sortColumnIndex: _sortColumnIndex,
               sortAscending: _sortAscending,
