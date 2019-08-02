@@ -117,6 +117,11 @@ class DataTableDemoState extends State<DataTableDemo> {
             tooltip: "This is Amount",
           ),
           DataColumn(
+            label: Text("Company"),
+            numeric: false,
+            tooltip: "This is Company",
+          ),
+          DataColumn(
             label: Text("Category"),
             numeric: false,
             tooltip: "This is Category",
@@ -140,14 +145,25 @@ class DataTableDemoState extends State<DataTableDemo> {
                   ),
                 ),
                 DataCell(
-                    TextField(
-                      decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hintText: receipt.Amount
-                      ),
+                  TextField(
+                    decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: receipt.Amount
                     ),
+                  ),
                   onTap: () {
                     print('Selected Amount cell of id ${receipt.id}');
+                  },
+                ),
+                DataCell(
+                  TextField(
+                    decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: receipt.Company
+                    ),
+                  ),
+                  onTap: () {
+                    print('Selected Company cell of id ${receipt.id}');
                   },
                 ),
                 DataCell(
