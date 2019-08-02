@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 
 import 'receipt.dart';
+import 'package:intl/intl.dart';
 
 class DataTableDemo extends StatefulWidget {
   DataTableDemo() : super();
@@ -16,12 +17,47 @@ class DataTableDemoState extends State<DataTableDemo> {
   List<Receipt> receipts;
   List<Receipt> selectedReceipts;
   bool sort;
+  List _fruits = ["Apple", "Banana", "Pineapple", "Mango", "Grapes"];
+
+  List<DropdownMenuItem<String>> _dropDownMenuItems;
+  String _selectedFruit;
+
+  List<DropdownMenuItem<String>> buildAndGetDropDownMenuItems(List fruits) {
+    List<DropdownMenuItem<String>> items = List();
+    for (String fruit in fruits) {
+      items.add(DropdownMenuItem(value: fruit, child: Text(fruit)));
+    }
+    return items;
+  }
+
+  void changedDropDownItem(String selectedFruit) {
+    setState(() {
+      _selectedFruit = selectedFruit;
+    });
+  }
+
+  DateTime selectedDate = DateTime.now();
+
+  Future<Null> _selectDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
+    if (picked != null && picked != selectedDate)
+      setState(() {
+        selectedDate = picked;
+      });
+  }
 
   @override
   void initState() {
     sort = false;
     selectedReceipts = [];
     receipts = Receipt.getReceipts();
+
+    _dropDownMenuItems = buildAndGetDropDownMenuItems(_fruits);
+    _selectedFruit = _dropDownMenuItems[0].value;
     super.initState();
   }
 
@@ -80,29 +116,46 @@ class DataTableDemoState extends State<DataTableDemo> {
             numeric: false,
             tooltip: "This is Amount",
           ),
+          DataColumn(
+            label: Text("Category"),
+            numeric: false,
+            tooltip: "This is Category",
+          ),
         ],
         rows: receipts
             .map(
               (receipt) => DataRow(
               selected: selectedReceipts.contains(receipt),
               onSelectChanged: (b) {
-                print("id ${receipt.id} is Onselect");
+                print("${receipt.id} is Onselect");
                 onSelectedRow(b, receipt);
               },
               cells: [
                 DataCell(
-                  Text(receipt.Date),
-                  showEditIcon: true,
-                  onTap: () {
-                    print('Selected Date cell of id ${receipt.id}');
-                  },
+                  GestureDetector(
+                    onTap: () {
+                      _selectDate(context);
+                    },
+                    child: Text("${DateFormat().add_yMd().format(selectedDate.toLocal())}"),
+                  ),
                 ),
                 DataCell(
-                  Text(receipt.Amount),
-                  showEditIcon: true,
+                    TextField(
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: receipt.Amount
+                      ),
+                    ),
                   onTap: () {
                     print('Selected Amount cell of id ${receipt.id}');
                   },
+                ),
+                DataCell(
+                    DropdownButton(
+                      value: _selectedFruit,
+                      items: _dropDownMenuItems,
+                      onChanged: changedDropDownItem,
+                    )
                 ),
               ]),
         )
