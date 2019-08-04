@@ -13,6 +13,26 @@ class ReceiptRepository {
     _userRepository = userRepository;
   }
 
+  List<ReceiptListItem> getReceiptItems(ReceeiptStatusType receiptStatus) {
+    List<ReceiptListItem> selectedReceipts = new List<ReceiptListItem>();
+    for (var i = 0; i < receipts.length; i++) {
+      if (receipts[i].statusId == receiptStatus) {
+        selectedReceipts.add(receipts[i]);
+      }
+    }
+    return selectedReceipts;
+  }
+
+  int getReceiptItemsCount(ReceeiptStatusType receiptStatus) {
+    int receiptCount = 0;
+    for (var i = 0; i < receipts.length; i++) {
+      if (receipts[i].statusId == receiptStatus) {
+        receiptCount++;
+      }
+    }
+    return receiptCount;
+  }
+
   Future<bool> getReceiptsFromServer({bool forceRefresh = false}) async {
     //var image = await ImagePicker.pickImage(source: ImageSource.camera);
     //await this.uploadReceiptFile(image);
@@ -51,4 +71,6 @@ class ReceiptRepository {
 
     return result.success;
   }
+
+
 }
