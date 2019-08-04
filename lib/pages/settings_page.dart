@@ -94,7 +94,7 @@ class _SettingsPageState extends State<SettingsPage> {
     return Scaffold(
       body: OrientationBuilder(builder: (context, orientation){
         return
-          Episode5();
+          Text("Settings");
       }),
     );
   }

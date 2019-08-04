@@ -97,7 +97,6 @@ class DataTableDemoState extends State<DataTableDemo> {
   Scrollbar dataBody() {
     return Scrollbar(
       child: ListView(
-        padding: const EdgeInsets.all(20.0),
         children: <Widget>[
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
@@ -200,9 +199,6 @@ class DataTableDemoState extends State<DataTableDemo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
       body: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -215,23 +211,17 @@ class DataTableDemoState extends State<DataTableDemo> {
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Padding(
-                padding: EdgeInsets.all(20.0),
-                child: OutlineButton(
-                  child: Text('SELECTED ${selectedReceipts.length}'),
-                  onPressed: () {},
-                ),
+              OutlineButton(
+                child: Text('SELECTED ${selectedReceipts.length}'),
+                onPressed: () {},
               ),
-              Padding(
-                padding: EdgeInsets.all(20.0),
-                child: OutlineButton(
-                  child: Text('DELETE SELECTED'),
-                  onPressed: selectedReceipts.isEmpty
-                      ? null
-                      : () {
-                          deleteSelected();
-                        },
-                ),
+              OutlineButton(
+                child: Text('DELETE SELECTED'),
+                onPressed: selectedReceipts.isEmpty
+                    ? null
+                    : () {
+                  deleteSelected();
+                },
               ),
             ],
           ),
