@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
+import 'my_paginated_data_table_widge.dart';
+
 class Dessert {
   Dessert(this.name, this.calories, this.fat, this.carbs, this.protein,
       this.sodium, this.calcium, this.iron);
@@ -172,7 +174,7 @@ class DataTableDemo extends StatefulWidget {
 }
 
 class _DataTableDemoState extends State<DataTableDemo> {
-  int _rowsPerPage = PaginatedDataTable.defaultRowsPerPage;
+  int _rowsPerPage = MyPaginatedDataTable.defaultRowsPerPage;
   int _sortColumnIndex;
   bool _sortAscending = true;
   final DessertDataSource _dessertsDataSource = DessertDataSource();
@@ -190,101 +192,106 @@ class _DataTableDemoState extends State<DataTableDemo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Scrollbar(
-        child: ListView(
-          padding: const EdgeInsets.all(20.0),
-          children: <Widget>[
-            PaginatedDataTable(
-              header: const Text('Nutrition'),
-              rowsPerPage: _rowsPerPage,
-              onRowsPerPageChanged: (int value) {
-                setState(() {
-                  _rowsPerPage = value;
-                });
-              },
-              sortColumnIndex: _sortColumnIndex,
-              sortAscending: _sortAscending,
-              onSelectAll: _dessertsDataSource._selectAll,
-              columns: <DataColumn>[
-                DataColumn(
-                  label: const Text('Dessert (100g serving)'),
-                  onSort: (int columnIndex, bool ascending) => _sort<String>(
-                      (Dessert d) => d.name, columnIndex, ascending),
-                ),
-                DataColumn(
-                  label: const Text('Calories'),
-                  tooltip:
-                      'The total amount of food energy in the given serving size.',
-                  numeric: true,
-                  onSort: (int columnIndex, bool ascending) => _sort<num>(
-                      (Dessert d) => d.calories, columnIndex, ascending),
-                ),
-                DataColumn(
-                  label: const Text('Fat (g)'),
-                  numeric: true,
-                  onSort: (int columnIndex, bool ascending) =>
-                      _sort<num>((Dessert d) => d.fat, columnIndex, ascending),
-                ),
-                DataColumn(
-                  label: const Text('Carbs (g)'),
-                  numeric: true,
-                  onSort: (int columnIndex, bool ascending) => _sort<num>(
-                      (Dessert d) => d.carbs, columnIndex, ascending),
-                ),
-                DataColumn(
-                  label: const Text('Protein (g)'),
-                  numeric: true,
-                  onSort: (int columnIndex, bool ascending) => _sort<num>(
-                      (Dessert d) => d.protein, columnIndex, ascending),
-                ),
-                DataColumn(
-                  label: const Text('Sodium (mg)'),
-                  numeric: true,
-                  onSort: (int columnIndex, bool ascending) => _sort<num>(
-                      (Dessert d) => d.sodium, columnIndex, ascending),
-                ),
-                DataColumn(
-                  label: const Text('Calcium (%)'),
-                  tooltip:
-                      'The amount of calcium as a percentage of the recommended daily amount.',
-                  numeric: true,
-                  onSort: (int columnIndex, bool ascending) => _sort<num>(
-                      (Dessert d) => d.calcium, columnIndex, ascending),
-                ),
-                DataColumn(
-                  label: const Text('Iron (%)'),
-                  numeric: true,
-                  onSort: (int columnIndex, bool ascending) =>
-                      _sort<num>((Dessert d) => d.iron, columnIndex, ascending),
-                ),
-              ],
-              source: _dessertsDataSource,
+      body: Column(
+        children: <Widget>[
+          Expanded(
+            child: Scrollbar(
+              child: ListView(
+                children: <Widget>[
+                  MyPaginatedDataTable(
+                    rowsPerPage: _rowsPerPage,
+                    onRowsPerPageChanged: (int value) {
+                      setState(() {
+                        _rowsPerPage = value;
+                      });
+                    },
+                    sortColumnIndex: _sortColumnIndex,
+                    sortAscending: _sortAscending,
+                    onSelectAll: _dessertsDataSource._selectAll,
+                    columns: <DataColumn>[
+                      DataColumn(
+                        label: const Text('Dessert (100g serving)'),
+                        onSort: (int columnIndex, bool ascending) =>
+                            _sort<String>(
+                                (Dessert d) => d.name, columnIndex, ascending),
+                      ),
+                      DataColumn(
+                        label: const Text('Calories'),
+                        tooltip:
+                            'The total amount of food energy in the given serving size.',
+                        numeric: true,
+                        onSort: (int columnIndex, bool ascending) => _sort<num>(
+                            (Dessert d) => d.calories, columnIndex, ascending),
+                      ),
+                      DataColumn(
+                        label: const Text('Fat (g)'),
+                        numeric: true,
+                        onSort: (int columnIndex, bool ascending) => _sort<num>(
+                            (Dessert d) => d.fat, columnIndex, ascending),
+                      ),
+                      DataColumn(
+                        label: const Text('Carbs (g)'),
+                        numeric: true,
+                        onSort: (int columnIndex, bool ascending) => _sort<num>(
+                            (Dessert d) => d.carbs, columnIndex, ascending),
+                      ),
+                      DataColumn(
+                        label: const Text('Protein (g)'),
+                        numeric: true,
+                        onSort: (int columnIndex, bool ascending) => _sort<num>(
+                            (Dessert d) => d.protein, columnIndex, ascending),
+                      ),
+                      DataColumn(
+                        label: const Text('Sodium (mg)'),
+                        numeric: true,
+                        onSort: (int columnIndex, bool ascending) => _sort<num>(
+                            (Dessert d) => d.sodium, columnIndex, ascending),
+                      ),
+                      DataColumn(
+                        label: const Text('Calcium (%)'),
+                        tooltip:
+                            'The amount of calcium as a percentage of the recommended daily amount.',
+                        numeric: true,
+                        onSort: (int columnIndex, bool ascending) => _sort<num>(
+                            (Dessert d) => d.calcium, columnIndex, ascending),
+                      ),
+                      DataColumn(
+                        label: const Text('Iron (%)'),
+                        numeric: true,
+                        onSort: (int columnIndex, bool ascending) => _sort<num>(
+                            (Dessert d) => d.iron, columnIndex, ascending),
+                      ),
+                    ],
+                    source: _dessertsDataSource,
+                  ),
+                ],
+              ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                OutlineButton(
-                  child: Text('SELECTED ${_selectedDesserts.length}'),
-                  onPressed: () {},
-                ),
-                OutlineButton(
-                    child: Text('DELETE SELECTED'),
-                    onPressed: _selectedDesserts.isEmpty
-                        ? null
-                        : () {
-                            _deleteSelected();
-                          }
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              OutlineButton(
+                child: Text('SELECTED ${_selectedDesserts.length}'),
+                onPressed: () {},
+              ),
+              OutlineButton(
+                  child: Text('DELETE SELECTED'),
+                  onPressed: _selectedDesserts.isEmpty
+                      ? null
+                      : () {
+                          _deleteSelected();
+                        }
 //                  onPressed: _dessertsDataSource._selectedDesserts.isEmpty
 //                      ? null
 //                      : () {
 //                    _dessertsDataSource.deleteSelected();
 //                  },
-                    ),
-              ],
-            ),
-          ],
-        ),
+                  ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -305,21 +312,5 @@ class _DataTableDemoState extends State<DataTableDemo> {
   void _deleteSelected() {
     _dessertsDataSource._deleteSelected();
     setState(() {});
-  }
-}
-
-class SettingsPage extends StatefulWidget {
-  @override
-  _SettingsPageState createState() => _SettingsPageState();
-}
-
-class _SettingsPageState extends State<SettingsPage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: OrientationBuilder(builder: (context, orientation) {
-        return Text("Settings");
-      }),
-    );
   }
 }

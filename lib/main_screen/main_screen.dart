@@ -5,7 +5,7 @@ import 'package:intelligent_receipt/login/login.dart';
 import 'package:intelligent_receipt/pages/home_page.dart';
 import 'package:intelligent_receipt/pages/search_bar.dart';
 import 'package:intelligent_receipt/pages/settings_page.dart';
-import 'package:intelligent_receipt/pages/receipts_page.dart';
+import 'package:intelligent_receipt/pages/receipts_page/receipts_page.dart';
 import 'package:intelligent_receipt/pages/reports_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intelligent_receipt/user_repository.dart';
