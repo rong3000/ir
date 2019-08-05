@@ -107,17 +107,6 @@ class DessertDataSource extends DataTableSource {
     notifyListeners();
   }
 
-//  void _deleteSelected() {
-//      if (selectedReceipts.isNotEmpty) {
-//        List<Receipt> temp = [];
-//        temp.addAll(selectedReceipts);
-//        for (Receipt receipt in temp) {
-//          receipts.remove(receipt);
-//          selectedReceipts.remove(receipt);
-//        }
-//      }
-//  }
-
   int _selectedCount = 0;
   int count = 0;
   List<Dessert> _selectedDesserts = [];
@@ -167,6 +156,11 @@ class DessertDataSource extends DataTableSource {
   void _selectAll(bool checked) {
     for (Dessert dessert in _desserts) dessert.selected = checked;
     _selectedCount = checked ? _desserts.length : 0;
+    if (checked) {
+      _selectedDesserts = _desserts;
+    } else {
+      _selectedDesserts = [];
+    }
     notifyListeners();
   }
 }
