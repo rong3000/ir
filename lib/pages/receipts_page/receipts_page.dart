@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intelligent_receipt/main_screen/bloc/bloc.dart';
 import 'package:flutter/rendering.dart';
 
-import 'package:intelligent_receipt/pages/receipts_page/data_table.dart';
+import 'package:intelligent_receipt/pages/receipts_page/paginated_data_table.dart';
 
 class TabsExample extends StatelessWidget {
   const TabsExample({Key key}) : super(key: key);
