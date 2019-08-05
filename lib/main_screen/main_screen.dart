@@ -9,11 +9,9 @@ import 'package:intelligent_receipt/pages/receipts_page/receipts_page.dart';
 import 'package:intelligent_receipt/pages/reports_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intelligent_receipt/user_repository.dart';
-import 'package:intelligent_receipt/common/receipt_repository.dart';
 
 class HomeScreen extends StatefulWidget {
   final UserRepository _userRepository;
-  ReceiptRepository _receiptRepository;
 
   final String name;
   HomeScreen(
@@ -21,8 +19,6 @@ class HomeScreen extends StatefulWidget {
       : assert(userRepository != null),
         _userRepository = userRepository,
         super(key: key) {
-    _receiptRepository = new ReceiptRepository(_userRepository);
-    _receiptRepository.getReceiptsFromServer();
   }
 
   @override

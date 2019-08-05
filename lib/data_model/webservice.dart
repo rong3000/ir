@@ -11,7 +11,9 @@ class Urls {
   // Receipt related APIs
   static String GetReceipts = ServiceBaseUrl + "Receipt/GetReceipts/";
   static String GetReceipt = ServiceBaseUrl + "Receipt/GetReceiptByReceiptId/";
+  static String UpdateReceipt = ServiceBaseUrl + "Receipt/UpdateReceipt";
   static String UploadReceiptImages = ServiceBaseUrl + "Receipt/UploadReceiptImages/1/";
+  static String DeleteReceipts = ServiceBaseUrl + "Receipt/DeleteReceipts";
 }
 
 class WebServiceResult

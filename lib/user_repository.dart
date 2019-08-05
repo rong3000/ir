@@ -1,16 +1,23 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:intelligent_receipt/data_model/receipt_repository.dart';
 
 class UserRepository {
   final FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn;
+
+  ReceiptRepository receiptRepository;
+
   String userGuid;
   int userId = 1; // The id stored in our service database
 
   UserRepository({FirebaseAuth firebaseAuth, GoogleSignIn googleSignin})
       : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
-        _googleSignIn = googleSignin ?? GoogleSignIn();
+        _googleSignIn = googleSignin ?? GoogleSignIn() {
+    // receiptRepository = new ReceiptRepository(this);
+    // postSignIn(null); // xxx temporary put the code here
+  }
 
   Future<FirebaseUser> signInWithGoogle() async {
     final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
@@ -64,5 +71,29 @@ class UserRepository {
     FirebaseUser currentUser = await _firebaseAuth.currentUser();
     userGuid = currentUser?.uid;
     return userGuid;
+  }
+
+  Future<void> postSignIn(FirebaseUser currentUser) async {
+    // Get user ID from server
+    userId = 1;
+
+    // Get receipts from server
+    await receiptRepository.getReceiptsFromServer(forceRefresh: true);
+
+    // Some testing code
+    if (receiptRepository.receipts.length > 0) {
+      Receipt receipt = await receiptRepository.getReceipt(receiptRepository.receipts[0].id);
+      receipt.decodedContent = "888";
+      receipt.extractedContent = "999";
+
+      Receipt newReceipt = await receiptRepository.updateReceipt(receipt);
+
+      List<int> receiptIds = new List<int>();
+      receiptIds.add(receiptRepository.receipts[0].id);
+      await receiptRepository.deleteReceipts(receiptIds);
+
+
+
+    }
   }
 }
