@@ -1,20 +1,10 @@
-enum ReceeiptStatusType
-{
-  Unknown,
-  Uploaded,
-  Assigned,
-  Decoded,
-  Reviewed,
-  Deleted
-}
+import 'package:json_annotation/json_annotation.dart';
 
-enum DecodeStatusType
-{
-  Unknown,
-  Success,
-  ExtractTextFailed,
-  UnrecognizedFormat
-}
+part 'receipt.g.dart';
+
+/// An annotation for the code generator to know that this class needs the
+/// JSON serialization logic to be generated.
+@JsonSerializable()
 
 // Used for receipt list
 class ReceiptListItem {
@@ -30,18 +20,11 @@ class ReceiptListItem {
 
   ReceiptListItem();
 
-  ReceiptListItem.fromJason(Map json)
-      : id = json['id'],
-        userId = json['userId'],
-        receiptTypeId = json['receiptTypeId'],
-        uploadDatetime = json['uploadDatetime'] != null ? DateTime.parse(json['uploadDatetime']) : null,
-        receiptDatatime = json['receiptDatatime'] != null ? DateTime.parse(json['receiptDatatime']) : null,
-        totalAmount = json['totalAmount'],
-        companyName = json['companyName'],
-        categoryId = json['categoryId'],
-        statusId = json['statusId'];
+  factory ReceiptListItem.fromJason(Map<String, dynamic> json) => _$ReceiptListItemFromJson(json);
+  Map<String, dynamic> toJson() => _$ReceiptListItemToJson(this);
 }
 
+@JsonSerializable()
 class Receipt extends ReceiptListItem {
   int decodeStatus;
   String imagePath;
@@ -58,18 +41,6 @@ class Receipt extends ReceiptListItem {
 
   Receipt() : super();
 
-  Receipt.fromJason(Map json)
-      : decodeStatus = json['decodeStatus'],
-        imagePath = json['imagePath'],
-        extractedContent = json['extractedContent'],
-        decodedContent = json['decodedContent'],
-        submittedContent = json['submittedContent'],
-        statusName = json['statusName'],
-        image = json['image'],
-        imageCropLeft = json['imageCropLeft'],
-        imageCropTop = json['imageCropTop'],
-        imageCropWidth = json['imageCropWidth'],
-        imageCropHeight = json['imageCropHeight'],
-        statusUpdateDatetime = DateTime.parse(json['statusUpdateDatetime']),
-        super.fromJason(json);
+  factory Receipt.fromJason(Map<String, dynamic> json) => _$ReceiptFromJson(json);
+  Map<String, dynamic> toJson() => _$ReceiptToJson(this);
 }

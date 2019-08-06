@@ -15,8 +15,8 @@ class UserRepository {
   UserRepository({FirebaseAuth firebaseAuth, GoogleSignIn googleSignin})
       : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
         _googleSignIn = googleSignin ?? GoogleSignIn() {
-    // receiptRepository = new ReceiptRepository(this);
-    // postSignIn(null); // xxx temporary put the code here
+     receiptRepository = new ReceiptRepository(this);
+     postSignIn(null); // xxx temporary put the code here
   }
 
   Future<FirebaseUser> signInWithGoogle() async {

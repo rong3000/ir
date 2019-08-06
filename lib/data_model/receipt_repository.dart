@@ -4,6 +4,7 @@ import "../user_repository.dart";
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'dart:convert';
+import "enums.dart";
 export "receipt.dart";
 
 class ReceiptRepository {
