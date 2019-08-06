@@ -16,7 +16,7 @@ class UserRepository {
       : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
         _googleSignIn = googleSignin ?? GoogleSignIn() {
      receiptRepository = new ReceiptRepository(this);
-     postSignIn(null); // xxx temporary put the code here
+     // postSignIn(null); // xxx temporary put the code here
   }
 
   Future<FirebaseUser> signInWithGoogle() async {
@@ -91,9 +91,6 @@ class UserRepository {
       List<int> receiptIds = new List<int>();
       receiptIds.add(receiptRepository.receipts[0].id);
       await receiptRepository.deleteReceipts(receiptIds);
-
-
-
     }
   }
 }
