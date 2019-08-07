@@ -3,18 +3,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intelligent_receipt/main_screen/bloc/bloc.dart';
 import 'package:flutter/rendering.dart';
-
-import 'package:intelligent_receipt/pages/receipts_page/paginated_data_table.dart';
+import 'package:intelligent_receipt/main_screen/receipts_page/paginated_data_table.dart';
+import 'package:intelligent_receipt/user_repository.dart';
 
 class TabsExample extends StatelessWidget {
-  const TabsExample({Key key}) : super(key: key);
+  final UserRepository _userRepository;
+
+  TabsExample(
+      {Key key, @required UserRepository userRepository})
+      : assert(userRepository != null),
+        _userRepository = userRepository,
+        super(key: key) {
+  }
 
   @override
   Widget build(BuildContext context) {
     final _kTabPages = <Widget>[
-      DataTableDemo(),
-      DataTableDemo(),
-      DataTableDemo(),
+      DataTableDemo(userRepository: _userRepository),
+      DataTableDemo(userRepository: _userRepository),
+      DataTableDemo(userRepository: _userRepository),
     ];
     final _kTabs = <Tab>[
       Tab(text: 'Pending'),
@@ -43,12 +50,23 @@ class TabsExample extends StatelessWidget {
 }
 
 class ReceiptsPage extends StatefulWidget {
+  final UserRepository _userRepository;
+
+  ReceiptsPage(
+      {Key key, @required UserRepository userRepository})
+      : assert(userRepository != null),
+        _userRepository = userRepository,
+        super(key: key) {
+  }
+
   @override
   _ReceiptsPageState createState() => _ReceiptsPageState();
 }
 
 class _ReceiptsPageState extends State<ReceiptsPage> {
   HomeBloc _homeBloc;
+
+  UserRepository get _userRepository => widget._userRepository;
 
   @override
   void initState() {
@@ -71,7 +89,7 @@ class _ReceiptsPageState extends State<ReceiptsPage> {
                         Flexible(
                           flex: 2,
                           fit: FlexFit.tight,
-                          child: TabsExample(),
+                          child: TabsExample(userRepository: _userRepository),
                         ),
                         Flexible(
                             fit: FlexFit.tight,

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:intelligent_receipt/data_model/receipt_repository.dart';
 
+import '../../user_repository.dart';
 import 'my_paginated_data_table_widge.dart';
 
 class Dessert {
@@ -19,6 +21,12 @@ class Dessert {
 }
 
 class DessertDataSource extends DataTableSource {
+//  UserRepository _userRepository;
+//
+//  DessertDataSource(UserRepository userRepository) {
+//    _userRepository = userRepository;
+//  }
+
   final List<Dessert> _desserts = <Dessert>[
     Dessert('Frozen yogurt', 159, 6.0, 24, 4.0, 87, 14, 1),
     Dessert('Ice cream sandwich', 237, 9.0, 37, 4.3, 129, 8, 1),
@@ -167,6 +175,13 @@ class DessertDataSource extends DataTableSource {
 }
 
 class DataTableDemo extends StatefulWidget {
+  final UserRepository _userRepository;
+
+  DataTableDemo({Key key, @required UserRepository userRepository})
+      : assert(userRepository != null),
+        _userRepository = userRepository,
+        super(key: key) {}
+
   static const String routeName = '/material/data-table';
 
   @override
@@ -174,11 +189,13 @@ class DataTableDemo extends StatefulWidget {
 }
 
 class _DataTableDemoState extends State<DataTableDemo> {
+  UserRepository get _userRepository => widget._userRepository;
   int _rowsPerPage = MyPaginatedDataTable.defaultRowsPerPage;
   int _sortColumnIndex;
   bool _sortAscending = true;
   final DessertDataSource _dessertsDataSource = DessertDataSource();
   List<Dessert> _selectedDesserts;
+  String text;
 
   void _sort<T>(
       Comparable<T> getField(Dessert d), int columnIndex, bool ascending) {
@@ -291,6 +308,16 @@ class _DataTableDemoState extends State<DataTableDemo> {
                   ),
             ],
           ),
+          OutlineButton(
+            child: Text(text.toString()),
+            onPressed: () {
+              _userRepository.receiptRepository.getReceipt(1).then((onValue) {
+                setState(() {
+                  text = onValue.companyName;
+                });
+              });
+            },
+          ),
         ],
       ),
     );
@@ -301,6 +328,11 @@ class _DataTableDemoState extends State<DataTableDemo> {
     super.initState();
     _dessertsDataSource.addListener(_handleDataSourceChanged);
     _handleDataSourceChanged();
+    _userRepository.receiptRepository.getReceipt(1).then((onValue) {
+      setState(() {
+        text = onValue.companyName;
+      });
+    });
   }
 
   void _handleDataSourceChanged() {

@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:intelligent_receipt/authentication_bloc/bloc.dart';
 import 'package:intelligent_receipt/main_screen/bloc/bloc.dart';
 import 'package:intelligent_receipt/login/login.dart';
-import 'package:intelligent_receipt/pages/home_page.dart';
-import 'package:intelligent_receipt/pages/search_bar.dart';
-import 'package:intelligent_receipt/pages/settings_page.dart';
-import 'package:intelligent_receipt/pages/receipts_page/receipts_page.dart';
-import 'package:intelligent_receipt/pages/reports_page.dart';
+import 'package:intelligent_receipt/main_screen/home_page/home_page.dart';
+import 'package:intelligent_receipt/main_screen/search_bar/search_bar.dart';
+import 'package:intelligent_receipt/main_screen/settings_page/settings_page.dart';
+import 'package:intelligent_receipt/main_screen/reports_page/reports_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intelligent_receipt/user_repository.dart';
+import 'receipts_page/receipts_page.dart';
 
 class HomeScreen extends StatefulWidget {
   final UserRepository _userRepository;
@@ -49,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
           controller: _controller,
           children: <Widget>[
             HomePage(),
-            ReceiptsPage(),
+            ReceiptsPage(userRepository: _userRepository),
             ReportsPage(),
             SettingsPage(),
           ],

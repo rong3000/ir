@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:intelligent_receipt/pages/receipts_page/my_paginated_data_table_widge.dart';
+import 'package:intelligent_receipt/main_screen/receipts_page/my_paginated_data_table_widge.dart';
 
 class Dessert {
   Dessert(this.name, this.calories, this.fat, this.carbs, this.protein,
