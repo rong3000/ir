@@ -50,7 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: <Widget>[
             HomePage(),
             ReceiptsPage(userRepository: _userRepository),
-            ReportsPage(),
+            ReportsPage(userRepository: _userRepository),
             SettingsPage(),
           ],
         ),
