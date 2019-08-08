@@ -40,7 +40,7 @@ class DataTableDemoState extends State<DataTableDemo> {
 //    });
 //    receipts = _userRepository.receiptRepository.receipts;
 
-      receipts = _userRepository.receiptRepository.getReceiptItems(ReceeiptStatusType.Unknown);
+      receipts = _userRepository.receiptRepository.getReceiptItems(ReceeiptStatusType.Assigned);
 
 
     super.initState();
@@ -150,13 +150,13 @@ class DataTableDemoState extends State<DataTableDemo> {
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-//              Padding(
-//                padding: EdgeInsets.all(20.0),
-//                child: OutlineButton(
-//                  child: Text('SELECTED ${selectedReceipts.length}'),
-//                  onPressed: () {},
-//                ),
-//              ),
+              Padding(
+                padding: EdgeInsets.all(20.0),
+                child: OutlineButton(
+                  child: Text('SELECTED ${selectedReceipts.length}'),
+                  onPressed: () {},
+                ),
+              ),
               Padding(
                 padding: EdgeInsets.all(20.0),
                 child: OutlineButton(

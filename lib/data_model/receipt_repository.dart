@@ -19,7 +19,7 @@ class ReceiptRepository {
   List<ReceiptListItem> getReceiptItems(ReceeiptStatusType receiptStatus) {
     List<ReceiptListItem> selectedReceipts = new List<ReceiptListItem>();
     for (var i = 0; i < receipts.length; i++) {
-      if (receipts[i].statusId == receiptStatus) {
+      if (receipts[i].statusId == receiptStatus.index) {
         selectedReceipts.add(receipts[i]);
       }
     }
