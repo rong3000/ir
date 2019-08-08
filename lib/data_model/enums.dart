@@ -1,4 +1,4 @@
-enum ReceeiptStatusType
+enum ReceiptStatusType
 {
   Unknown,
   Uploaded,
@@ -14,4 +14,11 @@ enum DecodeStatusType
   Success,
   ExtractTextFailed,
   UnrecognizedFormat
+}
+
+enum CategoryName
+{
+  Travel,
+  Material,
+  Undecided,
 }

@@ -16,7 +16,7 @@ class ReceiptRepository {
     _userRepository = userRepository;
   }
 
-  List<ReceiptListItem> getReceiptItems(ReceeiptStatusType receiptStatus) {
+  List<ReceiptListItem> getReceiptItems(ReceiptStatusType receiptStatus) {
     List<ReceiptListItem> selectedReceipts = new List<ReceiptListItem>();
     for (var i = 0; i < receipts.length; i++) {
       if (receipts[i].statusId == receiptStatus.index) {
@@ -26,7 +26,7 @@ class ReceiptRepository {
     return selectedReceipts;
   }
 
-  int getReceiptItemsCount(ReceeiptStatusType receiptStatus) {
+  int getReceiptItemsCount(ReceiptStatusType receiptStatus) {
     int receiptCount = 0;
     for (var i = 0; i < receipts.length; i++) {
       if (receipts[i].statusId == receiptStatus) {
