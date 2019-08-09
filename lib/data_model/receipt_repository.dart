@@ -16,13 +16,15 @@ class ReceiptRepository {
     _userRepository = userRepository;
   }
 
-  List<ReceiptListItem> getReceiptItems(ReceiptStatusType receiptStatus) {
+  Future<List<ReceiptListItem>> getReceiptItems(ReceiptStatusType receiptStatus) async{
     List<ReceiptListItem> selectedReceipts = new List<ReceiptListItem>();
-    for (var i = 0; i < receipts.length; i++) {
+    await {
+      for (var i = 0; i < receipts.length; i++) {
       if (receipts[i].statusId == receiptStatus.index) {
-        selectedReceipts.add(receipts[i]);
+        selectedReceipts.add(receipts[i])
       }
     }
+    };
     return selectedReceipts;
   }
 

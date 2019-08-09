@@ -36,16 +36,8 @@ class DataTableDemoState extends State<DataTableDemo> {
     sort = false;
     selectedReceipts = [];
     _userRepository.receiptRepository.getReceiptsFromServer();
-//        .then((onValue) {
-//      setState(() {
-//        receipts = onValue;
-//      });
-//    });
-//    receipts = _userRepository.receiptRepository.receipts;
-
-    receipts = _userRepository.receiptRepository
-        .getReceiptItems(_receiptStatusType);
-
+//    _userRepository.receiptRepository
+//        .getReceiptItems(_receiptStatusType).then(onValue);
     super.initState();
   }
 
@@ -82,7 +74,7 @@ class DataTableDemoState extends State<DataTableDemo> {
     });
   }
 
-  SingleChildScrollView dataBody() {
+  SingleChildScrollView dataBody(List<ReceiptListItem> receipts) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: DataTable(
@@ -186,12 +178,34 @@ class DataTableDemoState extends State<DataTableDemo> {
             child: Scrollbar(
               child: ListView(
                 children: <Widget>[
-                  dataBody(),
+//                  dataBody(),
+                  FutureBuilder<List<ReceiptListItem>>(
+                      future: _userRepository.receiptRepository.getReceiptItems(_receiptStatusType),
+                      builder: (BuildContext context, AsyncSnapshot<List<ReceiptListItem>> snapshot) {
+                        switch (snapshot.connectionState) {
+                          case ConnectionState.none:
+                            return new Text('Loading...');
+                          case ConnectionState.waiting:
+                            return new Center(child: new CircularProgressIndicator());
+                          case ConnectionState.active:
+                            return new Text('');
+                          case ConnectionState.done:
+                            if (snapshot.hasError) {
+                              return new Text(
+                                '${snapshot.error}',
+                                style: TextStyle(color: Colors.red),
+                              );
+                            } else {
+//                              return new Text(snapshot.data[0].companyName);
+                              return dataBody(snapshot.data);
+                            }
+                        }
+                      }),
                 ],
               ),
             ),
           ),
-          Text("${_name}"),
+
 //          Row(
 //            mainAxisAlignment: MainAxisAlignment.center,
 //            mainAxisSize: MainAxisSize.min,
