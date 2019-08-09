@@ -308,16 +308,31 @@ class _DataTableDemoState extends State<DataTableDemo> {
                   ),
             ],
           ),
-          OutlineButton(
-            child: Text(text.toString()),
-            onPressed: () {
-              _userRepository.receiptRepository.getReceipt(1).then((onValue) {
-                setState(() {
-                  text = onValue.companyName;
-                });
-              });
-            },
-          ),
+          FutureBuilder<Receipt>(
+              future: _userRepository.receiptRepository.getReceipt(1),
+              builder: (BuildContext context, AsyncSnapshot<Receipt> snapshot) {
+                switch (snapshot.connectionState) {
+                  case ConnectionState.none:
+                    return new Text('starting');
+                  case ConnectionState.waiting:
+                    return new Center(child: new CircularProgressIndicator());
+                  case ConnectionState.active:
+                    return new Text('');
+                  case ConnectionState.done:
+                    if (snapshot.hasError) {
+                      return new Text(
+                        '${snapshot.error}',
+                        style: TextStyle(color: Colors.red),
+                      );
+                    } else {
+                      return new Text(snapshot.data.companyName);
+                    }
+                }
+              }),
+//          OutlineButton(
+//            child: Text(text.toString()),
+//            onPressed: () {},
+//          ),
         ],
       ),
     );
@@ -328,11 +343,11 @@ class _DataTableDemoState extends State<DataTableDemo> {
     super.initState();
     _dessertsDataSource.addListener(_handleDataSourceChanged);
     _handleDataSourceChanged();
-    _userRepository.receiptRepository.getReceipt(1).then((onValue) {
-      setState(() {
-        text = onValue.companyName;
-      });
-    });
+//    _userRepository.receiptRepository.getReceipt(1).then((onValue) {
+//      setState(() {
+//        text = onValue.companyName;
+//      });}
+
   }
 
   void _handleDataSourceChanged() {
