@@ -2,12 +2,14 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intelligent_receipt/data_model/receipt_repository.dart';
+import 'package:intelligent_receipt/data_model/category_repository.dart';
 
 class UserRepository {
   final FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn;
 
   ReceiptRepository receiptRepository;
+  CategoryRepository categoryRepository;
 
   String userGuid;
   int userId = 1; // The id stored in our service database
@@ -16,6 +18,7 @@ class UserRepository {
       : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
         _googleSignIn = googleSignin ?? GoogleSignIn() {
      receiptRepository = new ReceiptRepository(this);
+     categoryRepository = new CategoryRepository(this);
      // postSignIn(null); // xxx temporary put the code here
   }
 

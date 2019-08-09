@@ -14,6 +14,12 @@ class Urls {
   static String UpdateReceipt = ServiceBaseUrl + "Receipt/UpdateReceipt";
   static String UploadReceiptImages = ServiceBaseUrl + "Receipt/UploadReceiptImages/1/";
   static String DeleteReceipts = ServiceBaseUrl + "Receipt/DeleteReceipts";
+
+  // Category related APIs
+  static String GetCategories = ServiceBaseUrl + "Settings/GetCategories/";
+  static String AddCategory = ServiceBaseUrl + "Settings/AddCategory/";
+  static String UpdateCategory = ServiceBaseUrl + "Settings/UpdateCategory/";
+  static String DeleteCategory = ServiceBaseUrl + "Settings/DeleteCategory/";
 }
 
 class WebServiceResult
