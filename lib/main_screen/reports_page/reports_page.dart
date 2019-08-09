@@ -7,10 +7,15 @@ import '../../user_repository.dart';
 
 class DataTableDemo extends StatefulWidget {
   final UserRepository _userRepository;
+  final String _name;
+  final ReceiptStatusType _receiptStatusType;
 
-  DataTableDemo({Key key, @required UserRepository userRepository})
+  DataTableDemo(
+      {Key key, @required UserRepository userRepository, @required String name, @required ReceiptStatusType receiptStatusType, })
       : assert(userRepository != null),
         _userRepository = userRepository,
+        _name = name,
+        _receiptStatusType = receiptStatusType,
         super(key: key) {}
 
   @override
@@ -23,6 +28,8 @@ class DataTableDemoState extends State<DataTableDemo> {
   bool sort;
 
   UserRepository get _userRepository => widget._userRepository;
+  get _name => widget._name;
+  get _receiptStatusType => widget._receiptStatusType;
 
   @override
   void initState() {
@@ -37,7 +44,7 @@ class DataTableDemoState extends State<DataTableDemo> {
 //    receipts = _userRepository.receiptRepository.receipts;
 
     receipts = _userRepository.receiptRepository
-        .getReceiptItems(ReceiptStatusType.Uploaded);
+        .getReceiptItems(_receiptStatusType);
 
     super.initState();
   }
@@ -121,44 +128,47 @@ class DataTableDemoState extends State<DataTableDemo> {
 //                    print("id ${receipt.id} is Onselect");
 //                    onSelectedRow(b, receipt);
 //                  },
-              cells: [
-                DataCell(
-                  Text("${DateFormat().add_yMd().format(receipt.receiptDatatime.toLocal())}"),
-                  showEditIcon: false,
-                  onTap: () {
-                    print('Selected Date cell of id ${receipt.id}');
-                  },
-                ),
-                DataCell(
-                  Text("${receipt.totalAmount}"),
-                  showEditIcon: false,
-                  onTap: () {
-                    print('Selected Amount cell of id ${receipt.id}');
-                  },
-                ),
-                DataCell(
-                  Text(receipt.companyName.toString()),
-                  showEditIcon: false,
-                  onTap: () {
-                    print('Selected Company cell of id ${receipt.id}');
-                  },
-                ),
-                DataCell(
-                  Text(CategoryName.values[receipt.categoryId].toString().split('.')[1]),
-                  showEditIcon: false,
-                  onTap: () {
-                    print('Selected Category cell of id ${receipt.id}');
-                  },
-                ),
-                DataCell(
-                  Text('View & Modify ${receipt.id}'),
-                  showEditIcon: false,
-                  onTap: () {
-                    print('Clicked Action Button of id ${receipt.id}');
-                  },
-                ),
-              ]),
-        )
+                  cells: [
+                    DataCell(
+                      Text(
+                          "${DateFormat().add_yMd().format(receipt.receiptDatatime.toLocal())}"),
+                      showEditIcon: false,
+                      onTap: () {
+                        print('Selected Date cell of id ${receipt.id}');
+                      },
+                    ),
+                    DataCell(
+                      Text("${receipt.totalAmount}"),
+                      showEditIcon: false,
+                      onTap: () {
+                        print('Selected Amount cell of id ${receipt.id}');
+                      },
+                    ),
+                    DataCell(
+                      Text(receipt.companyName.toString()),
+                      showEditIcon: false,
+                      onTap: () {
+                        print('Selected Company cell of id ${receipt.id}');
+                      },
+                    ),
+                    DataCell(
+                      Text(CategoryName.values[receipt.categoryId]
+                          .toString()
+                          .split('.')[1]),
+                      showEditIcon: false,
+                      onTap: () {
+                        print('Selected Category cell of id ${receipt.id}');
+                      },
+                    ),
+                    DataCell(
+                      Text('View & Modify ${receipt.id}'),
+                      showEditIcon: false,
+                      onTap: () {
+                        print('Clicked Action Button of id ${receipt.id}');
+                      },
+                    ),
+                  ]),
+            )
             .toList(),
       ),
     );
@@ -181,6 +191,7 @@ class DataTableDemoState extends State<DataTableDemo> {
               ),
             ),
           ),
+          Text("${_name}"),
 //          Row(
 //            mainAxisAlignment: MainAxisAlignment.center,
 //            mainAxisSize: MainAxisSize.min,
@@ -211,6 +222,47 @@ class DataTableDemoState extends State<DataTableDemo> {
   }
 }
 
+class TabsExample extends StatelessWidget {
+  final UserRepository _userRepository;
+
+  TabsExample({Key key, @required UserRepository userRepository})
+      : assert(userRepository != null),
+        _userRepository = userRepository,
+        super(key: key) {}
+
+  @override
+  Widget build(BuildContext context) {
+    final _kTabPages = <Widget>[
+      DataTableDemo(userRepository: _userRepository, name: 'a', receiptStatusType: ReceiptStatusType.Uploaded),
+      DataTableDemo(userRepository: _userRepository, name: 'b', receiptStatusType: ReceiptStatusType.Decoded),
+      DataTableDemo(userRepository: _userRepository, name: 'c', receiptStatusType: ReceiptStatusType.Reviewed),
+    ];
+    final _kTabs = <Tab>[
+      Tab(text: 'Pending'),
+      Tab(text: 'Unreviewed'),
+      Tab(text: 'Reviewed'),
+    ];
+    return DefaultTabController(
+      length: _kTabs.length,
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.cyan,
+          // If `TabController controller` is not provided, then a
+          // DefaultTabController ancestor must be provided instead.
+          // Another way is to use a self-defined controller, c.f. "Bottom tab
+          // bar" example.
+          title: TabBar(
+            tabs: _kTabs,
+          ),
+        ),
+        body: TabBarView(
+          children: _kTabPages,
+        ),
+      ),
+    );
+  }
+}
+
 class ReportsPage extends StatefulWidget {
   final UserRepository _userRepository;
 
@@ -234,7 +286,7 @@ class _ReportsPageState extends State<ReportsPage> {
             Flexible(
               flex: 2,
               fit: FlexFit.tight,
-              child: DataTableDemo(userRepository: _userRepository),
+              child: TabsExample(userRepository: _userRepository),
             ),
             Flexible(
                 fit: FlexFit.tight,
