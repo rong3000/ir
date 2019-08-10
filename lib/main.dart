@@ -38,10 +38,10 @@ class App extends StatelessWidget {
             return SplashScreen();
           }
           if (state is Unauthenticated) {
-            return HomeScreen(userRepository: _userRepository, name: state.displayName);
+            return MainScreen(userRepository: _userRepository, name: state.displayName);
           }
           if (state is Authenticated) {
-            return HomeScreen(userRepository: _userRepository, name: state.displayName);
+            return MainScreen(userRepository: _userRepository, name: state.displayName);
           }
         },
       ),

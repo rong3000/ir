@@ -36,8 +36,12 @@ class DataTableDemoState extends State<DataTableDemo> {
     sort = false;
     selectedReceipts = [];
     _userRepository.receiptRepository.getReceiptsFromServer();
-//    _userRepository.receiptRepository
-//        .getReceiptItems(_receiptStatusType).then(onValue);
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >=
+          _scrollController.position.maxScrollExtent - 100) {
+        _loadData();
+      }
+    });
     super.initState();
   }
 
@@ -166,6 +170,24 @@ class DataTableDemoState extends State<DataTableDemo> {
     );
   }
 
+  ScrollController _scrollController = ScrollController();
+
+  Future<Null> _handleRefresh() async {
+    await Future.delayed(Duration(seconds: 2));
+    setState(() {
+    });
+  }
+
+  _loadData() async {
+    await Future.delayed(Duration(seconds: 4));
+    setState(() {
+      print("loading...");
+//      List<String> list = List<String>.from(cityNames);
+//      list.addAll(cityNames);
+//      cityNames = list;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -176,54 +198,59 @@ class DataTableDemoState extends State<DataTableDemo> {
         children: <Widget>[
           Expanded(
             child: Scrollbar(
-              child: ListView(
-                children: <Widget>[
+              child: RefreshIndicator(
+                onRefresh: _handleRefresh,
+                child: ListView(
+                  controller: _scrollController,
+                  children: <Widget>[
 //                  dataBody(),
-                  FutureBuilder<bool>(
-                      future: _userRepository.receiptRepository.getReceiptsFromServer(),
-                      builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-                        switch (snapshot.connectionState) {
-                          case ConnectionState.none:
-                            return new Text('Loading...');
-                          case ConnectionState.waiting:
-                            return new Center(child: new CircularProgressIndicator());
-                          case ConnectionState.active:
-                            return new Text('');
-                          case ConnectionState.done:
-                            if (snapshot.hasError) {
-                              return new Text(
-                                '${snapshot.error}',
-                                style: TextStyle(color: Colors.red),
-                              );
-                            } else {
+                    FutureBuilder<bool>(
+                        future: _userRepository.receiptRepository.getReceiptsFromServer(),
+                        builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                          switch (snapshot.connectionState) {
+                            case ConnectionState.none:
+                              return new Text('Loading...');
+                            case ConnectionState.waiting:
+                              return new Center(child: new CircularProgressIndicator());
+                            case ConnectionState.active:
+                              return new Text('');
+                            case ConnectionState.done:
+                              if (snapshot.hasError) {
+                                return new Text(
+                                  '${snapshot.error}',
+                                  style: TextStyle(color: Colors.red),
+                                );
+                              } else {
 //                              return new Text(snapshot.data[0].companyName);
-                              return FutureBuilder<List<ReceiptListItem>>(
-                                  future: _userRepository.receiptRepository.getReceiptItems(_receiptStatusType),
-                                  builder: (BuildContext context, AsyncSnapshot<List<ReceiptListItem>> snapshot) {
-                                    switch (snapshot.connectionState) {
-                                      case ConnectionState.none:
-                                        return new Text('Loading...');
-                                      case ConnectionState.waiting:
-                                        return new Center(child: new CircularProgressIndicator());
-                                      case ConnectionState.active:
-                                        return new Text('');
-                                      case ConnectionState.done:
-                                        if (snapshot.hasError) {
-                                          return new Text(
-                                            '${snapshot.error}',
-                                            style: TextStyle(color: Colors.red),
-                                          );
-                                        } else {
+                                return FutureBuilder<List<ReceiptListItem>>(
+                                    future: _userRepository.receiptRepository.getReceiptItems(_receiptStatusType),
+                                    builder: (BuildContext context, AsyncSnapshot<List<ReceiptListItem>> snapshot) {
+                                      switch (snapshot.connectionState) {
+                                        case ConnectionState.none:
+                                          return new Text('Loading...');
+                                        case ConnectionState.waiting:
+                                          return new Center(child: new CircularProgressIndicator());
+                                        case ConnectionState.active:
+                                          return new Text('');
+                                        case ConnectionState.done:
+                                          if (snapshot.hasError) {
+                                            return new Text(
+                                              '${snapshot.error}',
+                                              style: TextStyle(color: Colors.red),
+                                            );
+                                          } else {
 //                              return new Text(snapshot.data[0].companyName);
-                                          return dataBody(snapshot.data);
-                                        }
-                                    }
-                                  });
-                            }
-                        }
-                      }),
-                ],
+                                            return dataBody(snapshot.data);
+                                          }
+                                      }
+                                    });
+                              }
+                          }
+                        }),
+                  ],
+                ),
               ),
+
             ),
           ),
 

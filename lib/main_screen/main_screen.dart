@@ -10,11 +10,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 import 'receipts_page/receipts_page.dart';
 
-class HomeScreen extends StatefulWidget {
+class MainScreen extends StatefulWidget {
   final UserRepository _userRepository;
 
   final String name;
-  HomeScreen(
+  MainScreen(
       {Key key, @required UserRepository userRepository, @required this.name})
       : assert(userRepository != null),
         _userRepository = userRepository,
@@ -22,11 +22,11 @@ class HomeScreen extends StatefulWidget {
   }
 
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  MainScreenState createState() => MainScreenState();
 
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class MainScreenState extends State<MainScreen> {
   final _defaultColor = Colors.grey;
   final _activeColor = Colors.blue;
   int _currentIndex = 0;
@@ -47,6 +47,11 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         body: PageView(
           controller: _controller,
+          onPageChanged: (index) {
+            setState(() {
+              _currentIndex = index;
+            });
+          },
           children: <Widget>[
             HomePage(),
             ReceiptsPage(userRepository: _userRepository),
@@ -74,8 +79,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             _currentIndex != 0 ? _defaultColor : _activeColor),
                   )),
               BottomNavigationBarItem(
-                  icon: Icon(Icons.search, color: _defaultColor),
-                  activeIcon: Icon(Icons.search, color: _activeColor),
+                  icon: Icon(Icons.receipt, color: _defaultColor),
+                  activeIcon: Icon(Icons.receipt, color: _activeColor),
                   title: Text(
                     'Receipts',
                     style: TextStyle(
@@ -83,8 +88,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             _currentIndex != 1 ? _defaultColor : _activeColor),
                   )),
               BottomNavigationBarItem(
-                  icon: Icon(Icons.camera_alt, color: _defaultColor),
-                  activeIcon: Icon(Icons.camera_alt, color: _activeColor),
+                  icon: Icon(Icons.insert_chart, color: _defaultColor),
+                  activeIcon: Icon(Icons.insert_chart, color: _activeColor),
                   title: Text(
                     'Reports',
                     style: TextStyle(
@@ -92,8 +97,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             _currentIndex != 2 ? _defaultColor : _activeColor),
                   )),
               BottomNavigationBarItem(
-                  icon: Icon(Icons.account_circle, color: _defaultColor),
-                  activeIcon: Icon(Icons.account_circle, color: _activeColor),
+                  icon: Icon(Icons.settings, color: _defaultColor),
+                  activeIcon: Icon(Icons.settings, color: _activeColor),
                   title: Text(
                     'Settings',
                     style: TextStyle(
