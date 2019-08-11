@@ -28,6 +28,18 @@ class ReceiptRepository {
     return selectedReceipts;
   }
 
+  Future<List<ReceiptListItem>> getReceiptItemsByRange(ReceiptStatusType receiptStatus, int start, int end) async{
+    List<ReceiptListItem> selectedReceipts = new List<ReceiptListItem>();
+    await {
+      for (var i = 0; i < receipts.length; i++) {
+        if (receipts[i].statusId == receiptStatus.index) {
+          selectedReceipts.add(receipts[i])
+        }
+      }
+    };
+    return selectedReceipts.getRange(start, end).toList();
+  }
+
   int getReceiptItemsCount(ReceiptStatusType receiptStatus) {
     int receiptCount = 0;
     for (var i = 0; i < receipts.length; i++) {

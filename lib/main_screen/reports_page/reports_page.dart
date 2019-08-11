@@ -5,14 +5,33 @@ import 'package:intl/intl.dart';
 
 import '../../user_repository.dart';
 
+class LoadMoreItem extends StatefulWidget {
+  @override
+  LoadMoreItemState createState() => new LoadMoreItemState();
+}
+
+class LoadMoreItemState extends State<LoadMoreItem> {
+  @override
+  Widget build(BuildContext context) {
+    return new Container(
+      child: new Center(
+        child: new CircularProgressIndicator(),
+      ),
+    );
+  }
+}
+
 class DataTableDemo extends StatefulWidget {
   final UserRepository _userRepository;
   final String _name;
   final ReceiptStatusType _receiptStatusType;
 
-  DataTableDemo(
-      {Key key, @required UserRepository userRepository, @required String name, @required ReceiptStatusType receiptStatusType, })
-      : assert(userRepository != null),
+  DataTableDemo({
+    Key key,
+    @required UserRepository userRepository,
+    @required String name,
+    @required ReceiptStatusType receiptStatusType,
+  })  : assert(userRepository != null),
         _userRepository = userRepository,
         _name = name,
         _receiptStatusType = receiptStatusType,
@@ -26,26 +45,30 @@ class DataTableDemoState extends State<DataTableDemo> {
   List<ReceiptListItem> receipts;
   List<ReceiptListItem> selectedReceipts;
   bool sort;
+  int start = 0;
+  int end = 0;
+  int counter;
 
   UserRepository get _userRepository => widget._userRepository;
   get _name => widget._name;
   get _receiptStatusType => widget._receiptStatusType;
+  ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     sort = false;
     selectedReceipts = [];
-    _userRepository.receiptRepository.getReceiptsFromServer();
-    _scrollController.addListener(() {
-      if (_scrollController.position.pixels >=
-          _scrollController.position.maxScrollExtent - 100) {
-        _loadData();
-      }
-    });
+//    _scrollController.addListener(() {
+//      print("${_scrollController.position.pixels} and ${_scrollController.initialScrollOffset} and ${_scrollController.position.outOfRange} and ${_scrollController.position.minScrollExtent}");
+//      if (_scrollController.position.pixels >=
+//          _scrollController.position.maxScrollExtent ) {
+//        print('xxx');
+//      }
+//    });
     super.initState();
   }
 
-  onSortColum(int columnIndex, bool ascending) {
+  onSortColumn(int columnIndex, bool ascending) {
     if (columnIndex == 0) {
       if (ascending) {
         receipts.sort((a, b) => a.receiptDatatime.compareTo(b.receiptDatatime));
@@ -65,19 +88,6 @@ class DataTableDemoState extends State<DataTableDemo> {
     });
   }
 
-  deleteSelected() async {
-    setState(() {
-      if (selectedReceipts.isNotEmpty) {
-        List<ReceiptListItem> temp = [];
-        temp.addAll(selectedReceipts);
-        for (Receipt receipt in temp) {
-          receipts.remove(receipt);
-          selectedReceipts.remove(receipt);
-        }
-      }
-    });
-  }
-
   SingleChildScrollView dataBody(List<ReceiptListItem> receipts) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
@@ -93,7 +103,7 @@ class DataTableDemoState extends State<DataTableDemo> {
                 setState(() {
                   sort = !sort;
                 });
-                onSortColum(columnIndex, ascending);
+                onSortColumn(columnIndex, ascending);
               }),
           DataColumn(
             label: Text("Amount"),
@@ -170,21 +180,18 @@ class DataTableDemoState extends State<DataTableDemo> {
     );
   }
 
-  ScrollController _scrollController = ScrollController();
-
   Future<Null> _handleRefresh() async {
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(Duration(milliseconds: 200));
     setState(() {
+      _userRepository.categoryRepository.getCategoriesFromServer(forceRefresh: true);
     });
   }
 
-  _loadData() async {
-    await Future.delayed(Duration(seconds: 4));
+  loadMore() {
     setState(() {
-      print("loading...");
-//      List<String> list = List<String>.from(cityNames);
-//      list.addAll(cityNames);
-//      cityNames = list;
+      end = end + 5;
+      counter ++;
+      print('loading data, start = ${start}, end = ${end}, counter = ${counter}');
     });
   }
 
@@ -200,84 +207,83 @@ class DataTableDemoState extends State<DataTableDemo> {
             child: Scrollbar(
               child: RefreshIndicator(
                 onRefresh: _handleRefresh,
-                child: ListView(
-                  controller: _scrollController,
-                  children: <Widget>[
-//                  dataBody(),
-                    FutureBuilder<bool>(
-                        future: _userRepository.receiptRepository.getReceiptsFromServer(),
-                        builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-                          switch (snapshot.connectionState) {
-                            case ConnectionState.none:
-                              return new Text('Loading...');
-                            case ConnectionState.waiting:
-                              return new Center(child: new CircularProgressIndicator());
-                            case ConnectionState.active:
-                              return new Text('');
-                            case ConnectionState.done:
-                              if (snapshot.hasError) {
-                                return new Text(
-                                  '${snapshot.error}',
-                                  style: TextStyle(color: Colors.red),
-                                );
-                              } else {
-//                              return new Text(snapshot.data[0].companyName);
-                                return FutureBuilder<List<ReceiptListItem>>(
-                                    future: _userRepository.receiptRepository.getReceiptItems(_receiptStatusType),
-                                    builder: (BuildContext context, AsyncSnapshot<List<ReceiptListItem>> snapshot) {
-                                      switch (snapshot.connectionState) {
-                                        case ConnectionState.none:
-                                          return new Text('Loading...');
-                                        case ConnectionState.waiting:
-                                          return new Center(child: new CircularProgressIndicator());
-                                        case ConnectionState.active:
-                                          return new Text('');
-                                        case ConnectionState.done:
-                                          if (snapshot.hasError) {
-                                            return new Text(
-                                              '${snapshot.error}',
-                                              style: TextStyle(color: Colors.red),
-                                            );
-                                          } else {
-//                              return new Text(snapshot.data[0].companyName);
-                                            return dataBody(snapshot.data);
-                                          }
-                                      }
-                                    });
-                              }
-                          }
-                        }),
-                  ],
-                ),
-              ),
+                child: NotificationListener<ScrollNotification>(
+                  onNotification: (ScrollNotification scrollInfo) {
+//                    if (scrollInfo.metrics.pixels ==
+//                        scrollInfo.metrics.maxScrollExtent)
+                  if (scrollInfo is ScrollEndNotification)
+                    {
+                      if (_scrollController.position.extentAfter == 0) {
+                      end++;
+                      print('yes ${end}');
+                      print("${scrollInfo.metrics.viewportDimension}, ${scrollInfo.metrics.extentInside}, ");
+                      print("${scrollInfo.metrics.pixels}, ${scrollInfo.metrics.atEdge}, ");
 
+//                      loadMore();
+                    }}
+                  },
+                  child: ListView(
+                    controller: _scrollController,
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    children: <Widget>[
+//                  dataBody(),
+                      FutureBuilder<bool>(
+                          future: _userRepository.receiptRepository.getReceiptsFromServer(),
+                          builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                            switch (snapshot.connectionState) {
+                              case ConnectionState.none:
+                                return new Text('Loading...');
+                              case ConnectionState.waiting:
+                                return new Center(child: new CircularProgressIndicator());
+                              case ConnectionState.active:
+                                return new Text('');
+                              case ConnectionState.done:
+                                if (snapshot.hasError) {
+                                  return new Text(
+                                    '${snapshot.error}',
+                                    style: TextStyle(color: Colors.red),
+                                  );
+                                } else {
+//                              return new Text(snapshot.data[0].companyName);
+                                  return FutureBuilder<List<ReceiptListItem>>(
+                                      future: _userRepository.receiptRepository
+                                          .getReceiptItems(_receiptStatusType),
+                                      builder: (BuildContext context,
+                                          AsyncSnapshot<List<ReceiptListItem>>
+                                          snapshot) {
+                                        switch (snapshot.connectionState) {
+                                          case ConnectionState.none:
+                                            return new Text('Loading...');
+                                          case ConnectionState.waiting:
+                                            return new Center(
+                                                child:
+                                                new CircularProgressIndicator());
+                                          case ConnectionState.active:
+                                            return new Text('');
+                                          case ConnectionState.done:
+                                            if (snapshot.hasError) {
+                                              return new Text(
+                                                '${snapshot.error}',
+                                                style:
+                                                TextStyle(color: Colors.red),
+                                              );
+                                            } else {
+//                              return new Text(snapshot.data[0].companyName);
+                                              return dataBody(snapshot.data);
+//                                              return dataBody(snapshot.data.getRange(0, 5).toList());
+                                            }
+                                        }
+                                      });
+                                }
+                            }
+                          }),
+                    ],
+                  ),
+                ),
+
+              ),
             ),
           ),
-
-//          Row(
-//            mainAxisAlignment: MainAxisAlignment.center,
-//            mainAxisSize: MainAxisSize.min,
-//            children: <Widget>[
-//              Padding(
-//                padding: EdgeInsets.all(20.0),
-//                child: OutlineButton(
-//                  child: Text('SELECTED ${selectedReceipts.length}'),
-//                  onPressed: () {},
-//                ),
-//              ),
-//              Padding(
-//                padding: EdgeInsets.all(20.0),
-//                child: OutlineButton(
-//                  child: Text('DELETE SELECTED'),
-//                  onPressed: selectedReceipts.isEmpty
-//                      ? null
-//                      : () {
-//                          deleteSelected();
-//                        },
-//                ),
-//              ),
-//            ],
-//          ),
         ],
       ),
     );
@@ -295,9 +301,18 @@ class TabsExample extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _kTabPages = <Widget>[
-      DataTableDemo(userRepository: _userRepository, name: 'a', receiptStatusType: ReceiptStatusType.Uploaded),
-      DataTableDemo(userRepository: _userRepository, name: 'b', receiptStatusType: ReceiptStatusType.Decoded),
-      DataTableDemo(userRepository: _userRepository, name: 'c', receiptStatusType: ReceiptStatusType.Reviewed),
+      DataTableDemo(
+          userRepository: _userRepository,
+          name: 'a',
+          receiptStatusType: ReceiptStatusType.Uploaded),
+      DataTableDemo(
+          userRepository: _userRepository,
+          name: 'b',
+          receiptStatusType: ReceiptStatusType.Decoded),
+      DataTableDemo(
+          userRepository: _userRepository,
+          name: 'c',
+          receiptStatusType: ReceiptStatusType.Reviewed),
     ];
     final _kTabs = <Tab>[
       Tab(text: 'Pending'),
