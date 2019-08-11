@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:convert';
 import "enums.dart";
 export "receipt.dart";
+export 'data_result.dart';
 
 class ReceiptRepository {
   List<ReceiptListItem> receipts;
@@ -38,75 +39,74 @@ class ReceiptRepository {
     return receiptCount;
   }
 
-  Future<bool> getReceiptsFromServer({bool forceRefresh = false}) async {
+  Future<DataResult> getReceiptsFromServer({bool forceRefresh = false}) async {
     //var image = await ImagePicker.pickImage(source: ImageSource.camera);
     //await this.uploadReceiptFile(image);
     if (_dataFetched && !forceRefresh) {
-      return true;
+      return DataResult.success(receipts);
     }
 
     if ((_userRepository == null) || (_userRepository.userId <= 0))
     {
       // Log an error
-      return false;
+      return DataResult.fail();
     }
 
-    WebServiceResult result = await webserviceGet(Urls.GetReceipts + _userRepository.userId.toString(), "");
+    DataResult result = await webserviceGet(Urls.GetReceipts + _userRepository.userId.toString(), "");
     if (result.success) {
-      Iterable l = result.jasonObj;
+      Iterable l = result.obj;
       receipts = l.map((model) => ReceiptListItem.fromJason(model)).toList();
+      result.obj = receipts;
     }
 
     _dataFetched = result.success;
-    return result.success;
+    return result;
   }
 
-  Future<Receipt> getReceipt(int receiptId) async {
-    Receipt receipt = null;
-    WebServiceResult result = await webserviceGet(Urls.GetReceipt + receiptId.toString(), "");
+  Future<DataResult> getReceipt(int receiptId) async {
+    DataResult result = await webserviceGet(Urls.GetReceipt + receiptId.toString(), "");
     if (result.success) {
-      receipt = Receipt.fromJason(result.jasonObj);
+      result.obj = Receipt.fromJason(result.obj);
     }
 
-    return receipt;
+    return result;
   }
 
-  Future<Receipt> updateReceipt(Receipt receipt) async {
-    Receipt newReceipt = null;
-    WebServiceResult result = await webservicePost(Urls.UpdateReceipt, "", jsonEncode(receipt));
+  Future<DataResult> updateReceipt(Receipt receipt) async {
+    DataResult result = await webservicePost(Urls.UpdateReceipt, "", jsonEncode(receipt));
     if (result.success) {
-      newReceipt = Receipt.fromJason(result.jasonObj);
+      result.obj = Receipt.fromJason(result.obj);
     }
 
-    return newReceipt;
+    return result;
   }
 
-  Future<Receipt> uploadReceiptImage(File imageFile) async {
+  Future<DataResult> uploadReceiptImage(File imageFile) async {
     if ((_userRepository == null) || (_userRepository.userId <= 0))
     {
       // Log an error
-      return null;
+      return DataResult.fail(msg: "No user logged in.");
     }
 
-    WebServiceResult result = await uploadFile(Urls.UploadReceiptImages + _userRepository.userId.toString(), "", imageFile);
+    DataResult result = await uploadFile(Urls.UploadReceiptImages + _userRepository.userId.toString(), "", imageFile);
     if (result.success) {
-      Iterable l = result.jasonObj;
+      Iterable l = result.obj;
       List<Receipt> newReceipts = l.map((model) => Receipt.fromJason(model)).toList();
       if (newReceipts.length > 0) {
         Receipt receipt = newReceipts[0];
         // insert the new receipt into the receipt list
         receipts.add(receipt);
-        return receipt;
+        result.obj = receipt;
       } else {
-        return null;
+        result.obj = null;
       }
     }
 
-    return null;
+    return result;
   }
 
-  Future<bool> deleteReceipts(List<int> receiptIds) async {
-    WebServiceResult result = await webservicePost(Urls.DeleteReceipts, "", jsonEncode(receiptIds));
+  Future<DataResult> deleteReceipts(List<int> receiptIds) async {
+    DataResult result = await webservicePost(Urls.DeleteReceipts, "", jsonEncode(receiptIds));
     if (result.success) {
       // Delete the local cache of the receipts
       for (int i = 0; i < receiptIds.length; i++) {
@@ -119,6 +119,6 @@ class ReceiptRepository {
       }
     }
 
-    return result.success;
+    return result;
   }
 }

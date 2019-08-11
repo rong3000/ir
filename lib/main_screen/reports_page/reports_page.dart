@@ -179,9 +179,9 @@ class DataTableDemoState extends State<DataTableDemo> {
               child: ListView(
                 children: <Widget>[
 //                  dataBody(),
-                  FutureBuilder<bool>(
+                  FutureBuilder<DataResult>(
                       future: _userRepository.receiptRepository.getReceiptsFromServer(),
-                      builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                      builder: (BuildContext context, AsyncSnapshot<DataResult> snapshot) {
                         switch (snapshot.connectionState) {
                           case ConnectionState.none:
                             return new Text('Loading...');

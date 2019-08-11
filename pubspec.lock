@@ -42,7 +42,7 @@ packages:
       name: boolean_selector
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.4"
+    version: "1.0.5"
   build:
     dependency: transitive
     description:
@@ -176,6 +176,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.6"
+  f_logs:
+    dependency: "direct main"
+    description:
+      name: f_logs
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.2.0"
   firebase_auth:
     dependency: "direct main"
     description:
@@ -326,6 +333,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.3.19"
+  logger:
+    dependency: "direct main"
+    description:
+      name: logger
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.7.0+2"
   logging:
     dependency: transitive
     description:
@@ -375,13 +389,27 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.6.2"
+  path_provider:
+    dependency: transitive
+    description:
+      name: path_provider
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.2.0"
   pedantic:
     dependency: transitive
     description:
       name: pedantic
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.7.0"
+    version: "1.8.0+1"
+  permission_handler:
+    dependency: transitive
+    description:
+      name: permission_handler
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.2.1+1"
   pool:
     dependency: transitive
     description:
@@ -424,6 +452,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.22.0"
+  sembast:
+    dependency: transitive
+    description:
+      name: sembast
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.1"
   shelf:
     dependency: transitive
     description:
@@ -492,6 +527,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.4"
+  synchronized:
+    dependency: transitive
+    description:
+      name: synchronized
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.0+1"
   term_glyph:
     dependency: transitive
     description:
@@ -541,6 +583,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.14"
+  xxtea:
+    dependency: transitive
+    description:
+      name: xxtea
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.2"
   yaml:
     dependency: transitive
     description:

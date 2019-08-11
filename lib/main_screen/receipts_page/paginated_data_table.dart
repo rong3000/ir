@@ -308,9 +308,9 @@ class _DataTableDemoState extends State<DataTableDemo> {
                   ),
             ],
           ),
-          FutureBuilder<Receipt>(
+          FutureBuilder<DataResult>(
               future: _userRepository.receiptRepository.getReceipt(1),
-              builder: (BuildContext context, AsyncSnapshot<Receipt> snapshot) {
+              builder: (BuildContext context, AsyncSnapshot<DataResult> snapshot) {
                 switch (snapshot.connectionState) {
                   case ConnectionState.none:
                     return new Text('starting');
@@ -325,7 +325,7 @@ class _DataTableDemoState extends State<DataTableDemo> {
                         style: TextStyle(color: Colors.red),
                       );
                     } else {
-                      return new Text(snapshot.data.companyName);
+                      //return new Text(snapshot.data.companyName);
                     }
                 }
               }),

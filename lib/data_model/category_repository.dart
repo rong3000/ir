@@ -15,44 +15,46 @@ class CategoryRepository {
     categories = new List<Category>();
   }
 
-  Future<bool> getCategoriesFromServer({bool forceRefresh = false}) async {
+  Future<DataResult> getCategoriesFromServer({bool forceRefresh = false}) async {
     //var image = await ImagePicker.pickImage(source: ImageSource.camera);
     //await this.uploadReceiptFile(image);
     if (_dataFetched && !forceRefresh) {
-      return true;
+      return DataResult.success(categories);
     }
 
     if ((_userRepository == null) || (_userRepository.userId <= 0))
     {
       // Log an error
-      return false;
+      return DataResult.fail(msg: "No user logged in.");
     }
 
-    WebServiceResult result = await webserviceGet(Urls.GetCategories + _userRepository.userId.toString(), "");
+    DataResult result = await webserviceGet(Urls.GetCategories + _userRepository.userId.toString(), "");
     if (result.success) {
-      Iterable l = result.jasonObj;
+      Iterable l = result.obj;
       categories = l.map((model) => Category.fromJason(model)).toList();
+      result.obj = categories;
     }
 
     _dataFetched = result.success;
-    return result.success;
+    return result;
   }
 
-  Future<Category> addCategory(String categoryName) async {
-    Category category = null;
-    WebServiceResult result = await webservicePost(Urls.AddCategory + _userRepository.userId.toString(), "", jsonEncode(categoryName));
+  Future<DataResult> addCategory(String categoryName) async {
+    DataResult result = await webservicePost(Urls.AddCategory + _userRepository.userId.toString(), "", jsonEncode(categoryName));
     if (result.success) {
-      category = Category.fromJason(result.jasonObj);
+      Category category = Category.fromJason(result.obj);
       categories.add(category);
+      result.obj = category;
     }
 
-    return category;
+    return result;
   }
 
-  Future<Category> updateCategory(Category category) async {
-    WebServiceResult result = await webservicePost(Urls.UpdateCategory + _userRepository.userId.toString(), "", jsonEncode(category));
+  Future<DataResult> updateCategory(Category category) async {
+    DataResult result = await webservicePost(Urls.UpdateCategory + _userRepository.userId.toString(), "", jsonEncode(category));
     if (result.success) {
-      category = Category.fromJason(result.jasonObj);
+      category = Category.fromJason(result.obj);
+      result.obj = category;
 
       // update local cache
       for (int i = 0; i < categories.length; i++) {
@@ -62,11 +64,11 @@ class CategoryRepository {
       }
     }
 
-    return category;
+    return result;
   }
 
-  Future<bool> deleteCategory(int categoryId) async {
-    WebServiceResult result = await webservicePost(Urls.DeleteCategory + categoryId.toString(), "", jsonEncode(categoryId));
+  Future<DataResult> deleteCategory(int categoryId) async {
+    DataResult result = await webservicePost(Urls.DeleteCategory + categoryId.toString(), "", jsonEncode(categoryId));
     if (result.success) {
       // delete local cache
       for (int i = 0; i < categories.length; i++) {
@@ -77,6 +79,6 @@ class CategoryRepository {
       }
     }
 
-    return result.success;
+    return result;
   }
 }

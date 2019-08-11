@@ -85,11 +85,12 @@ class UserRepository {
 
     // Some testing code
     if (receiptRepository.receipts.length > 0) {
-      Receipt receipt = await receiptRepository.getReceipt(receiptRepository.receipts[0].id);
+      DataResult dataResult = await receiptRepository.getReceipt(receiptRepository.receipts[0].id);
+      Receipt receipt = dataResult.obj as Receipt;
       receipt.decodedContent = "888";
       receipt.extractedContent = "999";
 
-      Receipt newReceipt = await receiptRepository.updateReceipt(receipt);
+      dataResult = await receiptRepository.updateReceipt(receipt);
 
       List<int> receiptIds = new List<int>();
       receiptIds.add(receiptRepository.receipts[0].id);

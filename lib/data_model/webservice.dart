@@ -4,6 +4,8 @@ import 'dart:convert';
 import 'package:path/path.dart';
 import 'package:async/async.dart';
 import 'dart:io';
+import 'data_result.dart';
+export 'data_result.dart';
 
 class Urls {
   static String ServiceBaseUrl = "http://10.0.2.2:3001/";
@@ -22,27 +24,10 @@ class Urls {
   static String DeleteCategory = ServiceBaseUrl + "Settings/DeleteCategory/";
 }
 
-class WebServiceResult
-{
-  bool success = false;
-  int messageCode;
-  String message;
-  Object jasonObj;
-
-  WebServiceResult(this.success, this.message);
-
-  WebServiceResult.fromJason(Map json)
-      : success = json['isSuccess'],
-        messageCode = json['messageCode'],
-        message = json['message'],
-        jasonObj = json['obj'];
-
-}
-
 /// Url: webservice URL
 /// token: token string
 /// body: the body Json string, which will be sent to the host
-Future<WebServiceResult> webservicePost(String url, String token, String body) async
+Future<DataResult> webservicePost(String url, String token, String body) async
 {
   final headers = {
 //    "Authorization": "Bearer " + token,
@@ -53,21 +38,21 @@ Future<WebServiceResult> webservicePost(String url, String token, String body) a
   try {
     http.Response  response = await http.post(url, headers: headers, body: body);
     if (response.statusCode == 200) {
-      return WebServiceResult.fromJason(json.decode(response.body));
+      return DataResult.fromJason(json.decode(response.body));
     } else {
       // Log an error
-      return WebServiceResult(false, response.statusCode.toString());
+      return DataResult(false, response.statusCode.toString());
     }
   } catch (e) {
     // Log an error
-    return WebServiceResult(false, e.toString());
+    return DataResult(false, e.toString());
   }
 }
 
 /// Url: webservice URL
 /// token: token string
 /// body: the body Json string, which will be sent to the host
-Future<WebServiceResult> webservicePut(String url, String token, String body) async
+Future<DataResult> webservicePut(String url, String token, String body) async
 {
   final headers = {
     "Authorization": "Bearer " + token,
@@ -78,21 +63,21 @@ Future<WebServiceResult> webservicePut(String url, String token, String body) as
   try {
     http.Response  response = await http.put(url, headers: headers, body: body);
     if (response.statusCode == 200) {
-      return WebServiceResult.fromJason(json.decode(response.body));
+      return DataResult.fromJason(json.decode(response.body));
     } else {
       // Log an error
-      return WebServiceResult(false, response.statusCode.toString());
+      return DataResult(false, response.statusCode.toString());
     }
   } catch (e) {
     // Log an error
-    return WebServiceResult(false, e.toString());
+    return DataResult(false, e.toString());
   }
 }
 
 /// Url: webservice URL
 /// token: token string
 /// body: the body Json string, which will be sent to the host
-Future<WebServiceResult> webserviceGet(String url, String token) async
+Future<DataResult> webserviceGet(String url, String token) async
 {
   final headers = {
     //"Authorization": "Bearer " + token,
@@ -103,18 +88,18 @@ Future<WebServiceResult> webserviceGet(String url, String token) async
   try {
     http.Response  response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
-      return WebServiceResult.fromJason(json.decode(response.body));
+      return DataResult.fromJason(json.decode(response.body));
     } else {
       // Log an error
-      return WebServiceResult(false, response.statusCode.toString());
+      return DataResult(false, response.statusCode.toString());
     }
   } catch (e) {
     // Log an error
-    return WebServiceResult(false, e.toString());
+    return DataResult(false, e.toString());
   }
 }
 
-Future<WebServiceResult> uploadFile(String url, String token, File imageFile) async {
+Future<DataResult> uploadFile(String url, String token, File imageFile) async {
   try {
     var stream = new http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
     var length = await imageFile.length();
@@ -130,13 +115,13 @@ Future<WebServiceResult> uploadFile(String url, String token, File imageFile) as
     var response = await request.send();
     print(response.statusCode);
     if (response.statusCode == 200) {
-      return WebServiceResult.fromJason(json.decode(await response.stream.bytesToString()));
+      return DataResult.fromJason(json.decode(await response.stream.bytesToString()));
     } else {
       // Log an error
-      return WebServiceResult(false, response.statusCode.toString());
+      return DataResult(false, response.statusCode.toString());
     }
   } catch (e) {
     // Log an error
-    return WebServiceResult(false, e.toString());
+    return DataResult(false, e.toString());
   }
 }
