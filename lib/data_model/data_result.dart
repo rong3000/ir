@@ -1,4 +1,4 @@
-import 'enums.dart';
+import 'message_code.dart';
 
 class DataResult
 {
