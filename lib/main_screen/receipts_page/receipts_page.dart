@@ -3,7 +3,51 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intelligent_receipt/main_screen/bloc/bloc.dart';
 import 'package:flutter/rendering.dart';
+import 'package:intelligent_receipt/main_screen/receipts_page/paginated_data_table.dart';
 import 'package:intelligent_receipt/user_repository.dart';
+
+class TabsExample extends StatelessWidget {
+  final UserRepository _userRepository;
+
+  TabsExample(
+      {Key key, @required UserRepository userRepository})
+      : assert(userRepository != null),
+        _userRepository = userRepository,
+        super(key: key) {
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final _kTabPages = <Widget>[
+      DataTableDemo(userRepository: _userRepository),
+      DataTableDemo(userRepository: _userRepository),
+      DataTableDemo(userRepository: _userRepository),
+    ];
+    final _kTabs = <Tab>[
+      Tab(text: 'Pending'),
+      Tab(text: 'Unreviewed'),
+      Tab(text: 'Reviewed'),
+    ];
+    return DefaultTabController(
+      length: _kTabs.length,
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.cyan,
+          // If `TabController controller` is not provided, then a
+          // DefaultTabController ancestor must be provided instead.
+          // Another way is to use a self-defined controller, c.f. "Bottom tab
+          // bar" example.
+          title: TabBar(
+            tabs: _kTabs,
+          ),
+        ),
+        body: TabBarView(
+          children: _kTabPages,
+        ),
+      ),
+    );
+  }
+}
 
 class ReceiptsPage extends StatefulWidget {
   final UserRepository _userRepository;
@@ -45,7 +89,7 @@ class _ReceiptsPageState extends State<ReceiptsPage> {
                         Flexible(
                           flex: 2,
                           fit: FlexFit.tight,
-                          child: TableListView(userRepository: _userRepository),
+                          child: TabsExample(userRepository: _userRepository),
                         ),
                         Flexible(
                             fit: FlexFit.tight,
@@ -113,83 +157,6 @@ class _ReceiptsPageState extends State<ReceiptsPage> {
                 }),
               );
             }),
-      ),
-    );
-  }
-}
-
-class TableListView extends StatefulWidget {
-  final UserRepository _userRepository;
-
-  TableListView(
-      {Key key, @required UserRepository userRepository, this.title})
-      : assert(userRepository != null),
-        _userRepository = userRepository,
-        super(key: key) {
-  }
-  final String title;
-
-  @override
-  TableListViewState createState() => new TableListViewState();
-}
-
-class TableListViewState extends State<TableListView> {
-  UserRepository get _userRepository => widget._userRepository;
-  int present = 0;
-  int perPage = 5;
-
-  final originalItems = List<String>.generate(100, (i) => "Item $i");
-//  final originalReceips = ;
-  var items = List<String>();
-
-
-  @override
-  void initState() {
-    super.initState();
-    setState(() {
-      items.addAll(originalItems.getRange(present, present + perPage));
-      present = present + perPage;
-    });
-  }
-
-  void loadMore() {
-    setState(() {
-      if((present + perPage )> originalItems.length) {
-        items.addAll(
-            originalItems.getRange(present, originalItems.length));
-      } else {
-        items.addAll(
-            originalItems.getRange(present, present + perPage));
-      }
-      present = present + perPage;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return new Scaffold(
-      body: NotificationListener<ScrollNotification>(
-        onNotification: (ScrollNotification scrollInfo) {
-          if (scrollInfo.metrics.pixels ==
-              scrollInfo.metrics.maxScrollExtent) {
-            loadMore();
-          }
-        },
-        child: ListView.builder(
-          itemCount: (present <= originalItems.length) ? items.length + 1 : items.length,
-          itemBuilder: (context, index) {
-            return (index == items.length ) ?
-            Container(
-              child: new Center(
-                child: new CircularProgressIndicator(),
-              ),
-            )
-                :
-            ListTile(
-              title: Text('${items[index]}'),
-            );
-          },
-        ),
       ),
     );
   }

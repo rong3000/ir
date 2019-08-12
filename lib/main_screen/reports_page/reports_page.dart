@@ -62,8 +62,13 @@ class DataTableDemoState extends State<DataTableDemo> {
     selectedReceipts = [];
     forceRefresh = false;
     start = 0;
-    receiptItemCount = _userRepository.receiptRepository
-        .getReceiptItemsCount(_receiptStatusType);
+    _userRepository.receiptRepository
+        .getReceiptsFromServer(forceRefresh: true).then(
+        (value) {
+          receiptItemCount = _userRepository.receiptRepository
+              .getReceiptItemsCount(_receiptStatusType);
+        }
+    );
     end = (receiptItemCount < 5) ? receiptItemCount : 5;
     print('count is ${receiptItemCount}');
     super.initState();

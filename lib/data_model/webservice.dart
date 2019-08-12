@@ -6,7 +6,7 @@ import 'package:async/async.dart';
 import 'dart:io';
 
 class Urls {
-  static String ServiceBaseUrl = "http://10.0.2.2:3001/";
+  static String ServiceBaseUrl = "http://35.244.127.111";
 
   // Receipt related APIs
   static String GetReceipts = ServiceBaseUrl + "Receipt/GetReceipts/";
