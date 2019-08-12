@@ -43,7 +43,7 @@ class ReceiptRepository {
   int getReceiptItemsCount(ReceiptStatusType receiptStatus) {
     int receiptCount = 0;
     for (var i = 0; i < receipts.length; i++) {
-      if (receipts[i].statusId == receiptStatus) {
+      if (receipts[i].statusId == receiptStatus.index) {
         receiptCount++;
       }
     }

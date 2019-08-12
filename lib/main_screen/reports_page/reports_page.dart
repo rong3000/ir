@@ -45,9 +45,11 @@ class DataTableDemoState extends State<DataTableDemo> {
   List<ReceiptListItem> receipts;
   List<ReceiptListItem> selectedReceipts;
   bool sort;
-  int start = 0;
-  int end = 0;
-  int counter;
+  int start;
+  int end;
+  bool forceRefresh;
+  int receiptItemCount;
+  bool fromServer;
 
   UserRepository get _userRepository => widget._userRepository;
   get _name => widget._name;
@@ -58,13 +60,12 @@ class DataTableDemoState extends State<DataTableDemo> {
   void initState() {
     sort = false;
     selectedReceipts = [];
-//    _scrollController.addListener(() {
-//      print("${_scrollController.position.pixels} and ${_scrollController.initialScrollOffset} and ${_scrollController.position.outOfRange} and ${_scrollController.position.minScrollExtent}");
-//      if (_scrollController.position.pixels >=
-//          _scrollController.position.maxScrollExtent ) {
-//        print('xxx');
-//      }
-//    });
+    forceRefresh = false;
+    start = 0;
+    receiptItemCount = _userRepository.receiptRepository
+        .getReceiptItemsCount(_receiptStatusType);
+    end = (receiptItemCount < 5) ? receiptItemCount : 5;
+    print('count is ${receiptItemCount}');
     super.initState();
   }
 
@@ -183,15 +184,19 @@ class DataTableDemoState extends State<DataTableDemo> {
   Future<Null> _handleRefresh() async {
     await Future.delayed(Duration(milliseconds: 200));
     setState(() {
-      _userRepository.categoryRepository.getCategoriesFromServer(forceRefresh: true);
+      print('${forceRefresh}');
+      forceRefresh = true;
+      print('${forceRefresh}');
     });
   }
 
   loadMore() {
+//    receiptItemCount = _userRepository.receiptRepository.getReceiptItemsCount(_receiptStatusType);
+//    print("count = ${receiptItemCount}");
     setState(() {
-      end = end + 5;
-      counter ++;
-      print('loading data, start = ${start}, end = ${end}, counter = ${counter}');
+      print('before loading data, start = ${start}, end = ${end}');
+      end = ((end + 5) < receiptItemCount) ? (end + 5) : receiptItemCount;
+      print('after loading data, start = ${start}, end = ${end}');
     });
   }
 
@@ -211,16 +216,18 @@ class DataTableDemoState extends State<DataTableDemo> {
                   onNotification: (ScrollNotification scrollInfo) {
 //                    if (scrollInfo.metrics.pixels ==
 //                        scrollInfo.metrics.maxScrollExtent)
-                  if (scrollInfo is ScrollEndNotification)
-                    {
-                      if (_scrollController.position.extentAfter == 0) {
-                      end++;
-                      print('yes ${end}');
-                      print("${scrollInfo.metrics.viewportDimension}, ${scrollInfo.metrics.extentInside}, ");
-                      print("${scrollInfo.metrics.pixels}, ${scrollInfo.metrics.atEdge}, ");
-
-//                      loadMore();
-                    }}
+//                    print("${_scrollController.position.pixels}, ${_scrollController.position.maxScrollExtent}, ");
+//                    print("${scrollInfo.metrics.pixels}, ${scrollInfo.metrics.maxScrollExtent}, ");
+                    if (scrollInfo is ScrollEndNotification) {
+                      if (scrollInfo.metrics.pixels ==
+                          scrollInfo.metrics.maxScrollExtent) {
+                        print(
+                            "${_scrollController.position.pixels}, ${_scrollController.position.maxScrollExtent}, ");
+                        print(
+                            "${scrollInfo.metrics.pixels}, ${scrollInfo.metrics.maxScrollExtent}, ");
+                        loadMore();
+                      }
+                    }
                   },
                   child: ListView(
                     controller: _scrollController,
@@ -228,13 +235,17 @@ class DataTableDemoState extends State<DataTableDemo> {
                     children: <Widget>[
 //                  dataBody(),
                       FutureBuilder<bool>(
-                          future: _userRepository.receiptRepository.getReceiptsFromServer(),
-                          builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                          future: _userRepository.receiptRepository
+                              .getReceiptsFromServer(
+                                  forceRefresh: forceRefresh),
+                          builder: (BuildContext context,
+                              AsyncSnapshot<bool> snapshot) {
                             switch (snapshot.connectionState) {
                               case ConnectionState.none:
                                 return new Text('Loading...');
                               case ConnectionState.waiting:
-                                return new Center(child: new CircularProgressIndicator());
+                                return new Center(
+                                    child: new CircularProgressIndicator());
                               case ConnectionState.active:
                                 return new Text('');
                               case ConnectionState.done:
@@ -247,25 +258,26 @@ class DataTableDemoState extends State<DataTableDemo> {
 //                              return new Text(snapshot.data[0].companyName);
                                   return FutureBuilder<List<ReceiptListItem>>(
                                       future: _userRepository.receiptRepository
-                                          .getReceiptItems(_receiptStatusType),
+                                          .getReceiptItemsByRange(
+                                              _receiptStatusType, start, end),
                                       builder: (BuildContext context,
                                           AsyncSnapshot<List<ReceiptListItem>>
-                                          snapshot) {
+                                              snapshot) {
                                         switch (snapshot.connectionState) {
                                           case ConnectionState.none:
                                             return new Text('Loading...');
                                           case ConnectionState.waiting:
                                             return new Center(
                                                 child:
-                                                new CircularProgressIndicator());
+                                                    new CircularProgressIndicator());
                                           case ConnectionState.active:
                                             return new Text('');
                                           case ConnectionState.done:
                                             if (snapshot.hasError) {
                                               return new Text(
                                                 '${snapshot.error}',
-                                                style:
-                                                TextStyle(color: Colors.red),
+                                                style: TextStyle(
+                                                    color: Colors.red),
                                               );
                                             } else {
 //                              return new Text(snapshot.data[0].companyName);
@@ -280,7 +292,6 @@ class DataTableDemoState extends State<DataTableDemo> {
                     ],
                   ),
                 ),
-
               ),
             ),
           ),
