@@ -40,6 +40,7 @@ dependencies:
   json_annotation: ^2.0.0
   f_logs: ^1.2.0
   logger: 0.7.0+2
+  synchronized: 2.1.0+1
 
 dev_dependencies:
   flutter_test:
