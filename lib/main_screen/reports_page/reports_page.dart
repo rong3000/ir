@@ -56,19 +56,23 @@ class DataTableDemoState extends State<DataTableDemo> {
   get _receiptStatusType => widget._receiptStatusType;
   ScrollController _scrollController = ScrollController();
 
+
   @override
   void initState() {
     sort = false;
     selectedReceipts = [];
-    forceRefresh = false;
+    forceRefresh = true;
     start = 0;
-    _userRepository.receiptRepository
-        .getReceiptsFromServer(forceRefresh: true).then(
-        (value) {
-          receiptItemCount = _userRepository.receiptRepository
-              .getReceiptItemsCount(_receiptStatusType);
-        }
-    );
+
+    getData() async {
+      await _userRepository.receiptRepository
+          .getReceiptsFromServer(forceRefresh: true);
+    }
+
+    getData();
+
+    receiptItemCount = _userRepository.receiptRepository
+          .getReceiptItemsCount(_receiptStatusType);
     end = (receiptItemCount < 5) ? receiptItemCount : 5;
     print('count is ${receiptItemCount}');
     super.initState();
@@ -187,11 +191,15 @@ class DataTableDemoState extends State<DataTableDemo> {
   }
 
   Future<Null> _handleRefresh() async {
-    await Future.delayed(Duration(milliseconds: 200));
+    forceRefresh = true;
+    await _userRepository.receiptRepository
+        .getReceiptsFromServer(forceRefresh: forceRefresh);
     setState(() {
       print('${forceRefresh}');
-      forceRefresh = true;
-      print('${forceRefresh}');
+      receiptItemCount = _userRepository.receiptRepository
+          .getReceiptItemsCount(_receiptStatusType);
+      end = (receiptItemCount < 5) ? receiptItemCount : 5;
+      print('${forceRefresh} ${receiptItemCount} ${end}');
     });
   }
 
@@ -199,6 +207,7 @@ class DataTableDemoState extends State<DataTableDemo> {
 //    receiptItemCount = _userRepository.receiptRepository.getReceiptItemsCount(_receiptStatusType);
 //    print("count = ${receiptItemCount}");
     setState(() {
+      forceRefresh = false;
       print('before loading data, start = ${start}, end = ${end}');
       end = ((end + 5) < receiptItemCount) ? (end + 5) : receiptItemCount;
       print('after loading data, start = ${start}, end = ${end}');
