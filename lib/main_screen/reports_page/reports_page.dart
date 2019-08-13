@@ -248,12 +248,12 @@ class DataTableDemoState extends State<DataTableDemo> {
                     physics: const AlwaysScrollableScrollPhysics(),
                     children: <Widget>[
 //                  dataBody(),
-                      FutureBuilder<bool>(
+                      FutureBuilder<DataResult>(
                           future: _userRepository.receiptRepository
                               .getReceiptsFromServer(
                                   forceRefresh: forceRefresh),
                           builder: (BuildContext context,
-                              AsyncSnapshot<bool> snapshot) {
+                              AsyncSnapshot<DataResult> snapshot) {
                             switch (snapshot.connectionState) {
                               case ConnectionState.none:
                                 return new Text('Loading...');

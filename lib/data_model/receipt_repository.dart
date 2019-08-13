@@ -32,11 +32,23 @@ class ReceiptRepository {
     return selectedReceipts;
   }
 
+  Future<List<ReceiptListItem>> getReceiptItemsByRange(ReceiptStatusType receiptStatus, int start, int end) async{
+    List<ReceiptListItem> selectedReceipts = new List<ReceiptListItem>();
+    await _lock.synchronized(() async {
+      for (var i = 0; i < receipts.length; i++) {
+        if (receipts[i].statusId == receiptStatus.index) {
+          selectedReceipts.add(receipts[i]);
+        }
+      }
+    });
+    return selectedReceipts.getRange(start, end).toList();
+  }
+
   int getReceiptItemsCount(ReceiptStatusType receiptStatus) {
     int receiptCount = 0;
     _lock.synchronized(() {
       for (var i = 0; i < receipts.length; i++) {
-        if (receipts[i].statusId == receiptStatus) {
+        if (receipts[i].statusId == receiptStatus.index) {
           receiptCount++;
         }
       }

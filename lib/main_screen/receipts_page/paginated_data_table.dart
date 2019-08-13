@@ -325,7 +325,7 @@ class _DataTableDemoState extends State<DataTableDemo> {
                         style: TextStyle(color: Colors.red),
                       );
                     } else {
-                      //return new Text(snapshot.data.companyName);
+                      return new Text((snapshot.data.obj as Receipt)?.companyName.toString());
                     }
                 }
               }),
