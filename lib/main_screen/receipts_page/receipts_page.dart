@@ -10,17 +10,14 @@ import 'package:intl/intl.dart';
 
 class DataTableDemo extends StatefulWidget {
   final UserRepository _userRepository;
-  final String _name;
   final ReceiptStatusType _receiptStatusType;
 
   DataTableDemo({
     Key key,
     @required UserRepository userRepository,
-    @required String name,
     @required ReceiptStatusType receiptStatusType,
   })  : assert(userRepository != null),
         _userRepository = userRepository,
-        _name = name,
         _receiptStatusType = receiptStatusType,
         super(key: key) {}
 
@@ -41,7 +38,6 @@ class DataTableDemoState extends State<DataTableDemo> {
   int loadMoreCount = 0;
 
   UserRepository get _userRepository => widget._userRepository;
-  get _name => widget._name;
   get _receiptStatusType => widget._receiptStatusType;
   ScrollController _scrollController = ScrollController();
 
@@ -297,10 +293,10 @@ class DataTableDemoState extends State<DataTableDemo> {
   }
 }
 
-class TabsExample extends StatelessWidget {
+class ReceiptsPage extends StatelessWidget {
   final UserRepository _userRepository;
 
-  TabsExample({Key key, @required UserRepository userRepository})
+  ReceiptsPage({Key key, @required UserRepository userRepository})
       : assert(userRepository != null),
         _userRepository = userRepository,
         super(key: key) {}
@@ -308,17 +304,14 @@ class TabsExample extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _kTabPages = <Widget>[
-      DataTableDemo(
+      ReceiptsTabs(
           userRepository: _userRepository,
-          name: 'a',
           receiptStatusType: ReceiptStatusType.Uploaded),
-      DataTableDemo(
+      ReceiptsTabs(
           userRepository: _userRepository,
-          name: 'b',
           receiptStatusType: ReceiptStatusType.Decoded),
-      DataTableDemo(
+      ReceiptsTabs(
           userRepository: _userRepository,
-          name: 'c',
           receiptStatusType: ReceiptStatusType.Reviewed),
     ];
     final _kTabs = <Tab>[
@@ -347,24 +340,28 @@ class TabsExample extends StatelessWidget {
   }
 }
 
-class ReceiptsPage extends StatefulWidget {
+class ReceiptsTabs extends StatefulWidget {
   final UserRepository _userRepository;
+  final ReceiptStatusType _receiptStatusType;
 
-  ReceiptsPage(
-      {Key key, @required UserRepository userRepository})
-      : assert(userRepository != null),
+  ReceiptsTabs({
+    Key key,
+    @required UserRepository userRepository,
+    @required ReceiptStatusType receiptStatusType,
+  })  : assert(userRepository != null),
         _userRepository = userRepository,
-        super(key: key) {
-  }
+        _receiptStatusType = receiptStatusType,
+        super(key: key) {}
 
   @override
-  _ReceiptsPageState createState() => _ReceiptsPageState();
+  _ReceiptsTabsState createState() => _ReceiptsTabsState();
 }
 
-class _ReceiptsPageState extends State<ReceiptsPage> {
+class _ReceiptsTabsState extends State<ReceiptsTabs> {
   HomeBloc _homeBloc;
 
   UserRepository get _userRepository => widget._userRepository;
+  get _receiptStatusType => widget._receiptStatusType;
 
   @override
   void initState() {
@@ -381,13 +378,24 @@ class _ReceiptsPageState extends State<ReceiptsPage> {
             builder: (BuildContext context, HomeState state) {
               return Scaffold(
                 body: OrientationBuilder(builder: (context, orientation){
-                  return
-                    Column(
+                  if (_receiptStatusType == ReceiptStatusType.Uploaded)
+                  {
+                    return Column(
                       children: <Widget>[
                         Flexible(
                           flex: 2,
                           fit: FlexFit.tight,
-                          child: TabsExample(userRepository: _userRepository),
+                          child: DataTableDemo(userRepository: _userRepository, receiptStatusType: _receiptStatusType),
+                        ),
+                      ],
+                    );
+                  } else {
+                    return Column(
+                      children: <Widget>[
+                        Flexible(
+                          flex: 2,
+                          fit: FlexFit.tight,
+                          child: DataTableDemo(userRepository: _userRepository, receiptStatusType: _receiptStatusType),
                         ),
                         Flexible(
                             fit: FlexFit.tight,
@@ -452,6 +460,7 @@ class _ReceiptsPageState extends State<ReceiptsPage> {
                         ),
                       ],
                     );
+                  }
                 }),
               );
             }),
