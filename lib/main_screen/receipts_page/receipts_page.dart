@@ -70,12 +70,12 @@ class _ReceiptsPageState extends State<ReceiptsPage> {
 
   @override
   void initState() {
-    getData() async {
-      await _userRepository.receiptRepository
-          .getReceiptsFromServer(forceRefresh: true);
-    }
-
-    getData();
+//    getData() async {
+//      await _userRepository.receiptRepository
+//          .getReceiptsFromServer(forceRefresh: true);
+//    }
+//
+//    getData();
     super.initState();
     _homeBloc = BlocProvider.of<HomeBloc>(context);
   }

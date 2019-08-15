@@ -20,9 +20,9 @@ class ReceiptRepository {
     _userRepository = userRepository;
   }
 
-  Future<List<ReceiptListItem>> getReceiptItems(ReceiptStatusType receiptStatus) async{
+  List<ReceiptListItem> getReceiptItems(ReceiptStatusType receiptStatus) {
     List<ReceiptListItem> selectedReceipts = new List<ReceiptListItem>();
-    await _lock.synchronized(() async {
+    _lock.synchronized(() {
       for (var i = 0; i < receipts.length; i++) {
         if (receipts[i].statusId == receiptStatus.index) {
           selectedReceipts.add(receipts[i]);
@@ -32,9 +32,9 @@ class ReceiptRepository {
     return selectedReceipts;
   }
 
-  Future<List<ReceiptListItem>> getReceiptItemsByRange(ReceiptStatusType receiptStatus, int start, int end) async{
+  List<ReceiptListItem> getReceiptItemsByRange(ReceiptStatusType receiptStatus, int start, int end) {
     List<ReceiptListItem> selectedReceipts = new List<ReceiptListItem>();
-    await _lock.synchronized(() async {
+    _lock.synchronized(() {
       for (var i = 0; i < receipts.length; i++) {
         if (receipts[i].statusId == receiptStatus.index) {
           selectedReceipts.add(receipts[i]);

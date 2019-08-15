@@ -309,7 +309,7 @@ class _DataTableDemoState extends State<DataTableDemo> {
             ],
           ),
           FutureBuilder<DataResult>(
-              future: _userRepository.receiptRepository.getReceipt(1),
+              future: _userRepository.receiptRepository.getReceiptsFromServer(forceRefresh: true),
               builder: (BuildContext context, AsyncSnapshot<DataResult> snapshot) {
                 switch (snapshot.connectionState) {
                   case ConnectionState.none:
@@ -325,7 +325,9 @@ class _DataTableDemoState extends State<DataTableDemo> {
                         style: TextStyle(color: Colors.red),
                       );
                     } else {
-                      return new Text((snapshot.data.obj as Receipt)?.companyName.toString());
+                      if (snapshot.hasData && snapshot.data.success) {
+                      return new Text((snapshot.data.success.toString()));
+                      }
                     }
                 }
               }),
