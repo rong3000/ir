@@ -45,36 +45,38 @@ class DataTableDemoState extends State<DataTableDemo> {
   List<ReceiptListItem> receipts;
   List<ReceiptListItem> selectedReceipts;
   bool sort;
-  int start;
+  int start = 0;
   int end;
   bool forceRefresh;
   int receiptItemCount;
   bool fromServer;
+  int refreshCount = 0;
+  int loadMoreCount = 0;
 
   UserRepository get _userRepository => widget._userRepository;
   get _name => widget._name;
   get _receiptStatusType => widget._receiptStatusType;
   ScrollController _scrollController = ScrollController();
 
+  getData() async {
+    await _userRepository.receiptRepository
+        .getReceiptsFromServer(forceRefresh: true);
+    receiptItemCount = _userRepository.receiptRepository
+        .getReceiptItemsCount(_receiptStatusType);
+    end = (receiptItemCount < 5) ? receiptItemCount : 5;
+    print('after count is ${receiptItemCount}');
+  }
 
   @override
   void initState() {
     sort = false;
     selectedReceipts = [];
     forceRefresh = true;
-    start = 0;
-
-    getData() async {
-      await _userRepository.receiptRepository
-          .getReceiptsFromServer(forceRefresh: true);
-    }
-
-    getData();
-
-    receiptItemCount = _userRepository.receiptRepository
-          .getReceiptItemsCount(_receiptStatusType);
-    end = (receiptItemCount < 5) ? receiptItemCount : 5;
-    print('count is ${receiptItemCount}');
+    refreshCount = 0;
+    loadMoreCount = 0;
+//    getData();
+    print('initState');
+    print('*****************');
     super.initState();
   }
 
@@ -195,22 +197,25 @@ class DataTableDemoState extends State<DataTableDemo> {
     await _userRepository.receiptRepository
         .getReceiptsFromServer(forceRefresh: forceRefresh);
     setState(() {
-      print('${forceRefresh}');
-      receiptItemCount = _userRepository.receiptRepository
-          .getReceiptItemsCount(_receiptStatusType);
-      end = (receiptItemCount < 5) ? receiptItemCount : 5;
-      print('${forceRefresh} ${receiptItemCount} ${end}');
+      print('before refresh counter is ${refreshCount}');
+//      receiptItemCount = _userRepository.receiptRepository
+//          .getReceiptItemsCount(_receiptStatusType);
+//      end = (receiptItemCount < 5) ? receiptItemCount : 5;
+      refreshCount++;
+      loadMoreCount = 0;
+      print(
+          'after refresh counter is ${refreshCount}, ${forceRefresh} ${receiptItemCount} ${end}');
     });
   }
 
   loadMore() {
-//    receiptItemCount = _userRepository.receiptRepository.getReceiptItemsCount(_receiptStatusType);
-//    print("count = ${receiptItemCount}");
     setState(() {
       forceRefresh = false;
-      print('before loading data, start = ${start}, end = ${end}');
-      end = ((end + 5) < receiptItemCount) ? (end + 5) : receiptItemCount;
-      print('after loading data, start = ${start}, end = ${end}');
+      print(
+          'before loading more, counter is ${loadMoreCount}, start = ${start}, end = ${end}');
+      loadMoreCount++;
+      print(
+          'after loading more, counter is ${loadMoreCount}, start = ${start}, end = ${end}');
     });
   }
 
@@ -228,10 +233,6 @@ class DataTableDemoState extends State<DataTableDemo> {
                 onRefresh: _handleRefresh,
                 child: NotificationListener<ScrollNotification>(
                   onNotification: (ScrollNotification scrollInfo) {
-//                    if (scrollInfo.metrics.pixels ==
-//                        scrollInfo.metrics.maxScrollExtent)
-//                    print("${_scrollController.position.pixels}, ${_scrollController.position.maxScrollExtent}, ");
-//                    print("${scrollInfo.metrics.pixels}, ${scrollInfo.metrics.maxScrollExtent}, ");
                     if (scrollInfo is ScrollEndNotification) {
                       if (scrollInfo.metrics.pixels ==
                           scrollInfo.metrics.maxScrollExtent) {
@@ -247,7 +248,6 @@ class DataTableDemoState extends State<DataTableDemo> {
                     controller: _scrollController,
                     physics: const AlwaysScrollableScrollPhysics(),
                     children: <Widget>[
-//                  dataBody(),
                       FutureBuilder<DataResult>(
                           future: _userRepository.receiptRepository
                               .getReceiptsFromServer(
@@ -269,38 +269,33 @@ class DataTableDemoState extends State<DataTableDemo> {
                                     style: TextStyle(color: Colors.red),
                                   );
                                 } else {
-//                              return new Text(snapshot.data[0].companyName);
-                                  return FutureBuilder<List<ReceiptListItem>>(
-                                      future: _userRepository.receiptRepository
-                                          .getReceiptItemsByRange(
-                                              _receiptStatusType, start, end),
-                                      builder: (BuildContext context,
-                                          AsyncSnapshot<List<ReceiptListItem>>
-                                              snapshot) {
-                                        switch (snapshot.connectionState) {
-                                          case ConnectionState.none:
-                                            return new Text('Loading...');
-                                          case ConnectionState.waiting:
-                                            return new Center(
-                                                child:
-                                                    new CircularProgressIndicator());
-                                          case ConnectionState.active:
-                                            return new Text('');
-                                          case ConnectionState.done:
-                                            if (snapshot.hasError) {
-                                              return new Text(
-                                                '${snapshot.error}',
-                                                style: TextStyle(
-                                                    color: Colors.red),
-                                              );
-                                            } else {
-//                              return new Text(snapshot.data[0].companyName);
-                                              return dataBody(snapshot.data);
-//                                              return dataBody(snapshot.data.getRange(0, 5).toList());
-                                            }
-                                        }
-                                      });
+                                  receiptItemCount = _userRepository
+                                      .receiptRepository
+                                      .getReceiptItemsCount(_receiptStatusType);
+                                  if (loadMoreCount == 0) {
+                                    end = (receiptItemCount < 5)
+                                        ? receiptItemCount
+                                        : 5;
+                                    print(
+                                        "receiptItemCount ${receiptItemCount} start ${start} end ${end}");
+                                    return dataBody(_userRepository
+                                        .receiptRepository
+                                        .getReceiptItemsByRange(
+                                        _receiptStatusType, start, end));
+                                  } else {
+                                    end = ((end + 5) < receiptItemCount)
+                                        ? (end + 5)
+                                        : receiptItemCount;
+                                    print(
+                                        "receiptItemCount ${receiptItemCount} start ${start} end ${end}");
+                                    return dataBody(_userRepository
+                                        .receiptRepository
+                                        .getReceiptItemsByRange(
+                                        _receiptStatusType, start, end));
+                                  }
+
                                 }
+                                ;
                             }
                           }),
                     ],
