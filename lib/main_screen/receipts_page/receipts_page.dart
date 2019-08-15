@@ -1,27 +1,325 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intelligent_receipt/data_model/enums.dart';
+import 'package:intelligent_receipt/data_model/receipt_repository.dart';
 import 'package:intelligent_receipt/main_screen/bloc/bloc.dart';
 import 'package:flutter/rendering.dart';
-import 'package:intelligent_receipt/main_screen/receipts_page/paginated_data_table.dart';
 import 'package:intelligent_receipt/user_repository.dart';
+import 'package:intl/intl.dart';
 
-class TabsExample extends StatelessWidget {
+class DataTableDemo extends StatefulWidget {
   final UserRepository _userRepository;
+  final String _name;
+  final ReceiptStatusType _receiptStatusType;
 
-  TabsExample(
-      {Key key, @required UserRepository userRepository})
-      : assert(userRepository != null),
+  DataTableDemo({
+    Key key,
+    @required UserRepository userRepository,
+    @required String name,
+    @required ReceiptStatusType receiptStatusType,
+  })  : assert(userRepository != null),
         _userRepository = userRepository,
-        super(key: key) {
+        _name = name,
+        _receiptStatusType = receiptStatusType,
+        super(key: key) {}
+
+  @override
+  DataTableDemoState createState() => DataTableDemoState();
+}
+
+class DataTableDemoState extends State<DataTableDemo> {
+  List<ReceiptListItem> receipts;
+  List<ReceiptListItem> selectedReceipts;
+  bool sort;
+  int start = 0;
+  int end;
+  bool forceRefresh;
+  int receiptItemCount;
+  bool fromServer;
+  int refreshCount = 0;
+  int loadMoreCount = 0;
+
+  UserRepository get _userRepository => widget._userRepository;
+  get _name => widget._name;
+  get _receiptStatusType => widget._receiptStatusType;
+  ScrollController _scrollController = ScrollController();
+
+  getData() async {
+    await _userRepository.receiptRepository
+        .getReceiptsFromServer(forceRefresh: true);
+    receiptItemCount = _userRepository.receiptRepository
+        .getReceiptItemsCount(_receiptStatusType);
+    end = (receiptItemCount < 5) ? receiptItemCount : 5;
+    print('after count is ${receiptItemCount}');
+  }
+
+  @override
+  void initState() {
+    sort = false;
+    selectedReceipts = [];
+    forceRefresh = true;
+    refreshCount = 0;
+    loadMoreCount = 0;
+//    getData();
+    print('initState');
+    print('*****************');
+    super.initState();
+  }
+
+  onSortColumn(int columnIndex, bool ascending) {
+    if (columnIndex == 0) {
+      if (ascending) {
+        receipts.sort((a, b) => a.receiptDatatime.compareTo(b.receiptDatatime));
+      } else {
+        receipts.sort((a, b) => b.receiptDatatime.compareTo(a.receiptDatatime));
+      }
+    }
+  }
+
+  onSelectedRow(bool selected, Receipt receipt) async {
+    setState(() {
+      if (selected) {
+        selectedReceipts.add(receipt);
+      } else {
+        selectedReceipts.remove(receipt);
+      }
+    });
+  }
+
+  SingleChildScrollView dataBody(List<ReceiptListItem> receipts) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: DataTable(
+        sortAscending: sort,
+        sortColumnIndex: 0,
+        columns: [
+          DataColumn(
+              label: Text("Date"),
+              numeric: false,
+              tooltip: "This is Date",
+              onSort: (columnIndex, ascending) {
+                setState(() {
+                  sort = !sort;
+                });
+                onSortColumn(columnIndex, ascending);
+              }),
+          DataColumn(
+            label: Text("Amount"),
+            numeric: false,
+            tooltip: "This is Amount",
+          ),
+          DataColumn(
+            label: Text("Companies"),
+            numeric: false,
+            tooltip: "This is Companies",
+          ),
+          DataColumn(
+            label: Text("Category"),
+            numeric: false,
+            tooltip: "This is Category",
+          ),
+          DataColumn(
+            label: Text("Actions"),
+            numeric: false,
+            tooltip: "This is Action",
+          ),
+        ],
+        rows: receipts
+            .map(
+              (receipt) => DataRow(
+//                  selected: selectedReceipts.contains(receipt),
+//                  onSelectChanged: (b) {
+//                    print("id ${receipt.id} is Onselect");
+//                    onSelectedRow(b, receipt);
+//                  },
+              cells: [
+                DataCell(
+                  Text(
+                      "${DateFormat().add_yMd().format(receipt.receiptDatatime.toLocal())}"),
+                  showEditIcon: false,
+                  onTap: () {
+                    print('Selected Date cell of id ${receipt.id}');
+                  },
+                ),
+                DataCell(
+                  Text("${receipt.totalAmount}"),
+                  showEditIcon: false,
+                  onTap: () {
+                    print('Selected Amount cell of id ${receipt.id}');
+                  },
+                ),
+                DataCell(
+                  Text(receipt.companyName.toString()),
+                  showEditIcon: false,
+                  onTap: () {
+                    print('Selected Company cell of id ${receipt.id}');
+                  },
+                ),
+                DataCell(
+                  Text(CategoryName.values[receipt.categoryId]
+                      .toString()
+                      .split('.')[1]),
+                  showEditIcon: false,
+                  onTap: () {
+                    print('Selected Category cell of id ${receipt.id}');
+                  },
+                ),
+                DataCell(
+                  Text('View & Modify ${receipt.id}'),
+                  showEditIcon: false,
+                  onTap: () {
+                    print('Clicked Action Button of id ${receipt.id}');
+                  },
+                ),
+              ]),
+        )
+            .toList(),
+      ),
+    );
+  }
+
+  Future<Null> _handleRefresh() async {
+    forceRefresh = true;
+    await _userRepository.receiptRepository
+        .getReceiptsFromServer(forceRefresh: forceRefresh);
+    setState(() {
+      print('before refresh counter is ${refreshCount}');
+//      receiptItemCount = _userRepository.receiptRepository
+//          .getReceiptItemsCount(_receiptStatusType);
+//      end = (receiptItemCount < 5) ? receiptItemCount : 5;
+      refreshCount++;
+      loadMoreCount = 0;
+      print(
+          'after refresh counter is ${refreshCount}, ${forceRefresh} ${receiptItemCount} ${end}');
+    });
+  }
+
+  loadMore() {
+    setState(() {
+      forceRefresh = false;
+      print(
+          'before loading more, counter is ${loadMoreCount}, start = ${start}, end = ${end}');
+      loadMoreCount++;
+      print(
+          'after loading more, counter is ${loadMoreCount}, start = ${start}, end = ${end}');
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    return Scaffold(
+      body: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        verticalDirection: VerticalDirection.down,
+        children: <Widget>[
+          Expanded(
+            child: Scrollbar(
+              child: RefreshIndicator(
+                onRefresh: _handleRefresh,
+                child: NotificationListener<ScrollNotification>(
+                  onNotification: (ScrollNotification scrollInfo) {
+                    if (scrollInfo is ScrollEndNotification) {
+                      if (scrollInfo.metrics.pixels ==
+                          scrollInfo.metrics.maxScrollExtent) {
+                        print(
+                            "${_scrollController.position.pixels}, ${_scrollController.position.maxScrollExtent}, ");
+                        print(
+                            "${scrollInfo.metrics.pixels}, ${scrollInfo.metrics.maxScrollExtent}, ");
+                        loadMore();
+                      }
+                    }
+                  },
+                  child: ListView(
+                    controller: _scrollController,
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    children: <Widget>[
+                      FutureBuilder<DataResult>(
+                          future: _userRepository.receiptRepository
+                              .getReceiptsFromServer(
+                              forceRefresh: forceRefresh),
+                          builder: (BuildContext context,
+                              AsyncSnapshot<DataResult> snapshot) {
+                            switch (snapshot.connectionState) {
+                              case ConnectionState.none:
+                                return new Text('Loading...');
+                              case ConnectionState.waiting:
+                                return new Center(
+                                    child: new CircularProgressIndicator());
+                              case ConnectionState.active:
+                                return new Text('');
+                              case ConnectionState.done:
+                                if (snapshot.hasError) {
+                                  return new Text(
+                                    '${snapshot.error}',
+                                    style: TextStyle(color: Colors.red),
+                                  );
+                                } else {
+                                  receiptItemCount = _userRepository
+                                      .receiptRepository
+                                      .getReceiptItemsCount(_receiptStatusType);
+                                  if (loadMoreCount == 0) {
+                                    end = (receiptItemCount < 5)
+                                        ? receiptItemCount
+                                        : 5;
+                                    print(
+                                        "receiptItemCount ${receiptItemCount} start ${start} end ${end}");
+                                    return dataBody(_userRepository
+                                        .receiptRepository
+                                        .getReceiptItemsByRange(
+                                        _receiptStatusType, start, end));
+                                  } else {
+                                    end = ((end + 5) < receiptItemCount)
+                                        ? (end + 5)
+                                        : receiptItemCount;
+                                    print(
+                                        "receiptItemCount ${receiptItemCount} start ${start} end ${end}");
+                                    return dataBody(_userRepository
+                                        .receiptRepository
+                                        .getReceiptItemsByRange(
+                                        _receiptStatusType, start, end));
+                                  }
+
+                                }
+                                ;
+                            }
+                          }),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class TabsExample extends StatelessWidget {
+  final UserRepository _userRepository;
+
+  TabsExample({Key key, @required UserRepository userRepository})
+      : assert(userRepository != null),
+        _userRepository = userRepository,
+        super(key: key) {}
+
+  @override
+  Widget build(BuildContext context) {
     final _kTabPages = <Widget>[
-      DataTableDemo(userRepository: _userRepository),
-      DataTableDemo(userRepository: _userRepository),
-      DataTableDemo(userRepository: _userRepository),
+      DataTableDemo(
+          userRepository: _userRepository,
+          name: 'a',
+          receiptStatusType: ReceiptStatusType.Uploaded),
+      DataTableDemo(
+          userRepository: _userRepository,
+          name: 'b',
+          receiptStatusType: ReceiptStatusType.Decoded),
+      DataTableDemo(
+          userRepository: _userRepository,
+          name: 'c',
+          receiptStatusType: ReceiptStatusType.Reviewed),
     ];
     final _kTabs = <Tab>[
       Tab(text: 'Pending'),
@@ -70,12 +368,6 @@ class _ReceiptsPageState extends State<ReceiptsPage> {
 
   @override
   void initState() {
-//    getData() async {
-//      await _userRepository.receiptRepository
-//          .getReceiptsFromServer(forceRefresh: true);
-//    }
-//
-//    getData();
     super.initState();
     _homeBloc = BlocProvider.of<HomeBloc>(context);
   }
