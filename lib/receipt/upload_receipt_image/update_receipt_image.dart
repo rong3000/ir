@@ -9,12 +9,14 @@ import 'dart:io';
 
 class UploadReceiptImage extends StatefulWidget {
   final UserRepository _userRepository;
-
+  final IRImageSource _imageSource;
   UploadReceiptImage({
     Key key,
-    @required UserRepository userRepository
+    @required UserRepository userRepository,
+    @required IRImageSource imageSource
   })  : assert(userRepository != null),
         _userRepository = userRepository,
+        _imageSource = imageSource,
         super(key: key) {}
 
   @override
@@ -31,7 +33,7 @@ class UploadReceiptImageState extends State<UploadReceiptImage> {
   }
 
   Future<DataResult> _uploadReceipt() async {
-    File image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    File image = await ImagePicker.pickImage(source: (widget._imageSource == IRImageSource.Gallary) ? ImageSource.gallery : ImageSource.camera);
 //    File croppedFile = await ImageCropper.cropImage(
 //      sourcePath: image.path,
 //        ratioX: 1.0,
@@ -60,6 +62,22 @@ class UploadReceiptImageState extends State<UploadReceiptImage> {
                     DataResult dataResult = snapshot.data;
                     if (dataResult.success) {
                       Receipt receipt = dataResult.obj as Receipt;
+                      if (receipt == null || receipt.decodeStatus == DecodeStatusType.Unknown.index) {
+                        // Show unknown error
+
+                      } else if (receipt.decodeStatus == DecodeStatusType.ExtractTextFailed.index) {
+                        // Show extracted text failure error
+
+                      } else if (receipt.decodeStatus == DecodeStatusType.MaybeNotValidReceipt.index) {
+                        // Show image maybe not a valid receipt error
+
+                      } else if (receipt.decodeStatus == DecodeStatusType.UnrecognizedFormat.index) {
+                        // Show unrecognized format error
+
+                      } else {
+                        // Show add or update receipt page
+                      }
+
                       // Return receipt editor form
                       return Text(receipt?.toString());
                     } else {

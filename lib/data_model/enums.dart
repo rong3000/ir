@@ -13,6 +13,7 @@ enum DecodeStatusType
   Unknown,
   Success,
   ExtractTextFailed,
+  MaybeNotValidReceipt,
   UnrecognizedFormat
 }
 
@@ -21,5 +22,11 @@ enum CategoryName
   Travel,
   Material,
   Undecided,
+}
+
+enum IRImageSource
+{
+  Gallary,
+  Camera
 }
 
