@@ -56,7 +56,7 @@ class MainScreenState extends State<MainScreen> {
             HomePage(),
             ReceiptsPage(userRepository: _userRepository),
             ReportsPage(userRepository: _userRepository),
-            SettingsPage(),
+            SettingsPage(userRepository: _userRepository),
           ],
         ),
         bottomNavigationBar: BottomNavigationBar(

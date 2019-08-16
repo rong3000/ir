@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intelligent_receipt/data_model/receipt_repository.dart';
 
 import '../../user_repository.dart';
 
@@ -14,7 +15,46 @@ class TabsExample extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _kTabPages = <Widget>[
-      Text('Active Reports'),
+      FutureBuilder<DataResult>(
+          future: _userRepository.receiptRepository
+              .getReceiptsFromServer(
+              forceRefresh: true),
+          builder: (BuildContext context,
+              AsyncSnapshot<DataResult> snapshot) {
+            switch (snapshot.connectionState) {
+              case ConnectionState.none:
+                return new Text('Loading...');
+              case ConnectionState.waiting:
+                return new Center(
+                    child: new CircularProgressIndicator());
+              case ConnectionState.active:
+                return new Text('');
+              case ConnectionState.done:
+                if (snapshot.hasError) {
+                  return new Text(
+                    '${snapshot.error}',
+                    style: TextStyle(color: Colors.red),
+                  );
+                } else {
+                  return Column(
+                    children: <Widget>[
+                      Text("${snapshot.connectionState}"),
+//                      Text("${snapshot.toString()}"),
+                      Text("${snapshot.data.success}"),
+                      Text("${snapshot.hasData}"),
+//                      Text("${snapshot.error}"),
+                      Text("${snapshot.hasError}"),
+//                      Text("${snapshot.requireData}"),
+//                      Text("${snapshot.runtimeType}"),
+//                      Text("${snapshot.data}"),
+//                      Text("${snapshot.connectionState}"),
+                    ],
+                  );
+
+                }
+                ;
+            }
+          }),
       Text('Submitted Reports'),
 //      DataTableDemo(
 //          userRepository: _userRepository,
@@ -61,6 +101,7 @@ class ReportsPage extends StatefulWidget {
       : assert(userRepository != null),
         _userRepository = userRepository,
         super(key: key) {}
+
   @override
   _ReportsPageState createState() => _ReportsPageState();
 }
