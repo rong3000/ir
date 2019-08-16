@@ -59,18 +59,19 @@ class ReceiptRepository {
   Future<DataResult> getReceiptsFromServer({bool forceRefresh = false}) async {
     //var image = await ImagePicker.pickImage(source: ImageSource.camera);
     //await this.uploadReceiptFile(image);
+    DataResult result = new DataResult(false, "Unknown");
     await _lock.synchronized(() async {
       if (_dataFetched && !forceRefresh) {
-        return DataResult.success(receipts);
+        result = DataResult.success(receipts);
       }
 
       if ((_userRepository == null) || (_userRepository.userId <= 0))
       {
         // Log an error
-        return DataResult.fail();
+        result = DataResult.fail();
       }
 
-      DataResult result = await webserviceGet(Urls.GetReceipts + _userRepository.userId.toString(), "");
+      result = await webserviceGet(Urls.GetReceipts + _userRepository.userId.toString(), "", timeout: 5000);
       if (result.success) {
         Iterable l = result.obj;
         receipts = l.map((model) => ReceiptListItem.fromJason(model)).toList();
@@ -78,9 +79,9 @@ class ReceiptRepository {
       }
 
       _dataFetched = result.success;
-      return result;
-
     });
+
+    return result;
   }
 
   Future<DataResult> getReceipt(int receiptId) async {
