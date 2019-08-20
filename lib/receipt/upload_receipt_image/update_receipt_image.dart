@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'dart:io';
-
+import "package:rflutter_alert/rflutter_alert.dart";
 
 class UploadReceiptImage extends StatefulWidget {
   final UserRepository _userRepository;
@@ -45,6 +45,63 @@ class UploadReceiptImageState extends State<UploadReceiptImage> {
     return dataResult;
   }
 
+  void showAlert(String message, AlertType alertType) {
+    Alert(
+      context: context,
+      type: alertType,
+      title: "RFLUTTER ALERT",
+      desc: message,
+      buttons: [
+        DialogButton(
+          child: Text(
+            "OK, Got it",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onPressed: () => Navigator.pop(context),
+          width: 120,
+        )
+      ],
+    ).show();
+  }
+
+  Icon getIcon(AlertType alertType) {
+    Color color = Colors.blue;
+    IconData iconData = Icons.info;
+
+    if (alertType == AlertType.error) {
+      color = Colors.red;
+      iconData = Icons.error;
+    } else if (alertType == AlertType.warning) {
+      color = Colors.orange;
+      iconData = Icons.warning;
+    }
+
+    return new Icon(
+      iconData,
+      color: color,
+      size: 80,
+    );
+  }
+
+  Widget getErrorPage(String titleTxt, String message, {AlertType alertType : AlertType.info}) {
+    return Scaffold(
+        appBar: AppBar(title: Text(titleTxt)),
+        body: Center (
+          child: Container(
+            width: 300,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                getIcon(alertType),
+                Text(message),
+              ],
+            )
+          )
+        )
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold (
@@ -54,7 +111,8 @@ class UploadReceiptImageState extends State<UploadReceiptImage> {
             builder: (BuildContext context, AsyncSnapshot<DataResult> snapshot) {
               switch (snapshot.connectionState) {
                 case ConnectionState.none: return new Text('Press button to start');
-                case ConnectionState.waiting: return new Text('Awaiting result...');
+                case ConnectionState.waiting:
+                  return new Text('Submitting receipt, will be ready soon ...');
                 default:
                   if (snapshot.hasError)
                     return new Text('Error: ${snapshot.error}');
@@ -64,25 +122,23 @@ class UploadReceiptImageState extends State<UploadReceiptImage> {
                       Receipt receipt = dataResult.obj as Receipt;
                       if (receipt == null || receipt.decodeStatus == DecodeStatusType.Unknown.index) {
                         // Show unknown error
-
+                        return getErrorPage("Error", "We encounter an unknown error when submitting the receipt, please resubmit the receipt.");
                       } else if (receipt.decodeStatus == DecodeStatusType.ExtractTextFailed.index) {
                         // Show extracted text failure error
-
+                        return getErrorPage("Extract Text Error", "Failed to extract the text from the image.");
                       } else if (receipt.decodeStatus == DecodeStatusType.MaybeNotValidReceipt.index) {
                         // Show image maybe not a valid receipt error
-
+                        return getErrorPage("Invalid Receipt", "This maybe not a valid receipt, please double check.");
                       } else if (receipt.decodeStatus == DecodeStatusType.UnrecognizedFormat.index) {
                         // Show unrecognized format error
-
+                        return getErrorPage("Recognizing", "The receipt has been submitted, we are now reconizing it, and will notify you after we recognize it.");
                       } else {
                         // Show add or update receipt page
+                        return Text(receipt?.toString());
                       }
-
-                      // Return receipt editor form
-                      return Text(receipt?.toString());
                     } else {
                       // Show error message
-                      return Text('Error: ' + dataResult.message);
+                      return getErrorPage("Error", "We encounter an error when submitting the receipt: " + dataResult.message);
                     }
                   }
               }

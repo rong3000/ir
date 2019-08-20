@@ -41,6 +41,7 @@ dependencies:
   f_logs: ^1.2.0
   synchronized: ^2.1.0+1
   image_cropper: ^1.0.2
+  rflutter_alert: ^1.0.3
 
 dev_dependencies:
   flutter_test:

@@ -42,7 +42,7 @@ packages:
       name: boolean_selector
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.4"
+    version: "1.0.5"
   build:
     dependency: transitive
     description:
@@ -402,7 +402,7 @@ packages:
       name: pedantic
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.7.0"
+    version: "1.8.0+1"
   permission_handler:
     dependency: transitive
     description:
@@ -445,6 +445,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.3"
+  rflutter_alert:
+    dependency: "direct main"
+    description:
+      name: rflutter_alert
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.3"
   rxdart:
     dependency: transitive
     description:
