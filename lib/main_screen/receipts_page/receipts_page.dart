@@ -40,6 +40,8 @@ class DataTableDemoState extends State<DataTableDemo> {
   GlobalKey anchorKey = GlobalKey();
   double dx;
   double dy;
+  double dx2;
+  double dy2;
 
   UserRepository get _userRepository => widget._userRepository;
   get _receiptStatusType => widget._receiptStatusType;
@@ -89,9 +91,15 @@ class DataTableDemoState extends State<DataTableDemo> {
 
   void _onTapDown(TapDownDetails details, BuildContext context) {
     print('_onLongPressDragStart details: ${details.globalPosition}');
+    RenderBox renderBox = context.findRenderObject();
+    var offset = renderBox
+//                            .localToGlobal(Offset(0.0, renderBox.size.height));
+        .globalToLocal(details.globalPosition);
+    print('${offset.dx} ${offset.dy} ');
     dx = details.globalPosition.dx;
     dy = details.globalPosition.dy;
-
+    dx2 = offset.dx;
+    dy2 = offset.dy;
   }
 
   SingleChildScrollView dataBody(List<ReceiptListItem> receipts) {
@@ -145,75 +153,70 @@ class DataTableDemoState extends State<DataTableDemo> {
                           return _onTapDown(details, context);
                         },
                         onTap: () {
-                          print('x');
-//                        RenderBox renderBox = context.findRenderObject();
-//                        var offset = renderBox
-//                            .localToGlobal(Offset(0.0, renderBox.size.height));
-//                        print('${offset.dx} ${offset.dy} ');
                           if (subMenuOverlayEntry != null) {
                             subMenuOverlayEntry.remove();
                             subMenuOverlayEntry = null;
                             return Future.value(false);
                           }
-                          showSubMenuView(dx, dy);
+//                        showSubMenuView(dx, dy);
+                          showSubMenuView(dy2 + 120, (dx2 < MediaQuery.of(context).size.width - 200)? (MediaQuery.of(context).size.width - 200 - dx2) : (MediaQuery.of(context).size.width - dx2));
                         },
-                        child: Text("${DateFormat().add_yMd().format(receipt.receiptDatatime.toLocal())}"),
+                        child: Text(
+                            "${DateFormat().add_yMd().format(receipt.receiptDatatime.toLocal())}"),
                       ),
-//                      Text(
-//                          "${DateFormat().add_yMd().format(receipt.receiptDatatime.toLocal())}",
-////                        key: anchorKey,
-//                      ),
-
                     ),
                     DataCell(
-                      Text("${receipt.totalAmount}"),
-                      showEditIcon: false,
-                      onTap: () {
-                        RenderBox renderBox = context.findRenderObject();
-                        var offset = renderBox
-                            .localToGlobal(Offset(0.0, renderBox.size.height));
-                        print('${offset.dx} ${offset.dy} ');
-                        if (subMenuOverlayEntry != null) {
-                          subMenuOverlayEntry.remove();
-                          subMenuOverlayEntry = null;
-                          return Future.value(false);
-                        }
-                        showSubMenuView();
-                      },
+                      GestureDetector(
+                        onTapDown: (details) {
+                          return _onTapDown(details, context);
+                        },
+                        onTap: () {
+                          if (subMenuOverlayEntry != null) {
+                            subMenuOverlayEntry.remove();
+                            subMenuOverlayEntry = null;
+                            return Future.value(false);
+                          }
+//                        showSubMenuView(dx, dy);
+                          showSubMenuView(dy2 + 120, (dx2 < MediaQuery.of(context).size.width - 200)? (MediaQuery.of(context).size.width - 200 - dx2) : (MediaQuery.of(context).size.width - dx2));
+                        },
+                        child: Text("${receipt.totalAmount}"),
+                      ),
                     ),
                     DataCell(
-                      Text(receipt.companyName.toString()),
-                      showEditIcon: false,
-                      onTap: () {
-                        RenderBox renderBox = context.findRenderObject();
-                        var offset = renderBox
-                            .localToGlobal(Offset(0.0, renderBox.size.height));
-                        print('${offset.dx} ${offset.dy} ');
-                        if (subMenuOverlayEntry != null) {
-                          subMenuOverlayEntry.remove();
-                          subMenuOverlayEntry = null;
-                          return Future.value(false);
-                        }
-                        showSubMenuView();
-                      },
+                      GestureDetector(
+                        onTapDown: (details) {
+                          return _onTapDown(details, context);
+                        },
+                        onTap: () {
+                          if (subMenuOverlayEntry != null) {
+                            subMenuOverlayEntry.remove();
+                            subMenuOverlayEntry = null;
+                            return Future.value(false);
+                          }
+//                        showSubMenuView(dx, dy);
+                          showSubMenuView(dy2 + 120, (dx2 < MediaQuery.of(context).size.width - 200)? (MediaQuery.of(context).size.width - 200 - dx2) : (MediaQuery.of(context).size.width - dx2));
+                        },
+                        child: Text(receipt.companyName.toString()),
+                      ),
                     ),
                     DataCell(
-                      Text(CategoryName.values[receipt.categoryId]
-                          .toString()
-                          .split('.')[1]),
-                      showEditIcon: false,
-                      onTap: () {
-                        RenderBox renderBox = context.findRenderObject();
-                        var offset = renderBox
-                            .localToGlobal(Offset(0.0, renderBox.size.height));
-                        print('${offset.dx} ${offset.dy} ');
-                        if (subMenuOverlayEntry != null) {
-                          subMenuOverlayEntry.remove();
-                          subMenuOverlayEntry = null;
-                          return Future.value(false);
-                        }
-                        showSubMenuView();
-                      },
+                      GestureDetector(
+                        onTapDown: (details) {
+                          return _onTapDown(details, context);
+                        },
+                        onTap: () {
+                          if (subMenuOverlayEntry != null) {
+                            subMenuOverlayEntry.remove();
+                            subMenuOverlayEntry = null;
+                            return Future.value(false);
+                          }
+//                        showSubMenuView(dx, dy);
+                          showSubMenuView(dy2 + 120, (dx2 < MediaQuery.of(context).size.width - 200)? (MediaQuery.of(context).size.width - 200 - dx2) : (MediaQuery.of(context).size.width - dx2));
+                        },
+                        child: Text(CategoryName.values[receipt.categoryId]
+                            .toString()
+                            .split('.')[1]),
+                      ),
                     ),
                   ]),
             )
