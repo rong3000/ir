@@ -153,13 +153,21 @@ class DataTableDemoState extends State<DataTableDemo> {
                           return _onTapDown(details, context);
                         },
                         onTap: () {
+                          print("id ${receipt.id} is tapped");
                           if (subMenuOverlayEntry != null) {
                             subMenuOverlayEntry.remove();
                             subMenuOverlayEntry = null;
                             return Future.value(false);
                           }
 //                        showSubMenuView(dx, dy);
-                          showSubMenuView(dy2 + 120, (dx2 < MediaQuery.of(context).size.width - 200)? (MediaQuery.of(context).size.width - 200 - dx2) : (MediaQuery.of(context).size.width - dx2));
+                          showSubMenuView(
+                              dy2 + 120,
+                              (dx2 < MediaQuery.of(context).size.width - 200)
+                                  ? (MediaQuery.of(context).size.width -
+                                      200 -
+                                      dx2)
+                                  : (MediaQuery.of(context).size.width - dx2),
+                              receipt.id);
                         },
                         child: Text(
                             "${DateFormat().add_yMd().format(receipt.receiptDatatime.toLocal())}"),
@@ -177,7 +185,14 @@ class DataTableDemoState extends State<DataTableDemo> {
                             return Future.value(false);
                           }
 //                        showSubMenuView(dx, dy);
-                          showSubMenuView(dy2 + 120, (dx2 < MediaQuery.of(context).size.width - 200)? (MediaQuery.of(context).size.width - 200 - dx2) : (MediaQuery.of(context).size.width - dx2));
+                          showSubMenuView(
+                              dy2 + 120,
+                              (dx2 < MediaQuery.of(context).size.width - 200)
+                                  ? (MediaQuery.of(context).size.width -
+                                  200 -
+                                  dx2)
+                                  : (MediaQuery.of(context).size.width - dx2),
+                              receipt.id);
                         },
                         child: Text("${receipt.totalAmount}"),
                       ),
@@ -194,7 +209,14 @@ class DataTableDemoState extends State<DataTableDemo> {
                             return Future.value(false);
                           }
 //                        showSubMenuView(dx, dy);
-                          showSubMenuView(dy2 + 120, (dx2 < MediaQuery.of(context).size.width - 200)? (MediaQuery.of(context).size.width - 200 - dx2) : (MediaQuery.of(context).size.width - dx2));
+                          showSubMenuView(
+                              dy2 + 120,
+                              (dx2 < MediaQuery.of(context).size.width - 200)
+                                  ? (MediaQuery.of(context).size.width -
+                                  200 -
+                                  dx2)
+                                  : (MediaQuery.of(context).size.width - dx2),
+                              receipt.id);
                         },
                         child: Text(receipt.companyName.toString()),
                       ),
@@ -211,7 +233,14 @@ class DataTableDemoState extends State<DataTableDemo> {
                             return Future.value(false);
                           }
 //                        showSubMenuView(dx, dy);
-                          showSubMenuView(dy2 + 120, (dx2 < MediaQuery.of(context).size.width - 200)? (MediaQuery.of(context).size.width - 200 - dx2) : (MediaQuery.of(context).size.width - dx2));
+                          showSubMenuView(
+                              dy2 + 120,
+                              (dx2 < MediaQuery.of(context).size.width - 200)
+                                  ? (MediaQuery.of(context).size.width -
+                                  200 -
+                                  dx2)
+                                  : (MediaQuery.of(context).size.width - dx2),
+                              receipt.id);
                         },
                         child: Text(CategoryName.values[receipt.categoryId]
                             .toString()
@@ -225,12 +254,12 @@ class DataTableDemoState extends State<DataTableDemo> {
     );
   }
 
-  void showSubMenuView(double t, double r) {
+  void showSubMenuView(double t, double r, int id) {
     subMenuOverlayEntry = new OverlayEntry(builder: (context) {
       return new Positioned(
           top: t,
           right: r,
-          width: 200,
+          width: 160,
           height: 160,
           child: new SafeArea(
               child: new Material(
@@ -243,9 +272,11 @@ class DataTableDemoState extends State<DataTableDemo> {
                         Icons.edit,
 //                            color: Colors.white,
                       ),
-                      title: new Text(
-                        "Modify",
-//                            style: TextStyle(color: Colors.white),
+                      title: GestureDetector(
+                        onTap: () {
+                          print('Modify ${id}');
+                        },
+                        child: Text('Modify'),
                       ),
                     ),
                   ),
@@ -255,9 +286,11 @@ class DataTableDemoState extends State<DataTableDemo> {
                         Icons.delete,
 //                              color: Colors.white
                       ),
-                      title: new Text(
-                        "Delete",
-//                              style: TextStyle(color: Colors.white)
+                      title: GestureDetector(
+                        onTap: () {
+                          print('delete ${id}');
+                        },
+                        child: Text('Delete'),
                       ),
                     ),
                   ),
@@ -267,9 +300,13 @@ class DataTableDemoState extends State<DataTableDemo> {
                         Icons.cancel,
 //                              color: Colors.white
                       ),
-                      title: new Text(
-                        "Cancel",
-//                              style: TextStyle(color: Colors.white)
+                      title: GestureDetector(
+                        onTap: () {
+                          subMenuOverlayEntry.remove();
+                          subMenuOverlayEntry = null;
+                          return Future.value(false);
+                        },
+                        child: Text('Cancel'),
                       ),
                     ),
                   ),
