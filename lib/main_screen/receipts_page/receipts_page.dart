@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intelligent_receipt/data_model/enums.dart';
 import 'package:intelligent_receipt/data_model/receipt_repository.dart';
+import 'package:intelligent_receipt/login/login_screen.dart';
 import 'package:intelligent_receipt/main_screen/bloc/bloc.dart';
 import 'package:flutter/rendering.dart';
+import 'package:intelligent_receipt/receipt/edit_receipt/edit_receipt.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 import 'package:intl/intl.dart';
 
@@ -274,9 +276,17 @@ class DataTableDemoState extends State<DataTableDemo> {
                       ),
                       title: GestureDetector(
                         onTap: () {
-                          print('Modify ${id}');
+                          print('View/Modify ${id}');
+                          Navigator.of(context).push(
+                            MaterialPageRoute(builder: (context) {
+                              subMenuOverlayEntry.remove();
+                              subMenuOverlayEntry = null;
+//                              return EditReceiptPage();
+                              return EditReceiptScreen(userRepository: _userRepository);
+                            }),
+                          );
                         },
-                        child: Text('Modify'),
+                        child: Text('View/Modify'),
                       ),
                     ),
                   ),
