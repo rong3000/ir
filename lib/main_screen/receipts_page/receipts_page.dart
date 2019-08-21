@@ -36,6 +36,10 @@ class DataTableDemoState extends State<DataTableDemo> {
   bool fromServer;
   int refreshCount = 0;
   int loadMoreCount = 0;
+  OverlayEntry subMenuOverlayEntry;
+  GlobalKey anchorKey = GlobalKey();
+  double dx;
+  double dy;
 
   UserRepository get _userRepository => widget._userRepository;
   get _receiptStatusType => widget._receiptStatusType;
@@ -83,6 +87,13 @@ class DataTableDemoState extends State<DataTableDemo> {
     });
   }
 
+  void _onTapDown(TapDownDetails details, BuildContext context) {
+    print('_onLongPressDragStart details: ${details.globalPosition}');
+    dx = details.globalPosition.dx;
+    dy = details.globalPosition.dy;
+
+  }
+
   SingleChildScrollView dataBody(List<ReceiptListItem> receipts) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
@@ -115,64 +126,156 @@ class DataTableDemoState extends State<DataTableDemo> {
             numeric: false,
             tooltip: "This is Category",
           ),
-          DataColumn(
-            label: Text("Actions"),
-            numeric: false,
-            tooltip: "This is Action",
-          ),
         ],
         rows: receipts
             .map(
               (receipt) => DataRow(
+//                onSelectChanged: (b) {
+//                  print('clicked & ${b}');
+//                },
 //                  selected: selectedReceipts.contains(receipt),
 //                  onSelectChanged: (b) {
 //                    print("id ${receipt.id} is Onselect");
 //                    onSelectedRow(b, receipt);
 //                  },
-              cells: [
-                DataCell(
-                  Text(
-                      "${DateFormat().add_yMd().format(receipt.receiptDatatime.toLocal())}"),
-                  showEditIcon: false,
-                  onTap: () {
-                    print('Selected Date cell of id ${receipt.id}');
-                  },
-                ),
-                DataCell(
-                  Text("${receipt.totalAmount}"),
-                  showEditIcon: false,
-                  onTap: () {
-                    print('Selected Amount cell of id ${receipt.id}');
-                  },
-                ),
-                DataCell(
-                  Text(receipt.companyName.toString()),
-                  showEditIcon: false,
-                  onTap: () {
-                    print('Selected Company cell of id ${receipt.id}');
-                  },
-                ),
-                DataCell(
-                  Text(CategoryName.values[receipt.categoryId]
-                      .toString()
-                      .split('.')[1]),
-                  showEditIcon: false,
-                  onTap: () {
-                    print('Selected Category cell of id ${receipt.id}');
-                  },
-                ),
-                DataCell(
-                  Text('View & Modify ${receipt.id}'),
-                  showEditIcon: false,
-                  onTap: () {
-                    print('Clicked Action Button of id ${receipt.id}');
-                  },
-                ),
-              ]),
-        )
+                  cells: [
+                    DataCell(
+                      GestureDetector(
+                        onTapDown: (details) {
+                          return _onTapDown(details, context);
+                        },
+                        onTap: () {
+                          print('x');
+//                        RenderBox renderBox = context.findRenderObject();
+//                        var offset = renderBox
+//                            .localToGlobal(Offset(0.0, renderBox.size.height));
+//                        print('${offset.dx} ${offset.dy} ');
+                          if (subMenuOverlayEntry != null) {
+                            subMenuOverlayEntry.remove();
+                            subMenuOverlayEntry = null;
+                            return Future.value(false);
+                          }
+                          showSubMenuView(dx, dy);
+                        },
+                        child: Text("${DateFormat().add_yMd().format(receipt.receiptDatatime.toLocal())}"),
+                      ),
+//                      Text(
+//                          "${DateFormat().add_yMd().format(receipt.receiptDatatime.toLocal())}",
+////                        key: anchorKey,
+//                      ),
+
+                    ),
+                    DataCell(
+                      Text("${receipt.totalAmount}"),
+                      showEditIcon: false,
+                      onTap: () {
+                        RenderBox renderBox = context.findRenderObject();
+                        var offset = renderBox
+                            .localToGlobal(Offset(0.0, renderBox.size.height));
+                        print('${offset.dx} ${offset.dy} ');
+                        if (subMenuOverlayEntry != null) {
+                          subMenuOverlayEntry.remove();
+                          subMenuOverlayEntry = null;
+                          return Future.value(false);
+                        }
+                        showSubMenuView();
+                      },
+                    ),
+                    DataCell(
+                      Text(receipt.companyName.toString()),
+                      showEditIcon: false,
+                      onTap: () {
+                        RenderBox renderBox = context.findRenderObject();
+                        var offset = renderBox
+                            .localToGlobal(Offset(0.0, renderBox.size.height));
+                        print('${offset.dx} ${offset.dy} ');
+                        if (subMenuOverlayEntry != null) {
+                          subMenuOverlayEntry.remove();
+                          subMenuOverlayEntry = null;
+                          return Future.value(false);
+                        }
+                        showSubMenuView();
+                      },
+                    ),
+                    DataCell(
+                      Text(CategoryName.values[receipt.categoryId]
+                          .toString()
+                          .split('.')[1]),
+                      showEditIcon: false,
+                      onTap: () {
+                        RenderBox renderBox = context.findRenderObject();
+                        var offset = renderBox
+                            .localToGlobal(Offset(0.0, renderBox.size.height));
+                        print('${offset.dx} ${offset.dy} ');
+                        if (subMenuOverlayEntry != null) {
+                          subMenuOverlayEntry.remove();
+                          subMenuOverlayEntry = null;
+                          return Future.value(false);
+                        }
+                        showSubMenuView();
+                      },
+                    ),
+                  ]),
+            )
             .toList(),
       ),
     );
+  }
+
+  void showSubMenuView(double t, double r) {
+    subMenuOverlayEntry = new OverlayEntry(builder: (context) {
+      return new Positioned(
+          top: t,
+          right: r,
+          width: 200,
+          height: 160,
+          child: new SafeArea(
+              child: new Material(
+            child: new Container(
+              child: new Column(
+                children: <Widget>[
+                  Expanded(
+                    child: new ListTile(
+                      leading: Icon(
+                        Icons.edit,
+//                            color: Colors.white,
+                      ),
+                      title: new Text(
+                        "Modify",
+//                            style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: new ListTile(
+                      leading: Icon(
+                        Icons.delete,
+//                              color: Colors.white
+                      ),
+                      title: new Text(
+                        "Delete",
+//                              style: TextStyle(color: Colors.white)
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: new ListTile(
+                      leading: Icon(
+                        Icons.cancel,
+//                              color: Colors.white
+                      ),
+                      title: new Text(
+                        "Cancel",
+//                              style: TextStyle(color: Colors.white)
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          )));
+    });
+    Overlay.of(context).insert(subMenuOverlayEntry);
   }
 
   Future<Null> _handleRefresh() async {
@@ -234,7 +337,7 @@ class DataTableDemoState extends State<DataTableDemo> {
                       FutureBuilder<DataResult>(
                           future: _userRepository.receiptRepository
                               .getReceiptsFromServer(
-                              forceRefresh: forceRefresh),
+                                  forceRefresh: forceRefresh),
                           builder: (BuildContext context,
                               AsyncSnapshot<DataResult> snapshot) {
                             switch (snapshot.connectionState) {
@@ -252,31 +355,42 @@ class DataTableDemoState extends State<DataTableDemo> {
                                     style: TextStyle(color: Colors.red),
                                   );
                                 } else {
-                                  receiptItemCount = _userRepository
-                                      .receiptRepository
-                                      .getReceiptItemsCount(_receiptStatusType);
-                                  if (loadMoreCount == 0) {
-                                    end = (receiptItemCount < 5)
-                                        ? receiptItemCount
-                                        : 5;
-                                    print(
-                                        "receiptItemCount ${receiptItemCount} start ${start} end ${end}");
-                                    return dataBody(_userRepository
+                                  if (snapshot.data.success) {
+                                    receiptItemCount = _userRepository
                                         .receiptRepository
-                                        .getReceiptItemsByRange(
-                                        _receiptStatusType, start, end));
+                                        .getReceiptItemsCount(
+                                            _receiptStatusType);
+                                    if (loadMoreCount == 0) {
+                                      end = (receiptItemCount < 5)
+                                          ? receiptItemCount
+                                          : 5;
+                                      print(
+                                          "receiptItemCount ${receiptItemCount} start ${start} end ${end}");
+                                      return dataBody(_userRepository
+                                          .receiptRepository
+                                          .getReceiptItemsByRange(
+                                              _receiptStatusType, start, end));
+                                    } else {
+                                      end = ((end + 5) < receiptItemCount)
+                                          ? (end + 5)
+                                          : receiptItemCount;
+                                      print(
+                                          "receiptItemCount ${receiptItemCount} start ${start} end ${end}");
+                                      return dataBody(_userRepository
+                                          .receiptRepository
+                                          .getReceiptItemsByRange(
+                                              _receiptStatusType, start, end));
+                                    }
                                   } else {
-                                    end = ((end + 5) < receiptItemCount)
-                                        ? (end + 5)
-                                        : receiptItemCount;
-                                    print(
-                                        "receiptItemCount ${receiptItemCount} start ${start} end ${end}");
-                                    return dataBody(_userRepository
-                                        .receiptRepository
-                                        .getReceiptItemsByRange(
-                                        _receiptStatusType, start, end));
+                                    return Column(
+                                      children: <Widget>[
+                                        Text(
+                                            'Failed retrieving data, error code is ${snapshot.data.messageCode}'),
+                                        Text(
+                                            'Error message is ${snapshot.data.message}'),
+                                      ],
+                                    );
                                   }
-
                                 }
                                 ;
                             }
@@ -377,15 +491,16 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
             bloc: _homeBloc,
             builder: (BuildContext context, HomeState state) {
               return Scaffold(
-                body: OrientationBuilder(builder: (context, orientation){
-                  if (_receiptStatusType == ReceiptStatusType.Uploaded)
-                  {
+                body: OrientationBuilder(builder: (context, orientation) {
+                  if (_receiptStatusType == ReceiptStatusType.Uploaded) {
                     return Column(
                       children: <Widget>[
                         Flexible(
                           flex: 2,
                           fit: FlexFit.tight,
-                          child: DataTableDemo(userRepository: _userRepository, receiptStatusType: _receiptStatusType),
+                          child: DataTableDemo(
+                              userRepository: _userRepository,
+                              receiptStatusType: _receiptStatusType),
                         ),
                       ],
                     );
@@ -395,18 +510,25 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
                         Flexible(
                           flex: 2,
                           fit: FlexFit.tight,
-                          child: DataTableDemo(userRepository: _userRepository, receiptStatusType: _receiptStatusType),
+                          child: DataTableDemo(
+                              userRepository: _userRepository,
+                              receiptStatusType: _receiptStatusType),
                         ),
                         Flexible(
                             fit: FlexFit.tight,
                             child: Wrap(
                               children: <Widget>[
                                 FractionallySizedBox(
-                                  widthFactor: orientation == Orientation.portrait ? 1: 0.33,
+                                  widthFactor:
+                                      orientation == Orientation.portrait
+                                          ? 1
+                                          : 0.33,
                                   child: Container(
-                                    height: MediaQuery.of(context).size.height * (orientation == Orientation.portrait ? 0.125: 0.32),
-                                    child:
-                                    Card(
+                                    height: MediaQuery.of(context).size.height *
+                                        (orientation == Orientation.portrait
+                                            ? 0.125
+                                            : 0.32),
+                                    child: Card(
                                       child: ListTile(
                                         leading: Icon(Icons.album),
                                         title: AutoSizeText(
@@ -423,17 +545,21 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
                                           maxLines: 2,
                                           overflow: TextOverflow.ellipsis,
                                         ),
-
                                       ),
                                     ),
                                   ),
                                 ),
                                 FractionallySizedBox(
-                                  widthFactor: orientation == Orientation.portrait ? 1: 0.33,
+                                  widthFactor:
+                                      orientation == Orientation.portrait
+                                          ? 1
+                                          : 0.33,
                                   child: Container(
-                                    height: MediaQuery.of(context).size.height * (orientation == Orientation.portrait ? 0.125: 0.32),
-                                    child:
-                                    Card(
+                                    height: MediaQuery.of(context).size.height *
+                                        (orientation == Orientation.portrait
+                                            ? 0.125
+                                            : 0.32),
+                                    child: Card(
                                       child: ListTile(
                                         leading: Icon(Icons.album),
                                         title: AutoSizeText(
@@ -450,14 +576,12 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
                                           maxLines: 2,
                                           overflow: TextOverflow.ellipsis,
                                         ),
-
                                       ),
                                     ),
                                   ),
                                 ),
                               ],
-                            )
-                        ),
+                            )),
                       ],
                     );
                   }

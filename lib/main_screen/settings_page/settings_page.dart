@@ -53,6 +53,7 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     //        if (dataResult.success) {
     if (_userRepository.receiptRepository.receipts.isNotEmpty) {
+      print('6');
       return Scaffold(
         body: Column(
           children: <Widget>[
