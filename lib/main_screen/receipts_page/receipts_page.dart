@@ -282,7 +282,7 @@ class DataTableDemoState extends State<DataTableDemo> {
                               subMenuOverlayEntry.remove();
                               subMenuOverlayEntry = null;
 //                              return EditReceiptPage();
-                              return EditReceiptScreen(userRepository: _userRepository);
+                              return EditReceiptScreen(userRepository: _userRepository, receiptId: id);
                             }),
                           );
                         },
