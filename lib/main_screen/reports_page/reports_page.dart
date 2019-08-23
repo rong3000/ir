@@ -52,7 +52,6 @@ class TabsExample extends StatelessWidget {
                   );
 
                 }
-                ;
             }
           }),
       Text('Submitted Reports'),

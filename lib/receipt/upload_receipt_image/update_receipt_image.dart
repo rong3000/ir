@@ -26,6 +26,7 @@ class UploadReceiptImage extends StatefulWidget {
 class UploadReceiptImageState extends State<UploadReceiptImage> {
 
   UserRepository get _userRepository => widget._userRepository;
+  File _image = null;
 
   @override
   void initState() {
@@ -33,7 +34,7 @@ class UploadReceiptImageState extends State<UploadReceiptImage> {
   }
 
   Future<DataResult> _uploadReceipt() async {
-    File image = await ImagePicker.pickImage(source: (widget._imageSource == IRImageSource.Gallary) ? ImageSource.gallery : ImageSource.camera);
+    _image = await ImagePicker.pickImage(source: (widget._imageSource == IRImageSource.Gallary) ? ImageSource.gallery : ImageSource.camera);
 //    File croppedFile = await ImageCropper.cropImage(
 //      sourcePath: image.path,
 //        ratioX: 1.0,
@@ -41,7 +42,7 @@ class UploadReceiptImageState extends State<UploadReceiptImage> {
 //        maxWidth: 512,
 //        maxHeight: 512);
 
-    DataResult dataResult = await _userRepository.receiptRepository.uploadReceiptImage(image);
+    DataResult dataResult = await _userRepository.receiptRepository.uploadReceiptImage(_image);
     return dataResult;
   }
 
@@ -88,14 +89,25 @@ class UploadReceiptImageState extends State<UploadReceiptImage> {
         appBar: AppBar(title: Text(titleTxt)),
         body: Center (
           child: Container(
-            width: 300,
+            width: MediaQuery.of(context).size.width * 0.9,
+            decoration: new BoxDecoration(
+              image: new DecorationImage(
+                colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.1), BlendMode.dstATop),
+                image: new MemoryImage(_image.readAsBytesSync()),
+                fit: BoxFit.cover,
+              ),
+            ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 getIcon(alertType),
-                Text(message),
-              ],
+                Text(message,
+                    style: TextStyle(
+                        color: Colors.indigo,
+                        //fontWeight: FontWeight.bold,
+                        fontSize: 16)),
+              ]
             )
           )
         )
