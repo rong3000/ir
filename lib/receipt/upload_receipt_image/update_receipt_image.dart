@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'dart:io';
 import "package:rflutter_alert/rflutter_alert.dart";
+import 'dart:convert';
 
 class UploadReceiptImage extends StatefulWidget {
   final UserRepository _userRepository;
@@ -127,7 +128,7 @@ class UploadReceiptImageState extends State<UploadReceiptImage> {
                   return new Text('Submitting receipt, will be ready soon ...');
                 default:
                   if (snapshot.hasError)
-                    return new Text('Error: ${snapshot.error}');
+                    return getErrorPage("Error", 'Error: ${snapshot.error}');
                   else {
                     DataResult dataResult = snapshot.data;
                     if (dataResult.success) {
@@ -143,10 +144,10 @@ class UploadReceiptImageState extends State<UploadReceiptImage> {
                         return getErrorPage("Invalid Receipt", "This maybe not a valid receipt, please double check.");
                       } else if (receipt.decodeStatus == DecodeStatusType.UnrecognizedFormat.index) {
                         // Show unrecognized format error
-                        return getErrorPage("Recognizing", "The receipt has been submitted, we are now reconizing it, and will notify you after we recognize it.");
+                        return getErrorPage("Recognizing", "The receipt image has been submitted, we are now recognizing it, and will notify you after we recognize it.");
                       } else {
                         // Show add or update receipt page
-                        return Text(receipt?.toString());
+                        return Text(jsonEncode(receipt));
                       }
                     } else {
                       // Show error message
