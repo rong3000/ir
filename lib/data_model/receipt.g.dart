@@ -20,7 +20,8 @@ ReceiptListItem _$ReceiptListItemFromJson(Map<String, dynamic> json) {
         ? null
         : DateTime.parse(json['receiptDatatime'] as String)
     ..totalAmount = (json['totalAmount'] as num)?.toDouble()
-    ..companyName = json['companyName'] as String;
+    ..companyName = json['companyName'] as String
+    ..imagePath = json['imagePath'] as String;
 }
 
 Map<String, dynamic> _$ReceiptListItemToJson(ReceiptListItem instance) =>
@@ -33,7 +34,8 @@ Map<String, dynamic> _$ReceiptListItemToJson(ReceiptListItem instance) =>
       'uploadDatetime': instance.uploadDatetime?.toIso8601String(),
       'receiptDatatime': instance.receiptDatatime?.toIso8601String(),
       'totalAmount': instance.totalAmount,
-      'companyName': instance.companyName
+      'companyName': instance.companyName,
+      'imagePath': instance.imagePath
     };
 
 Receipt _$ReceiptFromJson(Map<String, dynamic> json) {

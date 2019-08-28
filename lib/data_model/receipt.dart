@@ -17,6 +17,7 @@ class ReceiptListItem {
   DateTime receiptDatatime;
   double totalAmount;
   String companyName;
+  String imagePath;
 
   ReceiptListItem();
 

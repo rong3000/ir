@@ -9,6 +9,8 @@ import 'package:flutter/rendering.dart';
 import 'package:intelligent_receipt/receipt/edit_receipt/edit_receipt.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 import 'package:intl/intl.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:intelligent_receipt/data_model/webservice.dart';
 
 class DataTableDemo extends StatefulWidget {
   final UserRepository _userRepository;
@@ -71,6 +73,14 @@ class DataTableDemoState extends State<DataTableDemo> {
     super.initState();
   }
 
+  CachedNetworkImage getImage(String imagePath) {
+    return  new CachedNetworkImage(
+      imageUrl: Urls.GetImage + "/" + Uri.encodeComponent(imagePath),
+      placeholder: (context, url) => new CircularProgressIndicator(),
+      errorWidget: (context, url, error) => new Icon(Icons.error),
+    );
+  }
+
   onSortColumn(int columnIndex, bool ascending) {
     if (columnIndex == 0) {
       if (ascending) {
@@ -108,9 +118,15 @@ class DataTableDemoState extends State<DataTableDemo> {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: DataTable(
+        dataRowHeight: 120,
         sortAscending: sort,
         sortColumnIndex: 0,
         columns: [
+          DataColumn(
+              label: Text("Image"),
+              numeric: false,
+              tooltip: "Receipt image"
+          ),
           DataColumn(
               label: Text("Date"),
               numeric: false,
@@ -149,6 +165,14 @@ class DataTableDemoState extends State<DataTableDemo> {
 //                    onSelectedRow(b, receipt);
 //                  },
                   cells: [
+                    DataCell(
+                      GestureDetector(
+                        child: Container(
+                            width: 80,
+                            child: getImage(receipt.imagePath)
+                        ),
+                      ),
+                    ),
                     DataCell(
                       GestureDetector(
                         onTapDown: (details) {

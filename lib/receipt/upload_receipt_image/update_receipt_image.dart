@@ -35,7 +35,7 @@ class UploadReceiptImageState extends State<UploadReceiptImage> {
   }
 
   Future<DataResult> _uploadReceipt() async {
-    _image = await ImagePicker.pickImage(source: (widget._imageSource == IRImageSource.Gallary) ? ImageSource.gallery : ImageSource.camera);
+    _image = await ImagePicker.pickImage(source: (widget._imageSource == IRImageSource.Gallary) ? ImageSource.gallery : ImageSource.camera, maxWidth: 600);
 //    File croppedFile = await ImageCropper.cropImage(
 //      sourcePath: image.path,
 //        ratioX: 1.0,
