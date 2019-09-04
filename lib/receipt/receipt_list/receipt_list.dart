@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intelligent_receipt/data_model/enums.dart';
 import 'package:intelligent_receipt/data_model/receipt_repository.dart';
+import 'package:intelligent_receipt/receipt/receipt_card/receipt_card.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 import 'package:intl/intl.dart';
 
@@ -49,14 +50,6 @@ class ReceiptListState extends State<ReceiptList> {
   UserRepository get _userRepository => widget._userRepository;
   get _receiptStatusType => widget._receiptStatusType;
 
-  CachedNetworkImage getImage(String imagePath) {
-    return new CachedNetworkImage(
-      imageUrl: Urls.GetImage + "/" + Uri.encodeComponent(imagePath),
-      placeholder: (context, url) => new CircularProgressIndicator(),
-      errorWidget: (context, url, error) => new Icon(Icons.error),
-    );
-  }
-
   @override
   void initState() {
     forceRefresh = true;
@@ -97,129 +90,7 @@ class ReceiptListState extends State<ReceiptList> {
                       return ListView.builder(
                         itemCount: receiptItemCount,
                         itemBuilder: (context, index) {
-                          return Card(
-                            clipBehavior: Clip.antiAlias,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                SizedBox(
-                                  height: 50,
-                                  child: Stack(
-                                    children: <Widget>[
-                                      Positioned.fill(
-                                        // In order to have the ink splash appear above the image, you
-                                        // must use Ink.image. This allows the image to be painted as part
-                                        // of the Material and display ink effects above it. Using a
-                                        // standard Image will obscure the ink splash.
-                                        child: getImage(_userRepository
-                                            .receiptRepository
-                                            .getReceiptItems(
-                                                _receiptStatusType)[index]
-                                            .imagePath),
-//                                        Ink.image(
-////                                          image: getImage(receipt.imagePath),
-//                                          fit: BoxFit.cover,
-//                                          child: Container(),
-//                                        ),
-                                      ),
-                                      Positioned(
-                                        bottom: 16.0,
-                                        left: 16.0,
-                                        right: 16.0,
-                                        child: FittedBox(
-                                          fit: BoxFit.scaleDown,
-                                          alignment: Alignment.centerLeft,
-                                          child: Text(
-                                            'title',
-                                            style: titleStyle,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.fromLTRB(
-                                      16.0, 16.0, 16.0, 0.0),
-                                  child: DefaultTextStyle(
-                                    softWrap: false,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: descriptionStyle,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        // three line description
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              bottom: 8.0),
-                                          child: Text(
-                                            "description",
-                                            style: descriptionStyle.copyWith(
-                                                color: Colors.black54),
-                                          ),
-                                        ),
-                                        Text(
-                                            '${_userRepository.receiptRepository.getReceiptItems(_receiptStatusType)[index].companyName}'),
-                                        Text(
-                                            '${_userRepository.receiptRepository.getReceiptItems(_receiptStatusType)[index].receiptDatatime}'),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                ButtonTheme.bar(
-                                  child: ButtonBar(
-                                    alignment: MainAxisAlignment.start,
-                                    children: <Widget>[
-                                      FlatButton(
-                                        child: Text('Review',
-                                            semanticsLabel:
-                                                'Review ${_userRepository.receiptRepository.getReceiptItems(_receiptStatusType)[index].id}'),
-                                        textColor: Colors.amber.shade500,
-                                        onPressed: () {
-                                          print('pressed');
-                                        },
-                                      ),
-                                      FlatButton(
-                                        child: Text('Delete',
-                                            semanticsLabel:
-                                                'Delete ${_userRepository.receiptRepository.getReceiptItems(_receiptStatusType)[index].id}'),
-                                        textColor: Colors.amber.shade500,
-                                        onPressed: () {
-                                          print('pressed');
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-//                            ListTile(
-//                              leading: GestureDetector(
-//                                child: Container(
-//                                    width: 80,
-//                                    child: getImage(_userRepository
-//                                        .receiptRepository
-//                                        .getReceiptItems(
-//                                            _receiptStatusType)[index]
-//                                        .imagePath)),
-//                              ),
-//                              title: AutoSizeText(
-//                                'Uploaded ${DateFormat().add_yMd().format(_userRepository.receiptRepository.getReceiptItems(_receiptStatusType)[index].uploadDatetime.toLocal())}',
-//                                style: TextStyle(fontSize: 18),
-//                                minFontSize: 8,
-//                                maxLines: 1,
-//                                overflow: TextOverflow.ellipsis,
-//                              ),
-//                              subtitle: AutoSizeText(
-//                                'Click to View or Remove the receipt',
-//                                style: TextStyle(fontSize: 18),
-//                                minFontSize: 8,
-//                                maxLines: 2,
-//                                overflow: TextOverflow.ellipsis,
-//                              ),
-//                            ),
-                          )
+                          return ReceiptCard(index: index, userRepository: _userRepository, receiptStatusType: _receiptStatusType)
 //                            ListTile(
 //                            title: Text('${_userRepository
 //                                .receiptRepository.getReceiptItems(_receiptStatusType)[index].companyName}'),
