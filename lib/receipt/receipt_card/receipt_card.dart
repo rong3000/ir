@@ -1,11 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 
 import '../../data_model/enums.dart';
 import '../../data_model/webservice.dart';
 import '../../user_repository.dart';
-
 
 class ReceiptCard extends StatelessWidget {
   final int _index;
@@ -34,92 +34,137 @@ class ReceiptCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    final TextStyle titleStyle =
-    theme.textTheme.headline.copyWith(color: Colors.white);
-    final TextStyle descriptionStyle = theme.textTheme.subhead;
+    final TextStyle companyNameStyle =
+        theme.textTheme.headline.copyWith(color: Colors.black);
+    final TextStyle dateStyle = theme.textTheme.subhead;
+    final TextStyle amountStyle = theme.textTheme.title;
 
     return Card(
       clipBehavior: Clip.antiAlias,
-      child: Column(
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          SizedBox(
-            height: 50,
-            child: Stack(
+          Flexible(
+            child: SizedBox(
+              height: 160,
+              child: getImage(_userRepository.receiptRepository
+                  .getReceiptItems(_receiptStatusType)[_index]
+                  .imagePath),
+            ),
+          ),
+          Flexible(
+            flex: 2,
+            child: Column(
               children: <Widget>[
-                Positioned.fill(
-                  child: getImage(_userRepository
-                      .receiptRepository
-                      .getReceiptItems(
-                      _receiptStatusType)[_index]
-                      .imagePath),
-                ),
-                Positioned(
-                  bottom: 16.0,
-                  left: 16.0,
-                  right: 16.0,
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'title',
-                      style: titleStyle,
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
+                  child: DefaultTextStyle(
+                    softWrap: false,
+                    overflow: TextOverflow.ellipsis,
+                    style: dateStyle,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 8.0),
+                          child: Text(
+                            "Receipt Date ${DateFormat().add_yMd().format(_userRepository.receiptRepository.getReceiptItems(_receiptStatusType)[_index].receiptDatatime.toLocal())}",
+                            style: dateStyle.copyWith(color: Colors.black54),
+                          ),
+                        ),
+                        Padding(
+                          padding:
+                              const EdgeInsets.only(top: 8.0, bottom: 16.0),
+                          child: Text(
+                            '${_userRepository.receiptRepository.getReceiptItems(_receiptStatusType)[_index].companyName}',
+                            style: companyNameStyle,
+                          ),
+                        ),
+                        Text(
+                          'Total ${_userRepository.receiptRepository.getReceiptItems(_receiptStatusType)[_index].totalAmount}',
+                          style: amountStyle,
+                        ),
+                      ],
                     ),
                   ),
                 ),
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(
-                16.0, 16.0, 16.0, 0.0),
-            child: DefaultTextStyle(
-              softWrap: false,
-              overflow: TextOverflow.ellipsis,
-              style: descriptionStyle,
-              child: Column(
-                crossAxisAlignment:
-                CrossAxisAlignment.start,
-                children: <Widget>[
-                  // three line description
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        bottom: 8.0),
-                    child: Text(
-                      "description",
-                      style: descriptionStyle.copyWith(
-                          color: Colors.black54),
+          Flexible(
+            flex: 2,
+            child: Column(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
+                  child: DefaultTextStyle(
+                    softWrap: false,
+                    overflow: TextOverflow.ellipsis,
+                    style: dateStyle,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        // three line description
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 8.0),
+                          child: Text(
+                            "Uploaded ${DateFormat().add_yMd().format(_userRepository.receiptRepository.getReceiptItems(_receiptStatusType)[_index].uploadDatetime.toLocal())}",
+                            style: dateStyle.copyWith(color: Colors.black54),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+                          child: Text(
+                            CategoryName.values[_userRepository
+                                    .receiptRepository
+                                    .getReceiptItems(_receiptStatusType)[_index]
+                                    .categoryId]
+                                .toString()
+                                .split('.')[1],
+                            style: companyNameStyle,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  Text(
-                      '${_userRepository.receiptRepository.getReceiptItems(_receiptStatusType)[_index].companyName}'),
-                  Text(
-                      '${_userRepository.receiptRepository.getReceiptItems(_receiptStatusType)[_index].receiptDatatime}'),
-                ],
-              ),
-            ),
-          ),
-          ButtonTheme.bar(
-            child: ButtonBar(
-              alignment: MainAxisAlignment.start,
-              children: <Widget>[
-                FlatButton(
-                  child: Text('Review',
-                      semanticsLabel:
-                      'Review ${_userRepository.receiptRepository.getReceiptItems(_receiptStatusType)[_index].id}'),
-                  textColor: Colors.amber.shade500,
-                  onPressed: () {
-                    print('pressed');
-                  },
                 ),
-                FlatButton(
-                  child: Text('Delete',
-                      semanticsLabel:
-                      'Delete ${_userRepository.receiptRepository.getReceiptItems(_receiptStatusType)[_index].id}'),
-                  textColor: Colors.amber.shade500,
-                  onPressed: () {
-                    print('pressed');
-                  },
+                ButtonTheme.bar(
+                  child: ButtonBar(
+                    children: <Widget>[
+                      OutlineButton(
+                          child: Text('Review',
+                              style:
+                                  companyNameStyle.copyWith(color: Colors.blue),
+                              semanticsLabel:
+                                  'Review ${_userRepository.receiptRepository.getReceiptItems(_receiptStatusType)[_index].id}'),
+//                        textColor: Colors.blue.shade500,
+
+                          onPressed: () {
+                            print('pressed');
+                          },
+
+                          borderSide: BorderSide(color: Colors.blue),
+//                          shape: StadiumBorder(),
+                          shape: new RoundedRectangleBorder(
+                              borderRadius: new BorderRadius.circular(6.0))
+                      ),
+                      OutlineButton(
+                        child: Text('Delete',
+                            style:
+                                companyNameStyle.copyWith(color: Colors.blue),
+                            semanticsLabel:
+                                'Delete ${_userRepository.receiptRepository.getReceiptItems(_receiptStatusType)[_index].id}'),
+                        textColor: Colors.blue.shade500,
+                        onPressed: () {
+                          print('pressed');
+                        },
+                          borderSide: BorderSide(color: Colors.blue),
+//                          shape: StadiumBorder(),
+                          shape: new RoundedRectangleBorder(
+                              borderRadius: new BorderRadius.circular(6.0))
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
