@@ -24,6 +24,15 @@ class Urls {
   static String AddCategory = ServiceBaseUrl + "Settings/AddCategory/";
   static String UpdateCategory = ServiceBaseUrl + "Settings/UpdateCategory/";
   static String DeleteCategory = ServiceBaseUrl + "Settings/DeleteCategory/";
+
+  // Report related APIs
+  static String GetReports = ServiceBaseUrl + "Report/GetReports/";
+  static String AddReport = ServiceBaseUrl + "Report/AddReport/";
+  static String AddReceiptToReport = ServiceBaseUrl + "Report/AddReceiptToReport/";
+  static String DeleteReport = ServiceBaseUrl + "Report/DeleteReport/";
+  static String RemoveReceiptFromReport = ServiceBaseUrl + "Report/RemoveReceiptFromReport/";
+  static String UpdateReportWithReceipts = ServiceBaseUrl + "Report/UpdateReportWithReceipts";
+  static String UpdateReportWithoutReceipts = ServiceBaseUrl + "Report/UpdateReportWithoutReceipts";
 }
 
 const int default_timeout = 2000; // millisecons

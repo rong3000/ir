@@ -20,6 +20,17 @@ class ReceiptRepository {
     _userRepository = userRepository;
   }
 
+  ReceiptListItem getReceiptItem(int receiptId) {
+    ReceiptListItem receiptListItem = null;
+    for (var i = 0; i < receipts.length; i++) {
+      if (receipts[i].id == receiptId) {
+        receiptListItem = receipts[i];
+        break;
+      }
+    }
+    return receiptListItem;
+  }
+
   List<ReceiptListItem> getReceiptItems(ReceiptStatusType receiptStatus) {
     List<ReceiptListItem> selectedReceipts = new List<ReceiptListItem>();
     _lock.synchronized(() {

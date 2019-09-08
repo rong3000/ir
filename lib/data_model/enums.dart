@@ -30,3 +30,11 @@ enum IRImageSource
   Camera
 }
 
+enum ReportStatusType
+{
+  Unknown,
+  Active,
+  Submitted,
+  Deleted
+}
+
