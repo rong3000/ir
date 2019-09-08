@@ -7,6 +7,7 @@ import 'package:intelligent_receipt/main_screen/bloc/bloc.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intelligent_receipt/receipt/edit_receipt/edit_receipt.dart';
 import 'package:intelligent_receipt/receipt/receipt_list/receipt_list.dart';
+import 'package:intelligent_receipt/receipt/sorting_bar/sorting_bar.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 import 'package:intl/intl.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -572,9 +573,12 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
                         Flexible(
                           flex: 2,
                           fit: FlexFit.tight,
-                          child: ReceiptList(
-                              userRepository: _userRepository,
-                              receiptStatusType: _receiptStatusType),
+                          child: Scaffold(
+                            appBar: AppBar(title: SortingBar(),),
+                            body: ReceiptList(
+                                userRepository: _userRepository,
+                                receiptStatusType: _receiptStatusType),
+                          )
                         ),
                       ],
                     );

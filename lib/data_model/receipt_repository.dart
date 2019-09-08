@@ -43,6 +43,19 @@ class ReceiptRepository {
     return selectedReceipts;
   }
 
+  List<ReceiptListItem> getSortedReceiptItems(ReceiptStatusType receiptStatus) {
+    List<ReceiptListItem> selectedReceipts = new List<ReceiptListItem>();
+    _lock.synchronized(() {
+      for (var i = 0; i < receipts.length; i++) {
+        if (receipts[i].statusId == receiptStatus.index) {
+          selectedReceipts.add(receipts[i]);
+          selectedReceipts.sort((a, b) => a.totalAmount.compareTo(b.totalAmount));
+        }
+      }
+    });
+    return selectedReceipts;
+  }
+
   List<ReceiptListItem> getReceiptItemsByRange(ReceiptStatusType receiptStatus, int start, int end) {
     List<ReceiptListItem> selectedReceipts = new List<ReceiptListItem>();
     _lock.synchronized(() {
