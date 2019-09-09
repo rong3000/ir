@@ -97,15 +97,26 @@ class ReceiptListState extends State<ReceiptList> {
                           title: Container(
                             child: Row(
                               children: <Widget>[
-                                Expanded(
-                                  flex: 1,
-                                  child: TextField(
-//                                  controller: _controller,
-                                    decoration: new InputDecoration(
-                                      hintText: 'Start search',
-                                      icon: Icon(Icons.search),
-                                    ),
-                                  ),
+//                                Expanded(
+//                                  flex: 1,
+//                                  child: TextField(
+////                                  controller: _controller,
+//                                    decoration: new InputDecoration(
+//                                      hintText: 'Start search',
+//                                      icon: Icon(Icons.search),
+//                                    ),
+//                                  ),
+//                                ),
+                                RaisedButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      forceRefresh = false;
+                                      ascending = !ascending;
+                                      type = 0;
+                                      print("${ascending} ${forceRefresh}");
+                                    });
+                                  },
+                                  child: Text('Upload Time'),
                                 ),
                                 RaisedButton(
                                   onPressed: () {
@@ -114,22 +125,42 @@ class ReceiptListState extends State<ReceiptList> {
                                       ascending = !ascending;
                                       type =1;
                                       print("${ascending} ${forceRefresh}");
-//            if (columnIndex == 0) {
-//                                      if (ascending) {
-//                                        _userRepository
-//                                            .receiptRepository.receipts
-//                                            .sort((a, b) => a.totalAmount
-//                                                .compareTo(b.totalAmount));
-//                                      } else {
-//                                        _userRepository
-//                                            .receiptRepository.receipts
-//                                            .sort((a, b) => b.totalAmount
-//                                                .compareTo(a.totalAmount));
-//                                      }
                                     });
-//            }
                                   },
-                                  child: Text('Search'),
+                                  child: Text('Receipt Time'),
+                                ),
+                                RaisedButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      forceRefresh = false;
+                                      ascending = !ascending;
+                                      type = 2;
+                                      print("${ascending} ${forceRefresh}");
+                                    });
+                                  },
+                                  child: Text('Company Name'),
+                                ),
+                                RaisedButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      forceRefresh = false;
+                                      ascending = !ascending;
+                                      type = 3;
+                                      print("${ascending} ${forceRefresh}");
+                                    });
+                                  },
+                                  child: Text('Amount'),
+                                ),
+                                RaisedButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      forceRefresh = false;
+                                      ascending = !ascending;
+                                      type = 4;
+                                      print("${ascending} ${forceRefresh}");
+                                    });
+                                  },
+                                  child: Text('Category'),
                                 ),
                               ],
                             ),
