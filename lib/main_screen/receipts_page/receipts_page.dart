@@ -575,6 +575,12 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
                           child: ReceiptList(
                               userRepository: _userRepository,
                               receiptStatusType: _receiptStatusType),
+//                          Scaffold(
+//                            appBar: AppBar(title: SortingBar(userRepository: _userRepository),),
+//                            body: ReceiptList(
+//                                userRepository: _userRepository,
+//                                receiptStatusType: _receiptStatusType),
+//                          )
                         ),
                       ],
                     );

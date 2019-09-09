@@ -43,7 +43,66 @@ class ReceiptRepository {
     return selectedReceipts;
   }
 
-  List<ReceiptListItem> getReceiptItemsByRange(ReceiptStatusType receiptStatus, int start, int end) {
+  List<ReceiptListItem> getSortedReceiptItems(
+      ReceiptStatusType receiptStatus, int type, bool ascending) {
+    List<ReceiptListItem> selectedReceipts = new List<ReceiptListItem>();
+    _lock.synchronized(() {
+      for (var i = 0; i < receipts.length; i++) {
+        if (receipts[i].statusId == receiptStatus.index) {
+          selectedReceipts.add(receipts[i]);
+
+            if (ascending) {
+              if (type == 0) {
+                selectedReceipts
+                    .sort((a, b) => a.uploadDatetime.compareTo(b.uploadDatetime));
+              }
+              if (type == 1) {
+                selectedReceipts
+                    .sort((a, b) => a.receiptDatatime.compareTo(b.receiptDatatime));
+              }
+              if (type == 2) {
+                selectedReceipts
+                    .sort((a, b) => a.companyName.compareTo(b.companyName));
+              }
+              if (type == 3) {
+                selectedReceipts
+                    .sort((a, b) => a.totalAmount.compareTo(b.totalAmount));
+              }
+              if (type == 4) {
+                selectedReceipts
+                    .sort((a, b) => a.categoryId.compareTo(b.categoryId));
+              }
+            } else {
+              if (type == 0) {
+                selectedReceipts
+                    .sort((a, b) => b.uploadDatetime.compareTo(a.uploadDatetime));
+              }
+              if (type == 1) {
+                selectedReceipts
+                    .sort((a, b) => b.receiptDatatime.compareTo(a.receiptDatatime));
+              }
+              if (type == 2) {
+                selectedReceipts
+                    .sort((a, b) => b.companyName.compareTo(a.companyName));
+              }
+              if (type == 3) {
+                selectedReceipts
+                    .sort((a, b) => b.totalAmount.compareTo(a.totalAmount));
+              }
+              if (type == 4) {
+                selectedReceipts
+                    .sort((a, b) => b.categoryId.compareTo(a.categoryId));
+              }
+            }
+
+        }
+      }
+    });
+    return selectedReceipts;
+  }
+
+  List<ReceiptListItem> getReceiptItemsByRange(
+      ReceiptStatusType receiptStatus, int start, int end) {
     List<ReceiptListItem> selectedReceipts = new List<ReceiptListItem>();
     _lock.synchronized(() {
       for (var i = 0; i < receipts.length; i++) {
@@ -76,13 +135,14 @@ class ReceiptRepository {
         result = DataResult.success(receipts);
       }
 
-      if ((_userRepository == null) || (_userRepository.userId <= 0))
-      {
+      if ((_userRepository == null) || (_userRepository.userId <= 0)) {
         // Log an error
         result = DataResult.fail();
       }
 
-      result = await webserviceGet(Urls.GetReceipts + _userRepository.userId.toString(), "", timeout: 5000);
+      result = await webserviceGet(
+          Urls.GetReceipts + _userRepository.userId.toString(), "",
+          timeout: 5000);
       if (result.success) {
         Iterable l = result.obj;
         receipts = l.map((model) => ReceiptListItem.fromJason(model)).toList();
@@ -96,7 +156,8 @@ class ReceiptRepository {
   }
 
   Future<DataResult> getReceipt(int receiptId) async {
-    DataResult result = await webserviceGet(Urls.GetReceipt + receiptId.toString(), "");
+    DataResult result =
+        await webserviceGet(Urls.GetReceipt + receiptId.toString(), "");
     if (result.success) {
       result.obj = Receipt.fromJason(result.obj);
     }
@@ -105,7 +166,8 @@ class ReceiptRepository {
   }
 
   Future<DataResult> updateReceipt(Receipt receipt) async {
-    DataResult result = await webservicePost(Urls.UpdateReceipt, "", jsonEncode(receipt));
+    DataResult result =
+        await webservicePost(Urls.UpdateReceipt, "", jsonEncode(receipt));
     if (result.success) {
       result.obj = Receipt.fromJason(result.obj);
     }
@@ -114,16 +176,19 @@ class ReceiptRepository {
   }
 
   Future<DataResult> uploadReceiptImage(File imageFile) async {
-    if ((_userRepository == null) || (_userRepository.userId <= 0))
-    {
+    if ((_userRepository == null) || (_userRepository.userId <= 0)) {
       // Log an error
       return DataResult.fail(msg: "No user logged in.");
     }
 
-    DataResult result = await uploadFile(Urls.UploadReceiptImages + _userRepository.userId.toString(), "", imageFile);
+    DataResult result = await uploadFile(
+        Urls.UploadReceiptImages + _userRepository.userId.toString(),
+        "",
+        imageFile);
     if (result.success) {
       Iterable l = result.obj;
-      List<Receipt> newReceipts = l.map((model) => Receipt.fromJason(model)).toList();
+      List<Receipt> newReceipts =
+          l.map((model) => Receipt.fromJason(model)).toList();
       if (newReceipts.length > 0) {
         Receipt receipt = newReceipts[0];
         // insert the new receipt into the receipt list
@@ -140,7 +205,8 @@ class ReceiptRepository {
   }
 
   Future<DataResult> deleteReceipts(List<int> receiptIds) async {
-    DataResult result = await webservicePost(Urls.DeleteReceipts, "", jsonEncode(receiptIds));
+    DataResult result =
+        await webservicePost(Urls.DeleteReceipts, "", jsonEncode(receiptIds));
     if (result.success) {
       // Delete the local cache of the receipts
       for (int i = 0; i < receiptIds.length; i++) {
