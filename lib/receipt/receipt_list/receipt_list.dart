@@ -46,6 +46,8 @@ class ReceiptListState extends State<ReceiptList> {
   double dy;
   double dx2;
   double dy2;
+  bool ascending;
+  int type;
 
   UserRepository get _userRepository => widget._userRepository;
   get _receiptStatusType => widget._receiptStatusType;
@@ -53,6 +55,8 @@ class ReceiptListState extends State<ReceiptList> {
   @override
   void initState() {
     forceRefresh = true;
+    ascending = false;
+    type = 1;
     super.initState();
   }
 
@@ -87,16 +91,65 @@ class ReceiptListState extends State<ReceiptList> {
                     if (snapshot.data.success) {
                       receiptItemCount = _userRepository.receiptRepository
                           .getReceiptItemsCount(_receiptStatusType);
-                      return ListView.builder(
-                        itemCount: receiptItemCount,
-                        itemBuilder: (context, index) {
-                          return ReceiptCard(index: index, userRepository: _userRepository, receiptStatusType: _receiptStatusType)
+                      return Scaffold(
+//                        appBar: AppBar(title: SortingBar(userRepository: _userRepository),),
+                        appBar: AppBar(
+                          title: Container(
+                            child: Row(
+                              children: <Widget>[
+                                Expanded(
+                                  flex: 1,
+                                  child: TextField(
+//                                  controller: _controller,
+                                    decoration: new InputDecoration(
+                                      hintText: 'Start search',
+                                      icon: Icon(Icons.search),
+                                    ),
+                                  ),
+                                ),
+                                RaisedButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      forceRefresh = false;
+                                      ascending = !ascending;
+                                      type =1;
+                                      print("${ascending} ${forceRefresh}");
+//            if (columnIndex == 0) {
+//                                      if (ascending) {
+//                                        _userRepository
+//                                            .receiptRepository.receipts
+//                                            .sort((a, b) => a.totalAmount
+//                                                .compareTo(b.totalAmount));
+//                                      } else {
+//                                        _userRepository
+//                                            .receiptRepository.receipts
+//                                            .sort((a, b) => b.totalAmount
+//                                                .compareTo(a.totalAmount));
+//                                      }
+                                    });
+//            }
+                                  },
+                                  child: Text('Search'),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        body: ListView.builder(
+                          itemCount: receiptItemCount,
+                          itemBuilder: (context, index) {
+                            return ReceiptCard(
+                                    index: index,
+                                    userRepository: _userRepository,
+                                    receiptStatusType: _receiptStatusType,
+                            type: type, ascending: ascending)
 //                            ListTile(
 //                            title: Text('${_userRepository
 //                                .receiptRepository.getReceiptItems(_receiptStatusType)[index].companyName}'),
 //                          )
-                              ;
-                        },
+                                ;
+                          },
+                        ),
                       );
                     } else {
                       return Column(

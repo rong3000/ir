@@ -11,16 +11,22 @@ class ReceiptCard extends StatelessWidget {
   final int _index;
   final UserRepository _userRepository;
   final ReceiptStatusType _receiptStatusType;
+  final int _type;
+  final bool _ascending;
 
   const ReceiptCard({
     Key key,
     @required int index,
     @required UserRepository userRepository,
     @required ReceiptStatusType receiptStatusType,
+    @required int type,
+    @required bool ascending,
   })  : assert(userRepository != null),
         _index = index,
         _userRepository = userRepository,
         _receiptStatusType = receiptStatusType,
+        _type = type,
+        _ascending = ascending,
         super(key: key);
 
   CachedNetworkImage getImage(String imagePath) {
@@ -38,6 +44,7 @@ class ReceiptCard extends StatelessWidget {
         theme.textTheme.headline.copyWith(color: Colors.black);
     final TextStyle dateStyle = theme.textTheme.subhead;
     final TextStyle amountStyle = theme.textTheme.title;
+    print('card state being set');
 
     return Card(
       clipBehavior: Clip.antiAlias,
@@ -48,7 +55,7 @@ class ReceiptCard extends StatelessWidget {
             child: SizedBox(
               height: 160,
               child: getImage(_userRepository.receiptRepository
-                  .getSortedReceiptItems(_receiptStatusType)[_index]
+                  .getSortedReceiptItems(_receiptStatusType, _type, _ascending)[_index]
                   .imagePath),
             ),
           ),
@@ -68,7 +75,7 @@ class ReceiptCard extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.only(bottom: 8.0),
                           child: Text(
-                            "Receipt Date ${DateFormat().add_yMd().format(_userRepository.receiptRepository.getSortedReceiptItems(_receiptStatusType)[_index].receiptDatatime.toLocal())}",
+                            "Receipt Date ${DateFormat().add_yMd().format(_userRepository.receiptRepository.getSortedReceiptItems(_receiptStatusType, _type, _ascending)[_index].receiptDatatime.toLocal())}",
                             style: dateStyle.copyWith(color: Colors.black54),
                           ),
                         ),
@@ -76,12 +83,12 @@ class ReceiptCard extends StatelessWidget {
                           padding:
                               const EdgeInsets.only(top: 8.0, bottom: 16.0),
                           child: Text(
-                            '${_userRepository.receiptRepository.getSortedReceiptItems(_receiptStatusType)[_index].companyName}',
+                            '${_userRepository.receiptRepository.getSortedReceiptItems(_receiptStatusType, _type, _ascending)[_index].companyName}',
                             style: companyNameStyle,
                           ),
                         ),
                         Text(
-                          'Total ${_userRepository.receiptRepository.getSortedReceiptItems(_receiptStatusType)[_index].totalAmount}',
+                          'Total ${_userRepository.receiptRepository.getSortedReceiptItems(_receiptStatusType, _type, _ascending)[_index].totalAmount}',
                           style: amountStyle,
                         ),
                       ],
@@ -108,7 +115,7 @@ class ReceiptCard extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.only(bottom: 8.0),
                           child: Text(
-                            "Uploaded ${DateFormat().add_yMd().format(_userRepository.receiptRepository.getSortedReceiptItems(_receiptStatusType)[_index].uploadDatetime.toLocal())}",
+                            "Uploaded ${DateFormat().add_yMd().format(_userRepository.receiptRepository.getSortedReceiptItems(_receiptStatusType, _type, _ascending)[_index].uploadDatetime.toLocal())}",
                             style: dateStyle.copyWith(color: Colors.black54),
                           ),
                         ),
@@ -117,7 +124,7 @@ class ReceiptCard extends StatelessWidget {
                           child: Text(
                             CategoryName.values[_userRepository
                                     .receiptRepository
-                                    .getSortedReceiptItems(_receiptStatusType)[_index]
+                                    .getSortedReceiptItems(_receiptStatusType, _type, _ascending)[_index]
                                     .categoryId]
                                 .toString()
                                 .split('.')[1],
@@ -136,33 +143,30 @@ class ReceiptCard extends StatelessWidget {
                               style:
                                   companyNameStyle.copyWith(color: Colors.blue),
                               semanticsLabel:
-                                  'Review ${_userRepository.receiptRepository.getSortedReceiptItems(_receiptStatusType)[_index].id}'),
+                                  'Review ${_userRepository.receiptRepository.getSortedReceiptItems(_receiptStatusType, _type, _ascending)[_index].id}'),
 //                        textColor: Colors.blue.shade500,
 
                           onPressed: () {
                             print('pressed');
                           },
-
                           borderSide: BorderSide(color: Colors.blue),
 //                          shape: StadiumBorder(),
                           shape: new RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(6.0))
-                      ),
+                              borderRadius: new BorderRadius.circular(6.0))),
                       OutlineButton(
-                        child: Text('Delete',
-                            style:
-                                companyNameStyle.copyWith(color: Colors.blue),
-                            semanticsLabel:
-                                'Delete ${_userRepository.receiptRepository.getSortedReceiptItems(_receiptStatusType)[_index].id}'),
-                        textColor: Colors.blue.shade500,
-                        onPressed: () {
-                          print('pressed');
-                        },
+                          child: Text('Delete',
+                              style:
+                                  companyNameStyle.copyWith(color: Colors.blue),
+                              semanticsLabel:
+                                  'Delete ${_userRepository.receiptRepository.getSortedReceiptItems(_receiptStatusType, _type, _ascending)[_index].id}'),
+                          textColor: Colors.blue.shade500,
+                          onPressed: () {
+                            print('pressed');
+                          },
                           borderSide: BorderSide(color: Colors.blue),
 //                          shape: StadiumBorder(),
                           shape: new RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(6.0))
-                      ),
+                              borderRadius: new BorderRadius.circular(6.0))),
                     ],
                   ),
                 ),
