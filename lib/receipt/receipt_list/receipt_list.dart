@@ -10,6 +10,81 @@ import 'package:intl/intl.dart';
 
 import '../../data_model/webservice.dart';
 
+class _InputDropdown extends StatelessWidget {
+  const _InputDropdown({
+    Key key,
+    this.child,
+    this.labelText,
+    this.valueText,
+    this.valueStyle,
+    this.onPressed,
+  }) : super(key: key);
+
+  final String labelText;
+  final String valueText;
+  final TextStyle valueStyle;
+  final VoidCallback onPressed;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onPressed,
+      child: InputDecorator(
+        decoration: InputDecoration(
+          labelText: labelText,
+        ),
+        baseStyle: valueStyle,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Text(valueText, style: valueStyle),
+            Icon(Icons.arrow_drop_down,
+              color: Theme.of(context).brightness == Brightness.light ? Colors.grey.shade700 : Colors.white70,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _DateTimePicker extends StatelessWidget {
+  const _DateTimePicker({
+    Key key,
+    this.labelText,
+    this.selectedDate,
+    this.selectDate,
+  }) : super(key: key);
+
+  final String labelText;
+  final DateTime selectedDate;
+  final ValueChanged<DateTime> selectDate;
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime(2015, 8),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null && picked != selectedDate)
+      selectDate(picked);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final TextStyle valueStyle = Theme.of(context).textTheme.title;
+    return _InputDropdown(
+      labelText: labelText,
+      valueText: DateFormat.yMMMd().format(selectedDate),
+      valueStyle: valueStyle,
+      onPressed: () { _selectDate(context); },
+    );
+  }
+}
+
 class ReceiptList extends StatefulWidget {
   final UserRepository _userRepository;
   final ReceiptStatusType _receiptStatusType;
@@ -48,9 +123,35 @@ class ReceiptListState extends State<ReceiptList> {
   double dy2;
   bool ascending;
   int type;
+  DateTime _fromDate = DateTime.now();
+  DateTime _toDate = DateTime.now();
 
   UserRepository get _userRepository => widget._userRepository;
   get _receiptStatusType => widget._receiptStatusType;
+
+  Future<Null> _selectFromDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: _fromDate,
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
+    if (picked != null && picked != _fromDate)
+      setState(() {
+        _fromDate = picked;
+      });
+  }
+
+  Future<Null> _selectToDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: _toDate,
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
+    if (picked != null && picked != _toDate)
+      setState(() {
+        _toDate = picked;
+      });
+  }
 
   @override
   void initState() {
@@ -95,8 +196,27 @@ class ReceiptListState extends State<ReceiptList> {
 //                        appBar: AppBar(title: SortingBar(userRepository: _userRepository),),
                         appBar: AppBar(
                           title: Container(
-                            child: Row(
+                            child: Column(
                               children: <Widget>[
+                                Row(
+                                  children: <Widget>[
+                                    GestureDetector(
+                                      onTap: () {
+                                        _selectFromDate(context);
+                                      },
+                                      child: Text("From ${DateFormat().add_yMd().format(_fromDate.toLocal())}"),
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        _selectToDate(context);
+                                      },
+                                      child: Text("To ${DateFormat().add_yMd().format(_toDate.toLocal())}"),
+                                    ),
+                                  ],
+                                ),
+
+                                Row(
+                                  children: <Widget>[
 //                                Expanded(
 //                                  flex: 1,
 //                                  child: TextField(
@@ -107,60 +227,62 @@ class ReceiptListState extends State<ReceiptList> {
 //                                    ),
 //                                  ),
 //                                ),
-                                RaisedButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      forceRefresh = false;
-                                      ascending = !ascending;
-                                      type = 0;
-                                      print("${ascending} ${forceRefresh}");
-                                    });
-                                  },
-                                  child: Text('Upload Time'),
-                                ),
-                                RaisedButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      forceRefresh = false;
-                                      ascending = !ascending;
-                                      type =1;
-                                      print("${ascending} ${forceRefresh}");
-                                    });
-                                  },
-                                  child: Text('Receipt Time'),
-                                ),
-                                RaisedButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      forceRefresh = false;
-                                      ascending = !ascending;
-                                      type = 2;
-                                      print("${ascending} ${forceRefresh}");
-                                    });
-                                  },
-                                  child: Text('Company Name'),
-                                ),
-                                RaisedButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      forceRefresh = false;
-                                      ascending = !ascending;
-                                      type = 3;
-                                      print("${ascending} ${forceRefresh}");
-                                    });
-                                  },
-                                  child: Text('Amount'),
-                                ),
-                                RaisedButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      forceRefresh = false;
-                                      ascending = !ascending;
-                                      type = 4;
-                                      print("${ascending} ${forceRefresh}");
-                                    });
-                                  },
-                                  child: Text('Category'),
+                                    RaisedButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          forceRefresh = false;
+                                          ascending = !ascending;
+                                          type = 0;
+                                          print("${ascending} ${forceRefresh}");
+                                        });
+                                      },
+                                      child: Text('Upload Time'),
+                                    ),
+                                    RaisedButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          forceRefresh = false;
+                                          ascending = !ascending;
+                                          type =1;
+                                          print("${ascending} ${forceRefresh}");
+                                        });
+                                      },
+                                      child: Text('Receipt Time'),
+                                    ),
+                                    RaisedButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          forceRefresh = false;
+                                          ascending = !ascending;
+                                          type = 2;
+                                          print("${ascending} ${forceRefresh}");
+                                        });
+                                      },
+                                      child: Text('Company Name'),
+                                    ),
+                                    RaisedButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          forceRefresh = false;
+                                          ascending = !ascending;
+                                          type = 3;
+                                          print("${ascending} ${forceRefresh}");
+                                        });
+                                      },
+                                      child: Text('Amount'),
+                                    ),
+                                    RaisedButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          forceRefresh = false;
+                                          ascending = !ascending;
+                                          type = 4;
+                                          print("${ascending} ${forceRefresh}");
+                                        });
+                                      },
+                                      child: Text('Category'),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
