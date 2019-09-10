@@ -295,7 +295,7 @@ class ReceiptListState extends State<ReceiptList> {
                                     index: index,
                                     userRepository: _userRepository,
                                     receiptStatusType: _receiptStatusType,
-                            type: type, ascending: ascending)
+                            type: type, ascending: ascending, fromDate: _fromDate, toDate: _toDate,)
 //                            ListTile(
 //                            title: Text('${_userRepository
 //                                .receiptRepository.getReceiptItems(_receiptStatusType)[index].companyName}'),

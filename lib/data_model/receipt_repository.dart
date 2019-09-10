@@ -43,58 +43,59 @@ class ReceiptRepository {
     return selectedReceipts;
   }
 
-  List<ReceiptListItem> getSortedReceiptItems(
-      ReceiptStatusType receiptStatus, int type, bool ascending) {
+  List<ReceiptListItem> getSortedReceiptItems(ReceiptStatusType receiptStatus,
+      int type, bool ascending, DateTime fromDate, DateTime toDate) {
     List<ReceiptListItem> selectedReceipts = new List<ReceiptListItem>();
     _lock.synchronized(() {
       for (var i = 0; i < receipts.length; i++) {
-        if (receipts[i].statusId == receiptStatus.index) {
+        if (receipts[i].statusId == receiptStatus.index &&
+            receipts[i].uploadDatetime.isAfter(fromDate) &&
+            receipts[i].uploadDatetime.isBefore(toDate.add(Duration(days: 1)))) {
           selectedReceipts.add(receipts[i]);
 
-            if (ascending) {
-              if (type == 0) {
-                selectedReceipts
-                    .sort((a, b) => a.uploadDatetime.compareTo(b.uploadDatetime));
-              }
-              if (type == 1) {
-                selectedReceipts
-                    .sort((a, b) => a.receiptDatatime.compareTo(b.receiptDatatime));
-              }
-              if (type == 2) {
-                selectedReceipts
-                    .sort((a, b) => a.companyName.compareTo(b.companyName));
-              }
-              if (type == 3) {
-                selectedReceipts
-                    .sort((a, b) => a.totalAmount.compareTo(b.totalAmount));
-              }
-              if (type == 4) {
-                selectedReceipts
-                    .sort((a, b) => a.categoryId.compareTo(b.categoryId));
-              }
-            } else {
-              if (type == 0) {
-                selectedReceipts
-                    .sort((a, b) => b.uploadDatetime.compareTo(a.uploadDatetime));
-              }
-              if (type == 1) {
-                selectedReceipts
-                    .sort((a, b) => b.receiptDatatime.compareTo(a.receiptDatatime));
-              }
-              if (type == 2) {
-                selectedReceipts
-                    .sort((a, b) => b.companyName.compareTo(a.companyName));
-              }
-              if (type == 3) {
-                selectedReceipts
-                    .sort((a, b) => b.totalAmount.compareTo(a.totalAmount));
-              }
-              if (type == 4) {
-                selectedReceipts
-                    .sort((a, b) => b.categoryId.compareTo(a.categoryId));
-              }
+          if (ascending) {
+            if (type == 0) {
+              selectedReceipts
+                  .sort((a, b) => a.uploadDatetime.compareTo(b.uploadDatetime));
             }
-
+            if (type == 1) {
+              selectedReceipts.sort(
+                  (a, b) => a.receiptDatatime.compareTo(b.receiptDatatime));
+            }
+            if (type == 2) {
+              selectedReceipts
+                  .sort((a, b) => a.companyName.compareTo(b.companyName));
+            }
+            if (type == 3) {
+              selectedReceipts
+                  .sort((a, b) => a.totalAmount.compareTo(b.totalAmount));
+            }
+            if (type == 4) {
+              selectedReceipts
+                  .sort((a, b) => a.categoryId.compareTo(b.categoryId));
+            }
+          } else {
+            if (type == 0) {
+              selectedReceipts
+                  .sort((a, b) => b.uploadDatetime.compareTo(a.uploadDatetime));
+            }
+            if (type == 1) {
+              selectedReceipts.sort(
+                  (a, b) => b.receiptDatatime.compareTo(a.receiptDatatime));
+            }
+            if (type == 2) {
+              selectedReceipts
+                  .sort((a, b) => b.companyName.compareTo(a.companyName));
+            }
+            if (type == 3) {
+              selectedReceipts
+                  .sort((a, b) => b.totalAmount.compareTo(a.totalAmount));
+            }
+            if (type == 4) {
+              selectedReceipts
+                  .sort((a, b) => b.categoryId.compareTo(a.categoryId));
+            }
+          }
         }
       }
     });
