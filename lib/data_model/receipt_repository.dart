@@ -58,7 +58,7 @@ class ReceiptRepository {
               }
               if (type == 1) {
                 selectedReceipts
-                    .sort((a, b) => a.receiptDatatime.compareTo(b.receiptDatatime));
+                    .sort((a, b) => a.receiptDatetime.compareTo(b.receiptDatetime));
               }
               if (type == 2) {
                 selectedReceipts
@@ -79,7 +79,7 @@ class ReceiptRepository {
               }
               if (type == 1) {
                 selectedReceipts
-                    .sort((a, b) => b.receiptDatatime.compareTo(a.receiptDatatime));
+                    .sort((a, b) => b.receiptDatetime.compareTo(a.receiptDatetime));
               }
               if (type == 2) {
                 selectedReceipts

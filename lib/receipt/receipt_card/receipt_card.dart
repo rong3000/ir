@@ -75,7 +75,7 @@ class ReceiptCard extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.only(bottom: 8.0),
                           child: Text(
-                            "Receipt Date ${DateFormat().add_yMd().format(_userRepository.receiptRepository.getSortedReceiptItems(_receiptStatusType, _type, _ascending)[_index].receiptDatatime.toLocal())}",
+                            "Receipt Date ${DateFormat().add_yMd().format(_userRepository.receiptRepository.getSortedReceiptItems(_receiptStatusType, _type, _ascending)[_index].receiptDatetime.toLocal())}",
                             style: dateStyle.copyWith(color: Colors.black54),
                           ),
                         ),
