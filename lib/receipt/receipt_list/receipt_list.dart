@@ -123,7 +123,7 @@ class ReceiptListState extends State<ReceiptList> {
   double dy2;
   bool ascending;
   int type;
-  DateTime _fromDate = DateTime.now();
+  DateTime _fromDate = DateTime.now().subtract(Duration(days: 180));
   DateTime _toDate = DateTime.now();
 
   UserRepository get _userRepository => widget._userRepository;
@@ -133,7 +133,7 @@ class ReceiptListState extends State<ReceiptList> {
     final DateTime picked = await showDatePicker(
         context: context,
         initialDate: _fromDate,
-        firstDate: DateTime(2015, 8),
+        firstDate: DateTime(1900, 8),
         lastDate: DateTime(2101));
     if (picked != null && picked != _fromDate)
       setState(() {
@@ -145,7 +145,7 @@ class ReceiptListState extends State<ReceiptList> {
     final DateTime picked = await showDatePicker(
         context: context,
         initialDate: _toDate,
-        firstDate: DateTime(2015, 8),
+        firstDate: DateTime(1900, 8),
         lastDate: DateTime(2101));
     if (picked != null && picked != _toDate)
       setState(() {
@@ -217,16 +217,6 @@ class ReceiptListState extends State<ReceiptList> {
 
                                 Row(
                                   children: <Widget>[
-//                                Expanded(
-//                                  flex: 1,
-//                                  child: TextField(
-////                                  controller: _controller,
-//                                    decoration: new InputDecoration(
-//                                      hintText: 'Start search',
-//                                      icon: Icon(Icons.search),
-//                                    ),
-//                                  ),
-//                                ),
                                     RaisedButton(
                                       onPressed: () {
                                         setState(() {

@@ -47,9 +47,9 @@ class ReceiptCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final TextStyle companyNameStyle =
-        theme.textTheme.headline.copyWith(color: Colors.black);
-    final TextStyle dateStyle = theme.textTheme.subhead;
-    final TextStyle amountStyle = theme.textTheme.title;
+        theme.textTheme.body1.copyWith(color: Colors.black);
+    final TextStyle dateStyle = theme.textTheme.body2;
+    final TextStyle amountStyle = theme.textTheme.body1;
     print('card state being set');
 
     return Card(
@@ -59,7 +59,7 @@ class ReceiptCard extends StatelessWidget {
         children: <Widget>[
           Flexible(
             child: SizedBox(
-              height: 160,
+              height: MediaQuery.of(context).size.height * 0.1,
               child: getImage(_userRepository.receiptRepository
                   .getSortedReceiptItems(_receiptStatusType, _type, _ascending, _fromDate, _toDate)[_index]
                   .imagePath),
@@ -70,7 +70,7 @@ class ReceiptCard extends StatelessWidget {
             child: Column(
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
+                  padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
                   child: DefaultTextStyle(
                     softWrap: false,
                     overflow: TextOverflow.ellipsis,
@@ -79,7 +79,7 @@ class ReceiptCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Padding(
-                          padding: const EdgeInsets.only(bottom: 8.0),
+                          padding: const EdgeInsets.only(bottom: 0.0),
                           child: Text(
                             "Receipt Date ${DateFormat().add_yMd().format(_userRepository.receiptRepository.getSortedReceiptItems(_receiptStatusType, _type, _ascending, _fromDate, _toDate)[_index].receiptDatatime.toLocal())}",
                             style: dateStyle.copyWith(color: Colors.black54),
@@ -87,7 +87,7 @@ class ReceiptCard extends StatelessWidget {
                         ),
                         Padding(
                           padding:
-                              const EdgeInsets.only(top: 8.0, bottom: 16.0),
+                              const EdgeInsets.only(top: 0.0, bottom: 0.0),
                           child: Text(
                             '${_userRepository.receiptRepository.getSortedReceiptItems(_receiptStatusType, _type, _ascending, _fromDate, _toDate)[_index].companyName}',
                             style: companyNameStyle,
@@ -109,7 +109,7 @@ class ReceiptCard extends StatelessWidget {
             child: Column(
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
+                  padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
                   child: DefaultTextStyle(
                     softWrap: false,
                     overflow: TextOverflow.ellipsis,
@@ -119,14 +119,14 @@ class ReceiptCard extends StatelessWidget {
                       children: <Widget>[
                         // three line description
                         Padding(
-                          padding: const EdgeInsets.only(bottom: 8.0),
+                          padding: const EdgeInsets.only(bottom: 0.0),
                           child: Text(
                             "Uploaded ${DateFormat().add_yMd().format(_userRepository.receiptRepository.getSortedReceiptItems(_receiptStatusType, _type, _ascending, _fromDate, _toDate)[_index].uploadDatetime.toLocal())}",
                             style: dateStyle.copyWith(color: Colors.black54),
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+                          padding: const EdgeInsets.only(top: 0.0, bottom: 0.0),
                           child: Text(
                             CategoryName.values[_userRepository
                                     .receiptRepository
@@ -143,36 +143,47 @@ class ReceiptCard extends StatelessWidget {
                 ),
                 ButtonTheme.bar(
                   child: ButtonBar(
+                    mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      OutlineButton(
-                          child: Text('Review',
-                              style:
-                                  companyNameStyle.copyWith(color: Colors.blue),
-                              semanticsLabel:
-                                  'Review ${_userRepository.receiptRepository.getSortedReceiptItems(_receiptStatusType, _type, _ascending, _fromDate, _toDate)[_index].id}'),
+                      Container(
+                        width: 50,
+                        height: 25,
+                        child:
+                        OutlineButton(
+                            child: Text('Review',
+                                style:
+                                  dateStyle.copyWith(color: Colors.blue).apply(fontSizeFactor: 0.75),
+                                semanticsLabel:
+                                'Review ${_userRepository.receiptRepository.getSortedReceiptItems(_receiptStatusType, _type, _ascending, _fromDate, _toDate)[_index].id}'),
 //                        textColor: Colors.blue.shade500,
 
-                          onPressed: () {
-                            print('pressed');
-                          },
-                          borderSide: BorderSide(color: Colors.blue),
+                            onPressed: () {
+                              print('pressed');
+                            },
+                            borderSide: BorderSide(color: Colors.blue),
 //                          shape: StadiumBorder(),
-                          shape: new RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(6.0))),
-                      OutlineButton(
-                          child: Text('Delete',
-                              style:
-                                  companyNameStyle.copyWith(color: Colors.blue),
-                              semanticsLabel:
-                                  'Delete ${_userRepository.receiptRepository.getSortedReceiptItems(_receiptStatusType, _type, _ascending, _fromDate, _toDate)[_index].id}'),
-                          textColor: Colors.blue.shade500,
-                          onPressed: () {
-                            print('pressed');
-                          },
-                          borderSide: BorderSide(color: Colors.blue),
+                            shape: new RoundedRectangleBorder(
+                                borderRadius: new BorderRadius.circular(4.0))),
+                      ),
+                      Container(
+                        width: 50,
+                        height: 25,
+                        child:
+                        OutlineButton(
+                            child: Text('Delete',
+                                style:
+                                dateStyle.copyWith(color: Colors.blue).apply(fontSizeFactor: 0.8),
+                                semanticsLabel:
+                                'Delete ${_userRepository.receiptRepository.getSortedReceiptItems(_receiptStatusType, _type, _ascending, _fromDate, _toDate)[_index].id}'),
+                            textColor: Colors.blue.shade500,
+                            onPressed: () {
+                              print('pressed');
+                            },
+                            borderSide: BorderSide(color: Colors.blue),
 //                          shape: StadiumBorder(),
-                          shape: new RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(6.0))),
+                            shape: new RoundedRectangleBorder(
+                                borderRadius: new BorderRadius.circular(4.0))),
+                      ),
                     ],
                   ),
                 ),
