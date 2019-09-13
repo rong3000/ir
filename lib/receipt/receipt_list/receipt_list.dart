@@ -133,6 +133,8 @@ class ReceiptListState extends State<ReceiptList> {
   UserRepository get _userRepository => widget._userRepository;
   get _receiptStatusType => widget._receiptStatusType;
 
+  String dropdown1Value = 'Free';
+
   Future<Null> _selectFromDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
         context: context,
@@ -199,97 +201,50 @@ class ReceiptListState extends State<ReceiptList> {
                       return Scaffold(
 //                        appBar: AppBar(title: SortingBar(userRepository: _userRepository),),
                         appBar: AppBar(
-                          title: Container(
-                            child: Column(
-                              children: <Widget>[
-                                Row(
-                                  children: <Widget>[
-                                    GestureDetector(
-                                      onTap: () {
-                                        _selectFromDate(context);
-                                      },
-                                      child: Text(
-                                        "From   ${DateFormat().add_yMd().format(_fromDate.toLocal())}",
-                                        style: DefaultTextStyle.of(context)
-                                            .style
-                                            .apply(fontSizeFactor: 0.8),
-                                      ),
-                                    ),
-                                    GestureDetector(
-                                      onTap: () {
-                                        _selectToDate(context);
-                                      },
-                                      child: Text(
-                                        "    To   ${DateFormat().add_yMd().format(_toDate.toLocal())}",
-                                        style: DefaultTextStyle.of(context)
-                                            .style
-                                            .apply(fontSizeFactor: 0.8),
-                                      ),
-                                    ),
-                                  ],
+                          title: Row(
+                            children: <Widget>[
+                              GestureDetector(
+                                onTap: () {
+                                  _selectFromDate(context);
+                                },
+                                child: Text(
+                                  "From   ${DateFormat().add_yMd().format(_fromDate.toLocal())}",
+                                  style: DefaultTextStyle.of(context)
+                                      .style
+                                      .apply(fontSizeFactor: 0.8),
                                 ),
-                                Row(
-                                  children: <Widget>[
-                                    RaisedButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          forceRefresh = false;
-                                          ascending = !ascending;
-                                          type = 0;
-                                          print("${ascending} ${forceRefresh}");
-                                        });
-                                      },
-                                      child: Text('Upload Time'),
-                                    ),
-                                    RaisedButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          forceRefresh = false;
-                                          ascending = !ascending;
-                                          type = 1;
-                                          print("${ascending} ${forceRefresh}");
-                                        });
-                                      },
-                                      child: Text('Receipt Time'),
-                                    ),
-                                    RaisedButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          forceRefresh = false;
-                                          ascending = !ascending;
-                                          type = 2;
-                                          print("${ascending} ${forceRefresh}");
-                                        });
-                                      },
-                                      child: Text('Company Name'),
-                                    ),
-                                    RaisedButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          forceRefresh = false;
-                                          ascending = !ascending;
-                                          type = 3;
-                                          print("${ascending} ${forceRefresh}");
-                                        });
-                                      },
-                                      child: Text('Amount'),
-                                    ),
-                                    RaisedButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          forceRefresh = false;
-                                          ascending = !ascending;
-                                          type = 4;
-                                          print("${ascending} ${forceRefresh}");
-                                        });
-                                      },
-                                      child: Text('Category'),
-                                    ),
-                                  ],
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  _selectToDate(context);
+                                },
+                                child: Text(
+                                  "    To   ${DateFormat().add_yMd().format(_toDate.toLocal())}",
+                                  style: DefaultTextStyle.of(context)
+                                      .style
+                                      .apply(fontSizeFactor: 0.8),
                                 ),
-                              ],
-                            ),
+                              ),
+                              Expanded(child: ListTile(
+                                title: const Text('Simple dropdown:'),
+                                trailing: DropdownButton<String>(
+                                  value: dropdown1Value,
+                                  onChanged: (String newValue) {
+                                    setState(() {
+                                      dropdown1Value = newValue;
+                                    });
+                                  },
+                                  items: <String>['One', 'Two', 'Free', 'Four'].map<DropdownMenuItem<String>>((String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(value),
+                                    );
+                                  }).toList(),
+                                ),
+                              ),),
+                            ],
                           ),
+
                         ),
                         body: ListView.builder(
                           itemCount: receiptItemCount,
