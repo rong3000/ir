@@ -40,8 +40,11 @@ class _InputDropdown extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Text(valueText, style: valueStyle),
-            Icon(Icons.arrow_drop_down,
-              color: Theme.of(context).brightness == Brightness.light ? Colors.grey.shade700 : Colors.white70,
+            Icon(
+              Icons.arrow_drop_down,
+              color: Theme.of(context).brightness == Brightness.light
+                  ? Colors.grey.shade700
+                  : Colors.white70,
             ),
           ],
         ),
@@ -69,8 +72,7 @@ class _DateTimePicker extends StatelessWidget {
       firstDate: DateTime(2015, 8),
       lastDate: DateTime(2101),
     );
-    if (picked != null && picked != selectedDate)
-      selectDate(picked);
+    if (picked != null && picked != selectedDate) selectDate(picked);
   }
 
   @override
@@ -80,7 +82,9 @@ class _DateTimePicker extends StatelessWidget {
       labelText: labelText,
       valueText: DateFormat.yMMMd().format(selectedDate),
       valueStyle: valueStyle,
-      onPressed: () { _selectDate(context); },
+      onPressed: () {
+        _selectDate(context);
+      },
     );
   }
 }
@@ -204,17 +208,26 @@ class ReceiptListState extends State<ReceiptList> {
                                       onTap: () {
                                         _selectFromDate(context);
                                       },
-                                      child: Text("From ${DateFormat().add_yMd().format(_fromDate.toLocal())}"),
+                                      child: Text(
+                                        "From   ${DateFormat().add_yMd().format(_fromDate.toLocal())}",
+                                        style: DefaultTextStyle.of(context)
+                                            .style
+                                            .apply(fontSizeFactor: 0.8),
+                                      ),
                                     ),
                                     GestureDetector(
                                       onTap: () {
                                         _selectToDate(context);
                                       },
-                                      child: Text("To ${DateFormat().add_yMd().format(_toDate.toLocal())}"),
+                                      child: Text(
+                                        "    To   ${DateFormat().add_yMd().format(_toDate.toLocal())}",
+                                        style: DefaultTextStyle.of(context)
+                                            .style
+                                            .apply(fontSizeFactor: 0.8),
+                                      ),
                                     ),
                                   ],
                                 ),
-
                                 Row(
                                   children: <Widget>[
                                     RaisedButton(
@@ -233,7 +246,7 @@ class ReceiptListState extends State<ReceiptList> {
                                         setState(() {
                                           forceRefresh = false;
                                           ascending = !ascending;
-                                          type =1;
+                                          type = 1;
                                           print("${ascending} ${forceRefresh}");
                                         });
                                       },
@@ -282,10 +295,14 @@ class ReceiptListState extends State<ReceiptList> {
                           itemCount: receiptItemCount,
                           itemBuilder: (context, index) {
                             return ReceiptCard(
-                                    index: index,
-                                    userRepository: _userRepository,
-                                    receiptStatusType: _receiptStatusType,
-                            type: type, ascending: ascending, fromDate: _fromDate, toDate: _toDate,)
+                              index: index,
+                              userRepository: _userRepository,
+                              receiptStatusType: _receiptStatusType,
+                              type: type,
+                              ascending: ascending,
+                              fromDate: _fromDate,
+                              toDate: _toDate,
+                            )
 //                            ListTile(
 //                            title: Text('${_userRepository
 //                                .receiptRepository.getReceiptItems(_receiptStatusType)[index].companyName}'),

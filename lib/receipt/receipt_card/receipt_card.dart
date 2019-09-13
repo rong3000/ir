@@ -82,7 +82,7 @@ class ReceiptCard extends StatelessWidget {
                           padding: const EdgeInsets.only(bottom: 0.0),
                           child: Text(
                             "Receipt Date ${DateFormat().add_yMd().format(_userRepository.receiptRepository.getSortedReceiptItems(_receiptStatusType, _type, _ascending, _fromDate, _toDate)[_index].receiptDatatime.toLocal())}",
-                            style: dateStyle.copyWith(color: Colors.black54),
+                            style: dateStyle.copyWith(color: Colors.black54).apply(fontSizeFactor: 0.75),
                           ),
                         ),
                         Padding(
@@ -122,7 +122,7 @@ class ReceiptCard extends StatelessWidget {
                           padding: const EdgeInsets.only(bottom: 0.0),
                           child: Text(
                             "Uploaded ${DateFormat().add_yMd().format(_userRepository.receiptRepository.getSortedReceiptItems(_receiptStatusType, _type, _ascending, _fromDate, _toDate)[_index].uploadDatetime.toLocal())}",
-                            style: dateStyle.copyWith(color: Colors.black54),
+                            style: dateStyle.copyWith(color: Colors.black54).apply(fontSizeFactor: 0.75),
                           ),
                         ),
                         Padding(
