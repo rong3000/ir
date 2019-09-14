@@ -179,10 +179,10 @@ class ReceiptListState extends State<ReceiptList> {
   final List<PopupMenuItem<String>> _popUpMenuItems = menuItems
       .map(
         (String value) => PopupMenuItem<String>(
-      value: value,
-      child: Text(value),
-    ),
-  )
+          value: value,
+          child: Text(value),
+        ),
+      )
       .toList();
 
   String _btn3SelectedVal = 'Receipt Time';
@@ -193,9 +193,16 @@ class ReceiptListState extends State<ReceiptList> {
   String _simpleValue;
 
   void showMenuSelection(String value) {
-    if (<String>[_simpleValue1, _simpleValue2, _simpleValue3].contains(value))
-      _simpleValue = value;
-    showInSnackBar('You selected: $value');
+//    if (<String>[_simpleValue1, _simpleValue2, _simpleValue3].contains(value))
+//      _simpleValue = value;
+//    showInSnackBar('You selected: $value');
+    print('You selected: $value');
+    setState(() {
+      forceRefresh = false;
+      ascending = !ascending;
+      type = 3;
+      print("${ascending} ${forceRefresh}");
+    });
   }
 
   void showInSnackBar(String value) {
@@ -240,30 +247,31 @@ class ReceiptListState extends State<ReceiptList> {
                       .apply(fontSizeFactor: 0.8),
                 ),
               ),
-              Expanded(child:
-              PopupMenuButton<String>(
-                padding: EdgeInsets.zero,
-                initialValue: _simpleValue,
-                onSelected: showMenuSelection,
-                child: ListTile(
-                  title: Text('Sort By [${_simpleValue}]'),
+              Expanded(
+                child: PopupMenuButton<String>(
+                  padding: EdgeInsets.zero,
+                  initialValue: _simpleValue,
+                  onSelected: showMenuSelection,
+                  child: ListTile(
+                    title: Text('Sort By [${_simpleValue}]'),
 //                                  subtitle: Text(_simpleValue),
+                  ),
+                  itemBuilder: (BuildContext context) =>
+                      <PopupMenuItem<String>>[
+                    PopupMenuItem<String>(
+                      value: _simpleValue1,
+                      child: Text(_simpleValue1),
+                    ),
+                    PopupMenuItem<String>(
+                      value: _simpleValue2,
+                      child: Text(_simpleValue2),
+                    ),
+                    PopupMenuItem<String>(
+                      value: _simpleValue3,
+                      child: Text(_simpleValue3),
+                    ),
+                  ],
                 ),
-                itemBuilder: (BuildContext context) => <PopupMenuItem<String>>[
-                  PopupMenuItem<String>(
-                    value: _simpleValue1,
-                    child: Text(_simpleValue1),
-                  ),
-                  PopupMenuItem<String>(
-                    value: _simpleValue2,
-                    child: Text(_simpleValue2),
-                  ),
-                  PopupMenuItem<String>(
-                    value: _simpleValue3,
-                    child: Text(_simpleValue3),
-                  ),
-                ],
-              ),
 //                              ListTile(
 //                                title: const Text('Simple dropdown:'),
 //                                trailing: DropdownButton<String>(
@@ -284,7 +292,6 @@ class ReceiptListState extends State<ReceiptList> {
               ),
             ],
           ),
-
         ),
         body: FutureBuilder<DataResult>(
             future: _userRepository.receiptRepository
