@@ -165,7 +165,11 @@ class ReceiptListState extends State<ReceiptList> {
     ascending = false;
     type = ReceiptSortType.UploadTime;
     super.initState();
-    _simpleValue = _simpleValue2;
+    if (_receiptStatusType == ReceiptStatusType.Uploaded) {
+      _simpleValue = _simpleValue1;
+    } else {
+      _simpleValue = _simpleValue2;
+    }
   }
 
   static const menuItems = <String>[
@@ -196,7 +200,7 @@ class ReceiptListState extends State<ReceiptList> {
 
   void showMenuSelection(ReceiptSortType value) {
 //    if (<String>[_simpleValue1, _simpleValue2, _simpleValue3].contains(value))
-      _simpleValue = value;
+    _simpleValue = value;
 //    showInSnackBar('You selected: $value');
     print('You selected: $value');
     setState(() {
@@ -255,7 +259,8 @@ class ReceiptListState extends State<ReceiptList> {
                   initialValue: _simpleValue,
                   onSelected: showMenuSelection,
                   child: ListTile(
-                    title: Text('Sort By [${_simpleValue.toString().split('.')[1]}]'),
+                    title: Text(
+                        'Sort By [${_simpleValue.toString().split('.')[1]}]'),
 //                                  subtitle: Text(_simpleValue),
                   ),
                   itemBuilder: (BuildContext context) =>
@@ -268,21 +273,20 @@ class ReceiptListState extends State<ReceiptList> {
                       value: _simpleValue2,
                       child: Text(_simpleValue2.toString().split('.')[1]),
                     ),
-                        PopupMenuItem<ReceiptSortType>(
-                          value: _simpleValue3,
-                          child: Text(_simpleValue3.toString().split('.')[1]),
-                        ),
-                        PopupMenuItem<ReceiptSortType>(
-                          value: _simpleValue4,
-                          child: Text(_simpleValue4.toString().split('.')[1]),
-                        ),
-                        PopupMenuItem<ReceiptSortType>(
-                          value: _simpleValue5,
-                          child: Text(_simpleValue5.toString().split('.')[1]),
-                        ),
+                    PopupMenuItem<ReceiptSortType>(
+                      value: _simpleValue3,
+                      child: Text(_simpleValue3.toString().split('.')[1]),
+                    ),
+                    PopupMenuItem<ReceiptSortType>(
+                      value: _simpleValue4,
+                      child: Text(_simpleValue4.toString().split('.')[1]),
+                    ),
+                    PopupMenuItem<ReceiptSortType>(
+                      value: _simpleValue5,
+                      child: Text(_simpleValue5.toString().split('.')[1]),
+                    ),
                   ],
-                ),
-//                              ListTile(
+                ), //                              ListTile(
 //                                title: const Text('Simple dropdown:'),
 //                                trailing: DropdownButton<String>(
 //                                  value: dropdown1Value,
@@ -323,26 +327,12 @@ class ReceiptListState extends State<ReceiptList> {
                     );
                   } else {
                     if (snapshot.data.success) {
-                      receiptItemCount = _userRepository.receiptRepository
-                          .getReceiptItemsCount(_receiptStatusType);
-                      return ListView.builder(
-                        itemCount: receiptItemCount,
-                        itemBuilder: (context, index) {
-                          return ReceiptCard(
-                            index: index,
-                            userRepository: _userRepository,
-                            receiptStatusType: _receiptStatusType,
-                            type: type,
-                            ascending: ascending,
-                            fromDate: _fromDate,
-                            toDate: _toDate,
-                          )
-//                            ListTile(
-//                            title: Text('${_userRepository
-//                                .receiptRepository.getReceiptItems(_receiptStatusType)[index].companyName}'),
-//                          )
-                              ;
-                        },
+                      List<ReceiptListItem> sortedReceiptItems = _userRepository
+                          .receiptRepository
+                          .getSortedReceiptItems(_receiptStatusType, type,
+                              ascending, _fromDate, _toDate);
+                      return ReceiptCard(
+                        receiptItems: sortedReceiptItems,
                       );
                     } else {
                       return Column(

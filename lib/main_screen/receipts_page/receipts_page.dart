@@ -512,10 +512,6 @@ class ReceiptsPage extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.cyan,
-          // If `TabController controller` is not provided, then a
-          // DefaultTabController ancestor must be provided instead.
-          // Another way is to use a self-defined controller, c.f. "Bottom tab
-          // bar" example.
           title: TabBar(
             tabs: _kTabs,
           ),
@@ -566,105 +562,23 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
             builder: (BuildContext context, HomeState state) {
               return Scaffold(
                 body: OrientationBuilder(builder: (context, orientation) {
-                  if (_receiptStatusType == ReceiptStatusType.Uploaded) {
-                    return Column(
-                      children: <Widget>[
-                        Flexible(
-                          flex: 2,
-                          fit: FlexFit.tight,
-                          child: ReceiptList(
-                              userRepository: _userRepository,
-                              receiptStatusType: _receiptStatusType),
+                  return Column(
+                    children: <Widget>[
+                      Flexible(
+                        flex: 2,
+                        fit: FlexFit.tight,
+                        child: ReceiptList(
+                            userRepository: _userRepository,
+                            receiptStatusType: _receiptStatusType),
 //                          Scaffold(
 //                            appBar: AppBar(title: SortingBar(userRepository: _userRepository),),
 //                            body: ReceiptList(
 //                                userRepository: _userRepository,
 //                                receiptStatusType: _receiptStatusType),
 //                          )
-                        ),
-                      ],
-                    );
-                  } else {
-                    return Column(
-                      children: <Widget>[
-                        Flexible(
-                          flex: 2,
-                          fit: FlexFit.tight,
-                          child: DataTableDemo(
-                              userRepository: _userRepository,
-                              receiptStatusType: _receiptStatusType),
-                        ),
-                        Flexible(
-                            fit: FlexFit.tight,
-                            child: Wrap(
-                              children: <Widget>[
-                                FractionallySizedBox(
-                                  widthFactor:
-                                      orientation == Orientation.portrait
-                                          ? 1
-                                          : 0.33,
-                                  child: Container(
-                                    height: MediaQuery.of(context).size.height *
-                                        (orientation == Orientation.portrait
-                                            ? 0.125
-                                            : 0.32),
-                                    child: Card(
-                                      child: ListTile(
-                                        leading: Icon(Icons.album),
-                                        title: AutoSizeText(
-                                          'Snapped on...',
-                                          style: TextStyle(fontSize: 18),
-                                          minFontSize: 8,
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        subtitle: AutoSizeText(
-                                          'Click to View or Remove the receipt',
-                                          style: TextStyle(fontSize: 18),
-                                          minFontSize: 8,
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                FractionallySizedBox(
-                                  widthFactor:
-                                      orientation == Orientation.portrait
-                                          ? 1
-                                          : 0.33,
-                                  child: Container(
-                                    height: MediaQuery.of(context).size.height *
-                                        (orientation == Orientation.portrait
-                                            ? 0.125
-                                            : 0.32),
-                                    child: Card(
-                                      child: ListTile(
-                                        leading: Icon(Icons.album),
-                                        title: AutoSizeText(
-                                          'Snapped on...',
-                                          style: TextStyle(fontSize: 18),
-                                          minFontSize: 8,
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        subtitle: AutoSizeText(
-                                          'Click to View or Remove the receipt',
-                                          style: TextStyle(fontSize: 18),
-                                          minFontSize: 8,
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            )),
-                      ],
-                    );
-                  }
+                      ),
+                    ],
+                  );
                 }),
               );
             }),
