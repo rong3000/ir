@@ -38,3 +38,10 @@ enum ReportStatusType
   Deleted
 }
 
+enum ReceiptSortType {
+  UploadTime,
+  ReceiptTime,
+  CompanyName,
+  Amount,
+  Category
+}

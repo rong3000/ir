@@ -126,7 +126,7 @@ class ReceiptListState extends State<ReceiptList> {
   double dx2;
   double dy2;
   bool ascending;
-  int type;
+  ReceiptSortType type;
   DateTime _fromDate = DateTime.now().subtract(Duration(days: 180));
   DateTime _toDate = DateTime.now();
 
@@ -163,7 +163,7 @@ class ReceiptListState extends State<ReceiptList> {
   void initState() {
     forceRefresh = true;
     ascending = false;
-    type = 1;
+    type = ReceiptSortType.UploadTime;
     super.initState();
     _simpleValue = _simpleValue2;
   }
@@ -187,20 +187,22 @@ class ReceiptListState extends State<ReceiptList> {
 
   String _btn3SelectedVal = 'Receipt Time';
 
-  final String _simpleValue1 = 'Menu item value one';
-  final String _simpleValue2 = 'Menu item value two';
-  final String _simpleValue3 = 'Menu item value three';
-  String _simpleValue;
+  final ReceiptSortType _simpleValue1 = ReceiptSortType.UploadTime;
+  final ReceiptSortType _simpleValue2 = ReceiptSortType.ReceiptTime;
+  final ReceiptSortType _simpleValue3 = ReceiptSortType.CompanyName;
+  final ReceiptSortType _simpleValue4 = ReceiptSortType.Amount;
+  final ReceiptSortType _simpleValue5 = ReceiptSortType.Category;
+  ReceiptSortType _simpleValue;
 
-  void showMenuSelection(String value) {
+  void showMenuSelection(ReceiptSortType value) {
 //    if (<String>[_simpleValue1, _simpleValue2, _simpleValue3].contains(value))
-//      _simpleValue = value;
+      _simpleValue = value;
 //    showInSnackBar('You selected: $value');
     print('You selected: $value');
     setState(() {
       forceRefresh = false;
       ascending = !ascending;
-      type = 3;
+      type = value;
       print("${ascending} ${forceRefresh}");
     });
   }
@@ -248,28 +250,36 @@ class ReceiptListState extends State<ReceiptList> {
                 ),
               ),
               Expanded(
-                child: PopupMenuButton<String>(
+                child: PopupMenuButton<ReceiptSortType>(
                   padding: EdgeInsets.zero,
                   initialValue: _simpleValue,
                   onSelected: showMenuSelection,
                   child: ListTile(
-                    title: Text('Sort By [${_simpleValue}]'),
+                    title: Text('Sort By [${_simpleValue.toString().split('.')[1]}]'),
 //                                  subtitle: Text(_simpleValue),
                   ),
                   itemBuilder: (BuildContext context) =>
-                      <PopupMenuItem<String>>[
-                    PopupMenuItem<String>(
+                      <PopupMenuItem<ReceiptSortType>>[
+                    PopupMenuItem<ReceiptSortType>(
                       value: _simpleValue1,
-                      child: Text(_simpleValue1),
+                      child: Text(_simpleValue1.toString().split('.')[1]),
                     ),
-                    PopupMenuItem<String>(
+                    PopupMenuItem<ReceiptSortType>(
                       value: _simpleValue2,
-                      child: Text(_simpleValue2),
+                      child: Text(_simpleValue2.toString().split('.')[1]),
                     ),
-                    PopupMenuItem<String>(
-                      value: _simpleValue3,
-                      child: Text(_simpleValue3),
-                    ),
+                        PopupMenuItem<ReceiptSortType>(
+                          value: _simpleValue3,
+                          child: Text(_simpleValue3.toString().split('.')[1]),
+                        ),
+                        PopupMenuItem<ReceiptSortType>(
+                          value: _simpleValue4,
+                          child: Text(_simpleValue4.toString().split('.')[1]),
+                        ),
+                        PopupMenuItem<ReceiptSortType>(
+                          value: _simpleValue5,
+                          child: Text(_simpleValue5.toString().split('.')[1]),
+                        ),
                   ],
                 ),
 //                              ListTile(

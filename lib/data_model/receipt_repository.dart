@@ -44,7 +44,7 @@ class ReceiptRepository {
   }
 
   List<ReceiptListItem> getSortedReceiptItems(ReceiptStatusType receiptStatus,
-      int type, bool ascending, DateTime fromDate, DateTime toDate) {
+      ReceiptSortType type, bool ascending, DateTime fromDate, DateTime toDate) {
     List<ReceiptListItem> selectedReceipts = new List<ReceiptListItem>();
     _lock.synchronized(() {
       for (var i = 0; i < receipts.length; i++) {
@@ -52,48 +52,55 @@ class ReceiptRepository {
             receipts[i].uploadDatetime.isAfter(fromDate) &&
             receipts[i].uploadDatetime.isBefore(toDate.add(Duration(days: 1)))) {
           selectedReceipts.add(receipts[i]);
-
           if (ascending) {
-            if (type == 0) {
-              selectedReceipts
-                  .sort((a, b) => a.uploadDatetime.compareTo(b.uploadDatetime));
-            }
-            if (type == 1) {
-              selectedReceipts.sort(
-                  (a, b) => a.receiptDatatime.compareTo(b.receiptDatatime));
-            }
-            if (type == 2) {
-              selectedReceipts
-                  .sort((a, b) => a.companyName.compareTo(b.companyName));
-            }
-            if (type == 3) {
-              selectedReceipts
-                  .sort((a, b) => a.totalAmount.compareTo(b.totalAmount));
-            }
-            if (type == 4) {
-              selectedReceipts
-                  .sort((a, b) => a.categoryId.compareTo(b.categoryId));
+            switch (type) {
+              case ReceiptSortType.UploadTime:
+                selectedReceipts
+                    .sort((a, b) => a.uploadDatetime.compareTo(b.uploadDatetime));
+                break;
+              case ReceiptSortType.ReceiptTime:
+                selectedReceipts.sort(
+                        (a, b) => a.receiptDatatime.compareTo(b.receiptDatatime));
+                break;
+              case ReceiptSortType.CompanyName:
+                selectedReceipts.sort(
+                        (a, b) => a.companyName.compareTo(b.companyName));
+                break;
+              case ReceiptSortType.Amount:
+                selectedReceipts.sort(
+                        (a, b) => a.totalAmount.compareTo(b.totalAmount));
+                break;
+              case ReceiptSortType.Category:
+                selectedReceipts.sort(
+                        (a, b) => a.categoryId.compareTo(b.categoryId));
+                break;
+              default:
+                break;
             }
           } else {
-            if (type == 0) {
-              selectedReceipts
-                  .sort((a, b) => b.uploadDatetime.compareTo(a.uploadDatetime));
-            }
-            if (type == 1) {
-              selectedReceipts.sort(
-                  (a, b) => b.receiptDatatime.compareTo(a.receiptDatatime));
-            }
-            if (type == 2) {
-              selectedReceipts
-                  .sort((a, b) => b.companyName.compareTo(a.companyName));
-            }
-            if (type == 3) {
-              selectedReceipts
-                  .sort((a, b) => b.totalAmount.compareTo(a.totalAmount));
-            }
-            if (type == 4) {
-              selectedReceipts
-                  .sort((a, b) => b.categoryId.compareTo(a.categoryId));
+            switch (type) {
+              case ReceiptSortType.UploadTime:
+                selectedReceipts
+                    .sort((b, a) => a.uploadDatetime.compareTo(b.uploadDatetime));
+                break;
+              case ReceiptSortType.ReceiptTime:
+                selectedReceipts.sort(
+                        (b, a) => a.receiptDatatime.compareTo(b.receiptDatatime));
+                break;
+              case ReceiptSortType.CompanyName:
+                selectedReceipts.sort(
+                        (b, a) => a.companyName.compareTo(b.companyName));
+                break;
+              case ReceiptSortType.Amount:
+                selectedReceipts.sort(
+                        (b, a) => a.totalAmount.compareTo(b.totalAmount));
+                break;
+              case ReceiptSortType.Category:
+                selectedReceipts.sort(
+                        (b, a) => a.categoryId.compareTo(b.categoryId));
+                break;
+              default:
+                break;
             }
           }
         }

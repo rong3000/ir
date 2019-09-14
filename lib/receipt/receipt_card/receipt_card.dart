@@ -11,7 +11,7 @@ class ReceiptCard extends StatelessWidget {
   final int _index;
   final UserRepository _userRepository;
   final ReceiptStatusType _receiptStatusType;
-  final int _type;
+  final ReceiptSortType _type;
   final bool _ascending;
   final DateTime _fromDate;
   final DateTime _toDate;
@@ -21,7 +21,7 @@ class ReceiptCard extends StatelessWidget {
     @required int index,
     @required UserRepository userRepository,
     @required ReceiptStatusType receiptStatusType,
-    @required int type,
+    @required ReceiptSortType type,
     @required bool ascending,
     final DateTime fromDate,
     final DateTime toDate,
