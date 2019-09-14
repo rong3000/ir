@@ -38,3 +38,9 @@ enum ReportStatusType
   Deleted
 }
 
+const Set CurrencyCodes = 
+{
+  'AUD',
+  'USD'
+};
+
