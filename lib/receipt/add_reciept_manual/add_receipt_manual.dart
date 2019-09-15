@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -12,11 +14,11 @@ class AddReceiptForm extends StatefulWidget {
     // TODO: pass this in from edit exisiting
     var receipt = Receipt();
     receipt.receiptDatetime = DateTime(2018, 10, 5);
-    return AddReceiptFormState(null);
+    return _AddReceiptFormState(null);
   }
 }
 
-class AddReceiptFormState extends State<AddReceiptForm> {
+class _AddReceiptFormState extends State<AddReceiptForm> {
   final _formKey = GlobalKey<FormState>();
   final pageTitleEdit = 'Edit Receipt';
   final pageTitleNew = 'Create Receipt';
@@ -25,7 +27,7 @@ class AddReceiptFormState extends State<AddReceiptForm> {
   var defaultCurrencyValue = 'AUD';
   var defaultCategoryValue = categoryMapping[CategoryName.Undecided];
 
-  AddReceiptFormState(this.receipt) {
+  _AddReceiptFormState(this.receipt) {
     isNew = this.receipt == null;
     if (isNew) {
       this.receipt = Receipt();
@@ -86,8 +88,8 @@ class AddReceiptFormState extends State<AddReceiptForm> {
           )
         ],
       ),
-      body: Center(
-        child: Form(
+      body: ListView(children: <Widget>[
+        Form(
           key: _formKey,
           child: Column(
             children: <Widget>[
@@ -175,7 +177,25 @@ class AddReceiptFormState extends State<AddReceiptForm> {
             ],
           ),
         ),
-      ),
+        Row(
+          children: <Widget>[
+            Expanded(
+              flex: 5,
+              child: ClipRect(
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  heightFactor: .4,
+                  child: Image.asset('assets/test.jpg', fit: BoxFit.cover), // TODO: load image from db or display 'no image selected'
+                ),
+            ),
+            ),
+            Expanded(
+              child: Icon(Icons.image),
+              flex: 5,
+            )
+          ],
+        )
+      ]),
     );
   }
 }
