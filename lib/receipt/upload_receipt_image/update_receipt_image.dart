@@ -147,7 +147,7 @@ class UploadReceiptImageState extends State<UploadReceiptImage> {
                         return getErrorPage("Recognizing", "The receipt image has been submitted, we are now recognizing it, and will notify you after we recognize it.");
                       } else {
                         // Show add or update receipt page
-                        return Text(jsonEncode(receipt));
+                        return Text("Receipt was uploaded successfully");
                       }
                     } else {
                       // Show error message
