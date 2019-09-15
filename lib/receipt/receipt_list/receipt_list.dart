@@ -227,6 +227,10 @@ class ReceiptListState extends State<ReceiptList> {
     print('Delete ${id}');
   }
 
+  void addAction(int id) {
+    print('Add ${id}');
+  }
+
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
@@ -344,8 +348,12 @@ class ReceiptListState extends State<ReceiptList> {
                           itemBuilder: (context, index) {
                             return ReceiptCard(
                               receiptItem: sortedReceiptItems[index],
+                              reviewBtnOn: true,
+                              deleteBtnOn: true,
+                              addBtnOn: false,
                               reviewAction: reviewAction,
                               deleteAction: deleteAction,
+                              addAction: addAction,
                             );
                           });
                     } else {

@@ -8,10 +8,12 @@ import '../../data_model/enums.dart';
 import '../../data_model/webservice.dart';
 
 class ReceiptCard extends StatefulWidget {
-
   const ReceiptCard({
     Key key,
     @required ReceiptListItem receiptItem,
+    this.reviewBtnOn,
+    this.deleteBtnOn,
+    this.addBtnOn,
     this.reviewAction,
     this.deleteAction,
     this.addAction,
@@ -23,6 +25,9 @@ class ReceiptCard extends StatefulWidget {
   final Function(int) reviewAction;
   final Function(int) deleteAction;
   final Function(int) addAction;
+  final bool reviewBtnOn;
+  final bool deleteBtnOn;
+  final bool addBtnOn;
 
   @override
   _ReceiptCardState createState() => _ReceiptCardState();
@@ -44,6 +49,74 @@ class _ReceiptCardState extends State<ReceiptCard> {
         theme.textTheme.body1.copyWith(color: Colors.black);
     final TextStyle dateStyle = theme.textTheme.body2;
     final TextStyle amountStyle = theme.textTheme.body1;
+
+    Widget _reviewButton(BuildContext context, bool reviewOn) {
+      if (reviewOn) {
+        return Container(
+          height: 25,
+          child: OutlineButton(
+              child: Text('Review',
+                  style: dateStyle
+                      .copyWith(color: Colors.blue)
+                      .apply(fontSizeFactor: 0.75),
+                  semanticsLabel: 'Review ${widget._receiptItem.id}'),
+//                    textColor: Colors.blue.shade500,
+
+              onPressed: () => widget.reviewAction(widget._receiptItem.id),
+              borderSide: BorderSide(color: Colors.blue),
+//                      shape: StadiumBorder(),
+              shape: new RoundedRectangleBorder(
+                  borderRadius: new BorderRadius.circular(4.0))),
+        );
+      } else
+        return null;
+    }
+
+    Widget _deleteButton(BuildContext context, bool deleteBtnOn) {
+      if (deleteBtnOn) {
+        return Container(
+          width: 50,
+          height: 25,
+          child: OutlineButton(
+              child: Text('Delete',
+                  style: dateStyle
+                      .copyWith(color: Colors.blue)
+                      .apply(fontSizeFactor: 0.75),
+                  semanticsLabel: 'Delete ${widget._receiptItem.id}'),
+//                    textColor: Colors.blue.shade500,
+
+              onPressed: () => widget.deleteAction(widget._receiptItem.id),
+              borderSide: BorderSide(color: Colors.blue),
+//                      shape: StadiumBorder(),
+              shape: new RoundedRectangleBorder(
+                  borderRadius: new BorderRadius.circular(4.0))),
+        );
+      } else
+        return null;
+    }
+
+    Widget _addButton(BuildContext context, bool addBtnOn) {
+      if (addBtnOn) {
+        return Container(
+          width: 50,
+          height: 25,
+          child: OutlineButton(
+              child: Text('Add',
+                  style: dateStyle
+                      .copyWith(color: Colors.blue)
+                      .apply(fontSizeFactor: 0.75),
+                  semanticsLabel: 'Add ${widget._receiptItem.id}'),
+//                    textColor: Colors.blue.shade500,
+
+              onPressed: () => widget.addAction(widget._receiptItem.id),
+              borderSide: BorderSide(color: Colors.blue),
+//                      shape: StadiumBorder(),
+              shape: new RoundedRectangleBorder(
+                  borderRadius: new BorderRadius.circular(4.0))),
+        );
+      } else
+        return null;
+    }
 
     return Card(
       clipBehavior: Clip.antiAlias,
@@ -136,41 +209,9 @@ class _ReceiptCardState extends State<ReceiptCard> {
                   child: ButtonBar(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      Container(
-                        width: 50,
-                        height: 25,
-                        child: OutlineButton(
-                            child: Text('Review',
-                                style: dateStyle
-                                    .copyWith(color: Colors.blue)
-                                    .apply(fontSizeFactor: 0.75),
-                                semanticsLabel: 'Review ${widget._receiptItem.id}'),
-//                    textColor: Colors.blue.shade500,
-
-                            onPressed: () => widget
-                                .reviewAction(widget._receiptItem.id),
-                            borderSide: BorderSide(color: Colors.blue),
-//                      shape: StadiumBorder(),
-                            shape: new RoundedRectangleBorder(
-                                borderRadius: new BorderRadius.circular(4.0))),
-                      ),
-                      Container(
-                        width: 50,
-                        height: 25,
-                        child: OutlineButton(
-                            child: Text('Delete',
-                                style: dateStyle
-                                    .copyWith(color: Colors.blue)
-                                    .apply(fontSizeFactor: 0.8),
-                                semanticsLabel: 'Delete ${widget._receiptItem.id}'),
-                            textColor: Colors.blue.shade500,
-                            onPressed: () => widget
-                                .deleteAction(widget._receiptItem.id),
-                            borderSide: BorderSide(color: Colors.blue),
-//                      shape: StadiumBorder(),
-                            shape: new RoundedRectangleBorder(
-                                borderRadius: new BorderRadius.circular(4.0))),
-                      ),
+                      _reviewButton(context, widget.reviewBtnOn),
+                      _deleteButton(context, widget.deleteBtnOn),
+                      _addButton(context, widget.addBtnOn),
                     ],
                   ),
                 ),
