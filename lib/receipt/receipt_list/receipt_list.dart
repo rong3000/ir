@@ -10,6 +10,85 @@ import 'package:intl/intl.dart';
 
 import '../../data_model/webservice.dart';
 
+class _InputDropdown extends StatelessWidget {
+  const _InputDropdown({
+    Key key,
+    this.child,
+    this.labelText,
+    this.valueText,
+    this.valueStyle,
+    this.onPressed,
+  }) : super(key: key);
+
+  final String labelText;
+  final String valueText;
+  final TextStyle valueStyle;
+  final VoidCallback onPressed;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onPressed,
+      child: InputDecorator(
+        decoration: InputDecoration(
+          labelText: labelText,
+        ),
+        baseStyle: valueStyle,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Text(valueText, style: valueStyle),
+            Icon(
+              Icons.arrow_drop_down,
+              color: Theme.of(context).brightness == Brightness.light
+                  ? Colors.grey.shade700
+                  : Colors.white70,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _DateTimePicker extends StatelessWidget {
+  const _DateTimePicker({
+    Key key,
+    this.labelText,
+    this.selectedDate,
+    this.selectDate,
+  }) : super(key: key);
+
+  final String labelText;
+  final DateTime selectedDate;
+  final ValueChanged<DateTime> selectDate;
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime(2015, 8),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null && picked != selectedDate) selectDate(picked);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final TextStyle valueStyle = Theme.of(context).textTheme.title;
+    return _InputDropdown(
+      labelText: labelText,
+      valueText: DateFormat.yMMMd().format(selectedDate),
+      valueStyle: valueStyle,
+      onPressed: () {
+        _selectDate(context);
+      },
+    );
+  }
+}
+
 class ReceiptList extends StatefulWidget {
   final UserRepository _userRepository;
   final ReceiptStatusType _receiptStatusType;
@@ -47,17 +126,109 @@ class ReceiptListState extends State<ReceiptList> {
   double dx2;
   double dy2;
   bool ascending;
-  int type;
+  ReceiptSortType type;
+  DateTime _fromDate = DateTime.now().subtract(Duration(days: 180));
+  DateTime _toDate = DateTime.now();
 
   UserRepository get _userRepository => widget._userRepository;
   get _receiptStatusType => widget._receiptStatusType;
+
+  String dropdown1Value = 'Free';
+
+  Future<Null> _selectFromDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: _fromDate,
+        firstDate: DateTime(1900, 8),
+        lastDate: DateTime(2101));
+    if (picked != null && picked != _fromDate)
+      setState(() {
+        _fromDate = picked;
+      });
+  }
+
+  Future<Null> _selectToDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: _toDate,
+        firstDate: DateTime(1900, 8),
+        lastDate: DateTime(2101));
+    if (picked != null && picked != _toDate)
+      setState(() {
+        _toDate = picked;
+      });
+  }
 
   @override
   void initState() {
     forceRefresh = true;
     ascending = false;
-    type = 1;
+    type = ReceiptSortType.UploadTime;
     super.initState();
+    if (_receiptStatusType == ReceiptStatusType.Uploaded) {
+      _simpleValue = _simpleValue1;
+    } else {
+      _simpleValue = _simpleValue2;
+    }
+  }
+
+  static const menuItems = <String>[
+    'Upload Time',
+    'Receipt Time',
+    'Company Name',
+    'Amount',
+    'Category'
+  ];
+
+  final List<PopupMenuItem<String>> _popUpMenuItems = menuItems
+      .map(
+        (String value) => PopupMenuItem<String>(
+          value: value,
+          child: Text(value),
+        ),
+      )
+      .toList();
+
+  String _btn3SelectedVal = 'Receipt Time';
+
+  final ReceiptSortType _simpleValue1 = ReceiptSortType.UploadTime;
+  final ReceiptSortType _simpleValue2 = ReceiptSortType.ReceiptTime;
+  final ReceiptSortType _simpleValue3 = ReceiptSortType.CompanyName;
+  final ReceiptSortType _simpleValue4 = ReceiptSortType.Amount;
+  final ReceiptSortType _simpleValue5 = ReceiptSortType.Category;
+  ReceiptSortType _simpleValue;
+
+  void showMenuSelection(ReceiptSortType value) {
+//    if (<String>[_simpleValue1, _simpleValue2, _simpleValue3].contains(value))
+    _simpleValue = value;
+//    showInSnackBar('You selected: $value');
+    print('You selected: $value');
+    setState(() {
+      forceRefresh = false;
+      ascending = !ascending;
+      type = value;
+      print("${ascending} ${forceRefresh}");
+    });
+  }
+
+  void showInSnackBar(String value) {
+    _scaffoldKey.currentState.showSnackBar(SnackBar(
+      content: Text(value),
+    ));
+  }
+
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  void reviewAction(int id) {
+    print('Review ${id}');
+  }
+
+  void deleteAction(int id) {
+    print('Delete ${id}');
+  }
+
+  void addAction(int id) {
+    print('Add ${id}');
   }
 
   @override
@@ -69,6 +240,85 @@ class ReceiptListState extends State<ReceiptList> {
 
     return MaterialApp(
       home: Scaffold(
+        appBar: AppBar(
+          title: Row(
+            children: <Widget>[
+              GestureDetector(
+                onTap: () {
+                  _selectFromDate(context);
+                },
+                child: Text(
+                  "From   ${DateFormat().add_yMd().format(_fromDate.toLocal())}",
+                  style: DefaultTextStyle.of(context)
+                      .style
+                      .apply(fontSizeFactor: 0.8),
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  _selectToDate(context);
+                },
+                child: Text(
+                  "    To   ${DateFormat().add_yMd().format(_toDate.toLocal())}",
+                  style: DefaultTextStyle.of(context)
+                      .style
+                      .apply(fontSizeFactor: 0.8),
+                ),
+              ),
+              Expanded(
+                child: PopupMenuButton<ReceiptSortType>(
+                  padding: EdgeInsets.zero,
+                  initialValue: _simpleValue,
+                  onSelected: showMenuSelection,
+                  child: ListTile(
+                    title: Text(
+                        'Sort By [${_simpleValue.toString().split('.')[1]}]'),
+//                                  subtitle: Text(_simpleValue),
+                  ),
+                  itemBuilder: (BuildContext context) =>
+                      <PopupMenuItem<ReceiptSortType>>[
+                    PopupMenuItem<ReceiptSortType>(
+                      value: _simpleValue1,
+                      child: Text(_simpleValue1.toString().split('.')[1]),
+                    ),
+                    PopupMenuItem<ReceiptSortType>(
+                      value: _simpleValue2,
+                      child: Text(_simpleValue2.toString().split('.')[1]),
+                    ),
+                    PopupMenuItem<ReceiptSortType>(
+                      value: _simpleValue3,
+                      child: Text(_simpleValue3.toString().split('.')[1]),
+                    ),
+                    PopupMenuItem<ReceiptSortType>(
+                      value: _simpleValue4,
+                      child: Text(_simpleValue4.toString().split('.')[1]),
+                    ),
+                    PopupMenuItem<ReceiptSortType>(
+                      value: _simpleValue5,
+                      child: Text(_simpleValue5.toString().split('.')[1]),
+                    ),
+                  ],
+                ), //                              ListTile(
+//                                title: const Text('Simple dropdown:'),
+//                                trailing: DropdownButton<String>(
+//                                  value: dropdown1Value,
+//                                  onChanged: (String newValue) {
+//                                    setState(() {
+//                                      dropdown1Value = newValue;
+//                                    });
+//                                  },
+//                                  items: <String>['One', 'Two', 'Free', 'Four'].map<DropdownMenuItem<String>>((String value) {
+//                                    return DropdownMenuItem<String>(
+//                                      value: value,
+//                                      child: Text(value),
+//                                    );
+//                                  }).toList(),
+//                                ),
+//                              ),
+              ),
+            ],
+          ),
+        ),
         body: FutureBuilder<DataResult>(
             future: _userRepository.receiptRepository
                 .getReceiptsFromServer(forceRefresh: forceRefresh),
@@ -89,99 +339,23 @@ class ReceiptListState extends State<ReceiptList> {
                     );
                   } else {
                     if (snapshot.data.success) {
-                      receiptItemCount = _userRepository.receiptRepository
-                          .getReceiptItemsCount(_receiptStatusType);
-                      return Scaffold(
-//                        appBar: AppBar(title: SortingBar(userRepository: _userRepository),),
-                        appBar: AppBar(
-                          title: Container(
-                            child: Row(
-                              children: <Widget>[
-//                                Expanded(
-//                                  flex: 1,
-//                                  child: TextField(
-////                                  controller: _controller,
-//                                    decoration: new InputDecoration(
-//                                      hintText: 'Start search',
-//                                      icon: Icon(Icons.search),
-//                                    ),
-//                                  ),
-//                                ),
-                                RaisedButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      forceRefresh = false;
-                                      ascending = !ascending;
-                                      type = 0;
-                                      print("${ascending} ${forceRefresh}");
-                                    });
-                                  },
-                                  child: Text('Upload Time'),
-                                ),
-                                RaisedButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      forceRefresh = false;
-                                      ascending = !ascending;
-                                      type =1;
-                                      print("${ascending} ${forceRefresh}");
-                                    });
-                                  },
-                                  child: Text('Receipt Time'),
-                                ),
-                                RaisedButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      forceRefresh = false;
-                                      ascending = !ascending;
-                                      type = 2;
-                                      print("${ascending} ${forceRefresh}");
-                                    });
-                                  },
-                                  child: Text('Company Name'),
-                                ),
-                                RaisedButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      forceRefresh = false;
-                                      ascending = !ascending;
-                                      type = 3;
-                                      print("${ascending} ${forceRefresh}");
-                                    });
-                                  },
-                                  child: Text('Amount'),
-                                ),
-                                RaisedButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      forceRefresh = false;
-                                      ascending = !ascending;
-                                      type = 4;
-                                      print("${ascending} ${forceRefresh}");
-                                    });
-                                  },
-                                  child: Text('Category'),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        body: ListView.builder(
-                          itemCount: receiptItemCount,
+                      List<ReceiptListItem> sortedReceiptItems = _userRepository
+                          .receiptRepository
+                          .getSortedReceiptItems(_receiptStatusType, type,
+                              ascending, _fromDate, _toDate);
+                      return ListView.builder(
+                          itemCount: sortedReceiptItems.length,
                           itemBuilder: (context, index) {
                             return ReceiptCard(
-                                    index: index,
-                                    userRepository: _userRepository,
-                                    receiptStatusType: _receiptStatusType,
-                            type: type, ascending: ascending)
-//                            ListTile(
-//                            title: Text('${_userRepository
-//                                .receiptRepository.getReceiptItems(_receiptStatusType)[index].companyName}'),
-//                          )
-                                ;
-                          },
-                        ),
-                      );
+                              receiptItem: sortedReceiptItems[index],
+                              reviewBtnOn: true,
+                              deleteBtnOn: true,
+                              addBtnOn: false,
+                              reviewAction: reviewAction,
+                              deleteAction: deleteAction,
+                              addAction: addAction,
+                            );
+                          });
                     } else {
                       return Column(
                         children: <Widget>[

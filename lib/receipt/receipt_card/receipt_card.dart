@@ -1,34 +1,39 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intelligent_receipt/data_model/receipt_repository.dart';
 import 'package:intl/intl.dart';
 
 import '../../data_model/enums.dart';
 import '../../data_model/webservice.dart';
-import '../../user_repository.dart';
 
-class ReceiptCard extends StatelessWidget {
-  final int _index;
-  final UserRepository _userRepository;
-  final ReceiptStatusType _receiptStatusType;
-  final int _type;
-  final bool _ascending;
-
+class ReceiptCard extends StatefulWidget {
   const ReceiptCard({
     Key key,
-    @required int index,
-    @required UserRepository userRepository,
-    @required ReceiptStatusType receiptStatusType,
-    @required int type,
-    @required bool ascending,
-  })  : assert(userRepository != null),
-        _index = index,
-        _userRepository = userRepository,
-        _receiptStatusType = receiptStatusType,
-        _type = type,
-        _ascending = ascending,
+    @required ReceiptListItem receiptItem,
+    this.reviewBtnOn,
+    this.deleteBtnOn,
+    this.addBtnOn,
+    this.reviewAction,
+    this.deleteAction,
+    this.addAction,
+  })  : assert(receiptItem != null),
+        _receiptItem = receiptItem,
         super(key: key);
 
+  final ReceiptListItem _receiptItem;
+  final Function(int) reviewAction;
+  final Function(int) deleteAction;
+  final Function(int) addAction;
+  final bool reviewBtnOn;
+  final bool deleteBtnOn;
+  final bool addBtnOn;
+
+  @override
+  _ReceiptCardState createState() => _ReceiptCardState();
+}
+
+class _ReceiptCardState extends State<ReceiptCard> {
   CachedNetworkImage getImage(String imagePath) {
     return new CachedNetworkImage(
       imageUrl: Urls.GetImage + "/" + Uri.encodeComponent(imagePath),
@@ -41,30 +46,99 @@ class ReceiptCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final TextStyle companyNameStyle =
-        theme.textTheme.headline.copyWith(color: Colors.black);
-    final TextStyle dateStyle = theme.textTheme.subhead;
-    final TextStyle amountStyle = theme.textTheme.title;
-    print('card state being set');
+        theme.textTheme.body1.copyWith(color: Colors.black);
+    final TextStyle dateStyle = theme.textTheme.body2;
+    final TextStyle amountStyle = theme.textTheme.body1;
+
+    Widget _reviewButton(BuildContext context, bool reviewOn) {
+      if (reviewOn) {
+        return Container(
+          height: 25,
+          child: OutlineButton(
+              child: Text('Review',
+                  style: dateStyle
+                      .copyWith(color: Colors.blue)
+                      .apply(fontSizeFactor: 0.75),
+                  semanticsLabel: 'Review ${widget._receiptItem.id}'),
+//                    textColor: Colors.blue.shade500,
+
+              onPressed: () => widget.reviewAction(widget._receiptItem.id),
+              borderSide: BorderSide(color: Colors.blue),
+//                      shape: StadiumBorder(),
+              shape: new RoundedRectangleBorder(
+                  borderRadius: new BorderRadius.circular(4.0))),
+        );
+      } else
+        return null;
+    }
+
+    Widget _deleteButton(BuildContext context, bool deleteBtnOn) {
+      if (deleteBtnOn) {
+        return Container(
+          width: 50,
+          height: 25,
+          child: OutlineButton(
+              child: Text('Delete',
+                  style: dateStyle
+                      .copyWith(color: Colors.blue)
+                      .apply(fontSizeFactor: 0.75),
+                  semanticsLabel: 'Delete ${widget._receiptItem.id}'),
+//                    textColor: Colors.blue.shade500,
+
+              onPressed: () => widget.deleteAction(widget._receiptItem.id),
+              borderSide: BorderSide(color: Colors.blue),
+//                      shape: StadiumBorder(),
+              shape: new RoundedRectangleBorder(
+                  borderRadius: new BorderRadius.circular(4.0))),
+        );
+      } else
+        return null;
+    }
+
+    Widget _addButton(BuildContext context, bool addBtnOn) {
+      if (addBtnOn) {
+        return Container(
+          width: 50,
+          height: 25,
+          child: OutlineButton(
+              child: Text('Add',
+                  style: dateStyle
+                      .copyWith(color: Colors.blue)
+                      .apply(fontSizeFactor: 0.75),
+                  semanticsLabel: 'Add ${widget._receiptItem.id}'),
+//                    textColor: Colors.blue.shade500,
+
+              onPressed: () => widget.addAction(widget._receiptItem.id),
+              borderSide: BorderSide(color: Colors.blue),
+//                      shape: StadiumBorder(),
+              shape: new RoundedRectangleBorder(
+                  borderRadius: new BorderRadius.circular(4.0))),
+        );
+      } else
+        return null;
+    }
 
     return Card(
       clipBehavior: Clip.antiAlias,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
+//        mainAxisSize: MainAxisSize.max,
+//        mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          Flexible(
+          Expanded(
+        flex: 1,
             child: SizedBox(
-              height: 160,
-              child: getImage(_userRepository.receiptRepository
-                  .getSortedReceiptItems(_receiptStatusType, _type, _ascending)[_index]
-                  .imagePath),
+              height: MediaQuery.of(context).size.height * 0.16,
+//          width: MediaQuery.of(context).size.width * 0.1,
+              child: getImage(widget._receiptItem.imagePath),
             ),
           ),
-          Flexible(
+          Expanded(
             flex: 2,
             child: Column(
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
+                  padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
                   child: DefaultTextStyle(
                     softWrap: false,
                     overflow: TextOverflow.ellipsis,
@@ -73,22 +147,23 @@ class ReceiptCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Padding(
-                          padding: const EdgeInsets.only(bottom: 8.0),
+                          padding: const EdgeInsets.only(bottom: 0.0),
                           child: Text(
-                            "Receipt Date ${DateFormat().add_yMd().format(_userRepository.receiptRepository.getSortedReceiptItems(_receiptStatusType, _type, _ascending)[_index].receiptDatatime.toLocal())}",
-                            style: dateStyle.copyWith(color: Colors.black54),
+                            "Receipt Date ${DateFormat().add_yMd().format(widget._receiptItem.receiptDatatime.toLocal())}",
+                            style: dateStyle
+                                .copyWith(color: Colors.black54)
+                                .apply(fontSizeFactor: 0.75),
                           ),
                         ),
                         Padding(
-                          padding:
-                              const EdgeInsets.only(top: 8.0, bottom: 16.0),
+                          padding: const EdgeInsets.only(top: 0.0, bottom: 0.0),
                           child: Text(
-                            '${_userRepository.receiptRepository.getSortedReceiptItems(_receiptStatusType, _type, _ascending)[_index].companyName}',
+                            '${widget._receiptItem.companyName}',
                             style: companyNameStyle,
                           ),
                         ),
                         Text(
-                          'Total ${_userRepository.receiptRepository.getSortedReceiptItems(_receiptStatusType, _type, _ascending)[_index].totalAmount}',
+                          'Total ${widget._receiptItem.totalAmount}',
                           style: amountStyle,
                         ),
                       ],
@@ -98,12 +173,12 @@ class ReceiptCard extends StatelessWidget {
               ],
             ),
           ),
-          Flexible(
+          Expanded(
             flex: 2,
             child: Column(
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
+                  padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
                   child: DefaultTextStyle(
                     softWrap: false,
                     overflow: TextOverflow.ellipsis,
@@ -113,19 +188,18 @@ class ReceiptCard extends StatelessWidget {
                       children: <Widget>[
                         // three line description
                         Padding(
-                          padding: const EdgeInsets.only(bottom: 8.0),
+                          padding: const EdgeInsets.only(bottom: 0.0),
                           child: Text(
-                            "Uploaded ${DateFormat().add_yMd().format(_userRepository.receiptRepository.getSortedReceiptItems(_receiptStatusType, _type, _ascending)[_index].uploadDatetime.toLocal())}",
-                            style: dateStyle.copyWith(color: Colors.black54),
+                            "Uploaded ${DateFormat().add_yMd().format(widget._receiptItem.uploadDatetime.toLocal())}",
+                            style: dateStyle
+                                .copyWith(color: Colors.black54)
+                                .apply(fontSizeFactor: 0.75),
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+                          padding: const EdgeInsets.only(top: 0.0, bottom: 0.0),
                           child: Text(
-                            CategoryName.values[_userRepository
-                                    .receiptRepository
-                                    .getSortedReceiptItems(_receiptStatusType, _type, _ascending)[_index]
-                                    .categoryId]
+                            CategoryName.values[widget._receiptItem.categoryId]
                                 .toString()
                                 .split('.')[1],
                             style: companyNameStyle,
@@ -137,36 +211,11 @@ class ReceiptCard extends StatelessWidget {
                 ),
                 ButtonTheme.bar(
                   child: ButtonBar(
+                    mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      OutlineButton(
-                          child: Text('Review',
-                              style:
-                                  companyNameStyle.copyWith(color: Colors.blue),
-                              semanticsLabel:
-                                  'Review ${_userRepository.receiptRepository.getSortedReceiptItems(_receiptStatusType, _type, _ascending)[_index].id}'),
-//                        textColor: Colors.blue.shade500,
-
-                          onPressed: () {
-                            print('pressed');
-                          },
-                          borderSide: BorderSide(color: Colors.blue),
-//                          shape: StadiumBorder(),
-                          shape: new RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(6.0))),
-                      OutlineButton(
-                          child: Text('Delete',
-                              style:
-                                  companyNameStyle.copyWith(color: Colors.blue),
-                              semanticsLabel:
-                                  'Delete ${_userRepository.receiptRepository.getSortedReceiptItems(_receiptStatusType, _type, _ascending)[_index].id}'),
-                          textColor: Colors.blue.shade500,
-                          onPressed: () {
-                            print('pressed');
-                          },
-                          borderSide: BorderSide(color: Colors.blue),
-//                          shape: StadiumBorder(),
-                          shape: new RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(6.0))),
+                      _reviewButton(context, widget.reviewBtnOn),
+                      _deleteButton(context, widget.deleteBtnOn),
+                      _addButton(context, widget.addBtnOn),
                     ],
                   ),
                 ),
