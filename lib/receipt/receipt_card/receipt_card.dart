@@ -122,9 +122,11 @@ class _ReceiptCardState extends State<ReceiptCard> {
       clipBehavior: Clip.antiAlias,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
+//        mainAxisSize: MainAxisSize.max,
+//        mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           Expanded(
-//        flex: 1,
+        flex: 1,
             child: SizedBox(
               height: MediaQuery.of(context).size.height * 0.16,
 //          width: MediaQuery.of(context).size.width * 0.1,
@@ -132,6 +134,7 @@ class _ReceiptCardState extends State<ReceiptCard> {
             ),
           ),
           Expanded(
+            flex: 2,
             child: Column(
               children: <Widget>[
                 Padding(
@@ -171,6 +174,7 @@ class _ReceiptCardState extends State<ReceiptCard> {
             ),
           ),
           Expanded(
+            flex: 2,
             child: Column(
               children: <Widget>[
                 Padding(
