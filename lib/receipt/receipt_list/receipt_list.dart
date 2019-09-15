@@ -219,6 +219,14 @@ class ReceiptListState extends State<ReceiptList> {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  void reviewAction(int id) {
+    print('Review ${id}');
+  }
+
+  void deleteAction(int id) {
+    print('Delete ${id}');
+  }
+
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
@@ -331,12 +339,15 @@ class ReceiptListState extends State<ReceiptList> {
                           .receiptRepository
                           .getSortedReceiptItems(_receiptStatusType, type,
                               ascending, _fromDate, _toDate);
-                      return ListView.builder (
-                        itemCount: sortedReceiptItems.length,
-                        itemBuilder: (context, index) {
-                          return ReceiptCard(receiptItem: sortedReceiptItems[index]);
-                        }
-                      );
+                      return ListView.builder(
+                          itemCount: sortedReceiptItems.length,
+                          itemBuilder: (context, index) {
+                            return ReceiptCard(
+                              receiptItem: sortedReceiptItems[index],
+                              reviewAction: reviewAction,
+                              deleteAction: deleteAction,
+                            );
+                          });
                     } else {
                       return Column(
                         children: <Widget>[
