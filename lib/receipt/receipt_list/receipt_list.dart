@@ -331,8 +331,11 @@ class ReceiptListState extends State<ReceiptList> {
                           .receiptRepository
                           .getSortedReceiptItems(_receiptStatusType, type,
                               ascending, _fromDate, _toDate);
-                      return ReceiptCard(
-                        receiptItems: sortedReceiptItems,
+                      return ListView.builder (
+                        itemCount: sortedReceiptItems.length,
+                        itemBuilder: (context, index) {
+                          return ReceiptCard(receiptItem: sortedReceiptItems[index]);
+                        }
                       );
                     } else {
                       return Column(
