@@ -21,6 +21,7 @@ class ReceiptListItem {
   String imagePath;
   String productName; // Not yet in DB
   String currencyCode; //not yet in DB
+  String notes; //not yet in DB
 
   ReceiptListItem();
 

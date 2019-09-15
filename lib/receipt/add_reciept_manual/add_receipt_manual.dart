@@ -1,10 +1,10 @@
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intelligent_receipt/data_model/category.dart';
 import 'package:intelligent_receipt/data_model/enums.dart';
 import 'package:intelligent_receipt/data_model/receipt.dart';
 import 'package:intl/intl.dart';
-
 
 class AddReceiptForm extends StatefulWidget {
   @override
@@ -12,7 +12,7 @@ class AddReceiptForm extends StatefulWidget {
     // TODO: pass this in from edit exisiting
     var receipt = Receipt();
     receipt.receiptDatetime = DateTime(2018, 10, 5);
-    return AddReceiptFormState(receipt);
+    return AddReceiptFormState(null);
   }
 }
 
@@ -23,11 +23,11 @@ class AddReceiptFormState extends State<AddReceiptForm> {
   var isNew = true;
   Receipt receipt;
   var defaultCurrencyValue = 'AUD';
+  var defaultCategoryValue = categoryMapping[CategoryName.Undecided];
 
-  AddReceiptFormState(this.receipt)  {
-    
+  AddReceiptFormState(this.receipt) {
     isNew = this.receipt == null;
-    if (isNew){
+    if (isNew) {
       this.receipt = Receipt();
     }
   }
@@ -37,7 +37,7 @@ class AddReceiptFormState extends State<AddReceiptForm> {
   }
 
   saveForm() {
-    if (this._formKey.currentState.validate()){
+    if (this._formKey.currentState.validate()) {
       this._formKey.currentState.save();
     }
   }
@@ -49,14 +49,22 @@ class AddReceiptFormState extends State<AddReceiptForm> {
     return null;
   }
 
-  List<DropdownMenuItem<String>> getCurrencyCodesList(){
+  List<DropdownMenuItem<String>> getCurrencyCodesList() {
     var list = List<DropdownMenuItem<String>>();
-    for (var code in CurrencyCodes){
+    for (var code in CurrencyCodes) {
       list.add(DropdownMenuItem<String>(value: code, child: Text(code)));
     }
     return list;
   }
-  
+
+  List<DropdownMenuItem<String>> getCategorylist() {
+    var list = List<DropdownMenuItem<String>>();
+    for (var key in categoryMapping.keys) {
+      list.add(DropdownMenuItem<String>(
+          value: categoryMapping[key], child: Text(categoryMapping[key])));
+    }
+    return list;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -102,28 +110,70 @@ class AddReceiptFormState extends State<AddReceiptForm> {
                   this.receipt.productName = value;
                 },
               ),
-              //Row(children: <Widget>[
-                TextFormField(
-                  initialValue: isNew ? null : receipt.totalAmount.toString(),
-                  validator: textFieldValidator,
-                  onSaved: (String value){ this.receipt.totalAmount = double.tryParse(value); },
-                  ),
-                  DropdownButtonFormField<String>(
-                    items: getCurrencyCodesList(),
-                    value: defaultCurrencyValue,
-                    onSaved: (String value) {
-                       this.receipt.currencyCode = value; 
-                    },
-                    onChanged: (String newValue) {
-                    setState(() {
-                      defaultCurrencyValue = newValue;
-                    });
-                  },   
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Flexible(
+                    flex: 7,
+                    child: TextFormField(
+                      decoration: InputDecoration(labelText: 'Total Amount'),
+                      initialValue:
+                          isNew ? '0' : receipt.totalAmount.toString(),
+                      validator: textFieldValidator,
+                      onSaved: (String value) {
+                        this.receipt.totalAmount = double.tryParse(value);
+                      },
                     ),
+                  ),
+                  Flexible(
+                    flex: 3,
+                    child: DropdownButtonFormField<String>(
+                      decoration: InputDecoration(labelText: 'Currency Code'),
+                      items: getCurrencyCodesList(),
+                      value: defaultCurrencyValue,
+                      onSaved: (String value) {
+                        this.receipt.currencyCode = value;
+                      },
+                      onChanged: (String newValue) {
+                        setState(() {
+                          defaultCurrencyValue = newValue;
+                        });
+                      },
+                    ),
+                  ),
                 ],
-              )
-            //],
-          //),
+              ),
+              DropdownButtonFormField<String>(
+                decoration: InputDecoration(labelText: 'Category'),
+                items: getCategorylist(),
+                value: defaultCategoryValue,
+                onSaved: (String value) {
+                  this.receipt.currencyCode = value;
+                },
+                onChanged: (String newValue) {
+                  setState(() {
+                    defaultCategoryValue = newValue;
+                  });
+                },
+              ),
+              TextFormField(
+                decoration: InputDecoration(labelText: 'Shop/Vendor'),
+                initialValue: receipt.companyName,
+                validator: textFieldValidator,
+                onSaved: (String value) {
+                  this.receipt.companyName = value;
+                },
+              ),
+              TextFormField(
+                decoration: InputDecoration(labelText: 'Notes'),
+                initialValue: receipt.notes,
+                validator: textFieldValidator,
+                onSaved: (String value) {
+                  this.receipt.notes = value;
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

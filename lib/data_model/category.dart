@@ -1,5 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import 'enums.dart';
+
 part 'category.g.dart';
 
 /// An annotation for the code generator to know that this class needs the
@@ -16,3 +18,9 @@ class Category {
   factory Category.fromJason(Map<String, dynamic> json) => _$CategoryFromJson(json);
   Map<String, dynamic> toJson() => _$CategoryToJson(this);
 }
+
+const Map<CategoryName, String> categoryMapping = {
+  CategoryName.Material: 'Material',
+  CategoryName.Travel: 'Travel',
+  CategoryName.Undecided: 'Undecided'
+};
