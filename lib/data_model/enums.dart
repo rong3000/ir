@@ -44,3 +44,10 @@ const Set CurrencyCodes =
   'USD'
 };
 
+enum ReceiptSortType {
+  UploadTime,
+  ReceiptTime,
+  CompanyName,
+  Amount,
+  Category
+}
