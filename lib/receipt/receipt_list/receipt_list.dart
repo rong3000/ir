@@ -126,7 +126,7 @@ class ReceiptListState extends State<ReceiptList> {
   double dx2;
   double dy2;
   bool ascending;
-  ReceiptSortType type;
+  ReceiptSortType sortingType;
   DateTime _fromDate = DateTime.now().subtract(Duration(days: 180));
   DateTime _toDate = DateTime.now();
 
@@ -163,12 +163,15 @@ class ReceiptListState extends State<ReceiptList> {
   void initState() {
     forceRefresh = true;
     ascending = false;
-    type = ReceiptSortType.UploadTime;
     super.initState();
     if (_receiptStatusType == ReceiptStatusType.Uploaded) {
-      _simpleValue = _simpleValue1;
+      sortingType = ReceiptSortType.UploadTime;
     } else {
-      _simpleValue = _simpleValue2;
+      sortingType = ReceiptSortType.ReceiptTime;
+    }
+    if (subMenuOverlayEntry != null) {
+      subMenuOverlayEntry.remove();
+      subMenuOverlayEntry = null;
     }
   }
 
@@ -206,7 +209,7 @@ class ReceiptListState extends State<ReceiptList> {
     setState(() {
       forceRefresh = false;
       ascending = !ascending;
-      type = value;
+      sortingType = value;
       print("${ascending} ${forceRefresh}");
     });
   }
@@ -231,6 +234,165 @@ class ReceiptListState extends State<ReceiptList> {
     print('Add ${id}');
   }
 
+  void _onTapDown(TapDownDetails details, BuildContext context) {
+    print('_onLongPressDragStart details: ${details.globalPosition}');
+    RenderBox renderBox = context.findRenderObject();
+    var offset = renderBox
+//                            .localToGlobal(Offset(0.0, renderBox.size.height));
+        .globalToLocal(details.globalPosition);
+    print('${offset.dx} ${offset.dy} ');
+    dx = details.globalPosition.dx;
+    dy = details.globalPosition.dy;
+    dx2 = offset.dx;
+    dy2 = offset.dy;
+  }
+
+  void showSubMenuView(double t, double r) {
+    subMenuOverlayEntry = new OverlayEntry(builder: (context) {
+      return new Positioned(
+          top: t,
+          right: r,
+          width: 160,
+          height: 300,
+          child: new SafeArea(
+              child: new Material(
+                child: new Container(
+                  child: new Column(
+                    children: <Widget>[
+                      Expanded(
+                        child: new ListTile(
+//                          leading: Icon(
+//                            Icons.edit,
+////                            color: Colors.white,
+//                          ),
+                          title: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                forceRefresh = false;
+                                sortingType = ReceiptSortType.UploadTime;
+                              });
+                              subMenuOverlayEntry.remove();
+                              subMenuOverlayEntry = null;
+                            },
+                            child: Text('Upload Time'),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: new ListTile(
+//                          leading: Icon(
+//                            Icons.edit,
+////                            color: Colors.white,
+//                          ),
+                          title: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                forceRefresh = false;
+                                sortingType = ReceiptSortType.ReceiptTime;
+                              });
+                              subMenuOverlayEntry.remove();
+                              subMenuOverlayEntry = null;
+                            },
+                            child: Text('Receipt Time'),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: new ListTile(
+//                          leading: Icon(
+//                            Icons.edit,
+////                            color: Colors.white,
+//                          ),
+                          title: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                forceRefresh = false;
+                                sortingType = ReceiptSortType.CompanyName;
+                              });
+                              subMenuOverlayEntry.remove();
+                              subMenuOverlayEntry = null;
+                            },
+                            child: Text('Company Name'),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: new ListTile(
+//                          leading: Icon(
+//                            Icons.edit,
+////                            color: Colors.white,
+//                          ),
+                          title: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                forceRefresh = false;
+                                sortingType = ReceiptSortType.Amount;
+                              });
+                              subMenuOverlayEntry.remove();
+                              subMenuOverlayEntry = null;
+                            },
+                            child: Text('Amount'),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: new ListTile(
+//                          leading: Icon(
+//                            Icons.edit,
+////                            color: Colors.white,
+//                          ),
+                          title: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                forceRefresh = false;
+                                sortingType = ReceiptSortType.Category;
+                              });
+                              subMenuOverlayEntry.remove();
+                              subMenuOverlayEntry = null;
+                            },
+                            child: Text('Category'),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: new Row(
+                          children: <Widget>[
+                            Checkbox(
+                              onChanged: (bool value) {
+                                setState(() => this.ascending = value);
+                                subMenuOverlayEntry.remove();
+                                subMenuOverlayEntry = null;
+                              },
+                              value: this.ascending,
+                            ),
+                            Text('Ascending'),
+                          ],
+                        ),
+                      ),
+//                      Expanded(
+//                        child: new ListTile(
+//                          leading: Icon(
+//                            Icons.cancel,
+////                              color: Colors.white
+//                          ),
+//                          title: GestureDetector(
+//                            onTap: () {
+//                              subMenuOverlayEntry.remove();
+//                              subMenuOverlayEntry = null;
+//                              return Future.value(false);
+//                            },
+//                            child: Text('Cancel'),
+//                          ),
+//                        ),
+//                      ),
+                    ],
+                  ),
+                ),
+              )));
+    });
+    Overlay.of(context).insert(subMenuOverlayEntry);
+  }
+
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
@@ -242,6 +404,8 @@ class ReceiptListState extends State<ReceiptList> {
       home: Scaffold(
         appBar: AppBar(
           title: Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               GestureDetector(
                 onTap: () {
@@ -265,57 +429,103 @@ class ReceiptListState extends State<ReceiptList> {
                       .apply(fontSizeFactor: 0.8),
                 ),
               ),
-              Expanded(
-                child: PopupMenuButton<ReceiptSortType>(
-                  padding: EdgeInsets.zero,
-                  initialValue: _simpleValue,
-                  onSelected: showMenuSelection,
-                  child: ListTile(
-                    title: Text(
-                        'Sort By [${_simpleValue.toString().split('.')[1]}]'),
-//                                  subtitle: Text(_simpleValue),
-                  ),
-                  itemBuilder: (BuildContext context) =>
-                      <PopupMenuItem<ReceiptSortType>>[
-                    PopupMenuItem<ReceiptSortType>(
-                      value: _simpleValue1,
-                      child: Text(_simpleValue1.toString().split('.')[1]),
+              GestureDetector(
+                onTapDown: (details) {
+                  return _onTapDown(details, context);
+                },
+                onTap: () {
+                  if (subMenuOverlayEntry != null) {
+                    subMenuOverlayEntry.remove();
+                    subMenuOverlayEntry = null;
+                    return Future.value(false);
+                  }
+                  showSubMenuView(
+                      dy2 + 120,
+                      (dx2 < MediaQuery.of(context).size.width - 200)
+                          ? (MediaQuery.of(context).size.width -
+                          200 -
+                          dx2)
+                          : (MediaQuery.of(context).size.width - dx2)
+                      );
+                },
+                child: Row(
+                  children: <Widget>[
+                    Text(
+                      "Sort By [${sortingType.toString().split('.')[1]}]",
+                      style: DefaultTextStyle.of(context)
+                          .style
+                          .apply(fontSizeFactor: 0.8),
                     ),
-                    PopupMenuItem<ReceiptSortType>(
-                      value: _simpleValue2,
-                      child: Text(_simpleValue2.toString().split('.')[1]),
+                    Icon(
+                      ascending
+                          ? Icons.arrow_upward
+                          : Icons.arrow_downward,
+                      color: Colors.black,
                     ),
-                    PopupMenuItem<ReceiptSortType>(
-                      value: _simpleValue3,
-                      child: Text(_simpleValue3.toString().split('.')[1]),
-                    ),
-                    PopupMenuItem<ReceiptSortType>(
-                      value: _simpleValue4,
-                      child: Text(_simpleValue4.toString().split('.')[1]),
-                    ),
-                    PopupMenuItem<ReceiptSortType>(
-                      value: _simpleValue5,
-                      child: Text(_simpleValue5.toString().split('.')[1]),
+                    IconButton(
+                      icon: Icon(
+                        Theme.of(context).platform == TargetPlatform.iOS
+                            ? Icons.more_horiz
+                            : Icons.more_vert,
+                      ),
+                      tooltip: 'Show menu',
+//                      onPressed: _bottomSheet == null ? _showConfigurationSheet : null,
                     ),
                   ],
-                ), //                              ListTile(
-//                                title: const Text('Simple dropdown:'),
-//                                trailing: DropdownButton<String>(
-//                                  value: dropdown1Value,
-//                                  onChanged: (String newValue) {
-//                                    setState(() {
-//                                      dropdown1Value = newValue;
-//                                    });
-//                                  },
-//                                  items: <String>['One', 'Two', 'Free', 'Four'].map<DropdownMenuItem<String>>((String value) {
-//                                    return DropdownMenuItem<String>(
-//                                      value: value,
-//                                      child: Text(value),
-//                                    );
-//                                  }).toList(),
-//                                ),
-//                              ),
+                )
+
               ),
+//              Expanded(
+//                child: PopupMenuButton<ReceiptSortType>(
+//                  padding: EdgeInsets.zero,
+//                  initialValue: _simpleValue,
+//                  onSelected: showMenuSelection,
+//                  child: ListTile(
+//                    title: Text(
+//                        'Sort By [${_simpleValue.toString().split('.')[1]}]'),
+////                                  subtitle: Text(_simpleValue),
+//                  ),
+//                  itemBuilder: (BuildContext context) =>
+//                      <PopupMenuItem<ReceiptSortType>>[
+//                    PopupMenuItem<ReceiptSortType>(
+//                      value: _simpleValue1,
+//                      child: Text(_simpleValue1.toString().split('.')[1]),
+//                    ),
+//                    PopupMenuItem<ReceiptSortType>(
+//                      value: _simpleValue2,
+//                      child: Text(_simpleValue2.toString().split('.')[1]),
+//                    ),
+//                    PopupMenuItem<ReceiptSortType>(
+//                      value: _simpleValue3,
+//                      child: Text(_simpleValue3.toString().split('.')[1]),
+//                    ),
+//                    PopupMenuItem<ReceiptSortType>(
+//                      value: _simpleValue4,
+//                      child: Text(_simpleValue4.toString().split('.')[1]),
+//                    ),
+//                    PopupMenuItem<ReceiptSortType>(
+//                      value: _simpleValue5,
+//                      child: Text(_simpleValue5.toString().split('.')[1]),
+//                    ),
+//                  ],
+//                ), //                              ListTile(
+////                                title: const Text('Simple dropdown:'),
+////                                trailing: DropdownButton<String>(
+////                                  value: dropdown1Value,
+////                                  onChanged: (String newValue) {
+////                                    setState(() {
+////                                      dropdown1Value = newValue;
+////                                    });
+////                                  },
+////                                  items: <String>['One', 'Two', 'Free', 'Four'].map<DropdownMenuItem<String>>((String value) {
+////                                    return DropdownMenuItem<String>(
+////                                      value: value,
+////                                      child: Text(value),
+////                                    );
+////                                  }).toList(),
+////                                ),
+////                              ),
+//              ),
             ],
           ),
         ),
@@ -341,7 +551,7 @@ class ReceiptListState extends State<ReceiptList> {
                     if (snapshot.data.success) {
                       List<ReceiptListItem> sortedReceiptItems = _userRepository
                           .receiptRepository
-                          .getSortedReceiptItems(_receiptStatusType, type,
+                          .getSortedReceiptItems(_receiptStatusType, sortingType,
                               ascending, _fromDate, _toDate);
                       return ListView.builder(
                           itemCount: sortedReceiptItems.length,
