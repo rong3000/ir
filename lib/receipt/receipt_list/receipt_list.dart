@@ -226,8 +226,15 @@ class ReceiptListState extends State<ReceiptList> {
     print('Review ${id}');
   }
 
+  Future<void> deleteAndSetState(List<int> receiptIds) async{
+    DataResult result = await _userRepository.receiptRepository.deleteReceipts(receiptIds);
+    setState(() => {});
+  }
+
   void deleteAction(int id) {
-    print('Delete ${id}');
+    List<int> receiptIds = [];
+    receiptIds.add(id);
+    deleteAndSetState(receiptIds);
   }
 
   void addAction(int id) {
@@ -563,7 +570,7 @@ class ReceiptListState extends State<ReceiptList> {
                               addBtnOn: false,
                               reviewAction: reviewAction,
                               deleteAction: deleteAction,
-                              addAction: addAction,
+                              addAction: null,
                             );
                           });
                     } else {
