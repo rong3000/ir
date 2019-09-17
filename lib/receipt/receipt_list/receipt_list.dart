@@ -106,6 +106,11 @@ class ReceiptList extends StatefulWidget {
   ReceiptListState createState() => ReceiptListState();
 }
 
+class ActionWithLable {
+  Function(int) action;
+  String lable;
+}
+
 class ReceiptListState extends State<ReceiptList> {
   final List<String> items = List<String>.generate(10000, (i) => "Item $i");
   ScrollController _scrollController = ScrollController();
@@ -221,13 +226,15 @@ class ReceiptListState extends State<ReceiptList> {
   }
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final List<ActionWithLable> actions = [];
 
   void reviewAction(int id) {
     print('Review ${id}');
   }
 
-  Future<void> deleteAndSetState(List<int> receiptIds) async{
-    DataResult result = await _userRepository.receiptRepository.deleteReceipts(receiptIds);
+  Future<void> deleteAndSetState(List<int> receiptIds) async {
+    DataResult result =
+        await _userRepository.receiptRepository.deleteReceipts(receiptIds);
     setState(() => {});
   }
 
@@ -238,6 +245,10 @@ class ReceiptListState extends State<ReceiptList> {
   }
 
   void addAction(int id) {
+    print('Add ${id}');
+  }
+
+  void removeAction(int id) {
     print('Add ${id}');
   }
 
@@ -263,119 +274,119 @@ class ReceiptListState extends State<ReceiptList> {
           height: 300,
           child: new SafeArea(
               child: new Material(
-                child: new Container(
-                  child: new Column(
-                    children: <Widget>[
-                      Expanded(
-                        child: new ListTile(
+            child: new Container(
+              child: new Column(
+                children: <Widget>[
+                  Expanded(
+                    child: new ListTile(
 //                          leading: Icon(
 //                            Icons.edit,
 ////                            color: Colors.white,
 //                          ),
-                          title: GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                forceRefresh = false;
-                                sortingType = ReceiptSortType.UploadTime;
-                              });
-                              subMenuOverlayEntry.remove();
-                              subMenuOverlayEntry = null;
-                            },
-                            child: Text('Upload Time'),
-                          ),
-                        ),
+                      title: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            forceRefresh = false;
+                            sortingType = ReceiptSortType.UploadTime;
+                          });
+                          subMenuOverlayEntry.remove();
+                          subMenuOverlayEntry = null;
+                        },
+                        child: Text('Upload Time'),
                       ),
-                      Expanded(
-                        child: new ListTile(
+                    ),
+                  ),
+                  Expanded(
+                    child: new ListTile(
 //                          leading: Icon(
 //                            Icons.edit,
 ////                            color: Colors.white,
 //                          ),
-                          title: GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                forceRefresh = false;
-                                sortingType = ReceiptSortType.ReceiptTime;
-                              });
-                              subMenuOverlayEntry.remove();
-                              subMenuOverlayEntry = null;
-                            },
-                            child: Text('Receipt Time'),
-                          ),
-                        ),
+                      title: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            forceRefresh = false;
+                            sortingType = ReceiptSortType.ReceiptTime;
+                          });
+                          subMenuOverlayEntry.remove();
+                          subMenuOverlayEntry = null;
+                        },
+                        child: Text('Receipt Time'),
                       ),
-                      Expanded(
-                        child: new ListTile(
+                    ),
+                  ),
+                  Expanded(
+                    child: new ListTile(
 //                          leading: Icon(
 //                            Icons.edit,
 ////                            color: Colors.white,
 //                          ),
-                          title: GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                forceRefresh = false;
-                                sortingType = ReceiptSortType.CompanyName;
-                              });
-                              subMenuOverlayEntry.remove();
-                              subMenuOverlayEntry = null;
-                            },
-                            child: Text('Company Name'),
-                          ),
-                        ),
+                      title: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            forceRefresh = false;
+                            sortingType = ReceiptSortType.CompanyName;
+                          });
+                          subMenuOverlayEntry.remove();
+                          subMenuOverlayEntry = null;
+                        },
+                        child: Text('Company Name'),
                       ),
-                      Expanded(
-                        child: new ListTile(
+                    ),
+                  ),
+                  Expanded(
+                    child: new ListTile(
 //                          leading: Icon(
 //                            Icons.edit,
 ////                            color: Colors.white,
 //                          ),
-                          title: GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                forceRefresh = false;
-                                sortingType = ReceiptSortType.Amount;
-                              });
-                              subMenuOverlayEntry.remove();
-                              subMenuOverlayEntry = null;
-                            },
-                            child: Text('Amount'),
-                          ),
-                        ),
+                      title: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            forceRefresh = false;
+                            sortingType = ReceiptSortType.Amount;
+                          });
+                          subMenuOverlayEntry.remove();
+                          subMenuOverlayEntry = null;
+                        },
+                        child: Text('Amount'),
                       ),
-                      Expanded(
-                        child: new ListTile(
+                    ),
+                  ),
+                  Expanded(
+                    child: new ListTile(
 //                          leading: Icon(
 //                            Icons.edit,
 ////                            color: Colors.white,
 //                          ),
-                          title: GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                forceRefresh = false;
-                                sortingType = ReceiptSortType.Category;
-                              });
-                              subMenuOverlayEntry.remove();
-                              subMenuOverlayEntry = null;
-                            },
-                            child: Text('Category'),
-                          ),
-                        ),
+                      title: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            forceRefresh = false;
+                            sortingType = ReceiptSortType.Category;
+                          });
+                          subMenuOverlayEntry.remove();
+                          subMenuOverlayEntry = null;
+                        },
+                        child: Text('Category'),
                       ),
-                      Expanded(
-                        child: new Row(
-                          children: <Widget>[
-                            Checkbox(
-                              onChanged: (bool value) {
-                                setState(() => this.ascending = value);
-                                subMenuOverlayEntry.remove();
-                                subMenuOverlayEntry = null;
-                              },
-                              value: this.ascending,
-                            ),
-                            Text('Ascending'),
-                          ],
+                    ),
+                  ),
+                  Expanded(
+                    child: new Row(
+                      children: <Widget>[
+                        Checkbox(
+                          onChanged: (bool value) {
+                            setState(() => this.ascending = value);
+                            subMenuOverlayEntry.remove();
+                            subMenuOverlayEntry = null;
+                          },
+                          value: this.ascending,
                         ),
-                      ),
+                        Text('Ascending'),
+                      ],
+                    ),
+                  ),
 //                      Expanded(
 //                        child: new ListTile(
 //                          leading: Icon(
@@ -392,10 +403,10 @@ class ReceiptListState extends State<ReceiptList> {
 //                          ),
 //                        ),
 //                      ),
-                    ],
-                  ),
-                ),
-              )));
+                ],
+              ),
+            ),
+          )));
     });
     Overlay.of(context).insert(subMenuOverlayEntry);
   }
@@ -437,51 +448,44 @@ class ReceiptListState extends State<ReceiptList> {
                 ),
               ),
               GestureDetector(
-                onTapDown: (details) {
-                  return _onTapDown(details, context);
-                },
-                onTap: () {
-                  if (subMenuOverlayEntry != null) {
-                    subMenuOverlayEntry.remove();
-                    subMenuOverlayEntry = null;
-                    return Future.value(false);
-                  }
-                  showSubMenuView(
-                      dy2 + 120,
-                      (dx2 < MediaQuery.of(context).size.width - 200)
-                          ? (MediaQuery.of(context).size.width -
-                          200 -
-                          dx2)
-                          : (MediaQuery.of(context).size.width - dx2)
-                      );
-                },
-                child: Row(
-                  children: <Widget>[
-                    Text(
-                      "Sort By [${sortingType.toString().split('.')[1]}]",
-                      style: DefaultTextStyle.of(context)
-                          .style
-                          .apply(fontSizeFactor: 0.8),
-                    ),
-                    Icon(
-                      ascending
-                          ? Icons.arrow_upward
-                          : Icons.arrow_downward,
-                      color: Colors.black,
-                    ),
-                    IconButton(
-                      icon: Icon(
-                        Theme.of(context).platform == TargetPlatform.iOS
-                            ? Icons.more_horiz
-                            : Icons.more_vert,
+                  onTapDown: (details) {
+                    return _onTapDown(details, context);
+                  },
+                  onTap: () {
+                    if (subMenuOverlayEntry != null) {
+                      subMenuOverlayEntry.remove();
+                      subMenuOverlayEntry = null;
+                      return Future.value(false);
+                    }
+                    showSubMenuView(
+                        dy2 + 120,
+                        (dx2 < MediaQuery.of(context).size.width - 200)
+                            ? (MediaQuery.of(context).size.width - 200 - dx2)
+                            : (MediaQuery.of(context).size.width - dx2));
+                  },
+                  child: Row(
+                    children: <Widget>[
+                      Text(
+                        "Sort By [${sortingType.toString().split('.')[1]}]",
+                        style: DefaultTextStyle.of(context)
+                            .style
+                            .apply(fontSizeFactor: 0.8),
                       ),
-                      tooltip: 'Show menu',
+                      Icon(
+                        ascending ? Icons.arrow_upward : Icons.arrow_downward,
+                        color: Colors.black,
+                      ),
+                      IconButton(
+                        icon: Icon(
+                          Theme.of(context).platform == TargetPlatform.iOS
+                              ? Icons.more_horiz
+                              : Icons.more_vert,
+                        ),
+                        tooltip: 'Show menu',
 //                      onPressed: _bottomSheet == null ? _showConfigurationSheet : null,
-                    ),
-                  ],
-                )
-
-              ),
+                      ),
+                    ],
+                  )),
 //              Expanded(
 //                child: PopupMenuButton<ReceiptSortType>(
 //                  padding: EdgeInsets.zero,
@@ -558,19 +562,22 @@ class ReceiptListState extends State<ReceiptList> {
                     if (snapshot.data.success) {
                       List<ReceiptListItem> sortedReceiptItems = _userRepository
                           .receiptRepository
-                          .getSortedReceiptItems(_receiptStatusType, sortingType,
-                              ascending, _fromDate, _toDate);
+                          .getSortedReceiptItems(_receiptStatusType,
+                              sortingType, ascending, _fromDate, _toDate);
+                      ActionWithLable r = new ActionWithLable();
+                      r.action = reviewAction;
+                      r.lable = 'Review';
+                      ActionWithLable d = new ActionWithLable();
+                      d.action = deleteAction;
+                      d.lable = 'Delete';
+                      actions.add(r);
+                      actions.add(d);
                       return ListView.builder(
                           itemCount: sortedReceiptItems.length,
                           itemBuilder: (context, index) {
                             return ReceiptCard(
                               receiptItem: sortedReceiptItems[index],
-                              reviewBtnOn: true,
-                              deleteBtnOn: true,
-                              addBtnOn: false,
-                              reviewAction: reviewAction,
-                              deleteAction: deleteAction,
-                              addAction: null,
+                              actions: actions,
                             );
                           });
                     } else {
