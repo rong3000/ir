@@ -51,8 +51,8 @@ class _SettingsPageState extends State<SettingsPage> {
       return Scaffold(
         body: Column(
           children: <Widget>[
-            Text("${_userRepository.receiptRepository.receipts[0].companyName}"),
-            Text("${dataResult.success}"),
+//            Text("${_userRepository.receiptRepository.receipts[0].companyName}"),
+//            Text("${dataResult.success}"),
             Card(
               child: ListTile(
                 leading: Icon(Icons.album),
@@ -63,6 +63,23 @@ class _SettingsPageState extends State<SettingsPage> {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
+                trailing: SizedBox(
+                  width: 120,
+                  child: FlatButton(
+                    onPressed: () => {print('viewall')},
+//                    color: Colors.orange,
+//                    padding: EdgeInsets.all(10.0),
+                    child: Row(// Replace with a Row for horizontal icon + text
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        mainAxisSize: MainAxisSize.max,
+                        children: <Widget>[
+                          Text("View All"),
+                          Icon(Icons.more_horiz),
+                        ]),
+                  ),
+
+                ),
+
               ),
             ),
             Card(
@@ -75,7 +92,22 @@ class _SettingsPageState extends State<SettingsPage> {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                trailing: Text("AUD A\$"),
+                trailing: SizedBox(
+                  width: 120,
+                  child: FlatButton(
+                    onPressed: () => {print('currency')},
+//                    color: Colors.orange,
+//                    padding: EdgeInsets.all(10.0),
+                    child: Row(// Replace with a Row for horizontal icon + text
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        mainAxisSize: MainAxisSize.max,
+                        children: <Widget>[
+                          Text("AUD A\$"),
+                          Icon(Icons.more_horiz),
+                        ]),
+                  ),
+
+                ),
 
               ),
             ),
@@ -89,8 +121,22 @@ class _SettingsPageState extends State<SettingsPage> {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                trailing: Text("AUD A\$"),
+                trailing: SizedBox(
+                  width: 120,
+                  child: FlatButton(
+                    onPressed: () => {print('category')},
+//                    color: Colors.orange,
+//                    padding: EdgeInsets.all(10.0),
+                    child: Row(// Replace with a Row for horizontal icon + text
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        mainAxisSize: MainAxisSize.max,
+                        children: <Widget>[
+//                          Text("AUD A\$"),
+                          Icon(Icons.more_horiz),
+                        ]),
+                  ),
 
+                ),
               ),
             ),
           ],
