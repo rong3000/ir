@@ -25,6 +25,11 @@ class Urls {
   static String UpdateCategory = ServiceBaseUrl + "Settings/UpdateCategory/";
   static String DeleteCategory = ServiceBaseUrl + "Settings/DeleteCategory/";
 
+  // General setting related APIs
+  static String GetCurrencies = ServiceBaseUrl + "Settings/GetCurrencies";
+  static String GetSystemSettings = ServiceBaseUrl + "Settings/GetSystemSettings/";
+  static String AddOrUpdateSystemSetting = ServiceBaseUrl + "Settings/AddOrUpdateSystemSetting/";
+
   // Report related APIs
   static String GetReports = ServiceBaseUrl + "Report/GetReports/";
   static String AddReport = ServiceBaseUrl + "Report/AddReport/";
