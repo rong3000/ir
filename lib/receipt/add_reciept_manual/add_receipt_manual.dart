@@ -1,11 +1,11 @@
-import 'dart:io';
-
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intelligent_receipt/data_model/category.dart';
 import 'package:intelligent_receipt/data_model/enums.dart';
 import 'package:intelligent_receipt/data_model/receipt.dart';
+import 'package:intelligent_receipt/user_repository.dart';
 import 'package:intl/intl.dart';
 
 class AddReceiptForm extends StatefulWidget {
@@ -14,6 +14,12 @@ class AddReceiptForm extends StatefulWidget {
     // TODO: pass this in from edit exisiting
     var receipt = Receipt();
     receipt.receiptDatetime = DateTime(2018, 10, 5);
+    receipt.productName = 'Petrol';
+    receipt.currencyCode = 'AUD';
+    receipt.totalAmount = 120;
+    receipt.categoryId = CategoryName.Travel.index;
+    receipt.companyName = 'Bobs shop';
+    receipt.notes = 'Notes text';
     return _AddReceiptFormState(null);
   }
 }
@@ -22,10 +28,13 @@ class _AddReceiptFormState extends State<AddReceiptForm> {
   final _formKey = GlobalKey<FormState>();
   final pageTitleEdit = 'Edit Receipt';
   final pageTitleNew = 'Create Receipt';
+  
   var isNew = true;
   Receipt receipt;
   var defaultCurrencyValue = 'AUD';
   var defaultCategoryValue = categoryMapping[CategoryName.Undecided];
+  UserRepository _userRepository;
+
 
   _AddReceiptFormState(this.receipt) {
     isNew = this.receipt == null;
@@ -34,11 +43,17 @@ class _AddReceiptFormState extends State<AddReceiptForm> {
     }
   }
 
-  deleteReceipt() {
+  @override
+  void initState() {
+    super.initState();
+    _userRepository = RepositoryProvider.of<UserRepository>(context);
+  }
+  
+  void deleteReceipt() {
     // TODO handle delete/clear
   }
 
-  saveForm() {
+  void saveForm() {
     if (this._formKey.currentState.validate()) {
       this._formKey.currentState.save();
     }
@@ -53,9 +68,14 @@ class _AddReceiptFormState extends State<AddReceiptForm> {
 
   List<DropdownMenuItem<String>> getCurrencyCodesList() {
     var list = List<DropdownMenuItem<String>>();
-    for (var code in CurrencyCodes) {
-      list.add(DropdownMenuItem<String>(value: code, child: Text(code)));
+    
+    var currenciesList = _userRepository.settingRepository.getCurrencies();
+
+    for (var currency in currenciesList) {
+      list.add(DropdownMenuItem<String>(value: currency.code, child: Text(currency.code)));
     }
+
+
     return list;
   }
 
@@ -169,7 +189,6 @@ class _AddReceiptFormState extends State<AddReceiptForm> {
               TextFormField(
                 decoration: InputDecoration(labelText: 'Notes'),
                 initialValue: receipt.notes,
-                validator: textFieldValidator,
                 onSaved: (String value) {
                   this.receipt.notes = value;
                 },
