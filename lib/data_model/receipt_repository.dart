@@ -192,7 +192,7 @@ class ReceiptRepository {
     DataResult result = await uploadFile(
         Urls.UploadReceiptImages + _userRepository.userId.toString(),
         "",
-        imageFile);
+        imageFile, timeout: 5000);
     if (result.success) {
       Iterable l = result.obj;
       List<Receipt> newReceipts =

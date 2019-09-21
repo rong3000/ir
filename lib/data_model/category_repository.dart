@@ -28,7 +28,7 @@ class CategoryRepository {
       return DataResult.fail(msg: "No user logged in.");
     }
 
-    DataResult result = await webserviceGet(Urls.GetCategories + _userRepository.userId.toString(), "");
+    DataResult result = await webserviceGet(Urls.GetCategories + _userRepository.userId.toString(), "", timeout: 5000);
     if (result.success) {
       Iterable l = result.obj;
       categories = l.map((model) => Category.fromJason(model)).toList();
