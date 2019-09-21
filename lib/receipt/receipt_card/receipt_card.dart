@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intelligent_receipt/data_model/receipt_repository.dart';
+import 'package:intelligent_receipt/receipt/receipt_list/receipt_list.dart';
 import 'package:intl/intl.dart';
 
 import '../../data_model/enums.dart';
@@ -11,23 +12,13 @@ class ReceiptCard extends StatefulWidget {
   const ReceiptCard({
     Key key,
     @required ReceiptListItem receiptItem,
-    this.reviewBtnOn,
-    this.deleteBtnOn,
-    this.addBtnOn,
-    this.reviewAction,
-    this.deleteAction,
-    this.addAction,
+    this.actions,
   })  : assert(receiptItem != null),
         _receiptItem = receiptItem,
         super(key: key);
 
   final ReceiptListItem _receiptItem;
-  final Function(int) reviewAction;
-  final Function(int) deleteAction;
-  final Function(int) addAction;
-  final bool reviewBtnOn;
-  final bool deleteBtnOn;
-  final bool addBtnOn;
+  final List<ActionWithLable> actions;
 
   @override
   _ReceiptCardState createState() => _ReceiptCardState();
@@ -50,65 +41,19 @@ class _ReceiptCardState extends State<ReceiptCard> {
     final TextStyle dateStyle = theme.textTheme.body2;
     final TextStyle amountStyle = theme.textTheme.body1;
 
-    Widget _reviewButton(BuildContext context, bool reviewOn) {
-      if (reviewOn) {
+    Widget _actionButton(BuildContext context, ActionWithLable action) {
+      if (action.action != null) {
         return Container(
           height: 25,
           child: OutlineButton(
-              child: Text('Review',
+              child: Text(action.lable,
                   style: dateStyle
                       .copyWith(color: Colors.blue)
                       .apply(fontSizeFactor: 0.75),
-                  semanticsLabel: 'Review ${widget._receiptItem.id}'),
+                  semanticsLabel: '${action.lable} ${widget._receiptItem.id}'),
 //                    textColor: Colors.blue.shade500,
 
-              onPressed: () => widget.reviewAction(widget._receiptItem.id),
-              borderSide: BorderSide(color: Colors.blue),
-//                      shape: StadiumBorder(),
-              shape: new RoundedRectangleBorder(
-                  borderRadius: new BorderRadius.circular(4.0))),
-        );
-      } else
-        return null;
-    }
-
-    Widget _deleteButton(BuildContext context, bool deleteBtnOn) {
-      if (deleteBtnOn) {
-        return Container(
-          width: 50,
-          height: 25,
-          child: OutlineButton(
-              child: Text('Delete',
-                  style: dateStyle
-                      .copyWith(color: Colors.blue)
-                      .apply(fontSizeFactor: 0.75),
-                  semanticsLabel: 'Delete ${widget._receiptItem.id}'),
-//                    textColor: Colors.blue.shade500,
-
-              onPressed: () => widget.deleteAction(widget._receiptItem.id),
-              borderSide: BorderSide(color: Colors.blue),
-//                      shape: StadiumBorder(),
-              shape: new RoundedRectangleBorder(
-                  borderRadius: new BorderRadius.circular(4.0))),
-        );
-      } else
-        return null;
-    }
-
-    Widget _addButton(BuildContext context, bool addBtnOn) {
-      if (addBtnOn) {
-        return Container(
-          width: 50,
-          height: 25,
-          child: OutlineButton(
-              child: Text('Add',
-                  style: dateStyle
-                      .copyWith(color: Colors.blue)
-                      .apply(fontSizeFactor: 0.75),
-                  semanticsLabel: 'Add ${widget._receiptItem.id}'),
-//                    textColor: Colors.blue.shade500,
-
-              onPressed: () => widget.addAction(widget._receiptItem.id),
+              onPressed: () => action.action(widget._receiptItem.id),
               borderSide: BorderSide(color: Colors.blue),
 //                      shape: StadiumBorder(),
               shape: new RoundedRectangleBorder(
@@ -212,11 +157,11 @@ class _ReceiptCardState extends State<ReceiptCard> {
                 ButtonTheme.bar(
                   child: ButtonBar(
                     mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      _reviewButton(context, widget.reviewBtnOn),
-                      _deleteButton(context, widget.deleteBtnOn),
-                      _addButton(context, widget.addBtnOn),
-                    ],
+                    children:
+                    widget.actions.map<Widget>(
+                      (ActionWithLable action) =>
+                      _actionButton(context, action)
+                    ).toList(),
                   ),
                 ),
               ],

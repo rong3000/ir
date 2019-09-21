@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intelligent_receipt/data_model/receipt_repository.dart';
 import 'package:intelligent_receipt/data_model/category_repository.dart';
+import 'package:intelligent_receipt/data_model/setting_repository.dart';
 
 class UserRepository {
   final FirebaseAuth _firebaseAuth;
@@ -10,6 +11,7 @@ class UserRepository {
 
   ReceiptRepository receiptRepository;
   CategoryRepository categoryRepository;
+  SettingRepository settingRepository;
 
   String userGuid;
   int userId = 1; // The id stored in our service database
@@ -19,7 +21,8 @@ class UserRepository {
         _googleSignIn = googleSignin ?? GoogleSignIn() {
      receiptRepository = new ReceiptRepository(this);
      categoryRepository = new CategoryRepository(this);
-     // postSignIn(null); // xxx temporary put the code here
+     settingRepository = new SettingRepository(this);
+     postSignIn(null); // xxx temporary put the code here
   }
 
   Future<FirebaseUser> signInWithGoogle() async {
@@ -79,8 +82,13 @@ class UserRepository {
   Future<void> postSignIn(FirebaseUser currentUser) async {
     // Get user ID from server
     userId = 1;
+    receiptRepository.getReceiptsFromServer(forceRefresh: true);
+    categoryRepository.getCategoriesFromServer(forceRefresh: true);
+    settingRepository.getCurrenciesFromServer();
+    settingRepository.getSettingsFromServer();
+    /*
+    // Get receipts from server;
 
-    // Get receipts from server
     await receiptRepository.getReceiptsFromServer(forceRefresh: true);
 
     // Some testing code
@@ -96,5 +104,18 @@ class UserRepository {
       receiptIds.add(receiptRepository.receipts[0].id);
       await receiptRepository.deleteReceipts(receiptIds);
     }
+
+    // Test categories
+    DataResult addCategoryResult = await categoryRepository.addCategory("Labor");
+    Category category = addCategoryResult.obj as Category;
+    category.categoryName = "Rent";
+    DataResult updateCategoryResult = await categoryRepository.updateCategory(category);
+    await categoryRepository.deleteCategory(category.id);
+
+    // Test Settings
+    List<Currency> currencies = settingRepository.getCurrencies();
+    Currency defaultCurrency = await settingRepository.getDefaultCurrency();
+    DataResult setDefaultCurrency = await settingRepository.setDefaultCurrency(5);
+    */
   }
 }
