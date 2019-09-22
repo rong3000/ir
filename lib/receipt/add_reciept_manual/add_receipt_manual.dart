@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intelligent_receipt/data_model/category.dart';
+import 'package:intelligent_receipt/data_model/currency.dart';
 import 'package:intelligent_receipt/data_model/enums.dart';
 import 'package:intelligent_receipt/data_model/receipt.dart';
 import 'package:intelligent_receipt/user_repository.dart';
@@ -28,13 +29,13 @@ class _AddReceiptFormState extends State<AddReceiptForm> {
   final _formKey = GlobalKey<FormState>();
   final pageTitleEdit = 'Edit Receipt';
   final pageTitleNew = 'Create Receipt';
-  
+
   var isNew = true;
   Receipt receipt;
-  var defaultCurrencyValue = 'AUD';
+  Currency defaultCurrency;
+  var currenciesList = List<Currency>();
   var defaultCategoryValue = categoryMapping[CategoryName.Undecided];
   UserRepository _userRepository;
-
 
   _AddReceiptFormState(this.receipt) {
     isNew = this.receipt == null;
@@ -45,10 +46,11 @@ class _AddReceiptFormState extends State<AddReceiptForm> {
 
   @override
   void initState() {
-    super.initState();
     _userRepository = RepositoryProvider.of<UserRepository>(context);
+    defaultCurrency = _userRepository.settingRepository.getDefaultCurrency();
+    super.initState();
   }
-  
+
   void deleteReceipt() {
     // TODO handle delete/clear
   }
@@ -68,13 +70,17 @@ class _AddReceiptFormState extends State<AddReceiptForm> {
 
   List<DropdownMenuItem<String>> getCurrencyCodesList() {
     var list = List<DropdownMenuItem<String>>();
-    
-    var currenciesList = _userRepository.settingRepository.getCurrencies();
+    currenciesList = _userRepository.settingRepository.getCurrencies();
 
-    for (var currency in currenciesList) {
-      list.add(DropdownMenuItem<String>(value: currency.code, child: Text(currency.code)));
+    //Handle none returned
+    if (currenciesList.length == 0) {
+      currenciesList.add(defaultCurrency);
     }
 
+    for (var currency in currenciesList) {
+      list.add(DropdownMenuItem<String>(
+          value: currency.code, child: Text(currency.code)));
+    }
 
     return list;
   }
@@ -152,13 +158,15 @@ class _AddReceiptFormState extends State<AddReceiptForm> {
                     child: DropdownButtonFormField<String>(
                       decoration: InputDecoration(labelText: 'Currency Code'),
                       items: getCurrencyCodesList(),
-                      value: defaultCurrencyValue,
+                      value: defaultCurrency.code,
                       onSaved: (String value) {
                         this.receipt.currencyCode = value;
                       },
                       onChanged: (String newValue) {
                         setState(() {
-                          defaultCurrencyValue = newValue;
+                          defaultCurrency = currenciesList.singleWhere((curr) {
+                            return curr.code == newValue;
+                          });
                         });
                       },
                     ),
@@ -186,6 +194,12 @@ class _AddReceiptFormState extends State<AddReceiptForm> {
                   this.receipt.companyName = value;
                 },
               ),
+              Checkbox(
+                value: receipt.gstInclusive,
+                onChanged: (newValue) {
+                  //TODO: 
+                },
+              ),
               TextFormField(
                 decoration: InputDecoration(labelText: 'Notes'),
                 initialValue: receipt.notes,
@@ -204,9 +218,11 @@ class _AddReceiptFormState extends State<AddReceiptForm> {
                 child: Align(
                   alignment: Alignment.topCenter,
                   heightFactor: .4,
-                  child: Image.asset('assets/test.jpg', fit: BoxFit.cover), // TODO: load image from db or display 'no image selected'
+                  child: Image.asset('assets/test.jpg',
+                      fit: BoxFit
+                          .cover), // TODO: load image from db or display 'no image selected'
                 ),
-            ),
+              ),
             ),
             Expanded(
               child: Icon(Icons.image),

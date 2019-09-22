@@ -30,7 +30,12 @@ class SettingRepository {
 
   Currency getDefaultCurrency() {
     String currencyId = _getSettingValue(Setting_DefaultCurrency);
-    return _getCurrencyById(int.parse(currencyId));
+    var currId = int.tryParse(currencyId);
+    // Default currency if found, otherwise first currency in list or default to AUD if none loaded
+    var aud = Currency();
+    aud.code = 'AUD';
+    aud.symbol = '\$';
+    return currId == null ?  _currencies.length > 0 ? _currencies[0] : aud : _getCurrencyById(currId);
   }
 
   Future<DataResult> setDefaultCurrency(int currencyId) {

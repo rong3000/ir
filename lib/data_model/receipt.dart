@@ -22,6 +22,7 @@ class ReceiptListItem {
   String productName; // Not yet in DB
   String currencyCode; //not yet in DB
   String notes; //not yet in DB
+  bool gstInclusive; // NOT inDB 
 
   ReceiptListItem();
 
