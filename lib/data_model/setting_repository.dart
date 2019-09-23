@@ -1,8 +1,7 @@
 import "currency.dart";
 import "setting.dart";
 import "webservice.dart";
-import "../user_repository.dart";
-import 'dart:convert';
+import "package:intelligent_receipt/user_repository.dart";
 import 'package:synchronized/synchronized.dart';
 
 export 'currency.dart';
@@ -32,6 +31,8 @@ class SettingRepository {
     String currencyId = _getSettingValue(Setting_DefaultCurrency);
     var currId = int.tryParse(currencyId);
     // Default currency if found, otherwise first currency in list or default to AUD if none loaded
+    // TODO: this should not be here long term - need to trigger a reload from server and listen to resp
+    // as a stream
     var aud = Currency();
     aud.code = 'AUD';
     aud.symbol = '\$';

@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart' as prefix0;
 import 'package:json_annotation/json_annotation.dart';
 
 import 'enums.dart';
@@ -15,12 +16,19 @@ class Category {
 
   Category();
 
-  factory Category.fromJason(Map<String, dynamic> json) => _$CategoryFromJson(json);
+  factory Category.fromJason(Map<String, dynamic> json) =>
+      _$CategoryFromJson(json);
   Map<String, dynamic> toJson() => _$CategoryToJson(this);
+
+  //Dev only ATM
+  Category.fromParams(int id, String name)
+      : id = id,
+        categoryName = name;
 }
 
-const Map<CategoryName, String> categoryMapping = {
-  CategoryName.Material: 'Material',
-  CategoryName.Travel: 'Travel',
-  CategoryName.Undecided: 'Undecided'
-};
+// DEv placeholder till server side is up
+var categoryList = [
+  Category.fromParams(1, 'Material'),
+  Category.fromParams(2, 'Travel'),
+  Category.fromParams(3, 'Undecided'),
+];

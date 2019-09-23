@@ -23,6 +23,7 @@ class ReceiptListItem {
   String currencyCode; //not yet in DB
   String notes; //not yet in DB
   bool gstInclusive; // NOT inDB 
+  double warrantyPeriod;
 
   ReceiptListItem();
 

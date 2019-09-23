@@ -33,8 +33,10 @@ class _AddReceiptFormState extends State<AddReceiptForm> {
   var isNew = true;
   Receipt receipt;
   Currency defaultCurrency;
+  var gstInclusive = true;
+  double warrantyPeriod = 0;
   var currenciesList = List<Currency>();
-  var defaultCategoryValue = categoryMapping[CategoryName.Undecided];
+  var defaultCategoryValue = categoryList[0].id;
   UserRepository _userRepository;
 
   _AddReceiptFormState(this.receipt) {
@@ -58,6 +60,7 @@ class _AddReceiptFormState extends State<AddReceiptForm> {
   void saveForm() {
     if (this._formKey.currentState.validate()) {
       this._formKey.currentState.save();
+      var x = 1;
     }
   }
 
@@ -85,11 +88,11 @@ class _AddReceiptFormState extends State<AddReceiptForm> {
     return list;
   }
 
-  List<DropdownMenuItem<String>> getCategorylist() {
-    var list = List<DropdownMenuItem<String>>();
-    for (var key in categoryMapping.keys) {
-      list.add(DropdownMenuItem<String>(
-          value: categoryMapping[key], child: Text(categoryMapping[key])));
+  List<DropdownMenuItem<int>> getCategorylist() {
+    var list = List<DropdownMenuItem<int>>();
+    for (var cat in categoryList) {
+      list.add(DropdownMenuItem<int>(
+          value: cat.id, child: Text(cat.categoryName)));
     }
     return list;
   }
@@ -114,123 +117,155 @@ class _AddReceiptFormState extends State<AddReceiptForm> {
           )
         ],
       ),
-      body: ListView(children: <Widget>[
-        Form(
-          key: _formKey,
-          child: Column(
-            children: <Widget>[
-              DateTimePickerFormField(
-                editable: false,
-                inputType: InputType.date,
-                initialDate: DateTime.now(),
-                format: DateFormat("yyyy-MM-dd"),
-                decoration: InputDecoration(labelText: 'Purchase Date'),
-                initialValue: isNew ? DateTime.now() : receipt.receiptDatetime,
-                onSaved: (DateTime value) {
-                  this.receipt.receiptDatetime = value;
-                },
-              ),
-              TextFormField(
-                initialValue: receipt.productName,
-                validator: textFieldValidator,
-                decoration: InputDecoration(labelText: 'Product Name'),
-                onSaved: (String value) {
-                  this.receipt.productName = value;
-                },
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Flexible(
-                    flex: 7,
-                    child: TextFormField(
-                      decoration: InputDecoration(labelText: 'Total Amount'),
-                      initialValue:
-                          isNew ? '0' : receipt.totalAmount.toString(),
-                      validator: textFieldValidator,
-                      onSaved: (String value) {
-                        this.receipt.totalAmount = double.tryParse(value);
-                      },
+      body: Padding(
+        padding: EdgeInsets.all(8.0),
+        child: ListView(children: <Widget>[
+          Form(
+            key: _formKey,
+            child: Column(
+              children: <Widget>[
+                DateTimePickerFormField(
+                  editable: false,
+                  inputType: InputType.date,
+                  initialDate: DateTime.now(),
+                  format: DateFormat("yyyy-MM-dd"),
+                  decoration: InputDecoration(labelText: 'Purchase Date'),
+                  initialValue:
+                      isNew ? DateTime.now() : receipt.receiptDatetime,
+                  onSaved: (DateTime value) {
+                    receipt.receiptDatetime = value;
+                  },
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Flexible(
+                      flex: 7,
+                      child: TextFormField(
+                        decoration: InputDecoration(labelText: 'Total Amount'),
+                        initialValue:
+                            isNew ? '0' : receipt.totalAmount.toString(),
+                        validator: textFieldValidator,
+                        onSaved: (String value) {
+                          receipt.totalAmount = double.tryParse(value);
+                        },
+                      ),
                     ),
-                  ),
-                  Flexible(
-                    flex: 3,
-                    child: DropdownButtonFormField<String>(
-                      decoration: InputDecoration(labelText: 'Currency Code'),
-                      items: getCurrencyCodesList(),
-                      value: defaultCurrency.code,
-                      onSaved: (String value) {
-                        this.receipt.currencyCode = value;
-                      },
-                      onChanged: (String newValue) {
-                        setState(() {
-                          defaultCurrency = currenciesList.singleWhere((curr) {
-                            return curr.code == newValue;
+                    Flexible(
+                      flex: 3,
+                      child: DropdownButtonFormField<String>(
+                        decoration: InputDecoration(labelText: 'Currency Code'),
+                        items: getCurrencyCodesList(),
+                        value: defaultCurrency.code,
+                        onSaved: (String value) {
+                          receipt.currencyCode = value;
+                        },
+                        onChanged: (String newValue) {
+                          setState(() {
+                            defaultCurrency = currenciesList
+                                .singleWhere((curr) => curr.code == newValue);
                           });
-                        });
-                      },
+                        },
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              DropdownButtonFormField<String>(
-                decoration: InputDecoration(labelText: 'Category'),
-                items: getCategorylist(),
-                value: defaultCategoryValue,
-                onSaved: (String value) {
-                  this.receipt.currencyCode = value;
-                },
-                onChanged: (String newValue) {
-                  setState(() {
-                    defaultCategoryValue = newValue;
-                  });
-                },
-              ),
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Shop/Vendor'),
-                initialValue: receipt.companyName,
-                validator: textFieldValidator,
-                onSaved: (String value) {
-                  this.receipt.companyName = value;
-                },
-              ),
-              Checkbox(
-                value: receipt.gstInclusive,
-                onChanged: (newValue) {
-                  //TODO: 
-                },
-              ),
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Notes'),
-                initialValue: receipt.notes,
-                onSaved: (String value) {
-                  this.receipt.notes = value;
-                },
-              ),
-            ],
+                  ],
+                ),
+                CheckboxListTile(
+                  title: const Text('GST Inclusive'),
+                  value: gstInclusive,
+                  onChanged: (newValue) {
+                    setState(() {
+                      gstInclusive = !gstInclusive;
+                    });
+                  },
+                ),
+                DropdownButtonFormField<int>(
+                  decoration: InputDecoration(labelText: 'Category'),
+                  items: getCategorylist(),
+                  value: defaultCategoryValue,
+                  onSaved: (int value) {
+                    receipt.categoryId = value;
+                  },
+                  onChanged: (int newValue) {
+                    setState(() {
+                      defaultCategoryValue = newValue;
+                    });
+                  },
+                ),
+                TextFormField(
+                  decoration: InputDecoration(labelText: 'Shop/Vendor'),
+                  initialValue: receipt.companyName,
+                  validator: textFieldValidator,
+                  onSaved: (String value) {
+                    receipt.companyName = value;
+                  },
+                ),
+                TextFormField(
+                  initialValue: receipt.productName,
+                  validator: textFieldValidator,
+                  decoration: InputDecoration(labelText: 'Product Name'),
+                  onSaved: (String value) {
+                    receipt.productName = value;
+                  },
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 8.0),
+                      child: Text('Warranty Period'),
+                    ),
+                    FormField<double>(
+                      
+                      builder: (formFieldState) => Slider.adaptive(
+                        value: warrantyPeriod,
+                        divisions: warrantyPeriod < 24 ? 20 : 5,
+                        min: 0,
+                        max: 60,
+                        label:
+                            '${warrantyPeriod < 24 ? warrantyPeriod : warrantyPeriod / 12} ${warrantyPeriod < 24 ? "months" : "years"}',
+                        onChanged: (newValue) {
+                          setState(() {
+                            warrantyPeriod = newValue;
+                          });
+                        },
+                      ),
+                      onSaved: (double newValue) { receipt.warrantyPeriod = warrantyPeriod; },
+                    ),
+                  ],
+                ),
+                TextFormField(
+                  decoration: InputDecoration(labelText: 'Notes'),
+                  initialValue: receipt.notes,
+                  onSaved: (String value) {
+                    this.receipt.notes = value;
+                  },
+                ),
+              ],
+            ),
           ),
-        ),
-        Row(
-          children: <Widget>[
-            Expanded(
-              flex: 5,
-              child: ClipRect(
-                child: Align(
-                  alignment: Alignment.topCenter,
-                  heightFactor: .4,
-                  child: Image.asset('assets/test.jpg',
-                      fit: BoxFit
-                          .cover), // TODO: load image from db or display 'no image selected'
+          Row(
+            children: <Widget>[
+              Expanded(
+                flex: 5,
+                child: ClipRect(
+                  child: Align(
+                    alignment: Alignment.topCenter,
+                    heightFactor: .4,
+                    child: Image.asset('assets/test.jpg',
+                        fit: BoxFit
+                            .cover), // TODO: load image from db or display 'no image selected'
+                  ),
                 ),
               ),
-            ),
-            Expanded(
-              child: Icon(Icons.image),
-              flex: 5,
-            )
-          ],
-        )
-      ]),
+              Expanded(
+                child: Icon(Icons.image),
+                flex: 5,
+              )
+            ],
+          )
+        ]),
+      ),
     );
   }
 }
