@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:intelligent_receipt/data_model/data_result.dart';
+import 'package:intelligent_receipt/data_model/setting_repository.dart';
 
 import '../../user_repository.dart';
 
@@ -23,14 +24,7 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   UserRepository get _userRepository => widget._userRepository;
   DataResult dataResult;
-
-  fetchFromServer() async {
-
-    print('3');
-    await _userRepository.receiptRepository.getReceiptsFromServer(forceRefresh: true);
-
-    print('4');
-  }
+  Currency _currency;
 
   Future<void> getDataResultFromServer() async {
     dataResult = await _userRepository.receiptRepository.getReceiptsFromServer(forceRefresh: true);
@@ -38,9 +32,21 @@ class _SettingsPageState extends State<SettingsPage> {
     });
   }
 
+  Future<void> getSettingFromServer() async {
+    DataResult result = await _userRepository.settingRepository.getSettingsFromServer();
+  }
+
+  Future<void> getCurrencyFromServer() async {
+    _currency = await _userRepository.settingRepository.getDefaultCurrency();
+    setState(() {
+    });
+  }
+
   @override
   void initState() {
-    getDataResultFromServer();
+//    getDataResultFromServer();
+    getSettingFromServer();
+    getCurrencyFromServer();
     super.initState();
   }
 
@@ -102,7 +108,8 @@ class _SettingsPageState extends State<SettingsPage> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         mainAxisSize: MainAxisSize.max,
                         children: <Widget>[
-                          Text("AUD A\$"),
+//                          Text("${_currency.name}"),
+                          Text("currency"),
                           Icon(Icons.more_horiz),
                         ]),
                   ),
