@@ -22,7 +22,7 @@ class AddReceiptForm extends StatefulWidget {
     receipt.notes = 'Notes text';
     receipt.warrantyPeriod = 36;
     receipt.gstInclusive = true;
-    return _AddReceiptFormState(receipt);
+    return _AddReceiptFormState(null);
   }
 }
 
@@ -34,16 +34,18 @@ class _AddReceiptFormState extends State<AddReceiptForm> {
   var isNew = true;
   Receipt receipt;
   Currency defaultCurrency;
-  var gstInclusive = true;
-  double warrantyPeriod = 0;
   var currenciesList = List<Currency>();
-  var defaultCategoryValue = categoryList[0].id;
   UserRepository _userRepository;
 
   _AddReceiptFormState(this.receipt) {
     isNew = this.receipt == null;
     if (isNew) {
       this.receipt = Receipt();
+      receipt.receiptDatetime = DateTime.now();
+      receipt.totalAmount = 0;
+      receipt.categoryId = categoryList[2].id;
+      receipt.warrantyPeriod = 0;
+      receipt.gstInclusive = true;
     }
   }
 
@@ -85,7 +87,6 @@ class _AddReceiptFormState extends State<AddReceiptForm> {
       list.add(DropdownMenuItem<String>(
           value: currency.code, child: Text(currency.code)));
     }
-
     return list;
   }
 
@@ -131,8 +132,7 @@ class _AddReceiptFormState extends State<AddReceiptForm> {
                   initialDate: DateTime.now(),
                   format: DateFormat("yyyy-MM-dd"),
                   decoration: InputDecoration(labelText: 'Purchase Date'),
-                  initialValue:
-                      isNew ? DateTime.now() : receipt.receiptDatetime,
+                  initialValue: receipt.receiptDatetime,
                   onSaved: (DateTime value) {
                     receipt.receiptDatetime = value;
                   },
@@ -142,14 +142,17 @@ class _AddReceiptFormState extends State<AddReceiptForm> {
                   children: <Widget>[
                     Flexible(
                       flex: 7,
-                      child: TextFormField(
-                        decoration: InputDecoration(labelText: 'Total Amount'),
-                        initialValue:
-                            isNew ? '0' : receipt.totalAmount.toString(),
-                        validator: textFieldValidator,
-                        onSaved: (String value) {
-                          receipt.totalAmount = double.tryParse(value);
-                        },
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 5),
+                        child: TextFormField(
+                          decoration:
+                              InputDecoration(labelText: 'Total Amount'),
+                          initialValue: receipt.totalAmount.toString(),
+                          validator: textFieldValidator,
+                          onSaved: (String value) {
+                            receipt.totalAmount = double.tryParse(value);
+                          },
+                        ),
                       ),
                     ),
                     Flexible(
@@ -174,27 +177,27 @@ class _AddReceiptFormState extends State<AddReceiptForm> {
                 FormField<bool>(
                   builder: (formState) => CheckboxListTile(
                     title: const Text('GST Inclusive'),
-                    value: isNew ?  gstInclusive: receipt.gstInclusive,
+                    value: receipt.gstInclusive,
                     onChanged: (newValue) {
                       setState(() {
-                        gstInclusive = !gstInclusive;
+                        receipt.gstInclusive = !receipt.gstInclusive;
                       });
                     },
                   ),
                   onSaved: (newValue) {
-                    receipt.gstInclusive = gstInclusive;
+                    receipt.gstInclusive = receipt.gstInclusive;
                   },
                 ),
                 DropdownButtonFormField<int>(
                   decoration: InputDecoration(labelText: 'Category'),
                   items: getCategorylist(),
-                  value: defaultCategoryValue,
+                  value: receipt.categoryId,
                   onSaved: (int value) {
                     receipt.categoryId = value;
                   },
                   onChanged: (int newValue) {
                     setState(() {
-                      defaultCategoryValue = newValue;
+                      receipt.categoryId = newValue;
                     });
                   },
                 ),
@@ -223,20 +226,20 @@ class _AddReceiptFormState extends State<AddReceiptForm> {
                     ),
                     FormField<double>(
                       builder: (formFieldState) => Slider.adaptive(
-                        value: isNew ? warrantyPeriod : receipt.warrantyPeriod,
-                        divisions: warrantyPeriod < 24 ? 20 : 5,
+                        value: receipt.warrantyPeriod,
+                        divisions: receipt.warrantyPeriod < 24 ? 20 : 5,
                         min: 0,
                         max: 60,
                         label:
-                            '${warrantyPeriod < 24 ? warrantyPeriod : warrantyPeriod / 12} ${warrantyPeriod < 24 ? "months" : "years"}',
+                            '${receipt.warrantyPeriod < 24 ? receipt.warrantyPeriod : receipt.warrantyPeriod / 12} ${receipt.warrantyPeriod < 24 ? "months" : "years"}',
                         onChanged: (newValue) {
                           setState(() {
-                            warrantyPeriod = newValue;
+                            receipt.warrantyPeriod = newValue;
                           });
                         },
                       ),
                       onSaved: (double newValue) {
-                        receipt.warrantyPeriod = warrantyPeriod;
+                        receipt.warrantyPeriod = receipt.warrantyPeriod;
                       },
                     ),
                   ],
