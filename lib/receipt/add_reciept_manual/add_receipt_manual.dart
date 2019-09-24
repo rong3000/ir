@@ -4,7 +4,6 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intelligent_receipt/data_model/category.dart';
 import 'package:intelligent_receipt/data_model/currency.dart';
-import 'package:intelligent_receipt/data_model/enums.dart';
 import 'package:intelligent_receipt/data_model/receipt.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 import 'package:intl/intl.dart';
@@ -18,10 +17,12 @@ class AddReceiptForm extends StatefulWidget {
     receipt.productName = 'Petrol';
     receipt.currencyCode = 'AUD';
     receipt.totalAmount = 120;
-    receipt.categoryId = CategoryName.Travel.index;
+    receipt.categoryId = categoryList[0].id;
     receipt.companyName = 'Bobs shop';
     receipt.notes = 'Notes text';
-    return _AddReceiptFormState(null);
+    receipt.warrantyPeriod = 36;
+    receipt.gstInclusive = true;
+    return _AddReceiptFormState(receipt);
   }
 }
 
@@ -91,8 +92,8 @@ class _AddReceiptFormState extends State<AddReceiptForm> {
   List<DropdownMenuItem<int>> getCategorylist() {
     var list = List<DropdownMenuItem<int>>();
     for (var cat in categoryList) {
-      list.add(DropdownMenuItem<int>(
-          value: cat.id, child: Text(cat.categoryName)));
+      list.add(
+          DropdownMenuItem<int>(value: cat.id, child: Text(cat.categoryName)));
     }
     return list;
   }
@@ -170,13 +171,18 @@ class _AddReceiptFormState extends State<AddReceiptForm> {
                     ),
                   ],
                 ),
-                CheckboxListTile(
-                  title: const Text('GST Inclusive'),
-                  value: gstInclusive,
-                  onChanged: (newValue) {
-                    setState(() {
-                      gstInclusive = !gstInclusive;
-                    });
+                FormField<bool>(
+                  builder: (formState) => CheckboxListTile(
+                    title: const Text('GST Inclusive'),
+                    value: isNew ?  gstInclusive: receipt.gstInclusive,
+                    onChanged: (newValue) {
+                      setState(() {
+                        gstInclusive = !gstInclusive;
+                      });
+                    },
+                  ),
+                  onSaved: (newValue) {
+                    receipt.gstInclusive = gstInclusive;
                   },
                 ),
                 DropdownButtonFormField<int>(
@@ -216,9 +222,8 @@ class _AddReceiptFormState extends State<AddReceiptForm> {
                       child: Text('Warranty Period'),
                     ),
                     FormField<double>(
-                      
                       builder: (formFieldState) => Slider.adaptive(
-                        value: warrantyPeriod,
+                        value: isNew ? warrantyPeriod : receipt.warrantyPeriod,
                         divisions: warrantyPeriod < 24 ? 20 : 5,
                         min: 0,
                         max: 60,
@@ -230,7 +235,9 @@ class _AddReceiptFormState extends State<AddReceiptForm> {
                           });
                         },
                       ),
-                      onSaved: (double newValue) { receipt.warrantyPeriod = warrantyPeriod; },
+                      onSaved: (double newValue) {
+                        receipt.warrantyPeriod = warrantyPeriod;
+                      },
                     ),
                   ],
                 ),
@@ -238,7 +245,7 @@ class _AddReceiptFormState extends State<AddReceiptForm> {
                   decoration: InputDecoration(labelText: 'Notes'),
                   initialValue: receipt.notes,
                   onSaved: (String value) {
-                    this.receipt.notes = value;
+                    receipt.notes = value;
                   },
                 ),
               ],
