@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:intelligent_receipt/data_model/data_result.dart';
 import 'package:intelligent_receipt/data_model/setting_repository.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 
 class CurrencyScreen extends StatefulWidget {
   final String title;
   final UserRepository _userRepository;
-  CurrencyScreen({Key key, @required UserRepository userRepository, this.title})
+  final Currency defaultCurrency;
+  CurrencyScreen({Key key, @required UserRepository userRepository, this.title, this.defaultCurrency})
       : assert(userRepository != null),
         _userRepository = userRepository,
         super(key: key) {}
@@ -18,6 +20,8 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
   UserRepository get _userRepository => widget._userRepository;
   TextEditingController editingController = TextEditingController();
   List<Currency> duplicateItems;
+  Currency selectedCurrency;
+  bool show;
 
   var items = List<Currency>();
 
@@ -25,6 +29,7 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
   void initState() {
     duplicateItems = _userRepository.settingRepository.getCurrencies();
     items.addAll(duplicateItems);
+    selectedCurrency = widget.defaultCurrency;
     super.initState();
   }
 
@@ -49,8 +54,16 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
         items.addAll(duplicateItems);
       });
     }
-
   }
+
+  Future<void> _setAsDefaultCurrency(int currencyId) async{
+    DataResult dataResult = await _userRepository.settingRepository.setDefaultCurrency(currencyId);
+    setState(() {
+      selectedCurrency = _userRepository
+          .settingRepository
+          .getDefaultCurrency();
+    });
+}
 
   @override
   Widget build(BuildContext context) {
@@ -84,6 +97,11 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
                 itemBuilder: (context, index) {
                   return ListTile(
                     title: Text('${items[index].name} ${items[index].symbol} ${items[index].country}'),
+                    trailing: (items[index].id == selectedCurrency.id) ?
+                    Icon(Icons.check) : null,
+                    onTap: () {
+                      _setAsDefaultCurrency(items[index].id);
+                    },
                   );
                 },
               ),

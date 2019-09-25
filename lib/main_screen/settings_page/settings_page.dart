@@ -95,7 +95,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     onPressed: () => {
                       Navigator.of(context).push(
                         MaterialPageRoute(builder: (context) {
-                          return CurrencyScreen(userRepository: _userRepository, title: 'Choose Currency',);
+                          return CurrencyScreen(userRepository: _userRepository, title: 'Choose Currency', defaultCurrency: _currency);
                         }),
                       )
                     },
