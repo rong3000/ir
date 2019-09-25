@@ -4,11 +4,22 @@ import 'package:intelligent_receipt/data_model/data_result.dart';
 import 'package:intelligent_receipt/data_model/setting_repository.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 
+enum DialogDemoAction {
+  cancel,
+  discard,
+  disagree,
+  agree,
+}
+
 class CategoryScreen extends StatefulWidget {
   final String title;
   final UserRepository _userRepository;
   final Currency defaultCurrency;
-  CategoryScreen({Key key, @required UserRepository userRepository, this.title, this.defaultCurrency})
+  CategoryScreen(
+      {Key key,
+      @required UserRepository userRepository,
+      this.title,
+      this.defaultCurrency})
       : assert(userRepository != null),
         _userRepository = userRepository,
         super(key: key) {}
@@ -22,7 +33,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
   TextEditingController editingController = TextEditingController();
   List<Category> duplicateItems;
   Currency selectedCurrency;
-  bool show;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   var items = List<Category>();
 
@@ -37,10 +48,10 @@ class _CategoryScreenState extends State<CategoryScreen> {
   void filterSearchResults(String query) {
     List<Category> dummySearchList = List<Category>();
     dummySearchList.addAll(duplicateItems);
-    if(query.isNotEmpty) {
+    if (query.isNotEmpty) {
       List<Category> dummyListData = List<Category>();
       dummySearchList.forEach((item) {
-        if(item.categoryName.toLowerCase().contains(query.toLowerCase())) {
+        if (item.categoryName.toLowerCase().contains(query.toLowerCase())) {
           dummyListData.add(item);
         }
       });
@@ -57,19 +68,35 @@ class _CategoryScreenState extends State<CategoryScreen> {
     }
   }
 
-  Future<void> _setAsDefaultCurrency(int currencyId) async{
-    DataResult dataResult = await _userRepository.settingRepository.setDefaultCurrency(currencyId);
+  Future<void> _setAsDefaultCurrency(int currencyId) async {
+    DataResult dataResult =
+        await _userRepository.settingRepository.setDefaultCurrency(currencyId);
     setState(() {
-      selectedCurrency = _userRepository
-          .settingRepository
-          .getDefaultCurrency();
+      selectedCurrency = _userRepository.settingRepository.getDefaultCurrency();
     });
-}
+  }
+
+  void showDemoDialog<T>({BuildContext context, Widget child}) {
+    showDialog<T>(
+      context: context,
+      builder: (BuildContext context) => child,
+    ).then<void>((T value) {
+      // The value passed to Navigator.pop() or null.
+      if (value != null) {
+        _scaffoldKey.currentState.showSnackBar(SnackBar(
+          content: Text('You selected: $value'),
+        ));
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    final TextStyle dialogTextStyle = theme.textTheme.subhead.copyWith(color: theme.textTheme.caption.color);
 //    duplicateItems = _userRepository.settingRepository.getCurrencies();
     return new Scaffold(
+      key: _scaffoldKey,
       appBar: new AppBar(
         title: new Text(widget.title),
       ),
@@ -98,10 +125,34 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 itemBuilder: (context, index) {
                   return ListTile(
                     title: Text('${items[index].categoryName}'),
-                    trailing: (items[index].id == selectedCurrency.id) ?
-                    Icon(Icons.check) : null,
+                    trailing: (items[index].id == selectedCurrency.id)
+                        ? Icon(Icons.check)
+                        : null,
                     onTap: () {
-                      _setAsDefaultCurrency(items[index].id);
+                      showDemoDialog<DialogDemoAction>(
+                        context: context,
+                        child: AlertDialog(
+                          content: Text(
+                            "Modify/Delete Category",
+                            style: dialogTextStyle,
+                          ),
+                          actions: <Widget>[
+                            FlatButton(
+                              child: const Text('CANCEL'),
+                              onPressed: () {
+                                Navigator.pop(context, DialogDemoAction.cancel);
+                              },
+                            ),
+                            FlatButton(
+                              child: const Text('DISCARD'),
+                              onPressed: () {
+                                Navigator.pop(
+                                    context, DialogDemoAction.discard);
+                              },
+                            ),
+                          ],
+                        ),
+                      );
                     },
                   );
                 },
