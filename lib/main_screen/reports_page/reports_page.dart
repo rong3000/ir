@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:intelligent_receipt/data_model/receipt_repository.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter/rendering.dart';
+import 'package:intelligent_receipt/data_model/enums.dart';
+import 'package:intelligent_receipt/main_screen/bloc/home_bloc.dart';
+import 'package:intelligent_receipt/main_screen/bloc/home_state.dart';
+import 'package:intelligent_receipt/report/report_list/report_list.dart';
+import 'package:intelligent_receipt/user_repository.dart';
 
-import '../../user_repository.dart';
-
-
-class TabsExample extends StatelessWidget {
+class ReportsPage extends StatelessWidget {
   final UserRepository _userRepository;
 
-  TabsExample({Key key, @required UserRepository userRepository})
+  ReportsPage({Key key, @required UserRepository userRepository})
       : assert(userRepository != null),
         _userRepository = userRepository,
         super(key: key) {}
@@ -15,58 +18,12 @@ class TabsExample extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _kTabPages = <Widget>[
-      FutureBuilder<DataResult>(
-          future: _userRepository.receiptRepository
-              .getReceiptsFromServer(
-              forceRefresh: true),
-          builder: (BuildContext context,
-              AsyncSnapshot<DataResult> snapshot) {
-            switch (snapshot.connectionState) {
-              case ConnectionState.none:
-                return new Text('Loading...');
-              case ConnectionState.waiting:
-                return new Center(
-                    child: new CircularProgressIndicator());
-              case ConnectionState.active:
-                return new Text('');
-              case ConnectionState.done:
-                if (snapshot.hasError) {
-                  return new Text(
-                    '${snapshot.error}',
-                    style: TextStyle(color: Colors.red),
-                  );
-                } else {
-                  return Column(
-                    children: <Widget>[
-                      Text("${snapshot.connectionState}"),
-//                      Text("${snapshot.toString()}"),
-                      Text("${snapshot.data.success}"),
-                      Text("${snapshot.hasData}"),
-//                      Text("${snapshot.error}"),
-                      Text("${snapshot.hasError}"),
-//                      Text("${snapshot.requireData}"),
-//                      Text("${snapshot.runtimeType}"),
-//                      Text("${snapshot.data}"),
-//                      Text("${snapshot.connectionState}"),
-                    ],
-                  );
-
-                }
-            }
-          }),
-      Text('Submitted Reports'),
-//      DataTableDemo(
-//          userRepository: _userRepository,
-//          name: 'a',
-//          receiptStatusType: ReceiptStatusType.Uploaded),
-//      DataTableDemo(
-//          userRepository: _userRepository,
-//          name: 'b',
-//          receiptStatusType: ReceiptStatusType.Decoded),
-//      DataTableDemo(
-//          userRepository: _userRepository,
-//          name: 'c',
-//          receiptStatusType: ReceiptStatusType.Reviewed),
+      ReportsTabs(
+          userRepository: _userRepository,
+          reportStatusType: ReportStatusType.Active),
+      ReportsTabs(
+          userRepository: _userRepository,
+          reportStatusType: ReportStatusType.Submitted),
     ];
     final _kTabs = <Tab>[
       Tab(text: 'Active Reports'),
@@ -77,10 +34,6 @@ class TabsExample extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.cyan,
-          // If `TabController controller` is not provided, then a
-          // DefaultTabController ancestor must be provided instead.
-          // Another way is to use a self-defined controller, c.f. "Bottom tab
-          // bar" example.
           title: TabBar(
             tabs: _kTabs,
           ),
@@ -93,35 +46,67 @@ class TabsExample extends StatelessWidget {
   }
 }
 
-class ReportsPage extends StatefulWidget {
+class ReportsTabs extends StatefulWidget {
   final UserRepository _userRepository;
+  final ReportStatusType _reportStatusType;
 
-  ReportsPage({Key key, @required UserRepository userRepository})
-      : assert(userRepository != null),
+  ReportsTabs({
+    Key key,
+    @required UserRepository userRepository,
+    @required ReportStatusType reportStatusType,
+  })  : assert(userRepository != null),
         _userRepository = userRepository,
+        _reportStatusType = reportStatusType,
         super(key: key) {}
 
   @override
-  _ReportsPageState createState() => _ReportsPageState();
+  _ReportsTabsState createState() => _ReportsTabsState();
 }
 
-class _ReportsPageState extends State<ReportsPage> {
+class _ReportsTabsState extends State<ReportsTabs> {
+  HomeBloc _homeBloc;
+
   UserRepository get _userRepository => widget._userRepository;
+  get _reportStatusType => widget._reportStatusType;
+
+  @override
+  void initState() {
+    super.initState();
+    _homeBloc = BlocProvider.of<HomeBloc>(context);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: OrientationBuilder(builder: (context, orientation) {
-        return Column(
-          children: <Widget>[
-            Flexible(
-              flex: 2,
-              fit: FlexFit.tight,
-              child: TabsExample(userRepository: _userRepository),
-            ),
-          ],
-        );
-      }),
+      body: Center(
+        child: BlocBuilder(
+            bloc: _homeBloc,
+            builder: (BuildContext context, HomeState state) {
+              return Scaffold(
+                body: OrientationBuilder(builder: (context, orientation) {
+                  return Column(
+                    children: <Widget>[
+                      Flexible(
+                        flex: 2,
+                        fit: FlexFit.tight,
+                        child:
+//                        DataTableDemo(
+                        ReportList(
+                            userRepository: _userRepository,
+                            reportStatusType: _reportStatusType),
+//                          Scaffold(
+//                            appBar: AppBar(title: SortingBar(userRepository: _userRepository),),
+//                            body: ReportList(
+//                                userRepository: _userRepository,
+//                                reportStatusType: _reportStatusType),
+//                          )
+                      ),
+                    ],
+                  );
+                }),
+              );
+            }),
+      ),
     );
   }
 }

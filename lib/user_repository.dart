@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intelligent_receipt/data_model/receipt_repository.dart';
 import 'package:intelligent_receipt/data_model/category_repository.dart';
+import 'package:intelligent_receipt/data_model/report_repository.dart';
 import 'package:intelligent_receipt/data_model/setting_repository.dart';
 
 class UserRepository {
@@ -12,6 +13,7 @@ class UserRepository {
   ReceiptRepository receiptRepository;
   CategoryRepository categoryRepository;
   SettingRepository settingRepository;
+  ReportRepository reportRepository;
 
   String userGuid;
   int userId = 1; // The id stored in our service database
@@ -22,6 +24,7 @@ class UserRepository {
      receiptRepository = new ReceiptRepository(this);
      categoryRepository = new CategoryRepository(this);
      settingRepository = new SettingRepository(this);
+     reportRepository = new ReportRepository(this);
      postSignIn(null); // xxx temporary put the code here
   }
 
@@ -86,6 +89,7 @@ class UserRepository {
     categoryRepository.getCategoriesFromServer(forceRefresh: true);
     settingRepository.getCurrenciesFromServer();
     settingRepository.getSettingsFromServer();
+    reportRepository.getReportsFromServer(forceRefresh: true);
     /*
     // Get receipts from server;
 
