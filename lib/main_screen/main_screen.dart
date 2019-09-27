@@ -18,12 +18,10 @@ class MainScreen extends StatefulWidget {
       {Key key, @required UserRepository userRepository, @required this.name})
       : assert(userRepository != null),
         _userRepository = userRepository,
-        super(key: key) {
-  }
+        super(key: key) {}
 
   @override
   MainScreenState createState() => MainScreenState();
-
 }
 
 class MainScreenState extends State<MainScreen> {
@@ -110,7 +108,12 @@ class MainScreenState extends State<MainScreen> {
           child: ListView(
             children: <Widget>[
               DrawerHeader(
-                child: Text('Drawer Header'),
+                child: Column(
+                  children: <Widget>[
+                    Icon(Icons.verified_user),
+                    Text('${name}'),
+                  ],
+                ),
               ),
               ListTile(
                 title: Text('Log In'),
@@ -128,14 +131,8 @@ class MainScreenState extends State<MainScreen> {
                   BlocProvider.of<AuthenticationBloc>(context).dispatch(
                     LoggedOut(),
                   );
-				  Navigator.pop(context);
+                  Navigator.pop(context);
                 },
-              ),
-              ListTile(
-                title: Text('Item 3'),
-              ),
-              ListTile(
-                title: Text('Item 4'),
               ),
             ],
           ),

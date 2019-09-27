@@ -63,6 +63,7 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
           .settingRepository
           .getDefaultCurrency();
     });
+    Navigator.pop(context);
 }
 
   @override
