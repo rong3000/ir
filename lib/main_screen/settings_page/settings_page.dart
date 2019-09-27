@@ -128,11 +128,18 @@ class _SettingsPageState extends State<SettingsPage> {
                                       _currency = _userRepository
                                           .settingRepository
                                           .getDefaultCurrency();
-                                      return Row(
-                                        children: <Widget>[
-                                          Text("${_currency.name} "),
-                                          Text("${_currency.symbol}"),
-                                        ],
+                                      return Expanded(
+                                        child: AutoSizeText(
+                                          "${_currency.name} ${_currency.symbol}",
+                                          style: TextStyle(fontSize: 14),
+                                          minFontSize: 1,
+                                          maxLines: 3,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+//                                        children: <Widget>[//
+////                                          Text("${_currency.name} "),
+////                                          Text("${_currency.symbol}"),
+//                                        ],
                                       );
                                     }
                                 }

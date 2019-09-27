@@ -6,6 +6,8 @@ import 'package:intelligent_receipt/user_repository.dart';
 
 enum DialogDemoAction {
   cancel,
+  rename,
+  delete,
   discard,
   disagree,
   agree,
@@ -34,6 +36,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
   List<Category> duplicateItems;
   Currency selectedCurrency;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  TextEditingController _textFieldController = TextEditingController();
 
   var items = List<Category>();
 
@@ -76,6 +79,35 @@ class _CategoryScreenState extends State<CategoryScreen> {
     });
   }
 
+  Future<void> _updateCategory(Category category) async {
+    DataResult dataResult =
+        await _userRepository.categoryRepository.updateCategory(category);
+    setState(() {
+      items.clear();
+      items.addAll(duplicateItems);
+      editingController.clear();
+    });
+  }
+
+  Future<void> _deleteCategory(int categoryId) async {
+    DataResult dataResult =
+        await _userRepository.categoryRepository.deleteCategory(categoryId);
+    setState(() {
+      items.clear();
+      items.addAll(duplicateItems);
+      editingController.clear();
+    });
+  }
+
+  Future<void> _addCategory(String categoryName) async {
+    DataResult dataResult =
+        await _userRepository.categoryRepository.addCategory(categoryName);
+    setState(() {
+      items.clear();
+      items.addAll(duplicateItems);
+    });
+  }
+
   void showDemoDialog<T>({BuildContext context, Widget child}) {
     showDialog<T>(
       context: context,
@@ -83,9 +115,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
     ).then<void>((T value) {
       // The value passed to Navigator.pop() or null.
       if (value != null) {
-        _scaffoldKey.currentState.showSnackBar(SnackBar(
-          content: Text('You selected: $value'),
-        ));
+//        _scaffoldKey.currentState.showSnackBar(SnackBar(
+//          content: Text('You selected: $value'),
+//        ));
       }
     });
   }
@@ -93,12 +125,51 @@ class _CategoryScreenState extends State<CategoryScreen> {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    final TextStyle dialogTextStyle = theme.textTheme.subhead.copyWith(color: theme.textTheme.caption.color);
-//    duplicateItems = _userRepository.settingRepository.getCurrencies();
+    final TextStyle dialogTextStyle =
+        theme.textTheme.subhead.copyWith(color: theme.textTheme.caption.color);
     return new Scaffold(
       key: _scaffoldKey,
       appBar: new AppBar(
-        title: new Text(widget.title),
+        title: Row(
+          children: <Widget>[
+            new Text(widget.title),
+            SizedBox(
+                width: 80,
+                child: FlatButton(
+                  onPressed: () {
+                    _textFieldController.text = '';
+                    showDemoDialog<DialogDemoAction>(
+                      context: context,
+                      child: AlertDialog(
+                        title: Text(
+                          "Add New Category",
+                          style: dialogTextStyle,
+                        ),
+                        content: TextField(
+                          controller: _textFieldController,
+                        ),
+                        actions: <Widget>[
+                          FlatButton(
+                            child: const Text('CANCEL'),
+                            onPressed: () {
+                              Navigator.pop(context, DialogDemoAction.cancel);
+                            },
+                          ),
+                          FlatButton(
+                            child: const Text('ADD'),
+                            onPressed: () {
+                              _addCategory(_textFieldController.text);
+                              Navigator.pop(context, DialogDemoAction.rename);
+                            },
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                  child: Icon(Icons.add),
+                )),
+          ],
+        ),
       ),
       body: Container(
         child: Column(
@@ -125,16 +196,19 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 itemBuilder: (context, index) {
                   return ListTile(
                     title: Text('${items[index].categoryName}'),
-                    trailing: (items[index].id == selectedCurrency.id)
-                        ? Icon(Icons.check)
-                        : null,
                     onTap: () {
+                      _textFieldController.text =
+                          '${items[index].categoryName}';
                       showDemoDialog<DialogDemoAction>(
                         context: context,
                         child: AlertDialog(
-                          content: Text(
+                          title: Text(
                             "Modify/Delete Category",
                             style: dialogTextStyle,
+                          ),
+                          content: TextField(
+                            controller: _textFieldController,
+//                            decoration: InputDecoration(hintText: '${items[index].categoryName}'),
                           ),
                           actions: <Widget>[
                             FlatButton(
@@ -144,10 +218,20 @@ class _CategoryScreenState extends State<CategoryScreen> {
                               },
                             ),
                             FlatButton(
-                              child: const Text('DISCARD'),
+                              child: const Text('RENAME'),
                               onPressed: () {
-                                Navigator.pop(
-                                    context, DialogDemoAction.discard);
+                                items[index].categoryName =
+                                    _textFieldController.text;
+                                _updateCategory(items[index]);
+                                Navigator.pop(context, DialogDemoAction.rename);
+                              },
+                            ),
+                            FlatButton(
+                              child: const Text('DELETE'),
+                              onPressed: () {
+                                _deleteCategory(items[index].id);
+                                Navigator.pop(context, DialogDemoAction.delete);
+                                editingController.text == '';
                               },
                             ),
                           ],
