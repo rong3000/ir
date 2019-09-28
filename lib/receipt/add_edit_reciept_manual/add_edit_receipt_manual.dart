@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intelligent_receipt/data_model/category.dart';
 import 'package:intelligent_receipt/data_model/currency.dart';
+import 'package:intelligent_receipt/data_model/enums.dart';
 import 'package:intelligent_receipt/data_model/receipt.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 import 'package:intl/intl.dart';
@@ -32,6 +36,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
   final pageTitleNew = 'Create Receipt';
 
   var isNew = true;
+  File receiptImage;
   Receipt receipt;
   Currency defaultCurrency;
   var currenciesList = List<Currency>();
@@ -99,6 +104,119 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
     return list;
   }
 
+  Future<ImageSource> getImageSource() async {
+    return showDialog<ImageSource>(
+      context: context,
+      barrierDismissible: true, // Allow to be closed without selecting option
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Select Image Source'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Camera'),
+              onPressed: () {
+                Navigator.of(context).pop(ImageSource.camera);
+              },
+            ),
+            FlatButton(
+              child: Text('Gallery'),
+              onPressed: () {
+                Navigator.of(context).pop(ImageSource.gallery);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  selectImage(ImageSource imageSource) async {
+    var source = await getImageSource();
+    if (source != null) {
+      var ri = await ImagePicker.pickImage(source: source, maxWidth: 600);
+      setState(() {
+        receiptImage = ri;
+      });
+    }
+
+//    File croppedFile = await ImageCropper.cropImage(
+//      sourcePath: image.path,
+//        ratioX: 1.0,
+//        ratioY: 1.0,
+//        maxWidth: 512,
+//        maxHeight: 512);
+  }
+
+  List<Widget> getImageWidgets() {
+    var widgets = List<Widget>();
+    if (receiptImage != null) {
+      widgets.add(
+        Expanded(
+          flex: 5,
+          child: GestureDetector(
+            onTap: () {
+              showFullImage(receiptImage);
+            },
+            child: ClipRect(
+              child: Align(
+                alignment: Alignment.topCenter,
+                heightFactor: .6,
+                child: Image.file(receiptImage, fit: BoxFit.cover),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    widgets.add(
+      Expanded(
+        flex: 5,
+        child: GestureDetector(
+            onTap: () {
+              selectImage(ImageSource.gallery);
+            },
+            child: Column(
+              children: <Widget>[
+                Icon(
+                  Icons.image,
+                  size: 60,
+                  semanticLabel: 'Select New Image',
+                ),
+                Text('Select New Image')
+              ],
+            )),
+      ),
+    );
+
+    return widgets;
+  }
+
+  Future<void> showFullImage(File image) async {
+    await showDialog<void>(
+        context: context,
+        builder: (BuildContext context) {
+          return SimpleDialog(
+            // title: const Text('Receipt Image'),
+            //contentPadding: EdgeInsets.all(0),
+            children: <Widget>[
+              SimpleDialogOption(
+
+                child: Image.file(image, width: 500,),
+              ),
+              SimpleDialogOption(
+                child: FlatButton(
+                  child: Text('Close'),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              )
+            ],
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -121,160 +239,147 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
       ),
       body: Padding(
         padding: EdgeInsets.all(8.0),
-        child: ListView(children: <Widget>[
-          Form(
-            key: _formKey,
-            child: Column(
-              children: <Widget>[
-                DateTimePickerFormField(
-                  editable: false,
-                  inputType: InputType.date,
-                  initialDate: DateTime.now(),
-                  format: DateFormat("yyyy-MM-dd"),
-                  decoration: InputDecoration(labelText: 'Purchase Date'),
-                  initialValue: receipt.receiptDatetime,
-                  onSaved: (DateTime value) {
-                    receipt.receiptDatetime = value;
-                  },
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Flexible(
-                      flex: 7,
-                      child: Padding(
-                        padding: EdgeInsets.only(top: 5),
-                        child: TextFormField(
+        child: ListView(
+          children: <Widget>[
+            Form(
+              key: _formKey,
+              child: Column(
+                children: <Widget>[
+                  DateTimePickerFormField(
+                    editable: false,
+                    inputType: InputType.date,
+                    initialDate: DateTime.now(),
+                    format: DateFormat("yyyy-MM-dd"),
+                    decoration: InputDecoration(labelText: 'Purchase Date'),
+                    initialValue: receipt.receiptDatetime,
+                    onSaved: (DateTime value) {
+                      receipt.receiptDatetime = value;
+                    },
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Flexible(
+                        flex: 7,
+                        child: Padding(
+                          padding: EdgeInsets.only(top: 5),
+                          child: TextFormField(
+                            decoration:
+                                InputDecoration(labelText: 'Total Amount'),
+                            initialValue: receipt.totalAmount.toString(),
+                            validator: textFieldValidator,
+                            onSaved: (String value) {
+                              receipt.totalAmount = double.tryParse(value);
+                            },
+                          ),
+                        ),
+                      ),
+                      Flexible(
+                        flex: 3,
+                        child: DropdownButtonFormField<String>(
                           decoration:
-                              InputDecoration(labelText: 'Total Amount'),
-                          initialValue: receipt.totalAmount.toString(),
-                          validator: textFieldValidator,
+                              InputDecoration(labelText: 'Currency Code'),
+                          items: getCurrencyCodesList(),
+                          value: defaultCurrency.code,
                           onSaved: (String value) {
-                            receipt.totalAmount = double.tryParse(value);
+                            receipt.currencyCode = value;
+                          },
+                          onChanged: (String newValue) {
+                            setState(() {
+                              defaultCurrency = currenciesList
+                                  .singleWhere((curr) => curr.code == newValue);
+                            });
                           },
                         ),
                       ),
+                    ],
+                  ),
+                  FormField<bool>(
+                    builder: (formState) => CheckboxListTile(
+                      title: const Text('GST Inclusive'),
+                      value: receipt.gstInclusive,
+                      onChanged: (newValue) {
+                        setState(() {
+                          receipt.gstInclusive = !receipt.gstInclusive;
+                        });
+                      },
                     ),
-                    Flexible(
-                      flex: 3,
-                      child: DropdownButtonFormField<String>(
-                        decoration: InputDecoration(labelText: 'Currency Code'),
-                        items: getCurrencyCodesList(),
-                        value: defaultCurrency.code,
-                        onSaved: (String value) {
-                          receipt.currencyCode = value;
-                        },
-                        onChanged: (String newValue) {
-                          setState(() {
-                            defaultCurrency = currenciesList
-                                .singleWhere((curr) => curr.code == newValue);
-                          });
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                FormField<bool>(
-                  builder: (formState) => CheckboxListTile(
-                    title: const Text('GST Inclusive'),
-                    value: receipt.gstInclusive,
-                    onChanged: (newValue) {
+                    onSaved: (newValue) {
+                      receipt.gstInclusive = receipt.gstInclusive;
+                    },
+                  ),
+                  DropdownButtonFormField<int>(
+                    decoration: InputDecoration(labelText: 'Category'),
+                    items: getCategorylist(),
+                    value: receipt.categoryId,
+                    onSaved: (int value) {
+                      receipt.categoryId = value;
+                    },
+                    onChanged: (int newValue) {
                       setState(() {
-                        receipt.gstInclusive = !receipt.gstInclusive;
+                        receipt.categoryId = newValue;
                       });
                     },
                   ),
-                  onSaved: (newValue) {
-                    receipt.gstInclusive = receipt.gstInclusive;
-                  },
-                ),
-                DropdownButtonFormField<int>(
-                  decoration: InputDecoration(labelText: 'Category'),
-                  items: getCategorylist(),
-                  value: receipt.categoryId,
-                  onSaved: (int value) {
-                    receipt.categoryId = value;
-                  },
-                  onChanged: (int newValue) {
-                    setState(() {
-                      receipt.categoryId = newValue;
-                    });
-                  },
-                ),
-                TextFormField(
-                  decoration: InputDecoration(labelText: 'Shop/Vendor'),
-                  initialValue: receipt.companyName,
-                  validator: textFieldValidator,
-                  onSaved: (String value) {
-                    receipt.companyName = value;
-                  },
-                ),
-                TextFormField(
-                  initialValue: receipt.productName,
-                  validator: textFieldValidator,
-                  decoration: InputDecoration(labelText: 'Product Name'),
-                  onSaved: (String value) {
-                    receipt.productName = value;
-                  },
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 8.0),
-                      child: Text('Warranty Period'),
-                    ),
-                    FormField<double>(
-                      builder: (formFieldState) => Slider.adaptive(
-                        value: receipt.warrantyPeriod,
-                        divisions: receipt.warrantyPeriod < 24 ? 20 : 5,
-                        min: 0,
-                        max: 60,
-                        label:
-                            '${receipt.warrantyPeriod < 24 ? receipt.warrantyPeriod : receipt.warrantyPeriod / 12} ${receipt.warrantyPeriod < 24 ? "months" : "years"}',
-                        onChanged: (newValue) {
-                          setState(() {
-                            receipt.warrantyPeriod = newValue;
-                          });
+                  TextFormField(
+                    decoration: InputDecoration(labelText: 'Shop/Vendor'),
+                    initialValue: receipt.companyName,
+                    validator: textFieldValidator,
+                    onSaved: (String value) {
+                      receipt.companyName = value;
+                    },
+                  ),
+                  TextFormField(
+                    initialValue: receipt.productName,
+                    validator: textFieldValidator,
+                    decoration: InputDecoration(labelText: 'Product Name'),
+                    onSaved: (String value) {
+                      receipt.productName = value;
+                    },
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: 8.0),
+                        child: Text('Warranty Period'),
+                      ),
+                      FormField<double>(
+                        builder: (formFieldState) => Slider.adaptive(
+                          value: receipt.warrantyPeriod,
+                          divisions: receipt.warrantyPeriod < 24 ? 20 : 5,
+                          min: 0,
+                          max: 60,
+                          label:
+                              '${receipt.warrantyPeriod < 24 ? receipt.warrantyPeriod : receipt.warrantyPeriod / 12} ${receipt.warrantyPeriod < 24 ? "months" : "years"}',
+                          onChanged: (newValue) {
+                            setState(() {
+                              receipt.warrantyPeriod = newValue;
+                            });
+                          },
+                        ),
+                        onSaved: (double newValue) {
+                          receipt.warrantyPeriod = receipt.warrantyPeriod;
                         },
                       ),
-                      onSaved: (double newValue) {
-                        receipt.warrantyPeriod = receipt.warrantyPeriod;
-                      },
-                    ),
-                  ],
-                ),
-                TextFormField(
-                  decoration: InputDecoration(labelText: 'Notes'),
-                  initialValue: receipt.notes,
-                  onSaved: (String value) {
-                    receipt.notes = value;
-                  },
-                ),
-              ],
-            ),
-          ),
-          Row(
-            children: <Widget>[
-              Expanded(
-                flex: 5,
-                child: ClipRect(
-                  child: Align(
-                    alignment: Alignment.topCenter,
-                    heightFactor: .4,
-                    child: Image.asset('assets/test.jpg',
-                        fit: BoxFit
-                            .cover), // TODO: load image from db or display 'no image selected'
+                    ],
                   ),
-                ),
+                  TextFormField(
+                    decoration: InputDecoration(labelText: 'Notes'),
+                    initialValue: receipt.notes,
+                    onSaved: (String value) {
+                      receipt.notes = value;
+                    },
+                  ),
+                ],
               ),
-              Expanded(
-                child: Icon(Icons.image),
-                flex: 5,
-              )
-            ],
-          )
-        ]),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 10),
+              child: Row(children: getImageWidgets()),
+            ),
+          ],
+        ),
       ),
     );
   }
