@@ -98,7 +98,16 @@ class _ReportsTabsState extends State<ReportsTabs> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: _showMessage,
+        onPressed: () => {
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) {
+              return CurrencyScreen(
+                  userRepository: _userRepository,
+                  title: 'Add Report',
+                  defaultCurrency: _currency);
+            }),
+          )
+        },
         backgroundColor: Colors.redAccent,
         child: const Icon(
           Icons.add,

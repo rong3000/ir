@@ -45,8 +45,6 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-//    getDataResultFromServer();
-    if (_userRepository.receiptRepository.receipts.isNotEmpty) {
       return Scaffold(
         body: Column(
           children: <Widget>[
@@ -125,22 +123,40 @@ class _SettingsPageState extends State<SettingsPage> {
                                     return new Text('');
                                   case ConnectionState.done:
                                     {
-                                      _currency = _userRepository
-                                          .settingRepository
-                                          .getDefaultCurrency();
-                                      return Expanded(
-                                        child: AutoSizeText(
-                                          "${_currency.name} ${_currency.symbol}",
-                                          style: TextStyle(fontSize: 14),
-                                          minFontSize: 1,
-                                          maxLines: 3,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
+                                      return FutureBuilder<DataResult>(
+                                          future: _userRepository.settingRepository
+                                              .getCurrenciesFromServer(),
+                                          builder: (BuildContext context,
+                                              AsyncSnapshot<DataResult> snapshot) {
+                                            switch (snapshot.connectionState) {
+                                              case ConnectionState.none:
+                                                return new Text('Loading...');
+                                              case ConnectionState.waiting:
+                                                return new Center(
+                                                    child: new CircularProgressIndicator());
+                                              case ConnectionState.active:
+                                                return new Text('');
+                                              case ConnectionState.done:
+                                                {
+                                                  _currency = _userRepository
+                                                      .settingRepository
+                                                      .getDefaultCurrency();
+                                                  return Expanded(
+                                                    child: AutoSizeText(
+                                                      "${_currency.name} ${_currency.symbol}",
+                                                      style: TextStyle(fontSize: 14),
+                                                      minFontSize: 1,
+                                                      maxLines: 3,
+                                                      overflow: TextOverflow.ellipsis,
+                                                    ),
 //                                        children: <Widget>[//
 ////                                          Text("${_currency.name} "),
 ////                                          Text("${_currency.symbol}"),
 //                                        ],
-                                      );
+                                                  );
+                                                }
+                                            }
+                                          });
                                     }
                                 }
                               }),
@@ -208,9 +224,5 @@ class _SettingsPageState extends State<SettingsPage> {
           ],
         ),
       );
-    } else {
-      return Container();
-    }
-    //        if (dataResult.success) {
   }
 }
