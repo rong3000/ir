@@ -8,7 +8,7 @@ import 'package:intelligent_receipt/data_model/receipt.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 import 'package:intl/intl.dart';
 
-class AddReceiptForm extends StatefulWidget {
+class AddEditReiptForm extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     // TODO: pass this in from edit exisiting
@@ -22,11 +22,11 @@ class AddReceiptForm extends StatefulWidget {
     receipt.notes = 'Notes text';
     receipt.warrantyPeriod = 36;
     receipt.gstInclusive = true;
-    return _AddReceiptFormState(null);
+    return _AddEditReiptFormState(null);
   }
 }
 
-class _AddReceiptFormState extends State<AddReceiptForm> {
+class _AddEditReiptFormState extends State<AddEditReiptForm> {
   final _formKey = GlobalKey<FormState>();
   final pageTitleEdit = 'Edit Receipt';
   final pageTitleNew = 'Create Receipt';
@@ -37,7 +37,7 @@ class _AddReceiptFormState extends State<AddReceiptForm> {
   var currenciesList = List<Currency>();
   UserRepository _userRepository;
 
-  _AddReceiptFormState(this.receipt) {
+  _AddEditReiptFormState(this.receipt) {
     isNew = this.receipt == null;
     if (isNew) {
       this.receipt = Receipt();
@@ -63,8 +63,8 @@ class _AddReceiptFormState extends State<AddReceiptForm> {
   void saveForm() {
     if (this._formKey.currentState.validate()) {
       this._formKey.currentState.save();
-      var x = 1;
     }
+    // TODO: Dispatch save action
   }
 
   String textFieldValidator(value) {

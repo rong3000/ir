@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intelligent_receipt/main_screen/bloc/bloc.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:intelligent_receipt/receipt/add_reciept_manual/add_receipt_manual.dart';
+import 'package:intelligent_receipt/receipt/add_edit_reciept_manual/add_edit_receipt_manual.dart';
 import 'package:intelligent_receipt/receipt/upload_receipt_image/update_receipt_image.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 import 'package:intelligent_receipt/data_model/enums.dart';
@@ -95,7 +95,7 @@ class _HomePageState extends State<HomePage> {
                                     onTap: () {
                                       Navigator.push(
                                         context,
-                                         MaterialPageRoute(builder: (context) => AddReceiptForm()) 
+                                         MaterialPageRoute(builder: (context) => AddEditReiptForm()) 
                                       );
                                     },
                                     child: 
