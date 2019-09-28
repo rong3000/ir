@@ -45,3 +45,9 @@ enum ReceiptSortType {
   Amount,
   Category
 }
+
+enum ReportSortType {
+  CreateTime,
+  UpdateTime,
+  ReportName,
+}
