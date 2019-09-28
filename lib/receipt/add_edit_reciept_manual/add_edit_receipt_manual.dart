@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,12 +8,11 @@ import 'package:intelligent_receipt/data_model/currency.dart';
 import 'package:intelligent_receipt/data_model/receipt.dart';
 import 'package:intelligent_receipt/helper_widgets/date_time_picker.dart';
 import 'package:intelligent_receipt/user_repository.dart';
-import 'package:intl/intl.dart';
 
 class AddEditReiptForm extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    // TODO: pass this in from edit exisiting
+    // TODO: pass this in from review button
     var receipt = Receipt();
     receipt.receiptDatetime = DateTime(2018, 10, 5);
     receipt.productName = 'Petrol';
@@ -25,7 +23,7 @@ class AddEditReiptForm extends StatefulWidget {
     receipt.notes = 'Notes text';
     receipt.warrantyPeriod = 36;
     receipt.gstInclusive = true;
-    return _AddEditReiptFormState(null);
+    return _AddEditReiptFormState(receipt);
   }
 }
 
@@ -137,13 +135,6 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
         receiptImage = ri;
       });
     }
-
-//    File croppedFile = await ImageCropper.cropImage(
-//      sourcePath: image.path,
-//        ratioX: 1.0,
-//        ratioY: 1.0,
-//        maxWidth: 512,
-//        maxHeight: 512);
   }
 
   List<Widget> _getImageWidgets() {
@@ -196,11 +187,8 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
         context: context,
         builder: (BuildContext context) {
           return SimpleDialog(
-            // title: const Text('Receipt Image'),
-            //contentPadding: EdgeInsets.all(0),
             children: <Widget>[
               SimpleDialogOption(
-
                 child: Image.file(image, width: 500,),
               ),
               SimpleDialogOption(
@@ -214,20 +202,6 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
             ],
           );
         });
-  }
-
-   Future<void> _selectDate(BuildContext context) async {
-    final DateTime picked = await showDatePicker(
-      context: context,
-      initialDate: receipt.receiptDatetime,
-      firstDate: DateTime(2015, 8),
-      lastDate: DateTime(2101),
-    );
-    if (picked != null && picked != receipt.receiptDatetime) {
-      setState(() {
-        receipt.receiptDatetime = picked; 
-      });
-    }
   }
 
   @override
@@ -266,11 +240,6 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
                         receipt.receiptDatetime = newValue;
                       });
                     },
-                    //decoration: InputDecoration(labelText: 'Purchase Date'),
-                    //initialValue: receipt.receiptDatetime,
-                    //onSaved: (DateTime value) {
-                     // receipt.receiptDatetime = value;
-                    //},
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
