@@ -100,7 +100,7 @@ class _ReportCardState extends State<ReportCard> {
                           ),
                         ),
                         Text(
-                          'Description ${widget._reportItem.description}',
+                          '${widget._reportItem.description}',
                           style: amountStyle,
                         ),
                       ],
