@@ -33,6 +33,57 @@ class ReportRepository {
     return selectedReports;
   }
 
+  List<Report> getSortedReportItems(ReportStatusType reportStatus,
+      ReportSortType type, bool ascending, DateTime fromDate, DateTime toDate) {
+    List<Report> selectedReports = new List<Report>();
+    _lock.synchronized(() {
+      for (var i = 0; i < reports.length; i++) {
+        if (reports[i].statusId == reportStatus.index
+            && reports[i].createDateTime.isAfter(fromDate)
+            && reports[i].createDateTime.isBefore(toDate.add(Duration(days: 1)))) {
+          selectedReports.add(reports[i]);
+          if (ascending) {
+            switch (type) {
+              case ReportSortType.CreateTime:
+                selectedReports
+                    .sort((a, b) => a.createDateTime.compareTo(b.createDateTime));
+                break;
+              case ReportSortType.UpdateTime:
+                selectedReports.sort(
+                        (a, b) => a.updateDateTime.compareTo(b.updateDateTime));
+                break;
+              case ReportSortType.ReportName:
+                selectedReports.sort(
+                        (a, b) => a.reportName.compareTo(b.reportName));
+                break;
+              default:
+                break;
+            }
+          } else {
+            switch (type) {
+              case ReportSortType.CreateTime:
+                selectedReports
+                    .sort((b, a) => a.createDateTime.compareTo(b.createDateTime));
+                break;
+              case ReportSortType.UpdateTime:
+                selectedReports.sort(
+                        (b, a) => a.updateDateTime.compareTo(b.updateDateTime));
+                break;
+              case ReportSortType.ReportName:
+                selectedReports.sort(
+                        (b, a) => a.reportName.compareTo(b.reportName));
+                break;
+              default:
+                break;
+            }
+          }
+        }
+      }
+    });
+    return selectedReports;
+  }
+
+
   List<Report> getReportItemsByRange(ReportStatusType reportStatus, int start, int end) {
     List<Report> selectedReports = new List<Report>();
     _lock.synchronized(() {
