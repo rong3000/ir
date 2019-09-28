@@ -94,7 +94,7 @@ class _ReceiptCardState extends State<ReceiptCard> {
                         Padding(
                           padding: const EdgeInsets.only(bottom: 0.0),
                           child: Text(
-                            "Receipt Date ${DateFormat().add_yMd().format(widget._receiptItem.receiptDatatime.toLocal())}",
+                            "Receipt Date ${DateFormat().add_yMd().format(widget._receiptItem.receiptDatetime.toLocal())}",
                             style: dateStyle
                                 .copyWith(color: Colors.black54)
                                 .apply(fontSizeFactor: 0.75),

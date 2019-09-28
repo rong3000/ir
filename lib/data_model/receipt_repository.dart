@@ -2,7 +2,6 @@ import "receipt.dart";
 import "webservice.dart";
 import "../user_repository.dart";
 import 'dart:io';
-import 'package:image_picker/image_picker.dart';
 import 'dart:convert';
 import "enums.dart";
 import 'package:synchronized/synchronized.dart';
@@ -60,7 +59,7 @@ class ReceiptRepository {
                 break;
               case ReceiptSortType.ReceiptTime:
                 selectedReceipts.sort(
-                        (a, b) => a.receiptDatatime.compareTo(b.receiptDatatime));
+                        (a, b) => a.receiptDatetime.compareTo(b.receiptDatetime));
                 break;
               case ReceiptSortType.CompanyName:
                 selectedReceipts.sort(
@@ -85,7 +84,7 @@ class ReceiptRepository {
                 break;
               case ReceiptSortType.ReceiptTime:
                 selectedReceipts.sort(
-                        (b, a) => a.receiptDatatime.compareTo(b.receiptDatatime));
+                        (b, a) => a.receiptDatetime.compareTo(b.receiptDatetime));
                 break;
               case ReceiptSortType.CompanyName:
                 selectedReceipts.sort(

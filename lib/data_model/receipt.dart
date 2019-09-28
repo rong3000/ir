@@ -1,3 +1,4 @@
+import 'package:intelligent_receipt/data_model/report_repository.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'receipt.g.dart';
@@ -14,10 +15,15 @@ class ReceiptListItem {
   int categoryId;
   int receiptTypeId;
   DateTime uploadDatetime;
-  DateTime receiptDatatime;
+  DateTime receiptDatetime;
   double totalAmount;
   String companyName;
   String imagePath;
+  String productName; // Not yet in DB
+  String currencyCode; //not yet in DB
+  String notes; //not yet in DB
+  bool gstInclusive; // NOT inDB 
+  double warrantyPeriod;
 
   ReceiptListItem();
 

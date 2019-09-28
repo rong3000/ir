@@ -84,9 +84,9 @@ class DataTableDemoState extends State<DataTableDemo> {
   onSortColumn(int columnIndex, bool ascending) {
     if (columnIndex == 0) {
       if (ascending) {
-        receipts.sort((a, b) => a.receiptDatatime.compareTo(b.receiptDatatime));
+        receipts.sort((a, b) => a.receiptDatetime.compareTo(b.receiptDatetime));
       } else {
-        receipts.sort((a, b) => b.receiptDatatime.compareTo(a.receiptDatatime));
+        receipts.sort((a, b) => b.receiptDatetime.compareTo(a.receiptDatetime));
       }
     }
   }
@@ -196,7 +196,7 @@ class DataTableDemoState extends State<DataTableDemo> {
                               receipt.id);
                         },
                         child: Text(
-                            "${DateFormat().add_yMd().format(receipt.receiptDatatime.toLocal())}"),
+                            "${DateFormat().add_yMd().format(receipt.receiptDatetime.toLocal())}"),
                       ),
                     ),
                     DataCell(

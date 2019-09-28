@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intelligent_receipt/data_model/receipt_repository.dart';
 import 'package:intelligent_receipt/user_repository.dart';
-import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:image_cropper/image_cropper.dart';
 import 'dart:io';
 import "package:rflutter_alert/rflutter_alert.dart";
-import 'dart:convert';
 
 class UploadReceiptImage extends StatefulWidget {
   final UserRepository _userRepository;

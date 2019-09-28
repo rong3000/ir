@@ -53,7 +53,7 @@ class EditReceiptScreenState extends State<EditReceiptScreen> {
                   return Column(
                     children: <Widget>[
                       Text("Receipt editing ${_receiptId}"),
-                      Text("${(snapshot.data.obj as Receipt).receiptDatatime}"),
+                      Text("${(snapshot.data.obj as Receipt).receiptDatetime}"),
                       Text("${(snapshot.data.obj as Receipt).uploadDatetime}"),
                       Text("${(snapshot.data.obj as Receipt).totalAmount}"),
                       Text("${(snapshot.data.obj as Receipt).categoryId}"),

@@ -16,9 +16,9 @@ ReceiptListItem _$ReceiptListItemFromJson(Map<String, dynamic> json) {
     ..uploadDatetime = json['uploadDatetime'] == null
         ? null
         : DateTime.parse(json['uploadDatetime'] as String)
-    ..receiptDatatime = json['receiptDatatime'] == null
+    ..receiptDatetime = json['receiptDatetime'] == null
         ? null
-        : DateTime.parse(json['receiptDatatime'] as String)
+        : DateTime.parse(json['receiptDatetime'] as String)
     ..totalAmount = (json['totalAmount'] as num)?.toDouble()
     ..companyName = json['companyName'] as String
     ..imagePath = json['imagePath'] as String;
@@ -32,7 +32,7 @@ Map<String, dynamic> _$ReceiptListItemToJson(ReceiptListItem instance) =>
       'categoryId': instance.categoryId,
       'receiptTypeId': instance.receiptTypeId,
       'uploadDatetime': instance.uploadDatetime?.toIso8601String(),
-      'receiptDatatime': instance.receiptDatatime?.toIso8601String(),
+      'receiptDatetime': instance.receiptDatetime?.toIso8601String(),
       'totalAmount': instance.totalAmount,
       'companyName': instance.companyName,
       'imagePath': instance.imagePath
@@ -48,9 +48,9 @@ Receipt _$ReceiptFromJson(Map<String, dynamic> json) {
     ..uploadDatetime = json['uploadDatetime'] == null
         ? null
         : DateTime.parse(json['uploadDatetime'] as String)
-    ..receiptDatatime = json['receiptDatatime'] == null
+    ..receiptDatetime = json['receiptDatetime'] == null
         ? null
-        : DateTime.parse(json['receiptDatatime'] as String)
+        : DateTime.parse(json['receiptDatetime'] as String)
     ..totalAmount = (json['totalAmount'] as num)?.toDouble()
     ..companyName = json['companyName'] as String
     ..decodeStatus = json['decodeStatus'] as int
@@ -76,7 +76,7 @@ Map<String, dynamic> _$ReceiptToJson(Receipt instance) => <String, dynamic>{
       'categoryId': instance.categoryId,
       'receiptTypeId': instance.receiptTypeId,
       'uploadDatetime': instance.uploadDatetime?.toIso8601String(),
-      'receiptDatatime': instance.receiptDatatime?.toIso8601String(),
+      'receiptDatetime': instance.receiptDatetime?.toIso8601String(),
       'totalAmount': instance.totalAmount,
       'companyName': instance.companyName,
       'decodeStatus': instance.decodeStatus,
