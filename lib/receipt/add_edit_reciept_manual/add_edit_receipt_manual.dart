@@ -1,14 +1,13 @@
 import 'dart:io';
 
-import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intelligent_receipt/data_model/category.dart';
 import 'package:intelligent_receipt/data_model/currency.dart';
-import 'package:intelligent_receipt/data_model/enums.dart';
 import 'package:intelligent_receipt/data_model/receipt.dart';
+import 'package:intelligent_receipt/helper_widgets/date_time_picker.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 import 'package:intl/intl.dart';
 
@@ -61,11 +60,11 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
     super.initState();
   }
 
-  void deleteReceipt() {
+  void _deleteReceipt() {
     // TODO handle delete/clear
   }
 
-  void saveForm() {
+  void _saveForm() {
     if (this._formKey.currentState.validate()) {
       this._formKey.currentState.save();
     }
@@ -79,7 +78,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
     return null;
   }
 
-  List<DropdownMenuItem<String>> getCurrencyCodesList() {
+  List<DropdownMenuItem<String>> _getCurrencyCodesList() {
     var list = List<DropdownMenuItem<String>>();
     currenciesList = _userRepository.settingRepository.getCurrencies();
 
@@ -95,7 +94,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
     return list;
   }
 
-  List<DropdownMenuItem<int>> getCategorylist() {
+  List<DropdownMenuItem<int>> _getCategorylist() {
     var list = List<DropdownMenuItem<int>>();
     for (var cat in categoryList) {
       list.add(
@@ -104,7 +103,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
     return list;
   }
 
-  Future<ImageSource> getImageSource() async {
+  Future<ImageSource> _getImageSource() async {
     return showDialog<ImageSource>(
       context: context,
       barrierDismissible: true, // Allow to be closed without selecting option
@@ -130,8 +129,8 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
     );
   }
 
-  selectImage(ImageSource imageSource) async {
-    var source = await getImageSource();
+  _selectImage(ImageSource imageSource) async {
+    var source = await _getImageSource();
     if (source != null) {
       var ri = await ImagePicker.pickImage(source: source, maxWidth: 600);
       setState(() {
@@ -147,7 +146,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
 //        maxHeight: 512);
   }
 
-  List<Widget> getImageWidgets() {
+  List<Widget> _getImageWidgets() {
     var widgets = List<Widget>();
     if (receiptImage != null) {
       widgets.add(
@@ -155,7 +154,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
           flex: 5,
           child: GestureDetector(
             onTap: () {
-              showFullImage(receiptImage);
+              _showFullImage(receiptImage);
             },
             child: ClipRect(
               child: Align(
@@ -174,7 +173,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
         flex: 5,
         child: GestureDetector(
             onTap: () {
-              selectImage(ImageSource.gallery);
+              _selectImage(ImageSource.gallery);
             },
             child: Column(
               children: <Widget>[
@@ -192,7 +191,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
     return widgets;
   }
 
-  Future<void> showFullImage(File image) async {
+  Future<void> _showFullImage(File image) async {
     await showDialog<void>(
         context: context,
         builder: (BuildContext context) {
@@ -217,6 +216,20 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
         });
   }
 
+   Future<void> _selectDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+      context: context,
+      initialDate: receipt.receiptDatetime,
+      firstDate: DateTime(2015, 8),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null && picked != receipt.receiptDatetime) {
+      setState(() {
+        receipt.receiptDatetime = picked; 
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -226,13 +239,13 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
           IconButton(
             icon: const Icon(Icons.delete),
             onPressed: () {
-              deleteReceipt();
+              _deleteReceipt();
             },
           ),
           IconButton(
             icon: const Icon(Icons.done),
             onPressed: () {
-              this.saveForm();
+              this._saveForm();
             },
           )
         ],
@@ -245,16 +258,19 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
               key: _formKey,
               child: Column(
                 children: <Widget>[
-                  DateTimePickerFormField(
-                    editable: false,
-                    inputType: InputType.date,
-                    initialDate: DateTime.now(),
-                    format: DateFormat("yyyy-MM-dd"),
-                    decoration: InputDecoration(labelText: 'Purchase Date'),
-                    initialValue: receipt.receiptDatetime,
-                    onSaved: (DateTime value) {
-                      receipt.receiptDatetime = value;
+                  IRDateTimePicker(
+                    labelText: 'Purchase Date',
+                    selectedDate: receipt.receiptDatetime,
+                    selectDate: (newValue) { 
+                      setState(() {
+                        receipt.receiptDatetime = newValue;
+                      });
                     },
+                    //decoration: InputDecoration(labelText: 'Purchase Date'),
+                    //initialValue: receipt.receiptDatetime,
+                    //onSaved: (DateTime value) {
+                     // receipt.receiptDatetime = value;
+                    //},
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -279,7 +295,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
                         child: DropdownButtonFormField<String>(
                           decoration:
                               InputDecoration(labelText: 'Currency Code'),
-                          items: getCurrencyCodesList(),
+                          items: _getCurrencyCodesList(),
                           value: defaultCurrency.code,
                           onSaved: (String value) {
                             receipt.currencyCode = value;
@@ -310,7 +326,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
                   ),
                   DropdownButtonFormField<int>(
                     decoration: InputDecoration(labelText: 'Category'),
-                    items: getCategorylist(),
+                    items: _getCategorylist(),
                     value: receipt.categoryId,
                     onSaved: (int value) {
                       receipt.categoryId = value;
@@ -376,7 +392,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
             ),
             Padding(
               padding: EdgeInsets.symmetric(vertical: 10),
-              child: Row(children: getImageWidgets()),
+              child: Row(children: _getImageWidgets()),
             ),
           ],
         ),

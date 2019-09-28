@@ -2,7 +2,6 @@ import "receipt.dart";
 import "webservice.dart";
 import "../user_repository.dart";
 import 'dart:io';
-import 'package:image_picker/image_picker.dart';
 import 'dart:convert';
 import "enums.dart";
 import 'package:synchronized/synchronized.dart';
