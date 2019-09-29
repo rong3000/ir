@@ -568,9 +568,50 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
                         flex: 2,
                         fit: FlexFit.tight,
                         child:
-                          ReceiptList(
-                            userRepository: _userRepository,
-                            receiptStatusType: _receiptStatusType),
+                        FutureBuilder<DataResult>(
+                            future: _userRepository.receiptRepository
+                                .getReceiptsFromServer(),
+                            builder: (BuildContext context,
+                                AsyncSnapshot<DataResult> snapshot) {
+                              switch (snapshot.connectionState) {
+                                case ConnectionState.none:
+                                  return new Text('Loading...');
+                                case ConnectionState.waiting:
+                                  return new Center(
+                                      child: new CircularProgressIndicator());
+                                case ConnectionState.active:
+                                  return new Text('');
+                                case ConnectionState.done:
+                                  if (snapshot.hasError) {
+                                    return new Text(
+                                      '${snapshot.error}',
+                                      style: TextStyle(color: Colors.red),
+                                    );
+                                  } else {
+                                    if (snapshot.data.success) {
+                                      List<ReceiptListItem> ReceiptItems =
+                                          _userRepository.receiptRepository
+                                              .getReceiptItems(
+                                              _receiptStatusType);
+                                      return ReceiptList(
+                                        userRepository: _userRepository,
+                                        receiptStatusType: _receiptStatusType,
+                                        receiptItems: ReceiptItems,
+                                      );
+                                    } else {
+                                      return Column(
+                                        children: <Widget>[
+                                          Text(
+                                              'Failed retrieving data, error code is ${snapshot.data.messageCode}'),
+                                          Text(
+                                              'Error message is ${snapshot.data.message}'),
+                                        ],
+                                      );
+                                    }
+                                  }
+                                  ;
+                              }
+                            }),
                       ),
                     ],
                   );

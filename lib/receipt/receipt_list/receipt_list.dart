@@ -7,6 +7,7 @@ import 'package:intelligent_receipt/data_model/receipt_repository.dart';
 import 'package:intelligent_receipt/receipt/receipt_card/receipt_card.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 import 'package:intl/intl.dart';
+import 'package:synchronized/synchronized.dart';
 
 import '../../data_model/webservice.dart';
 
@@ -97,14 +98,17 @@ class ActionWithLable {
 class ReceiptList extends StatefulWidget {
   final UserRepository _userRepository;
   final ReceiptStatusType _receiptStatusType;
+  final List<ReceiptListItem> _receiptItems;
 
   ReceiptList({
     Key key,
     @required UserRepository userRepository,
     @required ReceiptStatusType receiptStatusType,
+    @required List<ReceiptListItem> receiptItems,
   })  : assert(userRepository != null),
         _userRepository = userRepository,
         _receiptStatusType = receiptStatusType,
+        _receiptItems = receiptItems,
         super(key: key) {}
 
   @override
@@ -114,7 +118,7 @@ class ReceiptList extends StatefulWidget {
 class ReceiptListState extends State<ReceiptList> {
   final List<String> items = List<String>.generate(10000, (i) => "Item $i");
   ScrollController _scrollController = ScrollController();
-  List<ReceiptListItem> receipts;
+//  List<ReceiptListItem> receipts;
   List<ReceiptListItem> selectedReceipts;
   bool sort;
   int start = 0;
@@ -137,6 +141,7 @@ class ReceiptListState extends State<ReceiptList> {
 
   UserRepository get _userRepository => widget._userRepository;
   get _receiptStatusType => widget._receiptStatusType;
+  Lock _lock = new Lock();
 
   String dropdown1Value = 'Free';
 
@@ -411,12 +416,99 @@ class ReceiptListState extends State<ReceiptList> {
     Overlay.of(context).insert(subMenuOverlayEntry);
   }
 
+  List<ReceiptListItem> getSortedReceiptItems(
+      List<ReceiptListItem> receipts,
+      ReceiptStatusType receiptStatus,
+      ReceiptSortType type,
+      bool ascending,
+      DateTime fromDate,
+      DateTime toDate) {
+    _lock.synchronized(() {
+      for (var i = 0; i < receipts.length; i++) {
+        if (receipts[i].statusId == receiptStatus.index &&
+            receipts[i].uploadDatetime.isAfter(fromDate) &&
+            receipts[i]
+                .uploadDatetime
+                .isBefore(toDate.add(Duration(days: 1)))) {
+          selectedReceipts.add(receipts[i]);
+          if (ascending) {
+            switch (type) {
+              case ReceiptSortType.UploadTime:
+                selectedReceipts.sort(
+                    (a, b) => a.uploadDatetime.compareTo(b.uploadDatetime));
+                break;
+              case ReceiptSortType.ReceiptTime:
+                selectedReceipts.sort(
+                    (a, b) => a.receiptDatatime.compareTo(b.receiptDatatime));
+                break;
+              case ReceiptSortType.CompanyName:
+                selectedReceipts
+                    .sort((a, b) => a.companyName.compareTo(b.companyName));
+                break;
+              case ReceiptSortType.Amount:
+                selectedReceipts
+                    .sort((a, b) => a.totalAmount.compareTo(b.totalAmount));
+                break;
+              case ReceiptSortType.Category:
+                selectedReceipts
+                    .sort((a, b) => a.categoryId.compareTo(b.categoryId));
+                break;
+              default:
+                break;
+            }
+          } else {
+            switch (type) {
+              case ReceiptSortType.UploadTime:
+                selectedReceipts.sort(
+                    (b, a) => a.uploadDatetime.compareTo(b.uploadDatetime));
+                break;
+              case ReceiptSortType.ReceiptTime:
+                selectedReceipts.sort(
+                    (b, a) => a.receiptDatatime.compareTo(b.receiptDatatime));
+                break;
+              case ReceiptSortType.CompanyName:
+                selectedReceipts
+                    .sort((b, a) => a.companyName.compareTo(b.companyName));
+                break;
+              case ReceiptSortType.Amount:
+                selectedReceipts
+                    .sort((b, a) => a.totalAmount.compareTo(b.totalAmount));
+                break;
+              case ReceiptSortType.Category:
+                selectedReceipts
+                    .sort((b, a) => a.categoryId.compareTo(b.categoryId));
+                break;
+              default:
+                break;
+            }
+          }
+        }
+      }
+    });
+    return selectedReceipts;
+  }
+
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final TextStyle titleStyle =
         theme.textTheme.headline.copyWith(color: Colors.white);
     final TextStyle descriptionStyle = theme.textTheme.subhead;
+    List<ReceiptListItem> sortedReceiptItems = getSortedReceiptItems(
+        widget._receiptItems,
+        _receiptStatusType,
+        sortingType,
+        ascending,
+        _fromDate,
+        _toDate);
+    ActionWithLable r = new ActionWithLable();
+    r.action = reviewAction;
+    r.lable = 'Review';
+    ActionWithLable d = new ActionWithLable();
+    d.action = deleteAction;
+    d.lable = 'Delete';
+    actions.add(r);
+    actions.add(d);
 
     return MaterialApp(
       home: Scaffold(
@@ -486,112 +578,16 @@ class ReceiptListState extends State<ReceiptList> {
                       ),
                     ],
                   )),
-//              Expanded(
-//                child: PopupMenuButton<ReceiptSortType>(
-//                  padding: EdgeInsets.zero,
-//                  initialValue: _simpleValue,
-//                  onSelected: showMenuSelection,
-//                  child: ListTile(
-//                    title: Text(
-//                        'Sort By [${_simpleValue.toString().split('.')[1]}]'),
-////                                  subtitle: Text(_simpleValue),
-//                  ),
-//                  itemBuilder: (BuildContext context) =>
-//                      <PopupMenuItem<ReceiptSortType>>[
-//                    PopupMenuItem<ReceiptSortType>(
-//                      value: _simpleValue1,
-//                      child: Text(_simpleValue1.toString().split('.')[1]),
-//                    ),
-//                    PopupMenuItem<ReceiptSortType>(
-//                      value: _simpleValue2,
-//                      child: Text(_simpleValue2.toString().split('.')[1]),
-//                    ),
-//                    PopupMenuItem<ReceiptSortType>(
-//                      value: _simpleValue3,
-//                      child: Text(_simpleValue3.toString().split('.')[1]),
-//                    ),
-//                    PopupMenuItem<ReceiptSortType>(
-//                      value: _simpleValue4,
-//                      child: Text(_simpleValue4.toString().split('.')[1]),
-//                    ),
-//                    PopupMenuItem<ReceiptSortType>(
-//                      value: _simpleValue5,
-//                      child: Text(_simpleValue5.toString().split('.')[1]),
-//                    ),
-//                  ],
-//                ), //                              ListTile(
-////                                title: const Text('Simple dropdown:'),
-////                                trailing: DropdownButton<String>(
-////                                  value: dropdown1Value,
-////                                  onChanged: (String newValue) {
-////                                    setState(() {
-////                                      dropdown1Value = newValue;
-////                                    });
-////                                  },
-////                                  items: <String>['One', 'Two', 'Free', 'Four'].map<DropdownMenuItem<String>>((String value) {
-////                                    return DropdownMenuItem<String>(
-////                                      value: value,
-////                                      child: Text(value),
-////                                    );
-////                                  }).toList(),
-////                                ),
-////                              ),
-//              ),
             ],
           ),
         ),
-        body: FutureBuilder<DataResult>(
-            future: _userRepository.receiptRepository
-                .getReceiptsFromServer(forceRefresh: forceRefresh),
-            builder:
-                (BuildContext context, AsyncSnapshot<DataResult> snapshot) {
-              switch (snapshot.connectionState) {
-                case ConnectionState.none:
-                  return new Text('Loading...');
-                case ConnectionState.waiting:
-                  return new Center(child: new CircularProgressIndicator());
-                case ConnectionState.active:
-                  return new Text('');
-                case ConnectionState.done:
-                  if (snapshot.hasError) {
-                    return new Text(
-                      '${snapshot.error}',
-                      style: TextStyle(color: Colors.red),
-                    );
-                  } else {
-                    if (snapshot.data.success) {
-                      List<ReceiptListItem> sortedReceiptItems = _userRepository
-                          .receiptRepository
-                          .getSortedReceiptItems(_receiptStatusType,
-                              sortingType, ascending, _fromDate, _toDate);
-                      ActionWithLable r = new ActionWithLable();
-                      r.action = reviewAction;
-                      r.lable = 'Review';
-                      ActionWithLable d = new ActionWithLable();
-                      d.action = deleteAction;
-                      d.lable = 'Delete';
-                      actions.add(r);
-                      actions.add(d);
-                      return ListView.builder(
-                          itemCount: sortedReceiptItems.length,
-                          itemBuilder: (context, index) {
-                            return ReceiptCard(
-                              receiptItem: sortedReceiptItems[index],
-                              actions: actions,
-                            );
-                          });
-                    } else {
-                      return Column(
-                        children: <Widget>[
-                          Text(
-                              'Failed retrieving data, error code is ${snapshot.data.messageCode}'),
-                          Text('Error message is ${snapshot.data.message}'),
-                        ],
-                      );
-                    }
-                  }
-                  ;
-              }
+        body: ListView.builder(
+            itemCount: sortedReceiptItems.length,
+            itemBuilder: (context, index) {
+              return ReceiptCard(
+                receiptItem: sortedReceiptItems[index],
+                actions: actions,
+              );
             }),
       ),
     );

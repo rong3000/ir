@@ -39,6 +39,9 @@ class _AddReceiptsScreenState extends State<AddReceiptsScreen> {
   List<ReceiptListItem> cachedReceiptItems = new List<ReceiptListItem>();
   final List<ActionWithLable> actions = [];
 
+  ReceiptStatusType _receiptStatusType = ReceiptStatusType.Reviewed;
+  List<ReceiptListItem> candidateReceiptItems;
+
   @override
   void initState() {
     duplicateItems = _userRepository.settingRepository.getCurrencies();
@@ -106,10 +109,50 @@ class _AddReceiptsScreenState extends State<AddReceiptsScreen> {
               Flexible(
                 flex: 2,
                 fit: FlexFit.tight,
-                child:
-                    ReceiptList(
-                        userRepository: _userRepository,
-                        receiptStatusType: ReceiptStatusType.Reviewed),
+                child: FutureBuilder<DataResult>(
+                    future: _userRepository.receiptRepository
+                        .getReceiptsFromServer(),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<DataResult> snapshot) {
+                      switch (snapshot.connectionState) {
+                        case ConnectionState.none:
+                          return new Text('Loading...');
+                        case ConnectionState.waiting:
+                          return new Center(
+                              child: new CircularProgressIndicator());
+                        case ConnectionState.active:
+                          return new Text('');
+                        case ConnectionState.done:
+                          if (snapshot.hasError) {
+                            return new Text(
+                              '${snapshot.error}',
+                              style: TextStyle(color: Colors.red),
+                            );
+                          } else {
+                            if (snapshot.data.success) {
+                              candidateReceiptItems =
+                                  _userRepository.receiptRepository
+                                      .getReceiptItems(
+                                          ReceiptStatusType.Reviewed);
+                              return ReceiptList(
+                                userRepository: _userRepository,
+                                receiptStatusType: _receiptStatusType,
+                                receiptItems: candidateReceiptItems,
+                              );
+                            } else {
+                              return Column(
+                                children: <Widget>[
+                                  Text(
+                                      'Failed retrieving data, error code is ${snapshot.data.messageCode}'),
+                                  Text(
+                                      'Error message is ${snapshot.data.message}'),
+                                ],
+                              );
+                            }
+                          }
+                          ;
+                      }
+                    }),
               ),
             ],
           );
