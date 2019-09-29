@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:intelligent_receipt/data_model/data_result.dart';
 import 'package:intelligent_receipt/data_model/enums.dart';
+import 'package:intelligent_receipt/data_model/receipt.dart';
 import 'package:intelligent_receipt/data_model/setting_repository.dart';
-import 'package:intelligent_receipt/main_screen/reports_page/report_receipt_screen/report_button.dart';
+import 'package:intelligent_receipt/receipt/receipt_card/receipt_card.dart';
 import 'package:intelligent_receipt/receipt/receipt_list/receipt_list.dart';
 import 'package:intelligent_receipt/user_repository.dart';
+
+import 'report_button.dart';
 
 class ReportReceiptScreen extends StatefulWidget {
   final String title;
@@ -35,6 +38,8 @@ class _ReportReceiptScreenState extends State<ReportReceiptScreen> {
   }
 
   var items = List<Currency>();
+  List<ReceiptListItem> cachedReceiptItems = new List<ReceiptListItem>();
+  final List<ActionWithLable> actions = [];
 
   @override
   void initState() {
@@ -75,9 +80,26 @@ class _ReportReceiptScreenState extends State<ReportReceiptScreen> {
     Navigator.pop(context);
   }
 
+  void removeAction(int inputId) {
+    int toBeRemoved;
+    for (var i = 0; i < cachedReceiptItems.length; i++) {
+      if (cachedReceiptItems[i].id == inputId) {
+        toBeRemoved = i;
+      }
+    }
+    cachedReceiptItems.remove(cachedReceiptItems[toBeRemoved]);
+    setState(() {
+
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
 //    duplicateItems = _userRepository.settingRepository.getCurrencies();
+    ActionWithLable d = new ActionWithLable();
+    d.action = removeAction;
+    d.lable = 'Remove';
+    actions.add(d);
     return new Scaffold(
       appBar: new AppBar(
         title: Text(widget.title),
@@ -115,15 +137,40 @@ class _ReportReceiptScreenState extends State<ReportReceiptScreen> {
 //                      return !state.isPasswordValid ? 'Invalid Password' : null;
 //                    },
                     ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 1),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          Text("Total:"),
+                          ReportButton(
+                            onPressed:
+
+                            isLoginButtonEnabled() ? _onAddReceipts : null,
+
+                            buttonName: 'Add Receipts',
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
             ),
             Expanded(
               flex: 5,
-              child: ReceiptList(
-                  userRepository: _userRepository,
-                  receiptStatusType: ReceiptStatusType.Reviewed),
+              child: ListView.builder(
+                itemCount: cachedReceiptItems.length,
+                itemBuilder: (context, index) {
+                  return ReceiptCard(
+                    receiptItem: cachedReceiptItems[index],
+                    actions: actions,
+                  );
+                })
+//              ReceiptList(
+//                  userRepository: _userRepository,
+//                  receiptStatusType: ReceiptStatusType.Reviewed),
             ),
             Expanded(
               flex: 1,
@@ -131,7 +178,7 @@ class _ReportReceiptScreenState extends State<ReportReceiptScreen> {
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 20),
                 child: Row(
-//                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
                     ReportButton(
                       onPressed:
@@ -167,5 +214,9 @@ class _ReportReceiptScreenState extends State<ReportReceiptScreen> {
 
   void _onReportSubmitted() {
     print('Submit ${_emailController.text} ${_passwordController.text}');
+  }
+
+  void _onAddReceipts() {
+    print('add Receipts');
   }
 }
