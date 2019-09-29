@@ -4,6 +4,7 @@ import 'package:flutter/rendering.dart';
 import 'package:intelligent_receipt/data_model/enums.dart';
 import 'package:intelligent_receipt/main_screen/bloc/home_bloc.dart';
 import 'package:intelligent_receipt/main_screen/bloc/home_state.dart';
+import 'package:intelligent_receipt/main_screen/reports_page/report_receipt_screen/report_receipt_screen.dart';
 import 'package:intelligent_receipt/report/report_list/report_list.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 
@@ -101,10 +102,10 @@ class _ReportsTabsState extends State<ReportsTabs> {
         onPressed: () => {
           Navigator.of(context).push(
             MaterialPageRoute(builder: (context) {
-              return CurrencyScreen(
+              return ReportReceiptScreen(
                   userRepository: _userRepository,
                   title: 'Add Report',
-                  defaultCurrency: _currency);
+              );
             }),
           )
         },
