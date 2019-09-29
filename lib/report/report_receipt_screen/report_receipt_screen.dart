@@ -5,6 +5,7 @@ import 'package:intelligent_receipt/data_model/receipt.dart';
 import 'package:intelligent_receipt/data_model/setting_repository.dart';
 import 'package:intelligent_receipt/receipt/receipt_card/receipt_card.dart';
 import 'package:intelligent_receipt/receipt/receipt_list/receipt_list.dart';
+import 'package:intelligent_receipt/report/add_receipts_screen/add_receipts_screen.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 
 import 'report_button.dart';
@@ -145,10 +146,7 @@ class _ReportReceiptScreenState extends State<ReportReceiptScreen> {
                         children: <Widget>[
                           Text("Total:"),
                           ReportButton(
-                            onPressed:
-
-                            isLoginButtonEnabled() ? _onAddReceipts : null,
-
+                            onPressed:_onAddReceipts,
                             buttonName: 'Add Receipts',
                           ),
                         ],
@@ -217,6 +215,13 @@ class _ReportReceiptScreenState extends State<ReportReceiptScreen> {
   }
 
   void _onAddReceipts() {
-    print('add Receipts');
-  }
+      Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) {
+          return AddReceiptsScreen(
+            userRepository: _userRepository,
+            title: 'Add Receipts',
+          );
+        }),
+      );
+    }
 }

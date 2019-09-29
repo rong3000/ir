@@ -568,16 +568,9 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
                         flex: 2,
                         fit: FlexFit.tight,
                         child:
-//                        DataTableDemo(
                           ReceiptList(
                             userRepository: _userRepository,
                             receiptStatusType: _receiptStatusType),
-//                          Scaffold(
-//                            appBar: AppBar(title: SortingBar(userRepository: _userRepository),),
-//                            body: ReceiptList(
-//                                userRepository: _userRepository,
-//                                receiptStatusType: _receiptStatusType),
-//                          )
                       ),
                     ],
                   );

@@ -89,6 +89,11 @@ class _DateTimePicker extends StatelessWidget {
   }
 }
 
+class ActionWithLable {
+  Function(int) action;
+  String lable;
+}
+
 class ReceiptList extends StatefulWidget {
   final UserRepository _userRepository;
   final ReceiptStatusType _receiptStatusType;
@@ -104,11 +109,6 @@ class ReceiptList extends StatefulWidget {
 
   @override
   ReceiptListState createState() => ReceiptListState();
-}
-
-class ActionWithLable {
-  Function(int) action;
-  String lable;
 }
 
 class ReceiptListState extends State<ReceiptList> {

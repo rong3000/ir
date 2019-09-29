@@ -12,6 +12,7 @@ export 'enums.dart';
 
 class ReceiptRepository {
   List<ReceiptListItem> receipts = new List<ReceiptListItem>();
+  List<ReceiptListItem> selectedReceipts = new List<ReceiptListItem>();
   UserRepository _userRepository;
   bool _dataFetched = false;
   Lock _lock = new Lock();
@@ -45,7 +46,6 @@ class ReceiptRepository {
 
   List<ReceiptListItem> getSortedReceiptItems(ReceiptStatusType receiptStatus,
       ReceiptSortType type, bool ascending, DateTime fromDate, DateTime toDate) {
-    List<ReceiptListItem> selectedReceipts = new List<ReceiptListItem>();
     _lock.synchronized(() {
       for (var i = 0; i < receipts.length; i++) {
         if (receipts[i].statusId == receiptStatus.index &&
