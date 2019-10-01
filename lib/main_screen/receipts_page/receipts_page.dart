@@ -77,11 +77,12 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
 
   UserRepository get _userRepository => widget._userRepository;
   get _receiptStatusType => widget._receiptStatusType;
+  DataResult dataResult;
 
   Future<void> getDataResultFromServer() async {
     print('4');
 //    dataResult = await _userRepository.receiptRepository.getReceiptsFromServer(forceRefresh: true);
-    await _userRepository.receiptRepository
+    dataResult = await _userRepository.receiptRepository
         .getReceiptsFromServer(forceRefresh: true);
     print('5');
     setState(() {
@@ -104,7 +105,7 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
         child: BlocBuilder(
             bloc: _homeBloc,
             builder: (BuildContext context, HomeState state) {
-              if (!_userRepository.receiptRepository.receipts.isNotEmpty) {
+              if (dataResult == null || dataResult.success == false) {
                 print('8');
                 return Text('Loading...');
               } else {
