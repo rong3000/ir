@@ -42,8 +42,21 @@ class _AddReceiptsScreenState extends State<AddReceiptsScreen> {
   ReceiptStatusType _receiptStatusType = ReceiptStatusType.Reviewed;
   List<ReceiptListItem> candidateReceiptItems;
 
+  Future<void> getDataResultFromServer() async {
+    print('4');
+//    dataResult = await _userRepository.receiptRepository.getReceiptsFromServer(forceRefresh: true);
+    await _userRepository.receiptRepository
+        .getReceiptsFromServer(forceRefresh: true);
+    print('5');
+    setState(() {
+      print('6');
+    });
+    print('7');
+  }
+
   @override
   void initState() {
+    getDataResultFromServer();
     duplicateItems = _userRepository.settingRepository.getCurrencies();
     items.addAll(duplicateItems);
     super.initState();
@@ -99,64 +112,30 @@ class _AddReceiptsScreenState extends State<AddReceiptsScreen> {
     d.action = removeAction;
     d.lable = 'Remove';
     actions.add(d);
+    candidateReceiptItems = _userRepository.receiptRepository
+        .getReceiptItems(ReceiptStatusType.Reviewed);
     return Scaffold(
-        appBar: new AppBar(
-          title: Text(widget.title),
-        ),
-        body: OrientationBuilder(builder: (context, orientation) {
-          return Column(
-            children: <Widget>[
-              Flexible(
-                flex: 2,
-                fit: FlexFit.tight,
-                child: FutureBuilder<DataResult>(
-                    future: _userRepository.receiptRepository
-                        .getReceiptsFromServer(),
-                    builder: (BuildContext context,
-                        AsyncSnapshot<DataResult> snapshot) {
-                      switch (snapshot.connectionState) {
-                        case ConnectionState.none:
-                          return new Text('Loading...');
-                        case ConnectionState.waiting:
-                          return new Center(
-                              child: new CircularProgressIndicator());
-                        case ConnectionState.active:
-                          return new Text('');
-                        case ConnectionState.done:
-                          if (snapshot.hasError) {
-                            return new Text(
-                              '${snapshot.error}',
-                              style: TextStyle(color: Colors.red),
-                            );
-                          } else {
-                            if (snapshot.data.success) {
-                              candidateReceiptItems =
-                                  _userRepository.receiptRepository
-                                      .getReceiptItems(
-                                          ReceiptStatusType.Reviewed);
-                              return ReceiptList(
-                                userRepository: _userRepository,
-                                receiptStatusType: _receiptStatusType,
-                                receiptItems: candidateReceiptItems,
-                              );
-                            } else {
-                              return Column(
-                                children: <Widget>[
-                                  Text(
-                                      'Failed retrieving data, error code is ${snapshot.data.messageCode}'),
-                                  Text(
-                                      'Error message is ${snapshot.data.message}'),
-                                ],
-                              );
-                            }
-                          }
-                          ;
-                      }
-                    }),
+      appBar: new AppBar(
+        title: Text(widget.title),
+      ),
+      body: OrientationBuilder(builder: (context, orientation) {
+        if (!_userRepository.receiptRepository.receipts.isNotEmpty) {
+          print('8');
+          return Text('Loading...');
+        } else
+          return Column(children: <Widget>[
+            Flexible(
+              flex: 2,
+              fit: FlexFit.tight,
+              child: ReceiptList(
+                userRepository: _userRepository,
+                receiptStatusType: _receiptStatusType,
+                receiptItems: candidateReceiptItems,
               ),
-            ],
-          );
-        }));
+            )
+          ]);
+      }),
+    );
   }
 
   @override

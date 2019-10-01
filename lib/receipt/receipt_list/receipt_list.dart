@@ -119,7 +119,7 @@ class ReceiptListState extends State<ReceiptList> {
   final List<String> items = List<String>.generate(10000, (i) => "Item $i");
   ScrollController _scrollController = ScrollController();
 //  List<ReceiptListItem> receipts;
-  List<ReceiptListItem> selectedReceipts;
+  List<ReceiptListItem> selectedReceipts = [];
   bool sort;
   int start = 0;
   int end;
