@@ -60,7 +60,7 @@ class ReceiptRepository {
                 break;
               case ReceiptSortType.ReceiptTime:
                 selectedReceipts.sort(
-                        (a, b) => a.receiptDatatime.compareTo(b.receiptDatatime));
+                        (a, b) => a.receiptDatetime.compareTo(b.receiptDatetime));
                 break;
               case ReceiptSortType.CompanyName:
                 selectedReceipts.sort(
@@ -85,7 +85,7 @@ class ReceiptRepository {
                 break;
               case ReceiptSortType.ReceiptTime:
                 selectedReceipts.sort(
-                        (b, a) => a.receiptDatatime.compareTo(b.receiptDatatime));
+                        (b, a) => a.receiptDatetime.compareTo(b.receiptDatetime));
                 break;
               case ReceiptSortType.CompanyName:
                 selectedReceipts.sort(
@@ -150,7 +150,7 @@ class ReceiptRepository {
 
       result = await webserviceGet(
           Urls.GetReceipts + _userRepository.userId.toString(), "",
-          timeout: 5000);
+          timeout: 50000);
       if (result.success) {
         Iterable l = result.obj;
         receipts = l.map((model) => ReceiptListItem.fromJason(model)).toList();
@@ -192,7 +192,7 @@ class ReceiptRepository {
     DataResult result = await uploadFile(
         Urls.UploadReceiptImages + _userRepository.userId.toString(),
         "",
-        imageFile, timeout: 5000);
+        imageFile, timeout: 50000);
     if (result.success) {
       Iterable l = result.obj;
       List<Receipt> newReceipts =

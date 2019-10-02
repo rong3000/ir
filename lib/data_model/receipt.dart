@@ -14,7 +14,7 @@ class ReceiptListItem {
   int categoryId;
   int receiptTypeId;
   DateTime uploadDatetime;
-  DateTime receiptDatatime;
+  DateTime receiptDatetime;
   double totalAmount;
   String companyName;
   String imagePath;

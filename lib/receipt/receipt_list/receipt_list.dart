@@ -119,7 +119,6 @@ class ReceiptListState extends State<ReceiptList> {
   final List<String> items = List<String>.generate(10000, (i) => "Item $i");
   ScrollController _scrollController = ScrollController();
 //  List<ReceiptListItem> receipts;
-  List<ReceiptListItem> selectedReceipts = [];
   bool sort;
   int start = 0;
   int end;
@@ -423,6 +422,7 @@ class ReceiptListState extends State<ReceiptList> {
       bool ascending,
       DateTime fromDate,
       DateTime toDate) {
+    List<ReceiptListItem> selectedReceipts = [];
     _lock.synchronized(() {
       for (var i = 0; i < receipts.length; i++) {
         if (receipts[i].statusId == receiptStatus.index &&
@@ -439,7 +439,7 @@ class ReceiptListState extends State<ReceiptList> {
                 break;
               case ReceiptSortType.ReceiptTime:
                 selectedReceipts.sort(
-                    (a, b) => a.receiptDatatime.compareTo(b.receiptDatatime));
+                    (a, b) => a.receiptDatetime.compareTo(b.receiptDatetime));
                 break;
               case ReceiptSortType.CompanyName:
                 selectedReceipts
@@ -464,7 +464,7 @@ class ReceiptListState extends State<ReceiptList> {
                 break;
               case ReceiptSortType.ReceiptTime:
                 selectedReceipts.sort(
-                    (b, a) => a.receiptDatatime.compareTo(b.receiptDatatime));
+                    (b, a) => a.receiptDatetime.compareTo(b.receiptDatetime));
                 break;
               case ReceiptSortType.CompanyName:
                 selectedReceipts
