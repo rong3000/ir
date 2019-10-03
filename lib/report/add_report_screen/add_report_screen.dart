@@ -41,7 +41,6 @@ class _AddReportScreenState extends State<AddReportScreen> {
   }
 
   var items = List<Currency>();
-  final List<ActionWithLable> actions = [];
 
   @override
   void initState() {
@@ -99,6 +98,8 @@ class _AddReportScreenState extends State<AddReportScreen> {
   @override
   Widget build(BuildContext context) {
 //    duplicateItems = _userRepository.settingRepository.getCurrencies();
+
+    List<ActionWithLable> actions = [];
     ActionWithLable d = new ActionWithLable();
     d.action = removeAction;
     d.lable = 'Remove';
@@ -182,8 +183,8 @@ class _AddReportScreenState extends State<AddReportScreen> {
                   children: <Widget>[
                     ReportButton(
                       onPressed:
-//                      isLoginButtonEnabled() ? _onReportSaved : null,
-                      _onReportSaved,
+                      isLoginButtonEnabled() ? _onReportSaved : null,
+//                      _onReportSaved,
                       buttonName: 'Save Report',
                     ),
                     ReportButton(
@@ -219,9 +220,10 @@ class _AddReportScreenState extends State<AddReportScreen> {
 
   void _onReportSaved() {
     Report newReport = new Report();
-//    newReport.id = 8;
+    newReport.id = 0;
     newReport.userId = _userRepository.userId;
     newReport.statusId = 1;
+    newReport.createDateTime = DateTime.now();
     newReport.updateDateTime = DateTime.now();
     newReport.reportName = _emailController.text;
     newReport.description = _passwordController.text;
@@ -231,10 +233,25 @@ class _AddReportScreenState extends State<AddReportScreen> {
     }
     addReport(newReport);
     print('Save ${_emailController.text} ${_passwordController.text} ${_userRepository.receiptRepository.cachedReceiptItems}');
+    Navigator.pop(context);
   }
 
   void _onReportSubmitted() {
-    print('Submit ${_emailController.text} ${_passwordController.text}');
+    Report newReport = new Report();
+    newReport.id = 0;
+    newReport.userId = _userRepository.userId;
+    newReport.statusId = 2;
+    newReport.createDateTime = DateTime.now();
+    newReport.updateDateTime = DateTime.now();
+    newReport.reportName = _emailController.text;
+    newReport.description = _passwordController.text;
+    newReport.receiptIds = [];
+    for (int i = 0; i < _userRepository.receiptRepository.cachedReceiptItems.length; i++) {
+      newReport.receiptIds.add(_userRepository.receiptRepository.cachedReceiptItems[i].id);
+    }
+    addReport(newReport);
+    print('Submit ${_emailController.text} ${_passwordController.text} ${_userRepository.receiptRepository.cachedReceiptItems}');
+    Navigator.pop(context);
   }
 
   void _onAddReceipts() {
