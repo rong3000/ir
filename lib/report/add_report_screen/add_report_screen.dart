@@ -210,8 +210,8 @@ class _AddReportScreenState extends State<AddReportScreen> {
   }
 
   Future<void> addReport(Report report) async{
-//    await _userRepository.reportRepository.addReport(report);
-    await _userRepository.reportRepository.updateReport(report, true);
+    await _userRepository.reportRepository.addReport(report);
+//    await _userRepository.reportRepository.updateReport(report, true);
     setState(() {
 
     });
@@ -219,8 +219,7 @@ class _AddReportScreenState extends State<AddReportScreen> {
 
   void _onReportSaved() {
     Report newReport = new Report();
-//    int id;
-    newReport.id = 8;
+//    newReport.id = 8;
     newReport.userId = _userRepository.userId;
     newReport.statusId = 1;
     newReport.updateDateTime = DateTime.now();

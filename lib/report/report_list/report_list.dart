@@ -224,7 +224,6 @@ class ReportListState extends State<ReportList> {
   }
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  final List<ActionWithLable> actions = [];
 
   void reviewAction(int id) {
     print('Review ${id}');
@@ -522,6 +521,7 @@ class ReportListState extends State<ReportList> {
                           .reportRepository
                           .getSortedReportItems(_reportStatusType,
                               sortingType, ascending, _fromDate, _toDate);
+                      List<ActionWithLable> actions = [];
                       ActionWithLable r = new ActionWithLable();
                       r.action = reviewAction;
                       r.lable = 'Review';
