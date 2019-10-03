@@ -1,7 +1,6 @@
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:intelligent_receipt/data_model/action_with_lable.dart';
 import 'package:intelligent_receipt/data_model/enums.dart';
 import 'package:intelligent_receipt/data_model/receipt_repository.dart';
 import 'package:intelligent_receipt/receipt/receipt_card/receipt_card.dart';
@@ -9,106 +8,23 @@ import 'package:intelligent_receipt/user_repository.dart';
 import 'package:intl/intl.dart';
 import 'package:synchronized/synchronized.dart';
 
-import '../../data_model/webservice.dart';
-
-class _InputDropdown extends StatelessWidget {
-  const _InputDropdown({
-    Key key,
-    this.child,
-    this.labelText,
-    this.valueText,
-    this.valueStyle,
-    this.onPressed,
-  }) : super(key: key);
-
-  final String labelText;
-  final String valueText;
-  final TextStyle valueStyle;
-  final VoidCallback onPressed;
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onPressed,
-      child: InputDecorator(
-        decoration: InputDecoration(
-          labelText: labelText,
-        ),
-        baseStyle: valueStyle,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Text(valueText, style: valueStyle),
-            Icon(
-              Icons.arrow_drop_down,
-              color: Theme.of(context).brightness == Brightness.light
-                  ? Colors.grey.shade700
-                  : Colors.white70,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _DateTimePicker extends StatelessWidget {
-  const _DateTimePicker({
-    Key key,
-    this.labelText,
-    this.selectedDate,
-    this.selectDate,
-  }) : super(key: key);
-
-  final String labelText;
-  final DateTime selectedDate;
-  final ValueChanged<DateTime> selectDate;
-
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime picked = await showDatePicker(
-      context: context,
-      initialDate: selectedDate,
-      firstDate: DateTime(2015, 8),
-      lastDate: DateTime(2101),
-    );
-    if (picked != null && picked != selectedDate) selectDate(picked);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final TextStyle valueStyle = Theme.of(context).textTheme.title;
-    return _InputDropdown(
-      labelText: labelText,
-      valueText: DateFormat.yMMMd().format(selectedDate),
-      valueStyle: valueStyle,
-      onPressed: () {
-        _selectDate(context);
-      },
-    );
-  }
-}
-
-class ActionWithLable {
-  Function(int) action;
-  String lable;
-}
-
 class ReceiptList extends StatefulWidget {
   final UserRepository _userRepository;
   final ReceiptStatusType _receiptStatusType;
   final List<ReceiptListItem> _receiptItems;
+  final List<ActionWithLable> _actions;
 
   ReceiptList({
     Key key,
     @required UserRepository userRepository,
     @required ReceiptStatusType receiptStatusType,
     @required List<ReceiptListItem> receiptItems,
+    @required List<ActionWithLable> actions,
   })  : assert(userRepository != null),
         _userRepository = userRepository,
         _receiptStatusType = receiptStatusType,
         _receiptItems = receiptItems,
+        _actions = actions,
         super(key: key) {}
 
   @override
@@ -230,31 +146,6 @@ class ReceiptListState extends State<ReceiptList> {
   }
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  final List<ActionWithLable> actions = [];
-
-  void reviewAction(int id) {
-    print('Review ${id}');
-  }
-
-  Future<void> deleteAndSetState(List<int> receiptIds) async {
-    DataResult result =
-        await _userRepository.receiptRepository.deleteReceipts(receiptIds);
-    setState(() => {});
-  }
-
-  void deleteAction(int id) {
-    List<int> receiptIds = [];
-    receiptIds.add(id);
-    deleteAndSetState(receiptIds);
-  }
-
-  void addAction(int id) {
-    print('Add ${id}');
-  }
-
-  void removeAction(int id) {
-    print('Add ${id}');
-  }
 
   void _onTapDown(TapDownDetails details, BuildContext context) {
     print('_onLongPressDragStart details: ${details.globalPosition}');
@@ -501,14 +392,6 @@ class ReceiptListState extends State<ReceiptList> {
         ascending,
         _fromDate,
         _toDate);
-    ActionWithLable r = new ActionWithLable();
-    r.action = reviewAction;
-    r.lable = 'Review';
-    ActionWithLable d = new ActionWithLable();
-    d.action = deleteAction;
-    d.lable = 'Delete';
-    actions.add(r);
-    actions.add(d);
 
     return MaterialApp(
       home: Scaffold(
@@ -586,7 +469,7 @@ class ReceiptListState extends State<ReceiptList> {
             itemBuilder: (context, index) {
               return ReceiptCard(
                 receiptItem: sortedReceiptItems[index],
-                actions: actions,
+                actions: widget._actions,
               );
             }),
       ),

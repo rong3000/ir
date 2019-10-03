@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intelligent_receipt/data_model/action_with_lable.dart';
 import 'package:intelligent_receipt/data_model/enums.dart';
 import 'package:intelligent_receipt/data_model/receipt_repository.dart';
 import 'package:intelligent_receipt/main_screen/bloc/bloc.dart';
@@ -78,17 +79,37 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
   UserRepository get _userRepository => widget._userRepository;
   get _receiptStatusType => widget._receiptStatusType;
   DataResult dataResult;
+  List<ReceiptListItem> ReceiptItems = [];
 
   Future<void> getDataResultFromServer() async {
-    print('4');
 //    dataResult = await _userRepository.receiptRepository.getReceiptsFromServer(forceRefresh: true);
     dataResult = await _userRepository.receiptRepository
         .getReceiptsFromServer(forceRefresh: true);
-    print('5');
     setState(() {
-      print('6');
     });
-    print('7');
+  }
+
+  void reviewAction(int id) {
+    print('Review ${id}');
+  }
+
+  Future<void> deleteAndSetState(List<int> receiptIds) async {
+    await _userRepository.receiptRepository.deleteReceipts(receiptIds);
+    setState(() {});
+  }
+
+  void deleteAction(int id) {
+    List<int> receiptIds = [];
+    receiptIds.add(id);
+    deleteAndSetState(receiptIds);
+  }
+
+  void addAction(int id) {
+    print('Add ${id}');
+  }
+
+  void removeAction(int id) {
+    print('Add ${id}');
   }
 
   @override
@@ -106,12 +127,19 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
             bloc: _homeBloc,
             builder: (BuildContext context, HomeState state) {
               if (dataResult == null || dataResult.success == false) {
-                print('8');
                 return Text('Loading...');
               } else {
-                List<ReceiptListItem> ReceiptItems = _userRepository
-                    .receiptRepository
+                ReceiptItems = _userRepository.receiptRepository
                     .getReceiptItems(_receiptStatusType);
+                List<ActionWithLable> actions = [];
+                ActionWithLable r = new ActionWithLable();
+                r.action = reviewAction;
+                r.lable = 'Review';
+                ActionWithLable d = new ActionWithLable();
+                d.action = deleteAction;
+                d.lable = 'Delete';
+                actions.add(r);
+                actions.add(d);
                 return Scaffold(
                   body: OrientationBuilder(builder: (context, orientation) {
                     return Column(
@@ -123,6 +151,7 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
                               userRepository: _userRepository,
                               receiptStatusType: _receiptStatusType,
                               receiptItems: ReceiptItems,
+                              actions: actions,
                             )),
                       ],
                     );

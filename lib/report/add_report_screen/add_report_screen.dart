@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intelligent_receipt/data_model/action_with_lable.dart';
 import 'package:intelligent_receipt/data_model/data_result.dart';
 import 'package:intelligent_receipt/data_model/enums.dart';
 import 'package:intelligent_receipt/data_model/receipt.dart';
@@ -10,20 +11,20 @@ import 'package:intelligent_receipt/user_repository.dart';
 
 import 'report_button.dart';
 
-class ReportReceiptScreen extends StatefulWidget {
+class AddReportScreen extends StatefulWidget {
   final String title;
   final UserRepository _userRepository;
-  ReportReceiptScreen(
+  AddReportScreen(
       {Key key, @required UserRepository userRepository, this.title})
       : assert(userRepository != null),
         _userRepository = userRepository,
         super(key: key) {}
 
   @override
-  _ReportReceiptScreenState createState() => new _ReportReceiptScreenState();
+  _AddReportScreenState createState() => new _AddReportScreenState();
 }
 
-class _ReportReceiptScreenState extends State<ReportReceiptScreen> {
+class _AddReportScreenState extends State<AddReportScreen> {
   UserRepository get _userRepository => widget._userRepository;
   TextEditingController editingController = TextEditingController();
   List<Currency> duplicateItems;
@@ -39,7 +40,6 @@ class _ReportReceiptScreenState extends State<ReportReceiptScreen> {
   }
 
   var items = List<Currency>();
-  List<ReceiptListItem> cachedReceiptItems = new List<ReceiptListItem>();
   final List<ActionWithLable> actions = [];
 
   @override
@@ -83,12 +83,13 @@ class _ReportReceiptScreenState extends State<ReportReceiptScreen> {
 
   void removeAction(int inputId) {
     int toBeRemoved;
-    for (var i = 0; i < cachedReceiptItems.length; i++) {
-      if (cachedReceiptItems[i].id == inputId) {
+    for (int i = 0; i < _userRepository.receiptRepository.cachedReceiptItems.length; i++) {
+      if (_userRepository.receiptRepository.cachedReceiptItems[i].id == inputId) {
         toBeRemoved = i;
       }
     }
-    cachedReceiptItems.remove(cachedReceiptItems[toBeRemoved]);
+    _userRepository.receiptRepository.candidateReceiptItems.add(_userRepository.receiptRepository.cachedReceiptItems[toBeRemoved]);
+    _userRepository.receiptRepository.cachedReceiptItems.removeAt(toBeRemoved);
     setState(() {
 
     });
@@ -146,7 +147,7 @@ class _ReportReceiptScreenState extends State<ReportReceiptScreen> {
                         children: <Widget>[
                           Text("Total:"),
                           ReportButton(
-                            onPressed:_onAddReceipts,
+                            onPressed: _onAddReceipts,
                             buttonName: 'Add Receipts',
                           ),
                         ],
@@ -159,10 +160,10 @@ class _ReportReceiptScreenState extends State<ReportReceiptScreen> {
             Expanded(
               flex: 5,
               child: ListView.builder(
-                itemCount: cachedReceiptItems.length,
+                itemCount: _userRepository.receiptRepository.cachedReceiptItems.length,
                 itemBuilder: (context, index) {
                   return ReceiptCard(
-                    receiptItem: cachedReceiptItems[index],
+                    receiptItem: _userRepository.receiptRepository.cachedReceiptItems[index],
                     actions: actions,
                   );
                 })

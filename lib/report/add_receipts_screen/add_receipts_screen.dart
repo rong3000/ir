@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intelligent_receipt/data_model/action_with_lable.dart';
 import 'package:intelligent_receipt/data_model/data_result.dart';
 import 'package:intelligent_receipt/data_model/enums.dart';
 import 'package:intelligent_receipt/data_model/receipt.dart';
@@ -28,6 +29,7 @@ class _AddReceiptsScreenState extends State<AddReceiptsScreen> {
   bool show;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  List<ReceiptListItem> candidateReceiptItems;
 
   bool get isPopulated => _emailController.text.isNotEmpty;
 
@@ -36,11 +38,8 @@ class _AddReceiptsScreenState extends State<AddReceiptsScreen> {
   }
 
   var items = List<Currency>();
-  List<ReceiptListItem> cachedReceiptItems = new List<ReceiptListItem>();
-  final List<ActionWithLable> actions = [];
 
   ReceiptStatusType _receiptStatusType = ReceiptStatusType.Reviewed;
-  List<ReceiptListItem> candidateReceiptItems;
 
   Future<void> getDataResultFromServer() async {
     print('4');
@@ -60,6 +59,7 @@ class _AddReceiptsScreenState extends State<AddReceiptsScreen> {
     duplicateItems = _userRepository.settingRepository.getCurrencies();
     items.addAll(duplicateItems);
     super.initState();
+    candidateReceiptItems = _userRepository.receiptRepository.candidateReceiptItems;
   }
 
   void filterSearchResults(String query) {
@@ -94,26 +94,34 @@ class _AddReceiptsScreenState extends State<AddReceiptsScreen> {
     Navigator.pop(context);
   }
 
-  void removeAction(int inputId) {
-    int toBeRemoved;
-    for (var i = 0; i < cachedReceiptItems.length; i++) {
-      if (cachedReceiptItems[i].id == inputId) {
-        toBeRemoved = i;
-      }
-    }
-    cachedReceiptItems.remove(cachedReceiptItems[toBeRemoved]);
-    setState(() {});
+//  void removeAction(int inputId) {
+//    int toBeRemoved;
+//    for (var i = 0; i < cachedReceiptItems.length; i++) {
+//      if (cachedReceiptItems[i].id == inputId) {
+//        toBeRemoved = i;
+//      }
+//    }
+//    cachedReceiptItems.remove(cachedReceiptItems[toBeRemoved]);
+//    setState(() {});
+//  }
+
+  void addAction(int id) {
+    _userRepository.receiptRepository.cachedReceiptItems.add(_userRepository.receiptRepository.getReceiptItem(id));
+    candidateReceiptItems = _userRepository.receiptRepository.removeCandidateItems(id);
+        print('id ${id} add to report');
+    setState(() {
+
+    });
   }
 
   @override
   Widget build(BuildContext context) {
 //    duplicateItems = _userRepository.settingRepository.getCurrencies();
-    ActionWithLable d = new ActionWithLable();
-    d.action = removeAction;
-    d.lable = 'Remove';
-    actions.add(d);
-    candidateReceiptItems = _userRepository.receiptRepository
-        .getReceiptItems(ReceiptStatusType.Reviewed);
+    List<ActionWithLable> actions = [];
+    ActionWithLable a = new ActionWithLable();
+    a.action = addAction;
+    a.lable = 'Add to Report';
+    actions.add(a);
     return Scaffold(
       appBar: new AppBar(
         title: Text(widget.title),
@@ -131,6 +139,7 @@ class _AddReceiptsScreenState extends State<AddReceiptsScreen> {
                 userRepository: _userRepository,
                 receiptStatusType: _receiptStatusType,
                 receiptItems: candidateReceiptItems,
+                actions: actions,
               ),
             )
           ]);

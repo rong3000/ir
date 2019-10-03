@@ -13,9 +13,29 @@ export 'enums.dart';
 class ReceiptRepository {
   List<ReceiptListItem> receipts = new List<ReceiptListItem>();
   List<ReceiptListItem> selectedReceipts = new List<ReceiptListItem>();
+  List<ReceiptListItem> cachedReceiptItems;
+  List<ReceiptListItem> candidateReceiptItems;
   UserRepository _userRepository;
   bool _dataFetched = false;
   Lock _lock = new Lock();
+
+  void resetCachedReceiptItems() {
+    cachedReceiptItems = [];
+    candidateReceiptItems = [];
+    candidateReceiptItems = getReceiptItems(ReceiptStatusType.Reviewed);
+  }
+
+  List<ReceiptListItem> removeCandidateItems(int id) {
+
+    int toBeRemoved;
+    for (int i = 0; i < _userRepository.receiptRepository.candidateReceiptItems.length; i++) {
+      if (_userRepository.receiptRepository.candidateReceiptItems[i].id == id) {
+        toBeRemoved = i;
+      }
+    }
+    candidateReceiptItems.removeAt(toBeRemoved);
+    return candidateReceiptItems;
+  }
 
   ReceiptRepository(UserRepository userRepository) {
     _userRepository = userRepository;
