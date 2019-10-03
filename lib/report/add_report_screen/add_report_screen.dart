@@ -3,6 +3,7 @@ import 'package:intelligent_receipt/data_model/action_with_lable.dart';
 import 'package:intelligent_receipt/data_model/data_result.dart';
 import 'package:intelligent_receipt/data_model/enums.dart';
 import 'package:intelligent_receipt/data_model/receipt.dart';
+import 'package:intelligent_receipt/data_model/report.dart';
 import 'package:intelligent_receipt/data_model/setting_repository.dart';
 import 'package:intelligent_receipt/receipt/receipt_card/receipt_card.dart';
 import 'package:intelligent_receipt/receipt/receipt_list/receipt_list.dart';
@@ -181,7 +182,8 @@ class _AddReportScreenState extends State<AddReportScreen> {
                   children: <Widget>[
                     ReportButton(
                       onPressed:
-                      isLoginButtonEnabled() ? _onReportSaved : null,
+//                      isLoginButtonEnabled() ? _onReportSaved : null,
+                      _onReportSaved,
                       buttonName: 'Save Report',
                     ),
                     ReportButton(
@@ -207,8 +209,29 @@ class _AddReportScreenState extends State<AddReportScreen> {
     super.dispose();
   }
 
+  Future<void> addReport(Report report) async{
+//    await _userRepository.reportRepository.addReport(report);
+    await _userRepository.reportRepository.updateReport(report, true);
+    setState(() {
+
+    });
+  }
+
   void _onReportSaved() {
-    print('Save ${_emailController.text} ${_passwordController.text}');
+    Report newReport = new Report();
+//    int id;
+    newReport.id = 8;
+    newReport.userId = _userRepository.userId;
+    newReport.statusId = 1;
+    newReport.updateDateTime = DateTime.now();
+    newReport.reportName = _emailController.text;
+    newReport.description = _passwordController.text;
+    newReport.receiptIds = [];
+    for (int i = 0; i < _userRepository.receiptRepository.cachedReceiptItems.length; i++) {
+      newReport.receiptIds.add(_userRepository.receiptRepository.cachedReceiptItems[i].id);
+    }
+    addReport(newReport);
+    print('Save ${_emailController.text} ${_passwordController.text} ${_userRepository.receiptRepository.cachedReceiptItems}');
   }
 
   void _onReportSubmitted() {
