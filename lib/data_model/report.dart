@@ -26,7 +26,7 @@ class Report {
   double getTotalAmount(ReceiptRepository receiptRepository) {
     double totalAmount = 0;
     for (var i = 0; i < receiptIds.length; i++) {
-      ReceiptListItem receiptListItem = receiptRepository.getReceiptItem(i);
+      ReceiptListItem receiptListItem = receiptRepository.getReceiptItem(receiptIds[i]);
       totalAmount += receiptListItem?.totalAmount;
     }
     return totalAmount;
@@ -35,7 +35,7 @@ class Report {
   List<ReceiptListItem> getReceiptList(ReceiptRepository receiptRepository) {
     List<ReceiptListItem> receiptList = new List<ReceiptListItem>();
     for (var i = 0; i < receiptIds.length; i++) {
-      ReceiptListItem receiptListItem = receiptRepository.getReceiptItem(i);
+      ReceiptListItem receiptListItem = receiptRepository.getReceiptItem(receiptIds[i]);
       if (receiptListItem != null) {
         receiptList.add(receiptListItem);
       }

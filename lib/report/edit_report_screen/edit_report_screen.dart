@@ -43,6 +43,9 @@ class _EditReportScreenState extends State<EditReportScreen> {
 
   var items = List<Currency>();
   String _reportName;
+  Report _report;
+  List<ReceiptListItem> _receiptList;
+  double _totalAmount;
 
   @override
   void initState() {
@@ -50,6 +53,13 @@ class _EditReportScreenState extends State<EditReportScreen> {
     items.addAll(duplicateItems);
     super.initState();
     _reportName = _userRepository.reportRepository.getReport(widget._reportId).reportName;
+    _emailController.text = _reportName;
+//    _receiptList = _userRepository.reportRepository.getReport(widget._reportId).getReceiptList(_userRepository.receiptRepository);
+//    _totalAmount = _userRepository.reportRepository.getReport(widget._reportId).getTotalAmount(_userRepository.receiptRepository);
+    _report = _userRepository.reportRepository.getReport(widget._reportId);
+    _receiptList = _report.getReceiptList(_userRepository.receiptRepository);
+    _totalAmount = _report.getTotalAmount(_userRepository.receiptRepository);
+    print('${_report} ${_receiptList} ${_totalAmount}');
   }
 
   void filterSearchResults(String query) {
@@ -118,7 +128,7 @@ class _EditReportScreenState extends State<EditReportScreen> {
                 child: ListView(
                   children: <Widget>[
                     TextFormField(
-                      initialValue: _reportName,
+//                      initialValue: _reportName,
                       controller: _emailController,
                       decoration: InputDecoration(
                         icon: Icon(Icons.title),
@@ -165,10 +175,10 @@ class _EditReportScreenState extends State<EditReportScreen> {
             Expanded(
               flex: 5,
               child: ListView.builder(
-                itemCount: _userRepository.reportRepository.getReport(widget._reportId).getReceiptList(_userRepository.receiptRepository).length,
+                itemCount: _receiptList.length,
                 itemBuilder: (context, index) {
                   return ReceiptCard(
-                    receiptItem: _userRepository.reportRepository.getReport(widget._reportId).getReceiptList(_userRepository.receiptRepository)[index],
+                    receiptItem: _receiptList[index],
                     actions: actions,
                   );
                 })
