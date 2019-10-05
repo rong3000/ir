@@ -42,12 +42,14 @@ class _EditReportScreenState extends State<EditReportScreen> {
   }
 
   var items = List<Currency>();
+  String _reportName;
 
   @override
   void initState() {
     duplicateItems = _userRepository.settingRepository.getCurrencies();
     items.addAll(duplicateItems);
     super.initState();
+    _reportName = _userRepository.reportRepository.getReport(widget._reportId).reportName;
   }
 
   void filterSearchResults(String query) {
@@ -116,6 +118,7 @@ class _EditReportScreenState extends State<EditReportScreen> {
                 child: ListView(
                   children: <Widget>[
                     TextFormField(
+                      initialValue: _reportName,
                       controller: _emailController,
                       decoration: InputDecoration(
                         icon: Icon(Icons.title),
@@ -128,6 +131,7 @@ class _EditReportScreenState extends State<EditReportScreen> {
 //                    },
                     ),
                     TextFormField(
+//                      initialValue: _userRepository.reportRepository.getReport(widget._reportId).description,
                       controller: _passwordController,
                       decoration: InputDecoration(
                         icon: Icon(Icons.description),
@@ -161,10 +165,10 @@ class _EditReportScreenState extends State<EditReportScreen> {
             Expanded(
               flex: 5,
               child: ListView.builder(
-                itemCount: _userRepository.receiptRepository.cachedReceiptItems.length,
+                itemCount: _userRepository.reportRepository.getReport(widget._reportId).getReceiptList(_userRepository.receiptRepository).length,
                 itemBuilder: (context, index) {
                   return ReceiptCard(
-                    receiptItem: _userRepository.receiptRepository.cachedReceiptItems[index],
+                    receiptItem: _userRepository.reportRepository.getReport(widget._reportId).getReceiptList(_userRepository.receiptRepository)[index],
                     actions: actions,
                   );
                 })
