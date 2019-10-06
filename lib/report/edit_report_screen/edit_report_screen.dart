@@ -60,6 +60,17 @@ class _EditReportScreenState extends State<EditReportScreen> {
     _receiptList = _report.getReceiptList(_userRepository.receiptRepository);
     _totalAmount = _report.getTotalAmount(_userRepository.receiptRepository);
     print('${_report} ${_receiptList} ${_totalAmount}');
+    _userRepository.receiptRepository.cachedReceiptItems = _receiptList;
+    List<int> _receiptIds = [];
+    for (var i = 0; i < _userRepository.reportRepository.reports.length; i++ ) {
+      _receiptIds.addAll(_userRepository.reportRepository.reports[i].receiptIds);
+    }
+
+    for (var i = 0; i< _userRepository.receiptRepository.candidateReceiptItems.length; i++){
+      if (_receiptIds.contains(_userRepository.receiptRepository.candidateReceiptItems[i].id)) {
+      _userRepository.receiptRepository.candidateReceiptItems.removeAt(i);
+      }
+    }
   }
 
   void filterSearchResults(String query) {
@@ -175,10 +186,10 @@ class _EditReportScreenState extends State<EditReportScreen> {
             Expanded(
               flex: 5,
               child: ListView.builder(
-                itemCount: _receiptList.length,
+                itemCount: _userRepository.receiptRepository.cachedReceiptItems.length,
                 itemBuilder: (context, index) {
                   return ReceiptCard(
-                    receiptItem: _receiptList[index],
+                    receiptItem: _userRepository.receiptRepository.cachedReceiptItems[index],
                     actions: actions,
                   );
                 })
@@ -231,41 +242,66 @@ class _EditReportScreenState extends State<EditReportScreen> {
     });
   }
 
+  Future<void> saveReport(Report report) async{
+    await _userRepository.reportRepository.updateReport(report, true);
+//    await _userRepository.reportRepository.updateReport(report, true);
+    setState(() {
+
+    });
+  }
+
+//  void _onReportSaved() {
+//    Report newReport = new Report();
+//    newReport.id = 0;
+//    newReport.userId = _userRepository.userId;
+//    newReport.statusId = 1;
+//    newReport.createDateTime = DateTime.now();
+//    newReport.updateDateTime = DateTime.now();
+//    newReport.reportName = _emailController.text;
+//    newReport.description = _passwordController.text;
+//    newReport.receiptIds = [];
+//    for (int i = 0; i < _userRepository.receiptRepository.cachedReceiptItems.length; i++) {
+//      newReport.receiptIds.add(_userRepository.receiptRepository.cachedReceiptItems[i].id);
+//    }
+//    addReport(newReport);
+//    print('Save ${_emailController.text} ${_passwordController.text} ${_userRepository.receiptRepository.cachedReceiptItems}');
+//    Navigator.pop(context);
+//  }
   void _onReportSaved() {
-    Report newReport = new Report();
-    newReport.id = 0;
-    newReport.userId = _userRepository.userId;
-    newReport.statusId = 1;
-    newReport.createDateTime = DateTime.now();
-    newReport.updateDateTime = DateTime.now();
-    newReport.reportName = _emailController.text;
-    newReport.description = _passwordController.text;
-    newReport.receiptIds = [];
+    _report.updateDateTime = DateTime.now();
+    _report.reportName = _emailController.text;
+    _report.description = _passwordController.text;
+    _report.receiptIds = [];
     for (int i = 0; i < _userRepository.receiptRepository.cachedReceiptItems.length; i++) {
-      newReport.receiptIds.add(_userRepository.receiptRepository.cachedReceiptItems[i].id);
+      _report.receiptIds.add(_userRepository.receiptRepository.cachedReceiptItems[i].id);
     }
-    addReport(newReport);
+    saveReport(_report);
     print('Save ${_emailController.text} ${_passwordController.text} ${_userRepository.receiptRepository.cachedReceiptItems}');
     Navigator.pop(context);
   }
 
   void _onReportSubmitted() {
-    Report newReport = new Report();
-    newReport.id = 0;
-    newReport.userId = _userRepository.userId;
-    newReport.statusId = 2;
-    newReport.createDateTime = DateTime.now();
-    newReport.updateDateTime = DateTime.now();
-    newReport.reportName = _emailController.text;
-    newReport.description = _passwordController.text;
-    newReport.receiptIds = [];
-    for (int i = 0; i < _userRepository.receiptRepository.cachedReceiptItems.length; i++) {
-      newReport.receiptIds.add(_userRepository.receiptRepository.cachedReceiptItems[i].id);
-    }
-    addReport(newReport);
-    print('Submit ${_emailController.text} ${_passwordController.text} ${_userRepository.receiptRepository.cachedReceiptItems}');
-    Navigator.pop(context);
+    _report.statusId = 2;
+    _onReportSaved();
   }
+
+//  void _onReportSubmitted() {
+//    Report newReport = new Report();
+//    newReport.id = 0;
+//    newReport.userId = _userRepository.userId;
+//    newReport.statusId = 2;
+//    newReport.createDateTime = DateTime.now();
+//    newReport.updateDateTime = DateTime.now();
+//    newReport.reportName = _emailController.text;
+//    newReport.description = _passwordController.text;
+//    newReport.receiptIds = [];
+//    for (int i = 0; i < _userRepository.receiptRepository.cachedReceiptItems.length; i++) {
+//      newReport.receiptIds.add(_userRepository.receiptRepository.cachedReceiptItems[i].id);
+//    }
+//    addReport(newReport);
+//    print('Submit ${_emailController.text} ${_passwordController.text} ${_userRepository.receiptRepository.cachedReceiptItems}');
+//    Navigator.pop(context);
+//  }
 
   void _onAddReceipts() {
       Navigator.of(context).push(
