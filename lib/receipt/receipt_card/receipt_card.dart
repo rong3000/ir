@@ -64,6 +64,12 @@ class _ReceiptCardState extends State<ReceiptCard> {
         return null;
     }
 
+    BoxDecoration myBoxDecoration() {
+      return BoxDecoration(
+        border: Border.all(),
+      );
+    }
+
     return Card(
       clipBehavior: Clip.antiAlias,
       child: Row(
@@ -74,14 +80,17 @@ class _ReceiptCardState extends State<ReceiptCard> {
           Expanded(
         flex: 1,
             child: SizedBox(
+
               height: MediaQuery.of(context).size.height * 0.16,
 //          width: MediaQuery.of(context).size.width * 0.1,
               child: getImage(widget._receiptItem.imagePath),
             ),
           ),
           Expanded(
+
             flex: 2,
             child: Column(
+
               children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
@@ -89,30 +98,35 @@ class _ReceiptCardState extends State<ReceiptCard> {
                     softWrap: false,
                     overflow: TextOverflow.ellipsis,
                     style: dateStyle,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 0.0),
-                          child: Text(
-                            "Receipt Date ${DateFormat().add_yMd().format(widget._receiptItem.receiptDatetime.toLocal())}",
-                            style: dateStyle
-                                .copyWith(color: Colors.black54)
-                                .apply(fontSizeFactor: 0.75),
+                    child: Container(
+                      height: MediaQuery.of(context).size.height * 0.16,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.max,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 0.0),
+                            child: Text(
+                              "Receipt Date ${DateFormat().add_yMd().format(widget._receiptItem.receiptDatetime.toLocal())}",
+                              style: dateStyle
+                                  .copyWith(color: Colors.black54)
+                                  .apply(fontSizeFactor: 0.75),
+                            ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 0.0, bottom: 0.0),
-                          child: Text(
-                            '${widget._receiptItem.companyName}',
-                            style: companyNameStyle,
+                          Padding(
+                            padding: const EdgeInsets.only(top: 0.0, bottom: 0.0),
+                            child: Text(
+                              '${widget._receiptItem.companyName}',
+                              style: companyNameStyle,
+                            ),
                           ),
-                        ),
-                        Text(
-                          'Total ${widget._receiptItem.totalAmount}',
-                          style: amountStyle,
-                        ),
-                      ],
+                          Text(
+                            'Total ${widget._receiptItem.totalAmount}',
+                            style: amountStyle,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -121,51 +135,61 @@ class _ReceiptCardState extends State<ReceiptCard> {
           ),
           Expanded(
             flex: 2,
-            child: Column(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
-                  child: DefaultTextStyle(
-                    softWrap: false,
-                    overflow: TextOverflow.ellipsis,
-                    style: dateStyle,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        // three line description
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 0.0),
-                          child: Text(
-                            "Uploaded ${DateFormat().add_yMd().format(widget._receiptItem.uploadDatetime.toLocal())}",
-                            style: dateStyle
-                                .copyWith(color: Colors.black54)
-                                .apply(fontSizeFactor: 0.75),
-                          ),
+            child: Container(
+              height: MediaQuery.of(context).size.height * 0.16,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.max,
+                children: <Widget>[
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+                      child: DefaultTextStyle(
+                        softWrap: false,
+                        overflow: TextOverflow.ellipsis,
+                        style: dateStyle,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.max,
+                          children: <Widget>[
+                            // three line description
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 0.0),
+                              child: Text(
+                                "Uploaded ${DateFormat().add_yMd().format(widget._receiptItem.uploadDatetime.toLocal())}",
+                                style: dateStyle
+                                    .copyWith(color: Colors.black54)
+                                    .apply(fontSizeFactor: 0.75),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 0.0, bottom: 0.0),
+                              child: Text(
+                                CategoryName.values[widget._receiptItem.categoryId]
+                                    .toString()
+                                    .split('.')[1],
+                                style: companyNameStyle,
+                              ),
+                            ),
+                          ],
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 0.0, bottom: 0.0),
-                          child: Text(
-                            CategoryName.values[widget._receiptItem.categoryId]
-                                .toString()
-                                .split('.')[1],
-                            style: companyNameStyle,
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                   ),
-                ),
-                ButtonTheme.bar(
-                  child: ButtonBar(
-                    mainAxisSize: MainAxisSize.min,
-                    children:
-                    widget.actions.map<Widget>(
-                      (ActionWithLable action) =>
-                      _actionButton(context, action)
-                    ).toList(),
+                  ButtonTheme.bar(
+                    child: ButtonBar(
+                      mainAxisSize: MainAxisSize.min,
+                      children:
+                      widget.actions.map<Widget>(
+                              (ActionWithLable action) =>
+                              _actionButton(context, action)
+                      ).toList(),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ],

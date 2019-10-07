@@ -72,43 +72,48 @@ class _ReportCardState extends State<ReportCard> {
         children: <Widget>[
           Expanded(
             flex: 2,
-            child: Column(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
-                  child: DefaultTextStyle(
-                    softWrap: false,
-                    overflow: TextOverflow.ellipsis,
-                    style: dateStyle,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 0.0),
-                          child: Text(
-                            "Update Time ${DateFormat().add_yMd().format(widget._reportItem.updateDateTime.toLocal())}",
-                            style: dateStyle
-                                .copyWith(color: Colors.black54)
-                                .apply(fontSizeFactor: 0.75),
+            child: SizedBox(
+              height: MediaQuery.of(context).size.height * 0.16,
+//          width: MediaQuery.of(context).size.width * 0.1,
+              child: Column(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+                    child: DefaultTextStyle(
+                      softWrap: false,
+                      overflow: TextOverflow.ellipsis,
+                      style: dateStyle,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 0.0),
+                            child: Text(
+                              "Update Time ${DateFormat().add_yMd().format(widget._reportItem.updateDateTime.toLocal())}",
+                              style: dateStyle
+                                  .copyWith(color: Colors.black54)
+                                  .apply(fontSizeFactor: 0.75),
+                            ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 0.0, bottom: 0.0),
-                          child: Text(
-                            '${widget._reportItem.reportName}',
-                            style: companyNameStyle,
+                          Padding(
+                            padding: const EdgeInsets.only(top: 0.0, bottom: 0.0),
+                            child: Text(
+                              '${widget._reportItem.reportName}',
+                              style: companyNameStyle,
+                            ),
                           ),
-                        ),
-                        Text(
-                          '${widget._reportItem.description}',
-                          style: amountStyle,
-                        ),
-                      ],
+                          Text(
+                            '${widget._reportItem.description}',
+                            style: amountStyle,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
+
           ),
           Expanded(
             flex: 2,
