@@ -23,6 +23,16 @@ class ReceiptRepository {
     cachedReceiptItems = [];
     candidateReceiptItems = [];
     candidateReceiptItems = getReceiptItems(ReceiptStatusType.Reviewed);
+    var _receiptsInReportSet = new Set<ReceiptListItem>();
+    var _candidateReceiptsSet = new Set<ReceiptListItem>();
+
+    for (var i = 0; i < _userRepository.reportRepository.reports.length; i++ ) {
+      _receiptsInReportSet.addAll(_userRepository.reportRepository.reports[i].getReceiptList(this));
+    }
+
+    _candidateReceiptsSet.addAll(candidateReceiptItems);
+
+    candidateReceiptItems = _candidateReceiptsSet.difference(_receiptsInReportSet).toList();
   }
 
   List<ReceiptListItem> removeCandidateItems(int id) {

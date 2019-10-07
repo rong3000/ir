@@ -43,6 +43,7 @@ class _EditReportScreenState extends State<EditReportScreen> {
 
   var items = List<Currency>();
   String _reportName;
+  String _reportDescription;
   Report _report;
   List<ReceiptListItem> _receiptList;
   double _totalAmount;
@@ -53,7 +54,9 @@ class _EditReportScreenState extends State<EditReportScreen> {
     items.addAll(duplicateItems);
     super.initState();
     _reportName = _userRepository.reportRepository.getReport(widget._reportId).reportName;
+    _reportDescription = _userRepository.reportRepository.getReport(widget._reportId).description;
     _emailController.text = _reportName;
+    _passwordController.text = _reportDescription;
 //    _receiptList = _userRepository.reportRepository.getReport(widget._reportId).getReceiptList(_userRepository.receiptRepository);
 //    _totalAmount = _userRepository.reportRepository.getReport(widget._reportId).getTotalAmount(_userRepository.receiptRepository);
     _report = _userRepository.reportRepository.getReport(widget._reportId);
@@ -62,15 +65,24 @@ class _EditReportScreenState extends State<EditReportScreen> {
     print('${_report} ${_receiptList} ${_totalAmount}');
     _userRepository.receiptRepository.cachedReceiptItems = _receiptList;
     List<int> _receiptIds = [];
-    for (var i = 0; i < _userRepository.reportRepository.reports.length; i++ ) {
-      _receiptIds.addAll(_userRepository.reportRepository.reports[i].receiptIds);
-    }
 
-    for (var i = 0; i< _userRepository.receiptRepository.candidateReceiptItems.length; i++){
-      if (_receiptIds.contains(_userRepository.receiptRepository.candidateReceiptItems[i].id)) {
-      _userRepository.receiptRepository.candidateReceiptItems.removeAt(i);
-      }
-    }
+    //get rid of duplicated items and set candidate
+//    var _receiptsInReportSet = new Set();
+//    var _candidateReceiptsSet = new Set();
+//
+//    for (var i = 0; i < _userRepository.reportRepository.reports.length; i++ ) {
+//      _receiptsInReportSet.addAll(_userRepository.reportRepository.reports[i].receiptIds);
+//    }
+//
+//    _candidateReceiptsSet.addAll(_userRepository.receiptRepository.candidateReceiptItems);
+//
+//    _userRepository.receiptRepository.candidateReceiptItems = _candidateReceiptsSet.difference(_receiptsInReportSet).toList();
+
+//    for (var i = 0; i< _userRepository.receiptRepository.candidateReceiptItems.length; i++){
+//      if (_receiptIds.contains(_userRepository.receiptRepository.candidateReceiptItems[i].id)) {
+//      _userRepository.receiptRepository.candidateReceiptItems.removeAt(i);
+//      }
+//    }
   }
 
   void filterSearchResults(String query) {
@@ -214,7 +226,7 @@ class _EditReportScreenState extends State<EditReportScreen> {
                     ReportButton(
                       onPressed:
                       isLoginButtonEnabled() ? _onReportSubmitted : null,
-                      buttonName: 'Submit Report',
+                      buttonName: 'Save & Submit Report',
                     ),
                   ],
                 ),

@@ -190,7 +190,7 @@ class _AddReportScreenState extends State<AddReportScreen> {
                     ReportButton(
                       onPressed:
                       isLoginButtonEnabled() ? _onReportSubmitted : null,
-                      buttonName: 'Submit Report',
+                      buttonName: 'Save & Submit Report',
                     ),
                   ],
                 ),
