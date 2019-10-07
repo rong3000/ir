@@ -3,6 +3,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intelligent_receipt/authentication_bloc/bloc.dart';
 import 'package:intelligent_receipt/main_screen/main_screen.dart';
+import 'package:intelligent_receipt/receipt/bloc/receipt_bloc.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 import 'package:intelligent_receipt/splash_screen.dart';
 import 'package:intelligent_receipt/simple_bloc_delegate.dart';
@@ -11,9 +12,17 @@ void main() {
   BlocSupervisor.delegate = SimpleBlocDelegate();
   final UserRepository userRepository = UserRepository();
   runApp(
-    BlocProvider(
-      builder: (context) => AuthenticationBloc(userRepository: userRepository)
-        ..dispatch(AppStarted()),
+    MultiBlocProvider(
+      providers: [
+        BlocProvider<AuthenticationBloc>(
+          builder: (context) =>
+              AuthenticationBloc(userRepository: userRepository)
+                ..dispatch(AppStarted()),
+        ),
+        BlocProvider<ReceiptBloc>(
+          builder: (context) => ReceiptBloc(receiptRepository: userRepository.receiptRepository),
+        )
+      ],
       child: App(userRepository: userRepository),
     ),
   );

@@ -181,6 +181,16 @@ class ReceiptRepository {
 
     return result;
   }
+  
+  Future<DataResult> addReceipts(Receipt[] receipts) async {
+    DataResult result =
+        await webservicePost(Urls.AddReceipts, "", jsonEncode(receipts));
+    if (result.success) {
+      result.obj = Receipt.fromJason(result.obj);
+    }
+
+    return result;
+  }
 
   Future<DataResult> uploadReceiptImage(File imageFile) async {
     if ((_userRepository == null) || (_userRepository.userId <= 0)) {
