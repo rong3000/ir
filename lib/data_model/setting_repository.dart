@@ -30,13 +30,7 @@ class SettingRepository {
   Currency getDefaultCurrency() {
     String currencyId = _getSettingValue(Setting_DefaultCurrency);
     var currId = int.tryParse(currencyId);
-    // Default currency if found, otherwise first currency in list or default to AUD if none loaded
-    // TODO: this should not be here long term - need to trigger a reload from server and listen to resp
-    // as a stream
-    var aud = Currency();
-    aud.code = 'AUD';
-    aud.symbol = '\$';
-    return currId == null ?  _currencies.length > 0 ? _currencies[0] : aud : _getCurrencyById(currId);
+    return  _getCurrencyById(currId);
   }
 
   Future<DataResult> setDefaultCurrency(int currencyId) {

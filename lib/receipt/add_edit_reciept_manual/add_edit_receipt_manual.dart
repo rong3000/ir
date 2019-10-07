@@ -49,12 +49,23 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
       receipt.warrantyPeriod = 0;
       receipt.gstInclusive = true;
     }
+    defaultCurrency = Currency();
+    defaultCurrency.code = 'AUD';
   }
 
   @override
   void initState() {
     _userRepository = RepositoryProvider.of<UserRepository>(context);
-    defaultCurrency = _userRepository.settingRepository.getDefaultCurrency();
+    defaultCurrency = _userRepository.settingRepository.getDefaultCurrency() ?? defaultCurrency;
+    currenciesList = _userRepository.settingRepository.getCurrencies();
+
+    if (currenciesList.length == 0){
+    _userRepository.settingRepository.getCurrenciesFromServer().then((value) {
+      this.setState(() {
+        currenciesList = _userRepository.settingRepository.getCurrencies();
+      });
+     });
+    }
     super.initState();
   }
 
@@ -78,17 +89,15 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
 
   List<DropdownMenuItem<String>> _getCurrencyCodesList() {
     var list = List<DropdownMenuItem<String>>();
-    currenciesList = _userRepository.settingRepository.getCurrencies();
 
     //Handle none returned
-    if (currenciesList.length == 0) {
-      currenciesList.add(defaultCurrency);
+    if (currenciesList.length > 0) {
+      for (var currency in currenciesList) {
+        list.add(DropdownMenuItem<String>(
+            value: currency.code, child: Text(currency.code)));
+      }
     }
 
-    for (var currency in currenciesList) {
-      list.add(DropdownMenuItem<String>(
-          value: currency.code, child: Text(currency.code)));
-    }
     return list;
   }
 
