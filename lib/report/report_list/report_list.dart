@@ -546,6 +546,7 @@ class ReportListState extends State<ReportList> {
                           itemBuilder: (context, index) {
                             return ReportCard(
                               reportItem: sortedReportItems[index],
+                              userRepository: _userRepository,
                               actions: actions,
                             );
                           });

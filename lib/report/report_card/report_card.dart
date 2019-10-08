@@ -3,17 +3,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intelligent_receipt/data_model/report.dart';
 import 'package:intelligent_receipt/report/report_list/report_list.dart';
+import 'package:intelligent_receipt/user_repository.dart';
 import 'package:intl/intl.dart';
 
 import '../../data_model/enums.dart';
 import '../../data_model/webservice.dart';
 
 class ReportCard extends StatefulWidget {
+  final UserRepository _userRepository;
+
   const ReportCard({
     Key key,
     @required Report reportItem,
+    @required UserRepository userRepository,
     this.actions,
-  })  : assert(reportItem != null),
+  })  : assert(reportItem != null && userRepository != null),
+        _userRepository = userRepository,
         _reportItem = reportItem,
         super(key: key);
 
@@ -32,6 +37,8 @@ class _ReportCardState extends State<ReportCard> {
       errorWidget: (context, url, error) => new Icon(Icons.error),
     );
   }
+
+  UserRepository get _userRepository => widget._userRepository;
 
   @override
   Widget build(BuildContext context) {
@@ -63,6 +70,12 @@ class _ReportCardState extends State<ReportCard> {
         return null;
     }
 
+    BoxDecoration myBoxDecoration() {
+      return BoxDecoration(
+        border: Border.all(),
+      );
+    }
+
     return Card(
       clipBehavior: Clip.antiAlias,
       child: Row(
@@ -72,13 +85,16 @@ class _ReportCardState extends State<ReportCard> {
         children: <Widget>[
           Expanded(
             flex: 2,
-            child: SizedBox(
+            child: Container(
+//              decoration: myBoxDecoration(),
               height: MediaQuery.of(context).size.height * 0.16,
-//          width: MediaQuery.of(context).size.width * 0.1,
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+                    padding: const EdgeInsets.fromLTRB(20.0, 8.0, 0.0, 0.0),
                     child: DefaultTextStyle(
                       softWrap: false,
                       overflow: TextOverflow.ellipsis,
@@ -87,9 +103,9 @@ class _ReportCardState extends State<ReportCard> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Padding(
-                            padding: const EdgeInsets.only(bottom: 0.0),
+                            padding: const EdgeInsets.only(bottom: 22.0),
                             child: Text(
-                              "Update Time ${DateFormat().add_yMd().format(widget._reportItem.updateDateTime.toLocal())}",
+                              '${widget._reportItem.reportName}',
                               style: dateStyle
                                   .copyWith(color: Colors.black54)
                                   .apply(fontSizeFactor: 0.75),
@@ -98,14 +114,14 @@ class _ReportCardState extends State<ReportCard> {
                           Padding(
                             padding: const EdgeInsets.only(top: 0.0, bottom: 0.0),
                             child: Text(
-                              '${widget._reportItem.reportName}',
+                              'Total: ${widget._reportItem.getTotalAmount(_userRepository.receiptRepository)}',
                               style: companyNameStyle,
                             ),
                           ),
-                          Text(
-                            '${widget._reportItem.description}',
-                            style: amountStyle,
-                          ),
+//                            Text(
+//                              '${widget._reportItem.description}',
+//                              style: amountStyle,
+//                            ),
                         ],
                       ),
                     ),
@@ -117,42 +133,60 @@ class _ReportCardState extends State<ReportCard> {
           ),
           Expanded(
             flex: 2,
-            child: Column(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
-                  child: DefaultTextStyle(
-                    softWrap: false,
-                    overflow: TextOverflow.ellipsis,
-                    style: dateStyle,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        // three line description
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 0.0),
-                          child: Text(
-                            "Created ${DateFormat().add_yMd().format(widget._reportItem.createDateTime.toLocal())}",
-                            style: dateStyle
-                                .copyWith(color: Colors.black54)
-                                .apply(fontSizeFactor: 0.75),
-                          ),
+            child: Container(
+//              decoration: myBoxDecoration(),
+              height: MediaQuery.of(context).size.height * 0.16,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.max,
+                children: <Widget>[
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 10.0),
+                      child: DefaultTextStyle(
+                        softWrap: false,
+                        overflow: TextOverflow.ellipsis,
+                        style: dateStyle,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.max,
+                          children: <Widget>[
+                            // three line description
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 0.0),
+                              child: Text(
+                                "Created ${DateFormat().add_yMd().format(widget._reportItem.createDateTime.toLocal())}",
+                                style: dateStyle
+                                    .copyWith(color: Colors.black54)
+                                    .apply(fontSizeFactor: 0.75),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 0.0, bottom: 0.0),
+                              child: Text(
+                                '${widget._reportItem.receiptIds.length} Expenses',
+                                style: companyNameStyle,
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
                   ),
-                ),
-                ButtonTheme.bar(
-                  child: ButtonBar(
-                    mainAxisSize: MainAxisSize.min,
-                    children:
-                    widget.actions.map<Widget>(
-                      (ActionWithLable action) =>
-                      _actionButton(context, action)
-                    ).toList(),
+                  ButtonTheme.bar(
+                    child: ButtonBar(
+                      mainAxisSize: MainAxisSize.min,
+                      children:
+                      widget.actions.map<Widget>(
+                              (ActionWithLable action) =>
+                              _actionButton(context, action)
+                      ).toList(),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ],

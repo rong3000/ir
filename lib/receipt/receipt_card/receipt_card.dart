@@ -81,12 +81,14 @@ class _ReceiptCardState extends State<ReceiptCard> {
         flex: 1,
             child: SizedBox(
 
+
               height: MediaQuery.of(context).size.height * 0.16,
 //          width: MediaQuery.of(context).size.width * 0.1,
               child: getImage(widget._receiptItem.imagePath),
             ),
           ),
           Expanded(
+
 
             flex: 2,
             child: Column(
@@ -144,7 +146,7 @@ class _ReceiptCardState extends State<ReceiptCard> {
                 children: <Widget>[
                   Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+                      padding: const EdgeInsets.fromLTRB(0.0, 4.0, 0.0, 2.0),
                       child: DefaultTextStyle(
                         softWrap: false,
                         overflow: TextOverflow.ellipsis,
