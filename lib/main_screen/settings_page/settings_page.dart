@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intelligent_receipt/data_model/data_result.dart';
 import 'package:intelligent_receipt/data_model/setting_repository.dart';
 import 'package:intelligent_receipt/main_screen/settings_page/category_screen/category_screen.dart';
+import 'package:intelligent_receipt/main_screen/settings_page/contact_screen/contact.dart';
 import 'package:intelligent_receipt/main_screen/settings_page/currency_screen/currency_screen.dart';
 
 import '../../user_repository.dart';
@@ -192,7 +193,7 @@ class _SettingsPageState extends State<SettingsPage> {
 //                    color: Colors.orange,
 //                    padding: EdgeInsets.all(10.0),
                     child: Row(
-                        // Replace with a Row for horizontal icon + text
+                      // Replace with a Row for horizontal icon + text
                         mainAxisAlignment: MainAxisAlignment.end,
                         mainAxisSize: MainAxisSize.max,
                         children: <Widget>[
@@ -217,6 +218,31 @@ class _SettingsPageState extends State<SettingsPage> {
 //                          Text("AUD A\$"),
 //                          Icon(Icons.more_horiz),
                         ]),
+                  ),
+                ),
+              ),
+            ),
+            GestureDetector(
+              onTap: () => {
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) {
+                    return TextFormFieldDemo(
+//                              userRepository: _userRepository,
+//                              title: 'Contact Us',
+//                              defaultCurrency: _currency
+                    );
+                  }),
+                )
+              },
+              child: Card(
+                child: ListTile(
+//                leading: Icon(Icons.album),
+                  title: AutoSizeText(
+                    'Contact Us',
+                    style: TextStyle(fontSize: 18),
+                    minFontSize: 8,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ),
