@@ -8,6 +8,7 @@ import 'package:intelligent_receipt/main_screen/bloc/bloc.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intelligent_receipt/receipt/edit_receipt/edit_receipt.dart';
 import 'package:intelligent_receipt/receipt/receipt_list/receipt_list.dart';
+import 'package:intelligent_receipt/receipt/upload_receipt_image/update_receipt_image.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 import 'package:intl/intl.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -122,6 +123,39 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+
+        children: <Widget>[
+          FloatingActionButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => UploadReceiptImage(userRepository: _userRepository, imageSource: IRImageSource.Gallary)),
+              );
+            },
+            backgroundColor: Colors.redAccent,
+            child: const Icon(
+              Icons.add,
+              semanticLabel: 'Add Expense Manually',
+            ),
+          ),
+          FloatingActionButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => UploadReceiptImage(userRepository: _userRepository, imageSource: IRImageSource.Gallary)),
+              );
+            },
+            backgroundColor: Colors.redAccent,
+            child: const Icon(
+              Icons.camera,
+              semanticLabel: 'Snap Receipt',
+            ),
+          ),
+        ],
+      ),
       body: Center(
         child: BlocBuilder(
             bloc: _homeBloc,
