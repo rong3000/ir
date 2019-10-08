@@ -46,7 +46,9 @@ class _EditReportScreenState extends State<EditReportScreen> {
   String _reportDescription;
   Report _report;
   List<ReceiptListItem> _receiptList;
-  double _totalAmount;
+  String _totalAmount;
+  Currency _currency;
+
 
   @override
   void initState() {
@@ -61,10 +63,11 @@ class _EditReportScreenState extends State<EditReportScreen> {
 //    _totalAmount = _userRepository.reportRepository.getReport(widget._reportId).getTotalAmount(_userRepository.receiptRepository);
     _report = _userRepository.reportRepository.getReport(widget._reportId);
     _receiptList = _report.getReceiptList(_userRepository.receiptRepository);
-    _totalAmount = _report.getTotalAmount(_userRepository.receiptRepository);
+    _totalAmount = _report.getTotalAmount(_userRepository.receiptRepository).toStringAsFixed(2);
     print('${_report} ${_receiptList} ${_totalAmount}');
     _userRepository.receiptRepository.cachedReceiptItems = _receiptList;
     List<int> _receiptIds = [];
+
 
     //get rid of duplicated items and set candidate
 //    var _receiptsInReportSet = new Set();
@@ -183,7 +186,39 @@ class _EditReportScreenState extends State<EditReportScreen> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
-                          Text("Total:"),
+                          FutureBuilder<DataResult>(
+                              future: _userRepository.settingRepository
+                                  .getCurrenciesFromServer(),
+                              builder: (BuildContext context,
+                                  AsyncSnapshot<DataResult> snapshot) {
+                                switch (snapshot.connectionState) {
+                                  case ConnectionState.none:
+                                    return new Text('Loading...');
+                                  case ConnectionState.waiting:
+                                    return new Center(
+                                        child: new CircularProgressIndicator());
+                                  case ConnectionState.active:
+                                    return new Text('');
+                                  case ConnectionState.done:
+                                    {
+                                      _currency = _userRepository
+                                          .settingRepository
+                                          .getDefaultCurrency();
+                                      double _tempAmount = 0;
+                                      for (var i = 0; i < _userRepository.receiptRepository.cachedReceiptItems.length; i++) {
+                                      _tempAmount += _userRepository.receiptRepository.cachedReceiptItems[i]?.totalAmount;}
+                                      _totalAmount = _tempAmount.toStringAsFixed(2);
+                                      return Expanded(
+                                        child: Text("Total: ${_currency.symbol} ${_totalAmount}"),
+//                                        children: <Widget>[//
+////                                          Text("${_currency.name} "),
+////                                          Text("${_currency.symbol}"),
+//                                        ],
+                                      );
+                                    }
+                                }
+                              }),
+
                           ReportButton(
                             onPressed: _onAddReceipts,
                             buttonName: 'Add Receipts',
