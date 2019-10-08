@@ -35,6 +35,13 @@ class MainScreenState extends State<MainScreen> {
   UserRepository get _userRepository => widget._userRepository;
   get name => widget.name;
 
+  void jumpTo(int i) {
+    _controller.jumpToPage(i);
+    setState(() {
+      _currentIndex = i;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider<HomeBloc>(
@@ -51,7 +58,7 @@ class MainScreenState extends State<MainScreen> {
             });
           },
           children: <Widget>[
-            HomePage(userRepository: _userRepository),
+            HomePage(userRepository: _userRepository, action: jumpTo,),
             ReceiptsPage(userRepository: _userRepository),
             ReportsPage(userRepository: _userRepository),
             SettingsPage(userRepository: _userRepository, name: name),

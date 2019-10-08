@@ -23,23 +23,23 @@ class _SearchBarState extends State<SearchBar> {
     return Container(
       child: Row(children: <Widget>[
         Text(name),
-        Expanded(
-          flex: 1,
-          child: TextField(
-            controller: _controller,
-            decoration: new InputDecoration(
-              hintText: 'Start search',
-              icon: Icon(Icons.search),
-            ),
-          ),
-        ),
-        RaisedButton(
-          onPressed: () {
-            print(_controller.text);
-          },
-          child: Text('Search'),
-
-        ),
+//        Expanded(
+//          flex: 1,
+//          child: TextField(
+//            controller: _controller,
+//            decoration: new InputDecoration(
+//              hintText: 'Start search',
+//              icon: Icon(Icons.search),
+//            ),
+//          ),
+//        ),
+//        RaisedButton(
+//          onPressed: () {
+//            print(_controller.text);
+//          },
+//          child: Text('Search'),
+//
+//        ),
       ],
       ),
     );
