@@ -87,7 +87,7 @@ class _ReportCardState extends State<ReportCard> {
             flex: 2,
             child: Container(
 //              decoration: myBoxDecoration(),
-              height: MediaQuery.of(context).size.height * 0.16,
+              height: MediaQuery.of(context).size.height * 0.12,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -103,7 +103,7 @@ class _ReportCardState extends State<ReportCard> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Padding(
-                            padding: const EdgeInsets.only(bottom: 22.0),
+                            padding: const EdgeInsets.only(bottom: 10.0),
                             child: Text(
                               '${widget._reportItem.reportName}',
                               style: dateStyle
@@ -115,7 +115,8 @@ class _ReportCardState extends State<ReportCard> {
                             padding: const EdgeInsets.only(top: 0.0, bottom: 0.0),
                             child: Text(
                               'Total: ${widget._reportItem.getTotalAmount(_userRepository.receiptRepository)}',
-                              style: companyNameStyle,
+                              style: companyNameStyle.apply(fontSizeFactor: 1.2),
+
                             ),
                           ),
 //                            Text(
@@ -135,7 +136,7 @@ class _ReportCardState extends State<ReportCard> {
             flex: 2,
             child: Container(
 //              decoration: myBoxDecoration(),
-              height: MediaQuery.of(context).size.height * 0.16,
+              height: MediaQuery.of(context).size.height * 0.12,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -143,7 +144,7 @@ class _ReportCardState extends State<ReportCard> {
                 children: <Widget>[
                   Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 10.0),
+                      padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 0.0),
                       child: DefaultTextStyle(
                         softWrap: false,
                         overflow: TextOverflow.ellipsis,
@@ -167,7 +168,7 @@ class _ReportCardState extends State<ReportCard> {
                               padding: const EdgeInsets.only(top: 0.0, bottom: 0.0),
                               child: Text(
                                 '${widget._reportItem.receiptIds.length} Expenses',
-                                style: companyNameStyle,
+                                style: companyNameStyle.apply(fontSizeFactor: 1.2),
                               ),
                             ),
                           ],
