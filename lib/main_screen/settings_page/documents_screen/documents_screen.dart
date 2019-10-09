@@ -6,21 +6,20 @@ import 'package:intelligent_receipt/receipt/upload_receipt_image/update_receipt_
 import 'package:intelligent_receipt/user_repository.dart';
 import 'package:intelligent_receipt/data_model/enums.dart';
 
-import 'credit_card_page.dart';
 
-class PlanScreen extends StatefulWidget {
+class DocumentsScreen extends StatefulWidget {
   final UserRepository _userRepository;
 
-  PlanScreen({Key key, @required UserRepository userRepository})
+  DocumentsScreen({Key key, @required UserRepository userRepository})
       : assert(userRepository != null),
         _userRepository = userRepository,
         super(key: key) {}
 
   @override
-  _PlanScreenState createState() => _PlanScreenState();
+  _DocumentsScreenState createState() => _DocumentsScreenState();
 }
 
-class _PlanScreenState extends State<PlanScreen> {
+class _DocumentsScreenState extends State<DocumentsScreen> {
   UserRepository get _userRepository => widget._userRepository;
 
   @override
@@ -33,7 +32,7 @@ class _PlanScreenState extends State<PlanScreen> {
     final Orientation orientation = MediaQuery.of(context).orientation;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Plan Information'),
+        title: Text('Documents & Knowledge Center'),
       ),
       body: OrientationBuilder(builder: (context, orientation) {
         return Center(
@@ -45,7 +44,7 @@ class _PlanScreenState extends State<PlanScreen> {
                   children: <Widget>[
                     FractionallySizedBox(
                       widthFactor:
-                          orientation == Orientation.portrait ? 0.8 : 0.3,
+                      orientation == Orientation.portrait ? 0.8 : 0.3,
                       child: Container(
                         height: MediaQuery.of(context).size.height *
                             (orientation == Orientation.portrait ? 0.2 : 0.4),
@@ -56,7 +55,7 @@ class _PlanScreenState extends State<PlanScreen> {
                           child: Card(
                             child: ListTile(
                               title: Text(
-                                  'Your current plan is Free Trial, now you have only 3 snaps and 1 free report left.'),
+                                  'The process to handle Snapped receipts'),
                             ),
                           ),
                         ),
@@ -64,26 +63,18 @@ class _PlanScreenState extends State<PlanScreen> {
                     ),
                     FractionallySizedBox(
                       widthFactor:
-                          orientation == Orientation.portrait ? 0.8 : 0.3,
+                      orientation == Orientation.portrait ? 0.8 : 0.3,
                       child: Container(
                         height: MediaQuery.of(context).size.height *
-                            (orientation == Orientation.portrait ? 0.3 : 0.4),
-                        child: Card(
-                          child: ListTile(
-                            title: Text('Basic Plan'),
-                            subtitle: Text(
-                                'With our basic plan, you can snap maximum 10 receipts per month and generate 2 reports.'),
-                            trailing: RaisedButton(
-                              onPressed: () => {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(builder: (context) {
-                                    return CreditCardPage(
-//                                      userRepository: _userRepository,
-                                    );
-                                  }),
-                                )
-                              },
-                              child: Text('Upgrade Now'),
+                            (orientation == Orientation.portrait ? 0.2 : 0.4),
+                        child: GestureDetector(
+                          onTap: () {
+                            print('2');
+                          },
+                          child: Card(
+                            child: ListTile(
+                              title: Text(
+                                  'What you can do with submitted reports'),
                             ),
                           ),
                         ),
@@ -91,26 +82,18 @@ class _PlanScreenState extends State<PlanScreen> {
                     ),
                     FractionallySizedBox(
                       widthFactor:
-                          orientation == Orientation.portrait ? 0.8 : 0.3,
+                      orientation == Orientation.portrait ? 0.8 : 0.3,
                       child: Container(
                         height: MediaQuery.of(context).size.height *
-                            (orientation == Orientation.portrait ? 0.3 : 0.4),
-                        child: Card(
-                          child: ListTile(
-                            title: Text('Premium Plan'),
-                            subtitle: Text(
-                                'You will get unlimited snaps and reports.'),
-                            trailing: RaisedButton(
-                              onPressed: () => {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(builder: (context) {
-                                    return CreditCardPage(
-//                                      userRepository: _userRepository,
-                                    );
-                                  }),
-                                )
-                              },
-                              child: Text('Upgrade Now'),
+                            (orientation == Orientation.portrait ? 0.2 : 0.4),
+                        child: GestureDetector(
+                          onTap: () {
+                            print('3');
+                          },
+                          child: Card(
+                            child: ListTile(
+                              title: Text(
+                                  'Knowledge about creating IR reports'),
                             ),
                           ),
                         ),
