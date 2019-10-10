@@ -7,6 +7,8 @@ import 'package:intelligent_receipt/data_model/category.dart';
 import 'package:intelligent_receipt/data_model/currency.dart';
 import 'package:intelligent_receipt/data_model/receipt.dart';
 import 'package:intelligent_receipt/helper_widgets/date_time_picker.dart';
+import 'package:intelligent_receipt/receipt/bloc/receipt_bloc.dart';
+import 'package:intelligent_receipt/receipt/bloc/receipt_event.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 
 class AddEditReiptForm extends StatefulWidget {
@@ -38,6 +40,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
   Currency defaultCurrency;
   var currenciesList = List<Currency>();
   UserRepository _userRepository;
+  ReceiptBloc _receiptBloc;
 
   _AddEditReiptFormState(this.receipt) {
     isNew = this.receipt == null;
@@ -55,6 +58,8 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
 
   @override
   void initState() {
+    _receiptBloc = BlocProvider.of<ReceiptBloc>(context);
+    
     _userRepository = RepositoryProvider.of<UserRepository>(context);
     defaultCurrency = _userRepository.settingRepository.getDefaultCurrency() ?? defaultCurrency;
     currenciesList = _userRepository.settingRepository.getCurrencies();
@@ -77,7 +82,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
     if (this._formKey.currentState.validate()) {
       this._formKey.currentState.save();
     }
-    // TODO: Dispatch save action
+    _receiptBloc.dispatch(ReceiptUpload(receipt: this.receipt, image: this.receiptImage));
   }
 
   String textFieldValidator(value) {

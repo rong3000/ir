@@ -21,7 +21,12 @@ ReceiptListItem _$ReceiptListItemFromJson(Map<String, dynamic> json) {
         : DateTime.parse(json['receiptDatetime'] as String)
     ..totalAmount = (json['totalAmount'] as num)?.toDouble()
     ..companyName = json['companyName'] as String
-    ..imagePath = json['imagePath'] as String;
+    ..imagePath = json['imagePath'] as String
+    ..productName = json['productName'] as String
+    ..currencyCode = json['currencyCode'] as String
+    ..notes = json['notes'] as String
+    ..gstInclusive = json['gstInclusive'] as bool
+    ..warrantyPeriod = (json['warrantyPeriod'] as num)?.toDouble();
 }
 
 Map<String, dynamic> _$ReceiptListItemToJson(ReceiptListItem instance) =>
@@ -35,7 +40,12 @@ Map<String, dynamic> _$ReceiptListItemToJson(ReceiptListItem instance) =>
       'receiptDatetime': instance.receiptDatetime?.toIso8601String(),
       'totalAmount': instance.totalAmount,
       'companyName': instance.companyName,
-      'imagePath': instance.imagePath
+      'imagePath': instance.imagePath,
+      'productName': instance.productName,
+      'currencyCode': instance.currencyCode,
+      'notes': instance.notes,
+      'gstInclusive': instance.gstInclusive,
+      'warrantyPeriod': instance.warrantyPeriod
     };
 
 Receipt _$ReceiptFromJson(Map<String, dynamic> json) {
@@ -53,6 +63,11 @@ Receipt _$ReceiptFromJson(Map<String, dynamic> json) {
         : DateTime.parse(json['receiptDatetime'] as String)
     ..totalAmount = (json['totalAmount'] as num)?.toDouble()
     ..companyName = json['companyName'] as String
+    ..productName = json['productName'] as String
+    ..currencyCode = json['currencyCode'] as String
+    ..notes = json['notes'] as String
+    ..gstInclusive = json['gstInclusive'] as bool
+    ..warrantyPeriod = (json['warrantyPeriod'] as num)?.toDouble()
     ..decodeStatus = json['decodeStatus'] as int
     ..imagePath = json['imagePath'] as String
     ..extractedContent = json['extractedContent'] as String
@@ -79,6 +94,11 @@ Map<String, dynamic> _$ReceiptToJson(Receipt instance) => <String, dynamic>{
       'receiptDatetime': instance.receiptDatetime?.toIso8601String(),
       'totalAmount': instance.totalAmount,
       'companyName': instance.companyName,
+      'productName': instance.productName,
+      'currencyCode': instance.currencyCode,
+      'notes': instance.notes,
+      'gstInclusive': instance.gstInclusive,
+      'warrantyPeriod': instance.warrantyPeriod,
       'decodeStatus': instance.decodeStatus,
       'imagePath': instance.imagePath,
       'extractedContent': instance.extractedContent,

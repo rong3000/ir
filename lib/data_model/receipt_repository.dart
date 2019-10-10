@@ -182,7 +182,7 @@ class ReceiptRepository {
     return result;
   }
   
-  Future<DataResult> addReceipts(Receipt[] receipts) async {
+  Future<DataResult> addReceipts(List<Receipt> receipts) async {
     DataResult result =
         await webservicePost(Urls.AddReceipts, "", jsonEncode(receipts));
     if (result.success) {

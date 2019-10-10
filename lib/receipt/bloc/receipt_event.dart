@@ -9,12 +9,12 @@ abstract class ReceiptEvent extends Equatable {
   ReceiptEvent([List props = const []]) : super(props);
 }
 
-class ReceiptUploaded extends ReceiptEvent {
+class ReceiptUpload extends ReceiptEvent {
   Receipt receipt;
   File image;
 
-  ReceiptUploaded({@required this.receipt, @required this.image}) : super([receipt, image]);
+  ReceiptUpload({@required this.receipt, @required this.image}) : super([receipt, image]);
 
   @override
-  String toString() => 'ReceiptUploaded { receiptID :${receipt.id}'; 
+  String toString() => 'ReceiptUpload { receiptID :${receipt.id}'; 
 }
