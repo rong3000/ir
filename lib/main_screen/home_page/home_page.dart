@@ -10,8 +10,9 @@ import 'package:intelligent_receipt/data_model/enums.dart';
 
 class HomePage extends StatefulWidget {
   final UserRepository _userRepository;
+  final Function(int) action;
 
-  HomePage({Key key, @required UserRepository userRepository})
+  HomePage({Key key, @required UserRepository userRepository, this.action,})
       : assert(userRepository != null),
         _userRepository = userRepository,
         super(key: key) {}
@@ -80,7 +81,7 @@ class _HomePageState extends State<HomePage> {
                                     },
                                     child: Card(
                                       child: ListTile(
-                                        title: Text('Click to Add Your Receipt'),
+                                        title: Text('Add Your (First) Receipt'),
                                       ),
                                     ),
                                   ),
@@ -111,24 +112,34 @@ class _HomePageState extends State<HomePage> {
                                 widthFactor: orientation == Orientation.portrait ? 0.5: 0.25,
                                 child: Container(
                                   height: MediaQuery.of(context).size.height * (orientation == Orientation.portrait ? 0.2: 0.4),
-                                  child:
-                                  Card(
-                                    child: ListTile(
-                                      title: Text('View Imported Receipts'),
+                                  child:GestureDetector(
+                                    onTap: () {
+                                      widget.action(1);
+                                    },
+                                    child: Card(
+                                      child: ListTile(
+                                        title: Text('View Imported Receipts'),
+                                      ),
                                     ),
                                   ),
+
                                 ),
                               ),
                               FractionallySizedBox(
                                 widthFactor: orientation == Orientation.portrait ? 0.5: 0.25,
                                 child: Container(
                                   height: MediaQuery.of(context).size.height * (orientation == Orientation.portrait ? 0.2: 0.4),
-                                  child:
-                                  Card(
-                                    child: ListTile(
-                                      title: Text('Add Your (First) Receipt'),
+                                  child:GestureDetector(
+                                    onTap: () {
+                                      widget.action(2);
+                                    },
+                                    child: Card(
+                                      child: ListTile(
+                                        title: Text('View Reports'),
+                                      ),
                                     ),
                                   ),
+
                                 ),
                               ),
                             ],

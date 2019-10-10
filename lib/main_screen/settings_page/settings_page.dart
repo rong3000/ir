@@ -3,7 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:intelligent_receipt/data_model/data_result.dart';
 import 'package:intelligent_receipt/data_model/setting_repository.dart';
 import 'package:intelligent_receipt/main_screen/settings_page/category_screen/category_screen.dart';
+import 'package:intelligent_receipt/main_screen/settings_page/contact_screen/contact.dart';
 import 'package:intelligent_receipt/main_screen/settings_page/currency_screen/currency_screen.dart';
+import 'package:intelligent_receipt/main_screen/settings_page/documents_screen/documents_screen.dart';
+import 'package:intelligent_receipt/main_screen/settings_page/invite_screen/invite_screen.dart';
+import 'package:intelligent_receipt/main_screen/settings_page/plan_screen/plan_screen.dart';
 
 import '../../user_repository.dart';
 
@@ -45,8 +49,6 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-//    getDataResultFromServer();
-    if (_userRepository.receiptRepository.receipts.isNotEmpty) {
       return Scaffold(
         body: Column(
           children: <Widget>[
@@ -125,22 +127,40 @@ class _SettingsPageState extends State<SettingsPage> {
                                     return new Text('');
                                   case ConnectionState.done:
                                     {
-                                      _currency = _userRepository
-                                          .settingRepository
-                                          .getDefaultCurrency();
-                                      return Expanded(
-                                        child: AutoSizeText(
-                                          "${_currency.name} ${_currency.symbol}",
-                                          style: TextStyle(fontSize: 14),
-                                          minFontSize: 1,
-                                          maxLines: 3,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
+                                      return FutureBuilder<DataResult>(
+                                          future: _userRepository.settingRepository
+                                              .getCurrenciesFromServer(),
+                                          builder: (BuildContext context,
+                                              AsyncSnapshot<DataResult> snapshot) {
+                                            switch (snapshot.connectionState) {
+                                              case ConnectionState.none:
+                                                return new Text('Loading...');
+                                              case ConnectionState.waiting:
+                                                return new Center(
+                                                    child: new CircularProgressIndicator());
+                                              case ConnectionState.active:
+                                                return new Text('');
+                                              case ConnectionState.done:
+                                                {
+                                                  _currency = _userRepository
+                                                      .settingRepository
+                                                      .getDefaultCurrency();
+                                                  return Expanded(
+                                                    child: AutoSizeText(
+                                                      "${_currency.name} ${_currency.symbol}",
+                                                      style: TextStyle(fontSize: 14),
+                                                      minFontSize: 1,
+                                                      maxLines: 3,
+                                                      overflow: TextOverflow.ellipsis,
+                                                    ),
 //                                        children: <Widget>[//
 ////                                          Text("${_currency.name} "),
 ////                                          Text("${_currency.symbol}"),
 //                                        ],
-                                      );
+                                                  );
+                                                }
+                                            }
+                                          });
                                     }
                                 }
                               }),
@@ -176,7 +196,7 @@ class _SettingsPageState extends State<SettingsPage> {
 //                    color: Colors.orange,
 //                    padding: EdgeInsets.all(10.0),
                     child: Row(
-                        // Replace with a Row for horizontal icon + text
+                      // Replace with a Row for horizontal icon + text
                         mainAxisAlignment: MainAxisAlignment.end,
                         mainAxisSize: MainAxisSize.max,
                         children: <Widget>[
@@ -205,12 +225,101 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
               ),
             ),
+            GestureDetector(
+              onTap: () => {
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) {
+                    return PlanScreen(
+                      userRepository: _userRepository,
+                    );
+                  }),
+                )
+              },
+              child: Card(
+                child: ListTile(
+//                leading: Icon(Icons.album),
+                  title: AutoSizeText(
+                    'Plan Information',
+                    style: TextStyle(fontSize: 18),
+                    minFontSize: 8,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ),
+            ),
+            GestureDetector(
+              onTap: () => {
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) {
+                    return DocumentsScreen(
+                      userRepository: _userRepository,
+                    );
+                  }),
+                )
+              },
+              child: Card(
+                child: ListTile(
+//                leading: Icon(Icons.album),
+                  title: AutoSizeText(
+                    'Documents & Knowledge Centre',
+                    style: TextStyle(fontSize: 18),
+                    minFontSize: 8,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ),
+            ),
+            GestureDetector(
+              onTap: () => {
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) {
+                    return InviteScreen(
+                    );
+                  }),
+                )
+              },
+              child: Card(
+                child: ListTile(
+//                leading: Icon(Icons.album),
+                  title: AutoSizeText(
+                    'Invite a friend',
+                    style: TextStyle(fontSize: 18),
+                    minFontSize: 8,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ),
+            ),
+            GestureDetector(
+              onTap: () => {
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) {
+                    return TextFormFieldDemo(
+//                              userRepository: _userRepository,
+//                              title: 'Contact Us',
+//                              defaultCurrency: _currency
+                    );
+                  }),
+                )
+              },
+              child: Card(
+                child: ListTile(
+//                leading: Icon(Icons.album),
+                  title: AutoSizeText(
+                    'Contact Us',
+                    style: TextStyle(fontSize: 18),
+                    minFontSize: 8,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       );
-    } else {
-      return Container();
-    }
-    //        if (dataResult.success) {
   }
 }
