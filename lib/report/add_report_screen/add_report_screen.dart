@@ -41,6 +41,8 @@ class _AddReportScreenState extends State<AddReportScreen> {
   }
 
   var items = List<Currency>();
+  String _totalAmount = '0';
+  Currency _currency;
 
   @override
   void initState() {
@@ -147,7 +149,38 @@ class _AddReportScreenState extends State<AddReportScreen> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
-                          Text("Total:"),
+                          FutureBuilder<DataResult>(
+                              future: _userRepository.settingRepository
+                                  .getCurrenciesFromServer(),
+                              builder: (BuildContext context,
+                                  AsyncSnapshot<DataResult> snapshot) {
+                                switch (snapshot.connectionState) {
+                                  case ConnectionState.none:
+                                    return new Text('Loading...');
+                                  case ConnectionState.waiting:
+                                    return new Center(
+                                        child: new CircularProgressIndicator());
+                                  case ConnectionState.active:
+                                    return new Text('');
+                                  case ConnectionState.done:
+                                    {
+                                      _currency = _userRepository
+                                          .settingRepository
+                                          .getDefaultCurrency();
+                                      double _tempAmount = 0;
+                                      for (var i = 0; i < _userRepository.receiptRepository.cachedReceiptItems.length; i++) {
+                                        _tempAmount += _userRepository.receiptRepository.cachedReceiptItems[i]?.totalAmount;}
+                                      _totalAmount = _tempAmount.toStringAsFixed(2);
+                                      return Expanded(
+                                        child: Text("Total: ${_currency.symbol} ${_totalAmount}"),
+//                                        children: <Widget>[//
+////                                          Text("${_currency.name} "),
+////                                          Text("${_currency.symbol}"),
+//                                        ],
+                                      );
+                                    }
+                                }
+                              }),
                           ReportButton(
                             onPressed: _onAddReceipts,
                             buttonName: 'Add Receipts',
