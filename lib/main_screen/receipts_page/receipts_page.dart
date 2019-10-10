@@ -6,6 +6,8 @@ import 'package:intelligent_receipt/data_model/enums.dart';
 import 'package:intelligent_receipt/data_model/receipt_repository.dart';
 import 'package:intelligent_receipt/main_screen/bloc/bloc.dart';
 import 'package:flutter/rendering.dart';
+import 'package:intelligent_receipt/main_screen/settings_page/plan_screen/plan_screen.dart';
+import 'package:intelligent_receipt/receipt/add_edit_reciept_manual/add_edit_receipt_manual.dart';
 import 'package:intelligent_receipt/receipt/edit_receipt/edit_receipt.dart';
 import 'package:intelligent_receipt/receipt/receipt_list/receipt_list.dart';
 import 'package:intelligent_receipt/receipt/upload_receipt_image/update_receipt_image.dart';
@@ -126,13 +128,16 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
       floatingActionButton: Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-
         children: <Widget>[
           FloatingActionButton(
+            heroTag: "btn1",
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => UploadReceiptImage(userRepository: _userRepository, imageSource: IRImageSource.Gallary)),
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) {
+                  return AddEditReiptForm(
+
+                  );
+                }),
               );
             },
             backgroundColor: Colors.redAccent,
@@ -142,6 +147,7 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
             ),
           ),
           FloatingActionButton(
+            heroTag: "btn2",
             onPressed: () {
               Navigator.push(
                 context,
