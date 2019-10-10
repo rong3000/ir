@@ -88,8 +88,7 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
 //    dataResult = await _userRepository.receiptRepository.getReceiptsFromServer(forceRefresh: true);
     dataResult = await _userRepository.receiptRepository
         .getReceiptsFromServer(forceRefresh: true);
-    setState(() {
-    });
+    setState(() {});
   }
 
   void reviewAction(int id) {
@@ -134,9 +133,7 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(builder: (context) {
-                  return AddEditReiptForm(
-
-                  );
+                  return AddEditReiptForm();
                 }),
               );
             },
@@ -151,7 +148,10 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => UploadReceiptImage(userRepository: _userRepository, imageSource: IRImageSource.Gallary)),
+                MaterialPageRoute(
+                    builder: (context) => UploadReceiptImage(
+                        userRepository: _userRepository,
+                        imageSource: IRImageSource.Gallary)),
               );
             },
             backgroundColor: Colors.redAccent,

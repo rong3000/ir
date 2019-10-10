@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:intelligent_receipt/data_model/data_result.dart';
 import 'package:intelligent_receipt/data_model/setting_repository.dart';
+import 'package:intelligent_receipt/main_screen/receipts_page/receipts_page.dart';
 import 'package:intelligent_receipt/main_screen/settings_page/category_screen/category_screen.dart';
 import 'package:intelligent_receipt/main_screen/settings_page/contact_screen/contact.dart';
 import 'package:intelligent_receipt/main_screen/settings_page/currency_screen/currency_screen.dart';
@@ -58,28 +59,33 @@ class _SettingsPageState extends State<SettingsPage> {
               child: ListTile(
                 leading: Icon(Icons.album),
                 title: AutoSizeText(
-                  '${widget.name}\'s Receipts',
+                  '${widget.name}\'s Setting',
                   style: TextStyle(fontSize: 18),
                   minFontSize: 8,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                trailing: SizedBox(
-                  width: 140,
-                  child: FlatButton(
-                    onPressed: () => {print('viewall')},
-//                    color: Colors.orange,
-//                    padding: EdgeInsets.all(10.0),
-                    child: Row(
-                        // Replace with a Row for horizontal icon + text
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        mainAxisSize: MainAxisSize.max,
-                        children: <Widget>[
-                          Text("View All"),
-                          Icon(Icons.more_horiz),
-                        ]),
-                  ),
-                ),
+//                trailing: SizedBox(
+//                  width: 140,
+//                  child: FlatButton(
+//                    onPressed: () {
+//                      Navigator.push(
+//                        context,
+//                        MaterialPageRoute(builder: (context) => ReceiptsPage(userRepository: _userRepository)),
+//                      );
+//                    },
+////                    color: Colors.orange,
+////                    padding: EdgeInsets.all(10.0),
+//                    child: Row(
+//                        // Replace with a Row for horizontal icon + text
+//                        mainAxisAlignment: MainAxisAlignment.end,
+//                        mainAxisSize: MainAxisSize.max,
+//                        children: <Widget>[
+//                          Text("View All"),
+//                          Icon(Icons.more_horiz),
+//                        ]),
+//                  ),
+//                ),
               ),
             ),
             Card(
