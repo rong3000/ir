@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -6,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intelligent_receipt/data_model/category.dart';
 import 'package:intelligent_receipt/data_model/currency.dart';
 import 'package:intelligent_receipt/data_model/receipt.dart';
+import 'package:intelligent_receipt/data_model/report_repository.dart';
 import 'package:intelligent_receipt/helper_widgets/date_time_picker.dart';
 import 'package:intelligent_receipt/receipt/bloc/receipt_bloc.dart';
 import 'package:intelligent_receipt/receipt/bloc/receipt_event.dart';
@@ -82,7 +84,15 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
     if (this._formKey.currentState.validate()) {
       this._formKey.currentState.save();
     }
-    _receiptBloc.dispatch(ReceiptUpload(receipt: this.receipt, image: this.receiptImage));
+    
+    var imageStream = this.receiptImage.readAsBytesSync();
+    this.receipt.image = base64Encode(imageStream);
+    this.receipt.userId = this._userRepository.userId;
+    this.receipt.imagePath = this.receiptImage.path;
+    this.receipt.statusId = ReceiptStatusType.Unknown.index;
+    this.receipt.receiptTypeId = 0; //what to set this to?
+    
+    _receiptBloc.dispatch(ManualReceiptUpload(receipt: this.receipt, image: this.receiptImage));
   }
 
   String textFieldValidator(value) {

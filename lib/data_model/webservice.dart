@@ -9,7 +9,7 @@ import 'message_code.dart';
 export 'data_result.dart';
 
 class Urls {
-  static String ServiceBaseUrl = "http://10.0.0.1:3001/";
+  static String ServiceBaseUrl = "http://10.0.2.2:3001/";
 
   // Receipt related APIs
   static String GetReceipts = ServiceBaseUrl + "Receipt/GetReceipts/";
@@ -18,7 +18,7 @@ class Urls {
   static String UploadReceiptImages = ServiceBaseUrl + "Receipt/UploadReceiptImages/1/";
   static String DeleteReceipts = ServiceBaseUrl + "Receipt/DeleteReceipts";
   static String GetImage = ServiceBaseUrl + "Receipt/GetImage";
-  static String AddReceipts = ServiceBaseUrl + "Receipt/AddReceipts/";
+  static String AddReceipts = ServiceBaseUrl + "Receipt/AddReceipts";
 
   // Category related APIs
   static String GetCategories = ServiceBaseUrl + "Settings/GetCategories/";

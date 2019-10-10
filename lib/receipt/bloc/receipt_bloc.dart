@@ -4,8 +4,7 @@ import 'package:intelligent_receipt/receipt/bloc/receipt_event.dart';
 import 'package:intelligent_receipt/receipt/bloc/receipt_state.dart';
 import 'package:meta/meta.dart';
 
-
-class ReceiptBloc extends Bloc<ReceiptEvent, ReceiptState>{
+class ReceiptBloc extends Bloc<ReceiptEvent, ReceiptState> {
   ReceiptRepository _receiptRepository;
 
   ReceiptBloc({
@@ -14,36 +13,24 @@ class ReceiptBloc extends Bloc<ReceiptEvent, ReceiptState>{
         _receiptRepository = receiptRepository;
 
   @override
-  ReceiptState get initialState => ReceiptState(uploadFail: false, uploadSuccess: false, uploadinProgress: false);
+  ReceiptState get initialState => ReceiptState(
+      uploadFail: false, uploadSuccess: false, uploadinProgress: false);
 
   @override
   Stream<ReceiptState> mapEventToState(ReceiptEvent event) async* {
-   
-    if (event is ReceiptUpload){
-     yield* _handleReceiptUpload(event);
+    if (event is ManualReceiptUpload) {
+      yield* _handleManualReceiptUpload(event);
     }
     // More cases here for different events
   }
 
-
-  Stream<ReceiptState> _handleReceiptUpload(ReceiptUpload event) async* {
+  Stream<ReceiptState> _handleManualReceiptUpload(ManualReceiptUpload event) async* {
     yield ReceiptState.uploading();
-    var imageResult = await _receiptRepository.uploadReceiptImage(event.image); // TODO - need new API for upload image only linked to existing receipt
-    if (imageResult.success){
-      var receiptResult = await _receiptRepository.updateReceipt(event.receipt);
-      //TODO: use data returned from image upload to merge with receipt data from form
-      // may need to update json mapping, DB, entities and DTO's for added fields
-      if (receiptResult.success){
-        yield ReceiptState.uploadSucess();
-      }
-      else {
-        yield ReceiptState.uploadFail();
-      }
-    }
-    else {
+    var receiptResult = await _receiptRepository.addReceipts([event.receipt]);
+    if (receiptResult.success) {
+      yield ReceiptState.uploadSucess();
+    } else {
       yield ReceiptState.uploadFail();
     }
-
   }
-
 }
