@@ -101,7 +101,7 @@ class _ReportsTabsState extends State<ReportsTabs> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-        _userRepository.receiptRepository.resetCachedReceiptItems();
+        _userRepository.receiptRepository.resetCachedReceiptItems(_userRepository.reportRepository);
           Navigator.of(context).push(
             MaterialPageRoute(builder: (context) {
               return AddReportScreen(

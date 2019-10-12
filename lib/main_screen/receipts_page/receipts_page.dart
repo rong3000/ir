@@ -82,7 +82,7 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
   UserRepository get _userRepository => widget._userRepository;
   get _receiptStatusType => widget._receiptStatusType;
   DataResult dataResult;
-  List<ReceiptListItem> ReceiptItems = [];
+//  List<ReceiptListItem> ReceiptItems = [];
 
   Future<void> getDataResultFromServer() async {
 //    dataResult = await _userRepository.receiptRepository.getReceiptsFromServer(forceRefresh: true);
@@ -116,7 +116,7 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
 
   @override
   void initState() {
-    getDataResultFromServer();
+//    getDataResultFromServer();
     super.initState();
     _homeBloc = BlocProvider.of<HomeBloc>(context);
   }
@@ -166,38 +166,59 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
         child: BlocBuilder(
             bloc: _homeBloc,
             builder: (BuildContext context, HomeState state) {
-              if (dataResult == null || dataResult.success == false) {
-                return Text('Loading...');
-              } else {
-                ReceiptItems = _userRepository.receiptRepository
-                    .getReceiptItems(_receiptStatusType);
-                List<ActionWithLable> actions = [];
-                ActionWithLable r = new ActionWithLable();
-                r.action = reviewAction;
-                r.lable = 'Review';
-                ActionWithLable d = new ActionWithLable();
-                d.action = deleteAction;
-                d.lable = 'Delete';
-                actions.add(r);
-                actions.add(d);
-                return Scaffold(
-                  body: OrientationBuilder(builder: (context, orientation) {
-                    return Column(
-                      children: <Widget>[
-                        Flexible(
-                            flex: 2,
-                            fit: FlexFit.tight,
-                            child: ReceiptList(
-                              userRepository: _userRepository,
-                              receiptStatusType: _receiptStatusType,
-                              receiptItems: ReceiptItems,
-                              actions: actions,
-                            )),
-                      ],
-                    );
-                  }),
-                );
-              }
+              return
+              FutureBuilder<DataResult>(
+                  future: _userRepository.receiptRepository
+                      .getReceiptsFromServer(forceRefresh: true),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<DataResult> snapshot) {
+                    switch (snapshot.connectionState) {
+                      case ConnectionState.none:
+                        return new Text('Loading...');
+                      case ConnectionState.waiting:
+                        return new Center(
+                            child: new CircularProgressIndicator());
+                      case ConnectionState.active:
+                        return new Text('');
+                      case ConnectionState.done:
+                        {
+                          {
+                            List<ReceiptListItem> ReceiptItems = _userRepository.receiptRepository
+                                .getReceiptItems(_receiptStatusType);
+                            List<ActionWithLable> actions = [];
+                            ActionWithLable r = new ActionWithLable();
+                            r.action = reviewAction;
+                            r.lable = 'Review';
+                            ActionWithLable d = new ActionWithLable();
+                            d.action = deleteAction;
+                            d.lable = 'Delete';
+                            actions.add(r);
+                            actions.add(d);
+                            return Scaffold(
+                              body: OrientationBuilder(builder: (context, orientation) {
+                                return Column(
+                                  children: <Widget>[
+                                    Flexible(
+                                        flex: 2,
+                                        fit: FlexFit.tight,
+                                        child: ReceiptList(
+                                          userRepository: _userRepository,
+                                          receiptStatusType: _receiptStatusType,
+                                          receiptItems: ReceiptItems,
+                                          actions: actions,
+                                        )),
+                                  ],
+                                );
+                              }),
+                            );
+                          }
+                        }
+                    }
+                  });
+//              if (dataResult == null || dataResult.success == false) {
+//                return Text('Loading...');
+//              } else
+
             }),
       ),
     );

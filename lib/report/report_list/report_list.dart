@@ -227,7 +227,7 @@ class ReportListState extends State<ReportList> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   void reviewAction(int id) {
-    _userRepository.receiptRepository.resetCachedReceiptItems();
+    _userRepository.receiptRepository.resetCachedReceiptItems(_userRepository.reportRepository);
     Navigator.of(context).push(
       MaterialPageRoute(builder: (context) {
         return EditReportScreen(

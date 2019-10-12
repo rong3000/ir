@@ -42,7 +42,7 @@ class _AddReportScreenState extends State<AddReportScreen> {
 
   var items = List<Currency>();
   String _totalAmount = '0';
-  Currency _currency;
+  Currency _currency = new Currency();
 
   @override
   void initState() {

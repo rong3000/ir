@@ -1,4 +1,5 @@
 import "receipt.dart";
+import 'report_repository.dart';
 import "webservice.dart";
 import "../user_repository.dart";
 import 'dart:io';
@@ -18,15 +19,15 @@ class ReceiptRepository {
   bool _dataFetched = false;
   Lock _lock = new Lock();
 
-  void resetCachedReceiptItems() {
+  void resetCachedReceiptItems(ReportRepository reportRepository) {
     cachedReceiptItems = [];
     candidateReceiptItems = [];
     candidateReceiptItems = getReceiptItems(ReceiptStatusType.Reviewed);
     var _receiptsInReportSet = new Set<ReceiptListItem>();
     var _candidateReceiptsSet = new Set<ReceiptListItem>();
 
-    for (var i = 0; i < _userRepository.reportRepository.reports.length; i++ ) {
-      _receiptsInReportSet.addAll(_userRepository.reportRepository.reports[i].getReceiptList(this));
+    for (var i = 0; i < reportRepository.reports.length; i++ ) {
+      _receiptsInReportSet.addAll(reportRepository.reports[i].getReceiptList(this));
     }
 
     _candidateReceiptsSet.addAll(candidateReceiptItems);
