@@ -22,11 +22,13 @@ class AddEditReiptForm extends StatefulWidget {
     receipt.productName = 'Petrol';
     receipt.currencyCode = 'AUD';
     receipt.totalAmount = 120;
-    receipt.categoryId = categoryList[0].id;
+    receipt.categoryId = 1;
     receipt.companyName = 'Bobs shop';
     receipt.notes = 'Notes text';
     receipt.warrantyPeriod = 36;
     receipt.gstInclusive = true;
+    receipt.uploadDatetime = DateTime.now();
+
     return _AddEditReiptFormState(receipt);
   }
 }
@@ -41,6 +43,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
   Receipt receipt;
   Currency defaultCurrency;
   var currenciesList = List<Currency>();
+  var categoryList = List<Category>();
   UserRepository _userRepository;
   ReceiptBloc _receiptBloc;
 
@@ -50,7 +53,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
       this.receipt = Receipt();
       receipt.receiptDatetime = DateTime.now();
       receipt.totalAmount = 0;
-      receipt.categoryId = categoryList[2].id;
+      receipt.categoryId = 1; //todo
       receipt.warrantyPeriod = 0;
       receipt.gstInclusive = true;
     }
@@ -61,17 +64,30 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
   @override
   void initState() {
     _receiptBloc = BlocProvider.of<ReceiptBloc>(context);
-    
-    _userRepository = RepositoryProvider.of<UserRepository>(context);
-    defaultCurrency = _userRepository.settingRepository.getDefaultCurrency() ?? defaultCurrency;
-    currenciesList = _userRepository.settingRepository.getCurrencies();
 
-    if (currenciesList.length == 0){
-    _userRepository.settingRepository.getCurrenciesFromServer().then((value) {
-      this.setState(() {
-        currenciesList = _userRepository.settingRepository.getCurrencies();
+    _userRepository = RepositoryProvider.of<UserRepository>(context);
+    defaultCurrency = _userRepository.settingRepository.getDefaultCurrency() ??
+        defaultCurrency;
+    currenciesList = _userRepository.settingRepository.getCurrencies();
+    categoryList = _userRepository.categoryRepository.categories;
+
+    if (categoryList.length == 0) {
+      _userRepository.categoryRepository.getCategoriesFromServer(forceRefresh: true).then((value) {
+        this.setState(() {
+          categoryList = _userRepository.categoryRepository.categories;
+          receipt.categoryId = categoryList[0].id;
+        });
       });
-     });
+    }
+
+    if (currenciesList.length == 0) {
+      _userRepository.settingRepository.getCurrenciesFromServer().then((value) {
+        this.setState(() {
+          currenciesList = _userRepository.settingRepository.getCurrencies();
+          defaultCurrency = _userRepository.settingRepository.getDefaultCurrency() ??
+            defaultCurrency;
+        });
+      });
     }
     super.initState();
   }
@@ -84,15 +100,23 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
     if (this._formKey.currentState.validate()) {
       this._formKey.currentState.save();
     }
-    
-    var imageStream = this.receiptImage.readAsBytesSync();
-    this.receipt.image = base64Encode(imageStream);
+
+    if (this.receipt.image == null) {
+      var imageStream = this.receiptImage?.readAsBytesSync();
+      this.receipt.image = base64Encode(imageStream);
+    }
     this.receipt.userId = this._userRepository.userId;
     this.receipt.imagePath = this.receiptImage.path;
-    this.receipt.statusId = ReceiptStatusType.Unknown.index;
-    this.receipt.receiptTypeId = 0; //what to set this to?
-    
-    _receiptBloc.dispatch(ManualReceiptUpload(receipt: this.receipt, image: this.receiptImage));
+    this.receipt.statusUpdateDatetime = DateTime.now();
+
+    this.receipt.statusId = ReceiptStatusType.Reviewed.index;
+    this.receipt.receiptTypeId = 0;
+    this.receipt.uploadDatetime =
+        isNew ? DateTime.now() : this.receipt.uploadDatetime;
+    this.receipt.decodeStatus = DecodeStatusType.Success.index;
+
+    _receiptBloc.dispatch(
+        ManualReceiptUpload(receipt: this.receipt, image: this.receiptImage));
   }
 
   String textFieldValidator(value) {
@@ -120,7 +144,8 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
     var list = List<DropdownMenuItem<int>>();
     for (var cat in categoryList) {
       list.add(
-          DropdownMenuItem<int>(value: cat.id, child: Text(cat.categoryName)));
+        DropdownMenuItem<int>(value: cat.id, child: Text(cat.categoryName)),
+      );
     }
     return list;
   }
@@ -213,7 +238,10 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
           return SimpleDialog(
             children: <Widget>[
               SimpleDialogOption(
-                child: Image.file(image, width: 500,),
+                child: Image.file(
+                  image,
+                  width: 500,
+                ),
               ),
               SimpleDialogOption(
                 child: FlatButton(
@@ -259,7 +287,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
                   IRDateTimePicker(
                     labelText: 'Purchase Date',
                     selectedDate: receipt.receiptDatetime,
-                    selectDate: (newValue) { 
+                    selectDate: (newValue) {
                       setState(() {
                         receipt.receiptDatetime = newValue;
                       });
@@ -286,8 +314,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
                       Flexible(
                         flex: 3,
                         child: DropdownButtonFormField<String>(
-                          decoration:
-                              InputDecoration(labelText: 'Currency Code'),
+                          decoration: InputDecoration(labelText: 'Currency Code'),
                           items: _getCurrencyCodesList(),
                           value: defaultCurrency.code,
                           onSaved: (String value) {
