@@ -117,10 +117,10 @@ class _AddReceiptsScreenState extends State<AddReceiptsScreen> {
   @override
   Widget build(BuildContext context) {
 //    duplicateItems = _userRepository.settingRepository.getCurrencies();
-    List<ActionWithLable> actions = [];
-    ActionWithLable a = new ActionWithLable();
+    List<ActionWithLabel> actions = [];
+    ActionWithLabel a = new ActionWithLabel();
     a.action = addAction;
-    a.lable = 'Add to Report';
+    a.label = 'Add to Report';
     actions.add(a);
     return Scaffold(
       appBar: new AppBar(

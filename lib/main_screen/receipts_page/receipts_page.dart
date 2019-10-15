@@ -91,8 +91,14 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
     setState(() {});
   }
 
-  void reviewAction(int id) {
-    print('Review ${id}');
+  void reviewAction(int receiptId) {
+    var receiptItem = _userRepository.receiptRepository.receipts.singleWhere((r) => r.id == receiptId );
+
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) {
+        return AddEditReiptForm(receiptItem);
+      }),
+    );
   }
 
   Future<void> deleteAndSetState(List<int> receiptIds) async {
@@ -133,7 +139,7 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(builder: (context) {
-                  return AddEditReiptForm();
+                  return AddEditReiptForm(null);
                 }),
               );
             },
@@ -166,8 +172,7 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
         child: BlocBuilder(
             bloc: _homeBloc,
             builder: (BuildContext context, HomeState state) {
-              return
-              FutureBuilder<DataResult>(
+              return FutureBuilder<DataResult>(
                   future: _userRepository.receiptRepository
                       .getReceiptsFromServer(forceRefresh: true),
                   builder: (BuildContext context,
@@ -182,43 +187,43 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
                         return new Text('');
                       case ConnectionState.done:
                         {
-                          {
-                            List<ReceiptListItem> ReceiptItems = _userRepository.receiptRepository
-                                .getReceiptItems(_receiptStatusType);
-                            List<ActionWithLable> actions = [];
-                            ActionWithLable r = new ActionWithLable();
-                            r.action = reviewAction;
-                            r.lable = 'Review';
-                            ActionWithLable d = new ActionWithLable();
-                            d.action = deleteAction;
-                            d.lable = 'Delete';
-                            actions.add(r);
-                            actions.add(d);
-                            return Scaffold(
-                              body: OrientationBuilder(builder: (context, orientation) {
-                                return Column(
-                                  children: <Widget>[
-                                    Flexible(
-                                        flex: 2,
-                                        fit: FlexFit.tight,
-                                        child: ReceiptList(
-                                          userRepository: _userRepository,
-                                          receiptStatusType: _receiptStatusType,
-                                          receiptItems: ReceiptItems,
-                                          actions: actions,
-                                        )),
-                                  ],
-                                );
-                              }),
-                            );
-                          }
+                          List<ReceiptListItem> ReceiptItems = _userRepository
+                              .receiptRepository
+                              .getReceiptItems(_receiptStatusType);
+
+                          List<ActionWithLabel> actions = [];
+                          ActionWithLabel r = new ActionWithLabel();
+                          r.action = reviewAction;
+                          r.label = 'Review';
+                          ActionWithLabel d = new ActionWithLabel();
+                          d.action = deleteAction;
+                          d.label = 'Delete';
+                          actions.add(r);
+                          actions.add(d);
+                          return Scaffold(
+                            body: OrientationBuilder(
+                                builder: (context, orientation) {
+                              return Column(
+                                children: <Widget>[
+                                  Flexible(
+                                      flex: 2,
+                                      fit: FlexFit.tight,
+                                      child: ReceiptList(
+                                        userRepository: _userRepository,
+                                        receiptStatusType: _receiptStatusType,
+                                        receiptItems: ReceiptItems,
+                                        actions: actions,
+                                      )),
+                                ],
+                              );
+                            }),
+                          );
                         }
                     }
                   });
 //              if (dataResult == null || dataResult.success == false) {
 //                return Text('Loading...');
 //              } else
-
             }),
       ),
     );

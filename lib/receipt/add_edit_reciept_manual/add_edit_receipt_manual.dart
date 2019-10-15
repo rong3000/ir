@@ -14,22 +14,28 @@ import 'package:intelligent_receipt/receipt/bloc/receipt_event.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 
 class AddEditReiptForm extends StatefulWidget {
+  ReceiptListItem _receiptItem;
+
+  AddEditReiptForm(this._receiptItem);
+  
   @override
   State<StatefulWidget> createState() {
-    // TODO: pass this in from review button
-    var receipt = Receipt();
-    receipt.receiptDatetime = DateTime(2018, 10, 5);
-    receipt.productName = 'Petrol';
-    receipt.currencyCode = 'AUD';
-    receipt.totalAmount = 120;
-    receipt.categoryId = 1;
-    receipt.companyName = 'Bobs shop';
-    receipt.notes = 'Notes text';
-    receipt.warrantyPeriod = 36;
-    receipt.gstInclusive = true;
-    receipt.uploadDatetime = DateTime.now();
+    var isNew = _receiptItem == null;
+    
+    Receipt receipt = Receipt()
+      ..receiptDatetime = _receiptItem?.receiptDatetime ?? DateTime.now()
+      ..receiptTypeId = _receiptItem?.receiptTypeId ?? 0
+      ..productName = _receiptItem?.productName
+      ..currencyCode = _receiptItem?.currencyCode
+      ..gstInclusive = _receiptItem?.gstInclusive ?? true
+      ..totalAmount = _receiptItem?.totalAmount ?? 0
+      ..companyName = _receiptItem?.companyName
+      ..warrantyPeriod = _receiptItem?.warrantyPeriod ?? 0
+      ..uploadDatetime = _receiptItem?.uploadDatetime
+      ..notes = _receiptItem?.notes
+      ..categoryId =  _receiptItem?.categoryId ?? 1;
 
-    return _AddEditReiptFormState(receipt);
+    return _AddEditReiptFormState(receipt, isNew);
   }
 }
 
@@ -38,7 +44,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
   final pageTitleEdit = 'Edit Receipt';
   final pageTitleNew = 'Create Receipt';
 
-  var isNew = true;
+  var isNew;
   File receiptImage;
   Receipt receipt;
   Currency defaultCurrency;
@@ -47,18 +53,12 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
   UserRepository _userRepository;
   ReceiptBloc _receiptBloc;
 
-  _AddEditReiptFormState(this.receipt) {
-    isNew = this.receipt == null;
-    if (isNew) {
-      this.receipt = Receipt();
-      receipt.receiptDatetime = DateTime.now();
-      receipt.totalAmount = 0;
-      receipt.categoryId = 1; //todo
-      receipt.warrantyPeriod = 0;
-      receipt.gstInclusive = true;
-    }
+  _AddEditReiptFormState(this.receipt, this.isNew) {
     defaultCurrency = Currency();
     defaultCurrency.code = 'AUD';
+    if (this.receipt.categoryId < 1) {
+      this.receipt.categoryId = 1;
+    }
   }
 
   @override
@@ -115,6 +115,8 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
         isNew ? DateTime.now() : this.receipt.uploadDatetime;
     this.receipt.decodeStatus = DecodeStatusType.Success.index;
 
+    //TODO: update if not new
+    
     _receiptBloc.dispatch(
         ManualReceiptUpload(receipt: this.receipt, image: this.receiptImage));
   }

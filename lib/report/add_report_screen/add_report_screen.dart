@@ -101,10 +101,10 @@ class _AddReportScreenState extends State<AddReportScreen> {
   Widget build(BuildContext context) {
 //    duplicateItems = _userRepository.settingRepository.getCurrencies();
 
-    List<ActionWithLable> actions = [];
-    ActionWithLable d = new ActionWithLable();
+    List<ActionWithLabel> actions = [];
+    ActionWithLabel d = new ActionWithLabel();
     d.action = removeAction;
-    d.lable = 'Remove';
+    d.label = 'Remove';
     actions.add(d);
     return new Scaffold(
       appBar: new AppBar(

@@ -17,13 +17,6 @@ enum DecodeStatusType
   UnrecognizedFormat
 }
 
-enum CategoryName
-{
-  Travel,
-  Material,
-  Undecided,
-}
-
 enum IRImageSource
 {
   Gallary,

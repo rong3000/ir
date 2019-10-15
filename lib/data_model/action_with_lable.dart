@@ -1,4 +1,4 @@
-class ActionWithLable {
+class ActionWithLabel {
   Function(int) action;
-  String lable;
+  String label;
 }
