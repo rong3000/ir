@@ -12,14 +12,14 @@ class ReceiptList extends StatefulWidget {
   final UserRepository _userRepository;
   final ReceiptStatusType _receiptStatusType;
   final List<ReceiptListItem> _receiptItems;
-  final List<ActionWithLable> _actions;
+  final List<ActionWithLabel> _actions;
 
   ReceiptList({
     Key key,
     @required UserRepository userRepository,
     @required ReceiptStatusType receiptStatusType,
     @required List<ReceiptListItem> receiptItems,
-    @required List<ActionWithLable> actions,
+    @required List<ActionWithLabel> actions,
   })  : assert(userRepository != null),
         _userRepository = userRepository,
         _receiptStatusType = receiptStatusType,

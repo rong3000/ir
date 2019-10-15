@@ -20,15 +20,5 @@ class Category {
       _$CategoryFromJson(json);
   Map<String, dynamic> toJson() => _$CategoryToJson(this);
 
-  //Dev only ATM
-  Category.fromParams(int id, String name)
-      : id = id,
-        categoryName = name;
 }
 
-// DEv placeholder till server side is up
-var categoryList = [
-  Category.fromParams(1, 'Material'),
-  Category.fromParams(2, 'Travel'),
-  Category.fromParams(3, 'Undecided'),
-];

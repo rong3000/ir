@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -6,24 +7,35 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intelligent_receipt/data_model/category.dart';
 import 'package:intelligent_receipt/data_model/currency.dart';
 import 'package:intelligent_receipt/data_model/receipt.dart';
+import 'package:intelligent_receipt/data_model/report_repository.dart';
 import 'package:intelligent_receipt/helper_widgets/date_time_picker.dart';
+import 'package:intelligent_receipt/receipt/bloc/receipt_bloc.dart';
+import 'package:intelligent_receipt/receipt/bloc/receipt_event.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 
 class AddEditReiptForm extends StatefulWidget {
+  ReceiptListItem _receiptItem;
+
+  AddEditReiptForm(this._receiptItem);
+  
   @override
   State<StatefulWidget> createState() {
-    // TODO: pass this in from review button
-    var receipt = Receipt();
-    receipt.receiptDatetime = DateTime(2018, 10, 5);
-    receipt.productName = 'Petrol';
-    receipt.currencyCode = 'AUD';
-    receipt.totalAmount = 120;
-    receipt.categoryId = categoryList[0].id;
-    receipt.companyName = 'Bobs shop';
-    receipt.notes = 'Notes text';
-    receipt.warrantyPeriod = 36;
-    receipt.gstInclusive = true;
-    return _AddEditReiptFormState(receipt);
+    var isNew = _receiptItem == null;
+    
+    Receipt receipt = Receipt()
+      ..receiptDatetime = _receiptItem?.receiptDatetime ?? DateTime.now()
+      ..receiptTypeId = _receiptItem?.receiptTypeId ?? 0
+      ..productName = _receiptItem?.productName
+      ..currencyCode = _receiptItem?.currencyCode
+      ..gstInclusive = _receiptItem?.gstInclusive ?? true
+      ..totalAmount = _receiptItem?.totalAmount ?? 0
+      ..companyName = _receiptItem?.companyName
+      ..warrantyPeriod = _receiptItem?.warrantyPeriod ?? 0
+      ..uploadDatetime = _receiptItem?.uploadDatetime
+      ..notes = _receiptItem?.notes
+      ..categoryId =  _receiptItem?.categoryId ?? 1;
+
+    return _AddEditReiptFormState(receipt, isNew);
   }
 }
 
@@ -32,39 +44,50 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
   final pageTitleEdit = 'Edit Receipt';
   final pageTitleNew = 'Create Receipt';
 
-  var isNew = true;
+  var isNew;
   File receiptImage;
   Receipt receipt;
   Currency defaultCurrency;
   var currenciesList = List<Currency>();
+  var categoryList = List<Category>();
   UserRepository _userRepository;
+  ReceiptBloc _receiptBloc;
 
-  _AddEditReiptFormState(this.receipt) {
-    isNew = this.receipt == null;
-    if (isNew) {
-      this.receipt = Receipt();
-      receipt.receiptDatetime = DateTime.now();
-      receipt.totalAmount = 0;
-      receipt.categoryId = categoryList[2].id;
-      receipt.warrantyPeriod = 0;
-      receipt.gstInclusive = true;
-    }
+  _AddEditReiptFormState(this.receipt, this.isNew) {
     defaultCurrency = Currency();
     defaultCurrency.code = 'AUD';
+    if (this.receipt.categoryId < 1) {
+      this.receipt.categoryId = 1;
+    }
   }
 
   @override
   void initState() {
-    _userRepository = RepositoryProvider.of<UserRepository>(context);
-    defaultCurrency = _userRepository.settingRepository.getDefaultCurrency() ?? defaultCurrency;
-    currenciesList = _userRepository.settingRepository.getCurrencies();
+    _receiptBloc = BlocProvider.of<ReceiptBloc>(context);
 
-    if (currenciesList.length == 0){
-    _userRepository.settingRepository.getCurrenciesFromServer().then((value) {
-      this.setState(() {
-        currenciesList = _userRepository.settingRepository.getCurrencies();
+    _userRepository = RepositoryProvider.of<UserRepository>(context);
+    defaultCurrency = _userRepository.settingRepository.getDefaultCurrency() ??
+        defaultCurrency;
+    currenciesList = _userRepository.settingRepository.getCurrencies();
+    categoryList = _userRepository.categoryRepository.categories;
+
+    if (categoryList.length == 0) {
+      _userRepository.categoryRepository.getCategoriesFromServer(forceRefresh: true).then((value) {
+        this.setState(() {
+          categoryList = _userRepository.categoryRepository.categories;
+          receipt.categoryId = categoryList[0].id;
+        });
       });
-     });
+    }
+
+    if (currenciesList.length == 0) {
+      _userRepository.settingRepository.getCurrenciesFromServer().then((value) {
+        this.setState(() {
+          currenciesList = _userRepository.settingRepository.getCurrencies();
+          defaultCurrency = _userRepository.settingRepository.getDefaultCurrency() ??
+            defaultCurrency;
+        });
+      });
     }
     super.initState();
   }
@@ -77,7 +100,25 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
     if (this._formKey.currentState.validate()) {
       this._formKey.currentState.save();
     }
-    // TODO: Dispatch save action
+
+    if (this.receipt.image == null) {
+      var imageStream = this.receiptImage?.readAsBytesSync();
+      this.receipt.image = base64Encode(imageStream);
+    }
+    this.receipt.userId = this._userRepository.userId;
+    this.receipt.imagePath = this.receiptImage.path;
+    this.receipt.statusUpdateDatetime = DateTime.now();
+
+    this.receipt.statusId = ReceiptStatusType.Reviewed.index;
+    this.receipt.receiptTypeId = 0;
+    this.receipt.uploadDatetime =
+        isNew ? DateTime.now() : this.receipt.uploadDatetime;
+    this.receipt.decodeStatus = DecodeStatusType.Success.index;
+
+    //TODO: update if not new
+    
+    _receiptBloc.dispatch(
+        ManualReceiptUpload(receipt: this.receipt, image: this.receiptImage));
   }
 
   String textFieldValidator(value) {
@@ -105,7 +146,8 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
     var list = List<DropdownMenuItem<int>>();
     for (var cat in categoryList) {
       list.add(
-          DropdownMenuItem<int>(value: cat.id, child: Text(cat.categoryName)));
+        DropdownMenuItem<int>(value: cat.id, child: Text(cat.categoryName)),
+      );
     }
     return list;
   }
@@ -198,7 +240,10 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
           return SimpleDialog(
             children: <Widget>[
               SimpleDialogOption(
-                child: Image.file(image, width: 500,),
+                child: Image.file(
+                  image,
+                  width: 500,
+                ),
               ),
               SimpleDialogOption(
                 child: FlatButton(
@@ -244,7 +289,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
                   IRDateTimePicker(
                     labelText: 'Purchase Date',
                     selectedDate: receipt.receiptDatetime,
-                    selectDate: (newValue) { 
+                    selectDate: (newValue) {
                       setState(() {
                         receipt.receiptDatetime = newValue;
                       });
@@ -271,8 +316,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
                       Flexible(
                         flex: 3,
                         child: DropdownButtonFormField<String>(
-                          decoration:
-                              InputDecoration(labelText: 'Currency Code'),
+                          decoration: InputDecoration(labelText: 'Currency Code'),
                           items: _getCurrencyCodesList(),
                           value: defaultCurrency.code,
                           onSaved: (String value) {

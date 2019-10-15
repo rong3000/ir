@@ -96,7 +96,7 @@ class _HomePageState extends State<HomePage> {
                                     onTap: () {
                                       Navigator.push(
                                         context,
-                                         MaterialPageRoute(builder: (context) => AddEditReiptForm()) 
+                                         MaterialPageRoute(builder: (context) => AddEditReiptForm(null)) 
                                       );
                                     },
                                     child: 

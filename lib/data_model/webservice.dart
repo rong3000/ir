@@ -18,6 +18,7 @@ class Urls {
   static String UploadReceiptImages = ServiceBaseUrl + "Receipt/UploadReceiptImages/1/";
   static String DeleteReceipts = ServiceBaseUrl + "Receipt/DeleteReceipts";
   static String GetImage = ServiceBaseUrl + "Receipt/GetImage";
+  static String AddReceipts = ServiceBaseUrl + "Receipt/AddReceipts";
 
   // Category related APIs
   static String GetCategories = ServiceBaseUrl + "Settings/GetCategories/";
@@ -109,6 +110,7 @@ Future<DataResult> webserviceGet(String url, String token, {int timeout: default
 
   try {
     http.Response  response = await http.get(url, headers: headers).timeout(Duration(milliseconds: timeout));
+    
     if (response.statusCode == 200) {
       return DataResult.fromJason(json.decode(response.body));
     } else {

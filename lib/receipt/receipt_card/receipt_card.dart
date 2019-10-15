@@ -1,12 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intelligent_receipt/data_model/action_with_lable.dart';
+import 'package:intelligent_receipt/data_model/category_repository.dart';
 import 'package:intelligent_receipt/data_model/receipt_repository.dart';
-import 'package:intelligent_receipt/receipt/receipt_list/receipt_list.dart';
+import 'package:intelligent_receipt/user_repository.dart';
 import 'package:intl/intl.dart';
-
-import '../../data_model/enums.dart';
 import '../../data_model/webservice.dart';
 
 class ReceiptCard extends StatefulWidget {
@@ -19,19 +19,28 @@ class ReceiptCard extends StatefulWidget {
         super(key: key);
 
   final ReceiptListItem _receiptItem;
-  final List<ActionWithLable> actions;
+  final List<ActionWithLabel> actions;
 
   @override
   _ReceiptCardState createState() => _ReceiptCardState();
 }
 
 class _ReceiptCardState extends State<ReceiptCard> {
+  CategoryRepository _categoryRepository;
+
   CachedNetworkImage getImage(String imagePath) {
     return new CachedNetworkImage(
       imageUrl: Urls.GetImage + "/" + Uri.encodeComponent(imagePath),
       placeholder: (context, url) => new CircularProgressIndicator(),
       errorWidget: (context, url, error) => new Icon(Icons.error),
     );
+  }
+
+  @override
+  void initState() {
+    _categoryRepository =
+        RepositoryProvider.of<UserRepository>(context).categoryRepository;
+    super.initState();
   }
 
   @override
@@ -42,16 +51,16 @@ class _ReceiptCardState extends State<ReceiptCard> {
     final TextStyle dateStyle = theme.textTheme.body2;
     final TextStyle amountStyle = theme.textTheme.body1;
 
-    Widget _actionButton(BuildContext context, ActionWithLable action) {
+    Widget _actionButton(BuildContext context, ActionWithLabel action) {
       if (action.action != null) {
         return Container(
           height: 25,
           child: OutlineButton(
-              child: Text(action.lable,
+              child: Text(action.label,
                   style: dateStyle
                       .copyWith(color: Colors.blue)
                       .apply(fontSizeFactor: 0.75),
-                  semanticsLabel: '${action.lable} ${widget._receiptItem.id}'),
+                  semanticsLabel: '${action.label} ${widget._receiptItem.id}'),
 //                    textColor: Colors.blue.shade500,
 
               onPressed: () => action.action(widget._receiptItem.id),
@@ -78,21 +87,16 @@ class _ReceiptCardState extends State<ReceiptCard> {
 //        mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           Expanded(
-        flex: 1,
+            flex: 1,
             child: SizedBox(
-
-
               height: MediaQuery.of(context).size.height * 0.16,
 //          width: MediaQuery.of(context).size.width * 0.1,
               child: getImage(widget._receiptItem.imagePath),
             ),
           ),
           Expanded(
-
-
             flex: 2,
             child: Column(
-
               children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
@@ -117,7 +121,8 @@ class _ReceiptCardState extends State<ReceiptCard> {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(top: 0.0, bottom: 0.0),
+                            padding:
+                                const EdgeInsets.only(top: 0.0, bottom: 0.0),
                             child: Text(
                               '${widget._receiptItem.companyName}',
                               style: companyNameStyle,
@@ -167,11 +172,18 @@ class _ReceiptCardState extends State<ReceiptCard> {
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.only(top: 0.0, bottom: 0.0),
+                              padding:
+                                  const EdgeInsets.only(top: 0.0, bottom: 0.0),
                               child: Text(
-                                CategoryName.values[widget._receiptItem.categoryId]
-                                    .toString()
-                                    .split('.')[1],
+                                _categoryRepository.categories
+                                    .singleWhere(
+                                      (c) =>
+                                          c.id ==
+                                          widget._receiptItem.categoryId,
+                                      orElse: () =>
+                                          Category()..categoryName = "Unkown",
+                                    )
+                                    ?.categoryName,
                                 style: companyNameStyle,
                               ),
                             ),
@@ -183,11 +195,10 @@ class _ReceiptCardState extends State<ReceiptCard> {
                   ButtonTheme.bar(
                     child: ButtonBar(
                       mainAxisSize: MainAxisSize.min,
-                      children:
-                      widget.actions.map<Widget>(
-                              (ActionWithLable action) =>
-                              _actionButton(context, action)
-                      ).toList(),
+                      children: widget.actions
+                          .map<Widget>((ActionWithLabel action) =>
+                              _actionButton(context, action))
+                          .toList(),
                     ),
                   ),
                 ],

@@ -16,8 +16,6 @@ class CategoryRepository {
   }
 
   Future<DataResult> getCategoriesFromServer({bool forceRefresh = false}) async {
-    //var image = await ImagePicker.pickImage(source: ImageSource.camera);
-    //await this.uploadReceiptFile(image);
     if (_dataFetched && !forceRefresh) {
       return DataResult.success(categories);
     }
