@@ -19,31 +19,29 @@ class ReceiptRepository {
   bool _dataFetched = false;
   Lock _lock = new Lock();
 
-  void resetCachedReceiptItems(ReportRepository reportRepository) {
+  void resetCachedReceiptItems(ReportRepository reportRepository, {int reportID = 0}) {
     cachedReceiptItems = [];
     candidateReceiptItems = [];
     candidateReceiptItems = getReceiptItems(ReceiptStatusType.Reviewed);
     var _receiptsInReportSet = new Set<ReceiptListItem>();
     var _candidateReceiptsSet = new Set<ReceiptListItem>();
 
+    // Only filter out the receipts in the specified report
     for (var i = 0; i < reportRepository.reports.length; i++ ) {
-      _receiptsInReportSet.addAll(reportRepository.reports[i].getReceiptList(this));
+      if (reportRepository.reports[i].id == reportID) {
+        _receiptsInReportSet.addAll(
+            reportRepository.reports[i].getReceiptList(this));
+      }
     }
 
     _candidateReceiptsSet.addAll(candidateReceiptItems);
-
     candidateReceiptItems = _candidateReceiptsSet.difference(_receiptsInReportSet).toList();
   }
 
   List<ReceiptListItem> removeCandidateItems(int id) {
-
-    int toBeRemoved;
-    for (int i = 0; i < _userRepository.receiptRepository.candidateReceiptItems.length; i++) {
-      if (_userRepository.receiptRepository.candidateReceiptItems[i].id == id) {
-        toBeRemoved = i;
-      }
-    }
-    candidateReceiptItems.removeAt(toBeRemoved);
+    candidateReceiptItems.removeWhere((ReceiptListItem item){
+      return item.id == id;
+    });
     return candidateReceiptItems;
   }
 
