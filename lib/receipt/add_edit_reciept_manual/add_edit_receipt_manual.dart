@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,13 +9,14 @@ import 'package:intelligent_receipt/data_model/category.dart';
 import 'package:intelligent_receipt/data_model/currency.dart';
 import 'package:intelligent_receipt/data_model/receipt.dart';
 import 'package:intelligent_receipt/data_model/report_repository.dart';
+import 'package:intelligent_receipt/data_model/webservice.dart';
 import 'package:intelligent_receipt/helper_widgets/date_time_picker.dart';
 import 'package:intelligent_receipt/receipt/bloc/receipt_bloc.dart';
 import 'package:intelligent_receipt/receipt/bloc/receipt_event.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 
 class AddEditReiptForm extends StatefulWidget {
-  ReceiptListItem _receiptItem;
+  final ReceiptListItem _receiptItem;
 
   AddEditReiptForm(this._receiptItem);
   
@@ -33,7 +35,10 @@ class AddEditReiptForm extends StatefulWidget {
       ..warrantyPeriod = _receiptItem?.warrantyPeriod ?? 0
       ..uploadDatetime = _receiptItem?.uploadDatetime
       ..notes = _receiptItem?.notes
-      ..categoryId =  _receiptItem?.categoryId ?? 1;
+      ..categoryId = _receiptItem?.categoryId ?? 1
+      ..imagePath = _receiptItem?.imagePath
+      ..id = _receiptItem.id;
+
 
     return _AddEditReiptFormState(receipt, isNew);
   }
@@ -45,7 +50,8 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
   final pageTitleNew = 'Create Receipt';
 
   var isNew;
-  File receiptImage;
+  File receiptImageFile;
+  Image receiptImage;
   Receipt receipt;
   Currency defaultCurrency;
   var currenciesList = List<Currency>();
@@ -58,6 +64,11 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
     defaultCurrency.code = 'AUD';
     if (this.receipt.categoryId < 1) {
       this.receipt.categoryId = 1;
+    }
+
+    if (!isNew){
+      var url = Urls.GetImage + "/" + Uri.encodeComponent(receipt.imagePath);
+      receiptImage = Image(image: CachedNetworkImageProvider(url));
     }
   }
 
@@ -100,25 +111,35 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
     if (this._formKey.currentState.validate()) {
       this._formKey.currentState.save();
     }
+    this.receipt.userId = this._userRepository.userId;
+    
+    //common save logic
+    this.receipt.statusId = ReceiptStatusType.Reviewed.index;
+    this.receipt.statusUpdateDatetime = DateTime.now();
+    
+    this.receipt.decodeStatus = DecodeStatusType.Success.index;
+    this.receipt.receiptTypeId = 0;
+    
+    // if this is not null we have a new receipt OR have changed the existing image
+    // either way send the base64 image to be saved/updated
+    if (receiptImageFile != null){
+      this.receipt.imageFileExtension = this.receiptImageFile.path.substring(this.receiptImageFile.path.lastIndexOf('.')).trim();
 
-    if (this.receipt.image == null) {
-      var imageStream = this.receiptImage?.readAsBytesSync();
+      var imageStream = this.receiptImageFile?.readAsBytesSync();
       this.receipt.image = base64Encode(imageStream);
     }
-    this.receipt.userId = this._userRepository.userId;
-    this.receipt.imagePath = this.receiptImage.path;
-    this.receipt.statusUpdateDatetime = DateTime.now();
-
-    this.receipt.statusId = ReceiptStatusType.Reviewed.index;
-    this.receipt.receiptTypeId = 0;
-    this.receipt.uploadDatetime =
-        isNew ? DateTime.now() : this.receipt.uploadDatetime;
-    this.receipt.decodeStatus = DecodeStatusType.Success.index;
-
-    //TODO: update if not new
     
-    _receiptBloc.dispatch(
-        ManualReceiptUpload(receipt: this.receipt, image: this.receiptImage));
+    // new logic
+    if (isNew){
+      this.receipt.uploadDatetime = DateTime.now();
+
+      _receiptBloc.dispatch(ManualReceiptUpload(receipt: this.receipt));
+    } else {
+      //TODO: update if not new
+      
+        _receiptBloc.dispatch(ManualReceiptUpdate(receipt: this.receipt));
+    }
+    
   }
 
   String textFieldValidator(value) {
@@ -183,13 +204,15 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
     if (source != null) {
       var ri = await ImagePicker.pickImage(source: source, maxWidth: 600);
       setState(() {
-        receiptImage = ri;
+        receiptImageFile = ri;
+        receiptImage = Image.file(ri);
       });
     }
   }
 
   List<Widget> _getImageWidgets() {
     var widgets = List<Widget>();
+      
     if (receiptImage != null) {
       widgets.add(
         Expanded(
@@ -202,7 +225,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
               child: Align(
                 alignment: Alignment.topCenter,
                 heightFactor: .6,
-                child: Image.file(receiptImage, fit: BoxFit.cover),
+                child: receiptImage,
               ),
             ),
           ),
@@ -233,17 +256,14 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
     return widgets;
   }
 
-  Future<void> _showFullImage(File image) async {
+  Future<void> _showFullImage(Widget childImage) async {
     await showDialog<void>(
         context: context,
         builder: (BuildContext context) {
           return SimpleDialog(
             children: <Widget>[
               SimpleDialogOption(
-                child: Image.file(
-                  image,
-                  width: 500,
-                ),
+                child: childImage,
               ),
               SimpleDialogOption(
                 child: FlatButton(

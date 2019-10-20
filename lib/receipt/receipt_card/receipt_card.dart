@@ -181,7 +181,7 @@ class _ReceiptCardState extends State<ReceiptCard> {
                                           c.id ==
                                           widget._receiptItem.categoryId,
                                       orElse: () =>
-                                          Category()..categoryName = "Unkown",
+                                          Category()..categoryName = "Unknown",
                                     )
                                     ?.categoryName,
                                 style: companyNameStyle,

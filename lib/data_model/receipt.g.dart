@@ -75,6 +75,7 @@ Receipt _$ReceiptFromJson(Map<String, dynamic> json) {
     ..submittedContent = json['submittedContent'] as String
     ..statusName = json['statusName'] as String
     ..image = json['image'] as String
+    ..imageFileExtension = json['imageFileExtension'] as String
     ..imageCropLeft = (json['imageCropLeft'] as num)?.toDouble()
     ..imageCropTop = (json['imageCropTop'] as num)?.toDouble()
     ..imageCropWidth = (json['imageCropWidth'] as num)?.toDouble()
@@ -106,6 +107,7 @@ Map<String, dynamic> _$ReceiptToJson(Receipt instance) => <String, dynamic>{
       'submittedContent': instance.submittedContent,
       'statusName': instance.statusName,
       'image': instance.image,
+      'imageFileExtension': instance.imageFileExtension,
       'imageCropLeft': instance.imageCropLeft,
       'imageCropTop': instance.imageCropTop,
       'imageCropWidth': instance.imageCropWidth,

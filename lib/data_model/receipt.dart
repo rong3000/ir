@@ -39,6 +39,7 @@ class Receipt extends ReceiptListItem {
   String submittedContent;
   String statusName;
   String image;
+  String imageFileExtension;
   double imageCropLeft;
   double imageCropTop;
   double imageCropWidth;

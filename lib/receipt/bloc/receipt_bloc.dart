@@ -21,12 +21,25 @@ class ReceiptBloc extends Bloc<ReceiptEvent, ReceiptState> {
     if (event is ManualReceiptUpload) {
       yield* _handleManualReceiptUpload(event);
     }
+    else if (event is ManualReceiptUpdate){
+      yield*  _handleManualReceiptUpdate(event);
+    }
     // More cases here for different events
   }
 
   Stream<ReceiptState> _handleManualReceiptUpload(ManualReceiptUpload event) async* {
     yield ReceiptState.uploading();
     var receiptResult = await _receiptRepository.addReceipts([event.receipt]);
+    if (receiptResult.success) {
+      yield ReceiptState.uploadSucess();
+    } else {
+      yield ReceiptState.uploadFail();
+    }
+  }
+
+  Stream<ReceiptState> _handleManualReceiptUpdate(ManualReceiptUpdate event) async* {
+    yield ReceiptState.uploading();
+    var receiptResult = await _receiptRepository.updateReceipt(event.receipt);
     if (receiptResult.success) {
       yield ReceiptState.uploadSucess();
     } else {
