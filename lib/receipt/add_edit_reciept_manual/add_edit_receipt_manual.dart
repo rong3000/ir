@@ -37,7 +37,7 @@ class AddEditReiptForm extends StatefulWidget {
       ..notes = _receiptItem?.notes
       ..categoryId = _receiptItem?.categoryId ?? 1
       ..imagePath = _receiptItem?.imagePath
-      ..id = _receiptItem.id;
+      ..id = _receiptItem?.id;
 
 
     return _AddEditReiptFormState(receipt, isNew);
