@@ -69,7 +69,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
 
     if (!isNew){
       var url = Urls.GetImage + "/" + Uri.encodeComponent(receipt.imagePath);
-      receiptImage = Image(image: CachedNetworkImageProvider(url));
+      receiptImage = Image.memory(base64Decode(receipt.image)); //Image(image: CachedNetworkImageProvider());
     }
   }
 
@@ -113,8 +113,6 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
       this._formKey.currentState.save();
     }
 
-    if (this.receipt.image == null) {
-    }
     this.receipt.userId = this._userRepository.userId;
     
     //common save logic
@@ -127,10 +125,14 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
     // if this is not null we have a new receipt OR have changed the existing image
     // either way send the base64 image to be saved/updated
     if (receiptImageFile != null){
-      this.receipt.imageFileExtension = this.receiptImageFile.path.substring(this.receiptImageFile.path.lastIndexOf('.')).trim();
+      this.receipt.imageFileExtension = this.receiptImageFile.path.substring(this.receiptImageFile.path.lastIndexOf('.') + 1).trim();
 
       var imageStream = this.receiptImageFile?.readAsBytesSync();
       this.receipt.image = imageStream != null ? base64Encode(imageStream) : null;
+    }
+    else {
+      // No update to image, set null so existing image is not re-sent to api for update
+      this.receipt.image = null;
     }
     
     // new logic
