@@ -14,28 +14,28 @@ import 'package:intelligent_receipt/receipt/bloc/receipt_event.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 
 class AddEditReiptForm extends StatefulWidget {
-  ReceiptListItem _receiptItem;
+  Receipt _receiptItem;
 
   AddEditReiptForm(this._receiptItem);
   
   @override
   State<StatefulWidget> createState() {
     var isNew = _receiptItem == null;
-    
-    Receipt receipt = Receipt()
-      ..receiptDatetime = _receiptItem?.receiptDatetime ?? DateTime.now()
-      ..receiptTypeId = _receiptItem?.receiptTypeId ?? 0
-      ..productName = _receiptItem?.productName
-      ..currencyCode = _receiptItem?.currencyCode
-      ..gstInclusive = _receiptItem?.gstInclusive ?? true
-      ..totalAmount = _receiptItem?.totalAmount ?? 0
-      ..companyName = _receiptItem?.companyName
-      ..warrantyPeriod = _receiptItem?.warrantyPeriod ?? 0
-      ..uploadDatetime = _receiptItem?.uploadDatetime
-      ..notes = _receiptItem?.notes
-      ..categoryId =  _receiptItem?.categoryId ?? 1;
 
-    return _AddEditReiptFormState(receipt, isNew);
+    if (isNew) {
+      _receiptItem = Receipt()
+        ..receiptDatetime = DateTime.now()
+        ..receiptTypeId = 0
+        ..productName = ""
+        ..gstInclusive = true
+        ..totalAmount = 0
+        ..companyName = ""
+        ..warrantyPeriod = 0
+        ..notes = ""
+        ..categoryId = 1;
+    }
+
+    return _AddEditReiptFormState(_receiptItem, isNew);
   }
 }
 
@@ -103,7 +103,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
 
     if (this.receipt.image == null) {
       var imageStream = this.receiptImage?.readAsBytesSync();
-      this.receipt.image = base64Encode(imageStream);
+      this.receipt.image = imageStream != null ? base64Encode(imageStream) : null;
     }
     this.receipt.userId = this._userRepository.userId;
     this.receipt.imagePath = this.receiptImage.path;
