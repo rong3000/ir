@@ -91,14 +91,18 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
     setState(() {});
   }
 
-  void reviewAction(int receiptId) {
-    var receiptItem = _userRepository.receiptRepository.receipts.singleWhere((r) => r.id == receiptId );
-
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) {
-        return AddEditReiptForm(receiptItem);
-      }),
-    );
+  Future<void> reviewAction(int receiptId) async {
+    // Try to get the receipt detailed information from server
+    DataResult dataResult = await _userRepository.receiptRepository.getReceipt(receiptId);
+    if (dataResult.success) {
+      Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) {
+          return AddEditReiptForm(dataResult.obj as Receipt);
+        }),
+      );
+    } else {
+      // Log an error
+    }
   }
 
   Future<void> deleteAndSetState(List<int> receiptIds) async {

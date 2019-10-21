@@ -16,29 +16,30 @@ import 'package:intelligent_receipt/receipt/bloc/receipt_event.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 
 class AddEditReiptForm extends StatefulWidget {
-  final ReceiptListItem _receiptItem;
+  final Receipt _receiptItem;
 
   AddEditReiptForm(this._receiptItem);
   
   @override
   State<StatefulWidget> createState() {
     var isNew = _receiptItem == null;
+    Receipt receipt;
     
-    Receipt receipt = Receipt()
-      ..receiptDatetime = _receiptItem?.receiptDatetime ?? DateTime.now()
-      ..receiptTypeId = _receiptItem?.receiptTypeId ?? 0
-      ..productName = _receiptItem?.productName
-      ..currencyCode = _receiptItem?.currencyCode
-      ..gstInclusive = _receiptItem?.gstInclusive ?? true
-      ..totalAmount = _receiptItem?.totalAmount ?? 0
-      ..companyName = _receiptItem?.companyName
-      ..warrantyPeriod = _receiptItem?.warrantyPeriod ?? 0
-      ..uploadDatetime = _receiptItem?.uploadDatetime
-      ..notes = _receiptItem?.notes
-      ..categoryId = _receiptItem?.categoryId ?? 1
-      ..imagePath = _receiptItem?.imagePath
-      ..id = _receiptItem?.id;
-
+    if (isNew) {
+      receipt = Receipt()
+        ..receiptDatetime = DateTime.now()
+        ..receiptTypeId = 0
+        ..productName = ""
+        ..gstInclusive = true
+        ..totalAmount = 0
+        ..companyName = ""
+        ..warrantyPeriod = 0
+        ..notes = ""
+        ..categoryId = 1;
+    }
+    else {
+      receipt = _receiptItem;
+    }
 
     return _AddEditReiptFormState(receipt, isNew);
   }
@@ -111,6 +112,9 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
     if (this._formKey.currentState.validate()) {
       this._formKey.currentState.save();
     }
+
+    if (this.receipt.image == null) {
+    }
     this.receipt.userId = this._userRepository.userId;
     
     //common save logic
@@ -126,7 +130,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
       this.receipt.imageFileExtension = this.receiptImageFile.path.substring(this.receiptImageFile.path.lastIndexOf('.')).trim();
 
       var imageStream = this.receiptImageFile?.readAsBytesSync();
-      this.receipt.image = base64Encode(imageStream);
+      this.receipt.image = imageStream != null ? base64Encode(imageStream) : null;
     }
     
     // new logic

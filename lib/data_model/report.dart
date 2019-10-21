@@ -27,7 +27,7 @@ class Report {
     double totalAmount = 0;
     for (var i = 0; i < receiptIds.length; i++) {
       ReceiptListItem receiptListItem = receiptRepository.getReceiptItem(receiptIds[i]);
-      totalAmount += receiptListItem?.totalAmount;
+      totalAmount += (receiptListItem != null) ? receiptListItem.totalAmount : 0;
     }
     return totalAmount;
   }
@@ -41,5 +41,16 @@ class Report {
       }
     }
     return receiptList;
+  }
+
+  int getValidReceiptCount(ReceiptRepository receiptRepository) {
+    int count = 0;
+    for (var i = 0; i < receiptIds.length; i++) {
+      ReceiptListItem receiptListItem = receiptRepository.getReceiptItem(receiptIds[i]);
+      if (receiptListItem != null) {
+        count++;
+      }
+    }
+    return count;
   }
 }

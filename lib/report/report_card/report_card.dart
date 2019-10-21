@@ -167,7 +167,7 @@ class _ReportCardState extends State<ReportCard> {
                             Padding(
                               padding: const EdgeInsets.only(top: 0.0, bottom: 0.0),
                               child: Text(
-                                '${widget._reportItem.receiptIds.length} Expenses',
+                                '${widget._reportItem.getValidReceiptCount(_userRepository.receiptRepository)} Expenses',
                                 style: companyNameStyle.apply(fontSizeFactor: 1.2),
                               ),
                             ),
