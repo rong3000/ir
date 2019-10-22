@@ -160,8 +160,7 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
                 context,
                 MaterialPageRoute(
                     builder: (context) => UploadReceiptImage(
-                        userRepository: _userRepository,
-                        imageSource: IRImageSource.Gallary)),
+                        userRepository: _userRepository, title: "Snap new receipt",)),
               );
             },
             backgroundColor: Colors.redAccent,
