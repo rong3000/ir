@@ -52,7 +52,7 @@ class _UploadReceiptImageState extends State<UploadReceiptImage> {
 //        maxHeight: 512);
 
     DataResult dataResult =
-    await _userRepository.receiptRepository.uploadReceiptImage(imageFile);
+        await _userRepository.receiptRepository.uploadReceiptImage(imageFile);
     return dataResult;
   }
 
@@ -125,16 +125,15 @@ class _UploadReceiptImageState extends State<UploadReceiptImage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: imageFile != null
-            ? Column(
-                children: <Widget>[
-                  Center(
-                    child: new FutureBuilder<DataResult>(
-                      future: _uploadReceipt(imageFile), // a Future<String> or null
+        appBar: AppBar(
+          title: Text(widget.title),
+        ),
+        body: Center(
+          child: (imageFile != null)
+              ? (state == AppState.cropped
+                  ? FutureBuilder<DataResult>(
+                      future:
+                          _uploadReceipt(imageFile), // a Future<String> or null
                       builder: (BuildContext context,
                           AsyncSnapshot<DataResult> snapshot) {
                         switch (snapshot.connectionState) {
@@ -188,40 +187,83 @@ class _UploadReceiptImageState extends State<UploadReceiptImage> {
                             }
                         }
                       },
-                    ),
+                    )
+                  : Image.file(imageFile))
+              : Container(),
+        ),
+        floatingActionButton: state == AppState.cropped
+            ? null
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisSize: MainAxisSize.max,
+                children: <Widget>[
+                  FloatingActionButton(
+                    heroTag: "camera",
+                    onPressed: () {
+                      if (state == AppState.free)
+                        _pickImageCamera();
+                      else if (state == AppState.picked) _cropImage();
+                    },
+                    child: _buildButtonIconCamera(),
                   ),
-//                  Image.file(imageFile)
+                  state == AppState.picked
+                      ? FloatingActionButton(
+                          heroTag: "continue",
+                          onPressed: () {
+                            setState(() {
+                              state = AppState.cropped;
+                            });
+                          },
+                          child: Icon(Icons.check),
+                        )
+                      : FloatingActionButton(
+                          heroTag: "gallery",
+                          onPressed: () {
+                            if (state == AppState.free)
+                              _pickImageGallery();
+                            else if (state == AppState.picked) _cropImage();
+                          },
+                          child: _buildButtonIconGallery(),
+                        ),
                 ],
-              )
-            : Container(),
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.deepOrange,
-        onPressed: () {
-          if (state == AppState.free)
-            _pickImage();
-          else if (state == AppState.picked)
-            _cropImage();
-          else if (state == AppState.cropped) _clearImage();
-        },
-        child: _buildButtonIcon(),
-      ),
-    );
+              ));
   }
 
-  Widget _buildButtonIcon() {
+  Widget _buildButtonIconCamera() {
     if (state == AppState.free)
-      return Icon(Icons.add);
+      return Icon(Icons.camera);
     else if (state == AppState.picked)
       return Icon(Icons.crop);
     else if (state == AppState.cropped)
-      return Icon(Icons.clear);
+      return null;
     else
       return Container();
   }
 
-  Future<Null> _pickImage() async {
-    imageFile = await ImagePicker.pickImage(source: ImageSource.camera, maxWidth: 600);
+  Widget _buildButtonIconGallery() {
+    if (state == AppState.free)
+      return Icon(Icons.photo);
+    else if (state == AppState.picked)
+      return null;
+    else if (state == AppState.cropped)
+      return null;
+    else
+      return Container();
+  }
+
+  Future<Null> _pickImageCamera() async {
+    imageFile =
+        await ImagePicker.pickImage(source: ImageSource.camera, maxWidth: 600);
+    if (imageFile != null) {
+      setState(() {
+        state = AppState.picked;
+      });
+    }
+  }
+
+  Future<Null> _pickImageGallery() async {
+    imageFile =
+        await ImagePicker.pickImage(source: ImageSource.gallery, maxWidth: 600);
     if (imageFile != null) {
       setState(() {
         state = AppState.picked;
