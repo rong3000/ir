@@ -215,7 +215,10 @@ class ReceiptRepository {
     DataResult result =
         await webservicePost(Urls.AddReceipts, "", jsonEncode(receipts));
     if (result.success) {
-      result.obj = Receipt.fromJason(result.obj);
+      var receipts = List<Receipt>();
+      for (var receipt in result.obj){
+        receipts.add(Receipt.fromJason(receipt));
+      }
     }
 
     return result;

@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:equatable/equatable.dart';
 import 'package:intelligent_receipt/data_model/receipt.dart';
 import 'package:meta/meta.dart';
@@ -11,10 +9,19 @@ abstract class ReceiptEvent extends Equatable {
 
 class ManualReceiptUpload extends ReceiptEvent {
   final Receipt receipt;
-  final File image;
 
-  ManualReceiptUpload({@required this.receipt, @required this.image}) : super([receipt, image]);
+  ManualReceiptUpload({@required this.receipt}) : super([receipt]);
 
   @override
   String toString() => 'ReceiptUpload { receiptID :${receipt.id}'; 
+}
+
+
+class ManualReceiptUpdate extends ReceiptEvent {
+  final Receipt receipt;
+
+  ManualReceiptUpdate({@required this.receipt}) : super([receipt]);
+
+  @override
+  String toString() => 'ReceiptUpdate { receiptID :${receipt.id}'; 
 }

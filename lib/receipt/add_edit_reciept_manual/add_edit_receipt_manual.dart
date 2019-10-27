@@ -11,19 +11,21 @@ import 'package:intelligent_receipt/data_model/report_repository.dart';
 import 'package:intelligent_receipt/helper_widgets/date_time_picker.dart';
 import 'package:intelligent_receipt/receipt/bloc/receipt_bloc.dart';
 import 'package:intelligent_receipt/receipt/bloc/receipt_event.dart';
+import 'package:intelligent_receipt/receipt/bloc/receipt_state.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 
 class AddEditReiptForm extends StatefulWidget {
-  Receipt _receiptItem;
+  final Receipt _receiptItem;
 
   AddEditReiptForm(this._receiptItem);
-  
+
   @override
   State<StatefulWidget> createState() {
     var isNew = _receiptItem == null;
+    Receipt receipt;
 
     if (isNew) {
-      _receiptItem = Receipt()
+      receipt = Receipt()
         ..receiptDatetime = DateTime.now()
         ..receiptTypeId = 0
         ..productName = ""
@@ -33,9 +35,11 @@ class AddEditReiptForm extends StatefulWidget {
         ..warrantyPeriod = 0
         ..notes = ""
         ..categoryId = 1;
+    } else {
+      receipt = _receiptItem;
     }
 
-    return _AddEditReiptFormState(_receiptItem, isNew);
+    return _AddEditReiptFormState(receipt, isNew);
   }
 }
 
@@ -45,19 +49,27 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
   final pageTitleNew = 'Create Receipt';
 
   var isNew;
-  File receiptImage;
+  File receiptImageFile;
+  Image receiptImage;
   Receipt receipt;
   Currency defaultCurrency;
   var currenciesList = List<Currency>();
   var categoryList = List<Category>();
   UserRepository _userRepository;
   ReceiptBloc _receiptBloc;
+  ReceiptState _state;
 
   _AddEditReiptFormState(this.receipt, this.isNew) {
     defaultCurrency = Currency();
     defaultCurrency.code = 'AUD';
     if (this.receipt.categoryId < 1) {
       this.receipt.categoryId = 1;
+    }
+
+    if (!isNew && receipt.image != null) {
+      var imageData = UriData.parse(receipt.image);
+      var bytes = imageData.contentAsBytes();
+      receiptImage = Image.memory(bytes);
     }
   }
 
@@ -72,7 +84,9 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
     categoryList = _userRepository.categoryRepository.categories;
 
     if (categoryList.length == 0) {
-      _userRepository.categoryRepository.getCategoriesFromServer(forceRefresh: true).then((value) {
+      _userRepository.categoryRepository
+          .getCategoriesFromServer(forceRefresh: true)
+          .then((value) {
         this.setState(() {
           categoryList = _userRepository.categoryRepository.categories;
           receipt.categoryId = categoryList[0].id;
@@ -85,7 +99,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
         this.setState(() {
           currenciesList = _userRepository.settingRepository.getCurrencies();
           defaultCurrency = _userRepository.settingRepository.getDefaultCurrency() ??
-            defaultCurrency;
+                  defaultCurrency;
         });
       });
     }
@@ -101,24 +115,39 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
       this._formKey.currentState.save();
     }
 
-    if (this.receipt.image == null) {
-      var imageStream = this.receiptImage?.readAsBytesSync();
-      this.receipt.image = imageStream != null ? base64Encode(imageStream) : null;
-    }
     this.receipt.userId = this._userRepository.userId;
-    this.receipt.imagePath = this.receiptImage.path;
+
+    //common save logic
+    this.receipt.statusId = ReceiptStatusType.Reviewed.index;
     this.receipt.statusUpdateDatetime = DateTime.now();
 
-    this.receipt.statusId = ReceiptStatusType.Reviewed.index;
-    this.receipt.receiptTypeId = 0;
-    this.receipt.uploadDatetime =
-        isNew ? DateTime.now() : this.receipt.uploadDatetime;
     this.receipt.decodeStatus = DecodeStatusType.Success.index;
+    this.receipt.receiptTypeId = 0;
 
-    //TODO: update if not new
-    
-    _receiptBloc.dispatch(
-        ManualReceiptUpload(receipt: this.receipt, image: this.receiptImage));
+    // if this is not null we have a new receipt OR have changed the existing image
+    // either way send the base64 image to be saved/updated
+    if (receiptImageFile != null) {
+      this.receipt.imageFileExtension = this.receiptImageFile.path
+          .substring(this.receiptImageFile.path.lastIndexOf('.') + 1)
+          .trim();
+
+      var imageStream = this.receiptImageFile?.readAsBytesSync();
+      this.receipt.image = imageStream != null ? base64Encode(imageStream) : null;
+    } else {
+      // No update to image, set null so existing image is not re-sent to api for update
+      this.receipt.image = null;
+    }
+
+    // new logic
+    if (isNew) {
+      this.receipt.uploadDatetime = DateTime.now();
+
+      _receiptBloc.dispatch(ManualReceiptUpload(receipt: this.receipt));
+    } else {
+      //TODO: update if not new
+
+      _receiptBloc.dispatch(ManualReceiptUpdate(receipt: this.receipt));
+    }
   }
 
   String textFieldValidator(value) {
@@ -183,13 +212,15 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
     if (source != null) {
       var ri = await ImagePicker.pickImage(source: source, maxWidth: 600);
       setState(() {
-        receiptImage = ri;
+        receiptImageFile = ri;
+        receiptImage = Image.file(ri);
       });
     }
   }
 
   List<Widget> _getImageWidgets() {
     var widgets = List<Widget>();
+
     if (receiptImage != null) {
       widgets.add(
         Expanded(
@@ -202,7 +233,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
               child: Align(
                 alignment: Alignment.topCenter,
                 heightFactor: .6,
-                child: Image.file(receiptImage, fit: BoxFit.cover),
+                child: receiptImage,
               ),
             ),
           ),
@@ -233,17 +264,14 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
     return widgets;
   }
 
-  Future<void> _showFullImage(File image) async {
+  Future<void> _showFullImage(Widget childImage) async {
     await showDialog<void>(
         context: context,
         builder: (BuildContext context) {
           return SimpleDialog(
             children: <Widget>[
               SimpleDialogOption(
-                child: Image.file(
-                  image,
-                  width: 500,
-                ),
+                child: childImage,
               ),
               SimpleDialogOption(
                 child: FlatButton(
@@ -267,156 +295,203 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
           IconButton(
             icon: const Icon(Icons.delete),
             onPressed: () {
-              _deleteReceipt();
+              if (_state == null || !_state.uploadinProgress){
+                _deleteReceipt();
+              }
             },
           ),
           IconButton(
             icon: const Icon(Icons.done),
             onPressed: () {
-              this._saveForm();
+              if ( _state == null || !_state.uploadinProgress){
+                this._saveForm();
+              }
             },
           )
         ],
       ),
-      body: Padding(
-        padding: EdgeInsets.all(8.0),
-        child: ListView(
-          children: <Widget>[
-            Form(
-              key: _formKey,
-              child: Column(
-                children: <Widget>[
-                  IRDateTimePicker(
-                    labelText: 'Purchase Date',
-                    selectedDate: receipt.receiptDatetime,
-                    selectDate: (newValue) {
-                      setState(() {
-                        receipt.receiptDatetime = newValue;
-                      });
-                    },
-                  ),
-                  Row(
+      body: BlocListener(
+        bloc: _receiptBloc,
+        listener: (BuildContext context, ReceiptState state) {
+          _state = state;        
+          if (state.uploadFail) {
+            Scaffold.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                SnackBar(
+                  content: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Flexible(
-                        flex: 7,
-                        child: Padding(
-                          padding: EdgeInsets.only(top: 5),
-                          child: TextFormField(
-                            decoration:
-                                InputDecoration(labelText: 'Total Amount'),
-                            initialValue: receipt.totalAmount.toString(),
-                            validator: textFieldValidator,
-                            onSaved: (String value) {
-                              receipt.totalAmount = double.tryParse(value);
+                    children: [Text('Upload Failed'), Icon(Icons.error)],
+                  ),
+                  backgroundColor: Colors.red,
+                ),
+              );
+          }
+          if (state.uploadinProgress) {
+            Scaffold.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                SnackBar(
+                  content: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Uploading Receipt...'),
+                      CircularProgressIndicator(),
+                    ],
+                  ),
+                ),
+              );
+          }
+          if (state.uploadSuccess) {
+            Navigator.pop(context);
+          }
+        },
+        child: BlocBuilder(
+          bloc: _receiptBloc,
+          builder: (BuildContext context, ReceiptState state) {
+            return Padding(
+              padding: EdgeInsets.all(8.0),
+              child: ListView(
+                children: <Widget>[
+                  Form(
+                    key: _formKey,
+                    child: Column(
+                      children: <Widget>[
+                        IRDateTimePicker(
+                          labelText: 'Purchase Date',
+                          selectedDate: receipt.receiptDatetime,
+                          selectDate: (newValue) {
+                            setState(() {
+                              receipt.receiptDatetime = newValue;
+                            });
+                          },
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Flexible(
+                              flex: 7,
+                              child: Padding(
+                                padding: EdgeInsets.only(top: 5),
+                                child: TextFormField(
+                                  decoration: InputDecoration(labelText: 'Total Amount'),
+                                  initialValue: receipt.totalAmount.toString(),
+                                  validator: textFieldValidator,
+                                  onSaved: (String value) {
+                                    receipt.totalAmount = double.tryParse(value);
+                                  },
+                                ),
+                              ),
+                            ),
+                            Flexible(
+                              flex: 3,
+                              child: DropdownButtonFormField<String>(
+                                decoration:
+                                    InputDecoration(labelText: 'Currency Code'),
+                                items: _getCurrencyCodesList(),
+                                value: defaultCurrency.code,
+                                onSaved: (String value) {
+                                  receipt.currencyCode = value;
+                                },
+                                onChanged: (String newValue) {
+                                  setState(() {
+                                    defaultCurrency =
+                                        currenciesList.singleWhere(
+                                            (curr) => curr.code == newValue);
+                                  });
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                        FormField<bool>(
+                          builder: (formState) => CheckboxListTile(
+                            title: const Text('GST Inclusive'),
+                            value: receipt.gstInclusive,
+                            onChanged: (newValue) {
+                              setState(() {
+                                receipt.gstInclusive = !receipt.gstInclusive;
+                              });
                             },
                           ),
+                          onSaved: (newValue) {
+                            receipt.gstInclusive = receipt.gstInclusive;
+                          },
                         ),
-                      ),
-                      Flexible(
-                        flex: 3,
-                        child: DropdownButtonFormField<String>(
-                          decoration: InputDecoration(labelText: 'Currency Code'),
-                          items: _getCurrencyCodesList(),
-                          value: defaultCurrency.code,
+                        DropdownButtonFormField<int>(
+                          decoration: InputDecoration(labelText: 'Category'),
+                          items: _getCategorylist(),
+                          value: receipt.categoryId,
+                          onSaved: (int value) {
+                            receipt.categoryId = value;
+                          },
+                          onChanged: (int newValue) {
+                            setState(() {
+                              receipt.categoryId = newValue;
+                            });
+                          },
+                        ),
+                        TextFormField(
+                          decoration: InputDecoration(labelText: 'Shop/Vendor'),
+                          initialValue: receipt.companyName,
+                          validator: textFieldValidator,
                           onSaved: (String value) {
-                            receipt.currencyCode = value;
-                          },
-                          onChanged: (String newValue) {
-                            setState(() {
-                              defaultCurrency = currenciesList
-                                  .singleWhere((curr) => curr.code == newValue);
-                            });
+                            receipt.companyName = value;
                           },
                         ),
-                      ),
-                    ],
-                  ),
-                  FormField<bool>(
-                    builder: (formState) => CheckboxListTile(
-                      title: const Text('GST Inclusive'),
-                      value: receipt.gstInclusive,
-                      onChanged: (newValue) {
-                        setState(() {
-                          receipt.gstInclusive = !receipt.gstInclusive;
-                        });
-                      },
+                        TextFormField(
+                          initialValue: receipt.productName,
+                          validator: textFieldValidator,
+                          decoration: InputDecoration(labelText: 'Product Name'),
+                          onSaved: (String value) {
+                            receipt.productName = value;
+                          },
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Padding(
+                              padding: EdgeInsets.symmetric(vertical: 8.0),
+                              child: Text('Warranty Period'),
+                            ),
+                            FormField<double>(
+                              builder: (formFieldState) => Slider.adaptive(
+                                value: receipt.warrantyPeriod,
+                                divisions: receipt.warrantyPeriod < 24 ? 20 : 5,
+                                min: 0,
+                                max: 60,
+                                label:
+                                    '${receipt.warrantyPeriod < 24 ? receipt.warrantyPeriod : receipt.warrantyPeriod / 12} ${receipt.warrantyPeriod < 24 ? "months" : "years"}',
+                                onChanged: (newValue) {
+                                  setState(() {
+                                    receipt.warrantyPeriod = newValue;
+                                  });
+                                },
+                              ),
+                              onSaved: (double newValue) {
+                                receipt.warrantyPeriod = receipt.warrantyPeriod;
+                              },
+                            ),
+                          ],
+                        ),
+                        TextFormField(
+                          decoration: InputDecoration(labelText: 'Notes'),
+                          initialValue: receipt.notes,
+                          onSaved: (String value) {
+                            receipt.notes = value;
+                          },
+                        ),
+                      ],
                     ),
-                    onSaved: (newValue) {
-                      receipt.gstInclusive = receipt.gstInclusive;
-                    },
                   ),
-                  DropdownButtonFormField<int>(
-                    decoration: InputDecoration(labelText: 'Category'),
-                    items: _getCategorylist(),
-                    value: receipt.categoryId,
-                    onSaved: (int value) {
-                      receipt.categoryId = value;
-                    },
-                    onChanged: (int newValue) {
-                      setState(() {
-                        receipt.categoryId = newValue;
-                      });
-                    },
-                  ),
-                  TextFormField(
-                    decoration: InputDecoration(labelText: 'Shop/Vendor'),
-                    initialValue: receipt.companyName,
-                    validator: textFieldValidator,
-                    onSaved: (String value) {
-                      receipt.companyName = value;
-                    },
-                  ),
-                  TextFormField(
-                    initialValue: receipt.productName,
-                    validator: textFieldValidator,
-                    decoration: InputDecoration(labelText: 'Product Name'),
-                    onSaved: (String value) {
-                      receipt.productName = value;
-                    },
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.symmetric(vertical: 8.0),
-                        child: Text('Warranty Period'),
-                      ),
-                      FormField<double>(
-                        builder: (formFieldState) => Slider.adaptive(
-                          value: receipt.warrantyPeriod,
-                          divisions: receipt.warrantyPeriod < 24 ? 20 : 5,
-                          min: 0,
-                          max: 60,
-                          label:
-                              '${receipt.warrantyPeriod < 24 ? receipt.warrantyPeriod : receipt.warrantyPeriod / 12} ${receipt.warrantyPeriod < 24 ? "months" : "years"}',
-                          onChanged: (newValue) {
-                            setState(() {
-                              receipt.warrantyPeriod = newValue;
-                            });
-                          },
-                        ),
-                        onSaved: (double newValue) {
-                          receipt.warrantyPeriod = receipt.warrantyPeriod;
-                        },
-                      ),
-                    ],
-                  ),
-                  TextFormField(
-                    decoration: InputDecoration(labelText: 'Notes'),
-                    initialValue: receipt.notes,
-                    onSaved: (String value) {
-                      receipt.notes = value;
-                    },
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10),
+                    child: Row(children: _getImageWidgets()),
                   ),
                 ],
               ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 10),
-              child: Row(children: _getImageWidgets()),
-            ),
-          ],
+            );
+          },
         ),
       ),
     );
