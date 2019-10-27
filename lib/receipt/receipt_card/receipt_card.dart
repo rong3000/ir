@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -28,12 +27,9 @@ class ReceiptCard extends StatefulWidget {
 class _ReceiptCardState extends State<ReceiptCard> {
   CategoryRepository _categoryRepository;
 
-  CachedNetworkImage getImage(String imagePath) {
-    return new CachedNetworkImage(
-      imageUrl: Urls.GetImage + "/" + Uri.encodeComponent(imagePath),
-      placeholder: (context, url) => new CircularProgressIndicator(),
-      errorWidget: (context, url, error) => new Icon(Icons.error),
-    );
+  Image getImage(String imagePath) {
+    var  imageUrl = Urls.GetImage + "/" + Uri.encodeComponent(imagePath);
+    return Image.network(imageUrl) ;
   }
 
   @override

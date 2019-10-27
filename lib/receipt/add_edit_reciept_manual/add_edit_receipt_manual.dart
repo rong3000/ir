@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,7 +8,6 @@ import 'package:intelligent_receipt/data_model/category.dart';
 import 'package:intelligent_receipt/data_model/currency.dart';
 import 'package:intelligent_receipt/data_model/receipt.dart';
 import 'package:intelligent_receipt/data_model/report_repository.dart';
-import 'package:intelligent_receipt/data_model/webservice.dart';
 import 'package:intelligent_receipt/helper_widgets/date_time_picker.dart';
 import 'package:intelligent_receipt/receipt/bloc/receipt_bloc.dart';
 import 'package:intelligent_receipt/receipt/bloc/receipt_event.dart';
@@ -68,8 +66,9 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
     }
 
     if (!isNew){
-      var url = Urls.GetImage + "/" + Uri.encodeComponent(receipt.imagePath);
-      receiptImage = Image.memory(base64Decode(receipt.image)); //Image(image: CachedNetworkImageProvider());
+      var imageData = UriData.parse(receipt.image);
+      var bytes = imageData.contentAsBytes();
+      receiptImage = Image.memory(bytes);
     }
   }
 
