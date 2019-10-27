@@ -15,6 +15,10 @@ import 'package:intelligent_receipt/user_repository.dart';
 import 'package:intl/intl.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:intelligent_receipt/data_model/webservice.dart';
+import 'package:flutter/material.dart';
+import 'dart:math';
+import 'package:vector_math/vector_math.dart' show radians;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ReceiptsPage extends StatelessWidget {
   final UserRepository _userRepository;
@@ -93,7 +97,8 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
 
   Future<void> reviewAction(int receiptId) async {
     // Try to get the receipt detailed information from server
-    DataResult dataResult = await _userRepository.receiptRepository.getReceipt(receiptId);
+    DataResult dataResult =
+        await _userRepository.receiptRepository.getReceipt(receiptId);
     if (dataResult.success) {
       Navigator.of(context).push(
         MaterialPageRoute(builder: (context) {
@@ -134,44 +139,46 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: Row(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          FloatingActionButton(
-            heroTag: "btn1",
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) {
-                  return AddEditReiptForm(null);
-                }),
-              );
-            },
-            backgroundColor: Colors.redAccent,
-            child: const Icon(
-              Icons.add,
-              semanticLabel: 'Add Expense Manually',
-            ),
-          ),
-          FloatingActionButton(
-            heroTag: "btn2",
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => UploadReceiptImage(
-                        userRepository: _userRepository,
-                        imageSource: IRImageSource.Gallary)),
-              );
-            },
-            backgroundColor: Colors.redAccent,
-            child: const Icon(
-              Icons.camera,
-              semanticLabel: 'Snap Receipt',
-            ),
-          ),
-        ],
-      ),
+      floatingActionButton: SizedBox.expand(child: RadialMenu(
+        userRepository: _userRepository,
+      ),),
+//      Row(
+//        mainAxisSize: MainAxisSize.max,
+//        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//        children: <Widget>[
+//          FloatingActionButton(
+//            heroTag: "btn1",
+//            onPressed: () {
+//              Navigator.of(context).push(
+//                MaterialPageRoute(builder: (context) {
+//                  return AddEditReiptForm(null);
+//                }),
+//              );
+//            },
+//            backgroundColor: Colors.redAccent,
+//            child: const Icon(
+//              Icons.add,
+//              semanticLabel: 'Add Expense Manually',
+//            ),
+//          ),
+//          FloatingActionButton(
+//            heroTag: "btn2",
+//            onPressed: () {
+//              Navigator.push(
+//                context,
+//                MaterialPageRoute(
+//                    builder: (context) => UploadReceiptImage(
+//                        userRepository: _userRepository, title: "Snap new receipt",)),
+//              );
+//            },
+//            backgroundColor: Colors.redAccent,
+//            child: const Icon(
+//              Icons.camera,
+//              semanticLabel: 'Snap Receipt',
+//            ),
+//          ),
+//        ],
+//      ),
       body: Center(
         child: BlocBuilder(
             bloc: _homeBloc,
@@ -231,5 +238,374 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
             }),
       ),
     );
+  }
+}
+
+class FancyFab extends StatefulWidget {
+  final Function() onPressed;
+  final String tooltip;
+  final IconData icon;
+  final UserRepository _userRepository;
+
+  FancyFab(
+      {Key key,
+      @required UserRepository userRepository,
+      this.onPressed,
+      this.tooltip,
+      this.icon})
+      : assert(userRepository != null),
+        _userRepository = userRepository,
+        super(key: key) {}
+
+  @override
+  _FancyFabState createState() => _FancyFabState();
+}
+
+class _FancyFabState extends State<FancyFab>
+    with SingleTickerProviderStateMixin {
+  bool isOpened = false;
+  AnimationController _animationController;
+  Animation<Color> _buttonColor;
+  Animation<double> _animateIcon;
+  Animation<double> _translateButton;
+  Curve _curve = Curves.easeOut;
+  double _fabHeight = 56.0;
+  UserRepository get _userRepository => widget._userRepository;
+
+  @override
+  initState() {
+    _animationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 500))
+          ..addListener(() {
+            setState(() {});
+          });
+    _animateIcon =
+        Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);
+    _buttonColor = ColorTween(
+      begin: Colors.blue,
+      end: Colors.red,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Interval(
+        0.00,
+        1.00,
+        curve: Curves.linear,
+      ),
+    ));
+    _translateButton = Tween<double>(
+      begin: _fabHeight,
+      end: -14.0,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Interval(
+        0.0,
+        0.75,
+        curve: _curve,
+      ),
+    ));
+    super.initState();
+  }
+
+  @override
+  dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  animate() {
+    if (!isOpened) {
+      _animationController.forward();
+    } else {
+      _animationController.reverse();
+    }
+    isOpened = !isOpened;
+  }
+
+  Widget add() {
+    return Container(
+      child: FloatingActionButton(
+        heroTag: "add",
+        onPressed: null,
+        tooltip: 'Add',
+        child: Icon(Icons.add),
+      ),
+    );
+  }
+
+  Widget camera() {
+    return Container(
+      child: FloatingActionButton(
+        heroTag: "camera",
+        onPressed: () {
+          animate();
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => UploadReceiptImage(
+                      userRepository: _userRepository,
+                      title: "Snap new receipt",
+                    )),
+          );
+          setState(() {
+
+          });
+        },
+
+        tooltip: 'From Camera or gallery',
+        child: Icon(Icons.camera),
+//        label: Text("From Camera"),
+      ),
+    );
+  }
+
+  Widget manually() {
+    return Container(
+      child: FloatingActionButton(
+        heroTag: "manually",
+        onPressed: () {
+          animate();
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) {
+              return AddEditReiptForm(null);
+            }),
+          );
+          setState(() {
+
+          });
+        },
+        tooltip: 'Manually add receipt',
+        child: Icon(Icons.mode_edit),
+//        label: Text("From Gallery"),
+      ),
+    );
+  }
+
+  Widget toggle() {
+    return Container(
+      child: FloatingActionButton(
+        heroTag: "toggle",
+        backgroundColor: _buttonColor.value,
+        onPressed: animate,
+        tooltip: 'Toggle',
+        child: Icon(
+          Icons.add,
+//          progress: _animateIcon,
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: <Widget>[
+//        Transform(
+//          transform: Matrix4.translationValues(
+//            0.0,
+//            _translateButton.value * 3.0,
+//            0.0,
+//          ),
+//          child: add(),
+//        ),
+        Transform(
+          transform: Matrix4.translationValues(
+            0.0,
+            _translateButton.value * 2.0,
+            0.0,
+          ),
+          child: camera(),
+        ),
+        Transform(
+          transform: Matrix4.translationValues(
+            0.0,
+            _translateButton.value,
+            0.0,
+          ),
+          child: manually(),
+        ),
+        toggle(),
+      ],
+    );
+  }
+}
+
+
+// The stateful widget + animation controller
+class RadialMenu extends StatefulWidget {
+
+  final UserRepository _userRepository;
+
+  RadialMenu(
+      {Key key,
+        @required UserRepository userRepository})
+      : assert(userRepository != null),
+        _userRepository = userRepository,
+        super(key: key) {}
+
+  createState() => _RadialMenuState();
+}
+
+class _RadialMenuState extends State<RadialMenu> with SingleTickerProviderStateMixin {
+
+  AnimationController controller;
+
+  UserRepository get _userRepository => widget._userRepository;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = AnimationController(duration: Duration(milliseconds: 900), vsync: this);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return RadialAnimation(controller: controller, userRepository: _userRepository,);
+  }
+}
+
+
+// The Animation
+class RadialAnimation extends StatelessWidget {
+  RadialAnimation({ Key key, this.controller, this.userRepository,}) :
+
+        scale = Tween<double>(
+          begin: 1.5,
+          end: 0.0,
+        ).animate(
+          CurvedAnimation(
+              parent: controller,
+              curve: Curves.fastOutSlowIn
+          ),
+        ),
+        translation = Tween<double>(
+          begin: 0.0,
+          end: 100.0,
+        ).animate(
+          CurvedAnimation(
+              parent: controller,
+              curve: Curves.linear
+          ),
+        ),
+
+        rotation = Tween<double>(
+          begin: 0.0,
+          end: 360.0,
+        ).animate(
+          CurvedAnimation(
+            parent: controller,
+            curve: Interval(
+              0.3, 0.9,
+              curve: Curves.decelerate,
+            ),
+          ),
+        ),
+
+        super(key: key);
+
+  final AnimationController controller;
+  final Animation<double> scale;
+  final Animation<double> translation;
+  final Animation<double> rotation;
+  final UserRepository userRepository;
+
+  build(context) {
+    return AnimatedBuilder(
+        animation: controller,
+        builder: (context, builder) {
+          return Transform.rotate( // Add rotation
+              angle: radians(rotation.value),
+              child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+            Transform(
+                transform: Matrix4.identity()..translate(
+                    (translation.value) * cos(radians(180)),
+                    (translation.value) * sin(radians(180))
+                ),
+
+                child: FloatingActionButton(
+                  heroTag: "cam",
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => UploadReceiptImage(
+                            userRepository: userRepository,
+                            title: "Snap new receipt",
+                          )),
+                    );
+                  },
+                  tooltip: 'From Camera or gallery',
+                  child: Icon(Icons.camera),
+//        label: Text("From Camera"),
+                ),
+            ),
+                    Transform(
+                      transform: Matrix4.identity()..translate(
+                          (translation.value) * cos(radians(225)),
+                          (translation.value) * sin(radians(225))
+                      ),
+
+                      child: FloatingActionButton(
+                        heroTag: "man",
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(builder: (context) {
+                              return AddEditReiptForm(null);
+                            }),
+                          );
+                        },
+                        tooltip: 'Manually add receipt',
+                        child: Icon(Icons.mode_edit),
+//        label: Text("From Gallery"),
+                      ),
+                    ),
+                    Transform.scale(
+                      scale: scale.value - 1.5, // subtract the beginning value to run the opposite animation
+                      child: FloatingActionButton(
+                        heroTag: "MainOpened",
+                          child: Icon(FontAwesomeIcons.plus),
+                          onPressed: _close,
+                          backgroundColor: Colors.red
+                      ),
+                    ),
+                    Transform.scale(
+                      scale: scale.value,
+                      child: FloatingActionButton(
+                        heroTag: "MainClosed",
+                          child:
+                          Icon(FontAwesomeIcons.plus),
+                          onPressed: _open
+                      ),
+                    )
+                  ])
+          );
+        });
+  }
+
+  _buildButton(double angle, { Color color, IconData icon }) {
+    final double rad = radians(angle);
+    return Transform(
+        transform: Matrix4.identity()..translate(
+            (translation.value) * cos(rad),
+            (translation.value) * sin(rad)
+        ),
+
+        child: FloatingActionButton(
+            child: Icon(icon),
+            backgroundColor: color,
+            onPressed: (){print('a');},
+            elevation: 0
+        )
+    );
+  }
+
+  _open() {
+    controller.forward();
+  }
+
+  _close() {
+    controller.reverse();
   }
 }

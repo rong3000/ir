@@ -76,7 +76,7 @@ class _HomePageState extends State<HomePage> {
                                     onTap: () {
                                       Navigator.push(
                                         context,
-                                        MaterialPageRoute(builder: (context) => UploadReceiptImage(userRepository: _userRepository, imageSource: IRImageSource.Gallary)),
+                                        MaterialPageRoute(builder: (context) => UploadReceiptImage(userRepository: _userRepository, title: "Snap new receipt",)),
                                       );
                                     },
                                     child: Card(
