@@ -115,7 +115,7 @@ class _ReportsPageState extends State<ReportsPage> {
             MaterialPageRoute(builder: (context) {
               return AddReportScreen(
                   userRepository: _userRepository,
-                  title: 'Add Report',
+                  title: 'New Receipt Group',
               );
             }),
           );

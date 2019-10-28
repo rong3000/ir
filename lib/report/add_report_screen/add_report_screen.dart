@@ -122,7 +122,7 @@ class _AddReportScreenState extends State<AddReportScreen> {
                       controller: _emailController,
                       decoration: InputDecoration(
                         icon: Icon(Icons.title),
-                        labelText: 'Report Name',
+                        labelText: 'Receipt Group Name',
                       ),
                       autovalidate: true,
                       autocorrect: false,
@@ -218,13 +218,13 @@ class _AddReportScreenState extends State<AddReportScreen> {
                       onPressed:
                       isLoginButtonEnabled() ? _onReportSaved : null,
 //                      _onReportSaved,
-                      buttonName: 'Save Report',
+                      buttonName: 'Save Receipt Group',
                     ),
-                    ReportButton(
-                      onPressed:
-                      isLoginButtonEnabled() ? _onReportSubmitted : null,
-                      buttonName: 'Save & Submit Report',
-                    ),
+//                    ReportButton(
+//                      onPressed:
+//                      isLoginButtonEnabled() ? _onReportSubmitted : null,
+//                      buttonName: 'Save & Submit Report',
+//                    ),
                   ],
                 ),
               ),

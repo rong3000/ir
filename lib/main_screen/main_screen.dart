@@ -99,7 +99,7 @@ class MainScreenState extends State<MainScreen> {
                   icon: Icon(Icons.insert_chart, color: _defaultColor),
                   activeIcon: Icon(Icons.insert_chart, color: _activeColor),
                   title: Text(
-                    'Reports',
+                    'Receipt Groups',
                     style: TextStyle(
                         color:
                             _currentIndex != 2 ? _defaultColor : _activeColor),
@@ -145,7 +145,7 @@ class MainScreenState extends State<MainScreen> {
                 },
               ),
               ListTile(
-                title: Text('Check Archived Reports'),
+                title: Text('Archived Receipt Groups'),
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(builder: (context) {

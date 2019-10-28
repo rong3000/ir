@@ -227,12 +227,14 @@ class ReportListState extends State<ReportList> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   void reviewAction(int id) {
-    _userRepository.receiptRepository.resetCachedReceiptItems(_userRepository.reportRepository, reportID: id);
+    _userRepository.receiptRepository.resetCachedReceiptItems(
+        _userRepository.reportRepository,
+        reportID: id);
     Navigator.of(context).push(
       MaterialPageRoute(builder: (context) {
         return EditReportScreen(
           userRepository: _userRepository,
-          title: 'Edit Report',
+          title: 'Edit Receipt Group',
           reportId: id,
         );
       }),
@@ -388,72 +390,79 @@ class ReportListState extends State<ReportList> {
 
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          title: Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              GestureDetector(
-                onTap: () {
-                  _selectFromDate(context);
-                },
-                child: Text(
-                  "From   ${DateFormat().add_yMd().format(_fromDate.toLocal())}",
-                  style: DefaultTextStyle.of(context)
-                      .style
-                      .apply(fontSizeFactor: 0.8),
-                ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  _selectToDate(context);
-                },
-                child: Text(
-                  "    To   ${DateFormat().add_yMd().format(_toDate.toLocal())}",
-                  style: DefaultTextStyle.of(context)
-                      .style
-                      .apply(fontSizeFactor: 0.8),
-                ),
-              ),
-              GestureDetector(
-                  onTapDown: (details) {
-                    return _onTapDown(details, context);
-                  },
-                  onTap: () {
-                    if (subMenuOverlayEntry != null) {
-                      subMenuOverlayEntry.remove();
-                      subMenuOverlayEntry = null;
-                      return Future.value(false);
-                    }
-                    showSubMenuView(
-                        dy2 + 120,
-                        (dx2 < MediaQuery.of(context).size.width - 200)
-                            ? (MediaQuery.of(context).size.width - 200 - dx2)
-                            : (MediaQuery.of(context).size.width - dx2));
-                  },
-                  child: Row(
-                    children: <Widget>[
-                      Text(
-                        "Sort By [${sortingType.toString().split('.')[1]}]",
-                        style: DefaultTextStyle.of(context)
-                            .style
-                            .apply(fontSizeFactor: 0.8),
+        appBar: PreferredSize(
+          preferredSize: Size(50.0, 50.0),
+          child: Container(
+            height: 50.0,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    GestureDetector(
+                      onTap: () {
+                        _selectFromDate(context);
+                      },
+                      child: Text(
+                        "From ${DateFormat().add_yMd().format(_fromDate.toLocal())}",
+                        style: TextStyle(height: 1, fontSize: 12),
                       ),
-                      Icon(
-                        ascending ? Icons.arrow_upward : Icons.arrow_downward,
-                        color: Colors.black,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        _selectToDate(context);
+                      },
+                      child: Text(
+                        "    To ${DateFormat().add_yMd().format(_toDate.toLocal())}",
+                        style: TextStyle(height: 1, fontSize: 12),
                       ),
-                      IconButton(
-                        icon: Icon(
-                          Theme.of(context).platform == TargetPlatform.iOS
-                              ? Icons.more_horiz
-                              : Icons.more_vert,
-                        ),
-                        tooltip: 'Show menu',
+                    ),
+                    GestureDetector(
+                        onTapDown: (details) {
+                          return _onTapDown(details, context);
+                        },
+                        onTap: () {
+                          if (subMenuOverlayEntry != null) {
+                            subMenuOverlayEntry.remove();
+                            subMenuOverlayEntry = null;
+                            return Future.value(false);
+                          }
+                          showSubMenuView(
+                              dy2 + 120,
+                              (dx2 < MediaQuery.of(context).size.width - 200)
+                                  ? (MediaQuery.of(context).size.width -
+                                      200 -
+                                      dx2)
+                                  : (MediaQuery.of(context).size.width - dx2));
+                        },
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+//                    mainAxisAlignment: MainAxisAlignment.,
+                          children: <Widget>[
+                            Text(
+                              "Sort By [${sortingType.toString().split('.')[1]}]",
+                              style: TextStyle(height: 1, fontSize: 12),
+                            ),
+                            Icon(
+                              ascending
+                                  ? Icons.arrow_upward
+                                  : Icons.arrow_downward,
+                              color: Colors.black,
+                            ),
+                            IconButton(
+                              icon: Icon(
+                                Theme.of(context).platform == TargetPlatform.iOS
+                                    ? Icons.more_horiz
+                                    : Icons.more_vert,
+                                color: Colors.black,
+                              ),
+                              tooltip: 'Show menu',
 //                      onPressed: _bottomSheet == null ? _showConfigurationSheet : null,
-                      ),
-                    ],
-                  )),
+                            ),
+                          ],
+                        )),
 //              Expanded(
 //                child: PopupMenuButton<ReportSortType>(
 //                  padding: EdgeInsets.zero,
@@ -505,7 +514,10 @@ class ReportListState extends State<ReportList> {
 ////                                ),
 ////                              ),
 //              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
         body: FutureBuilder<DataResult>(
@@ -528,10 +540,13 @@ class ReportListState extends State<ReportList> {
                     );
                   } else {
                     if (snapshot.data.success) {
-                      List<Report> sortedReportItems = _userRepository
-                          .reportRepository
-                          .getSortedReportItems(_reportStatusType,
-                              sortingType, ascending, _fromDate, _toDate);
+                      List<Report> sortedReportItems =
+                          _userRepository.reportRepository.getSortedReportItems(
+                              _reportStatusType,
+                              sortingType,
+                              ascending,
+                              _fromDate,
+                              _toDate);
                       List<ActionWithLable> actions = [];
                       ActionWithLable r = new ActionWithLable();
                       r.action = reviewAction;

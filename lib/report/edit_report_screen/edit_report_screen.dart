@@ -158,7 +158,7 @@ class _EditReportScreenState extends State<EditReportScreen> {
                       controller: _emailController,
                       decoration: InputDecoration(
                         icon: Icon(Icons.title),
-                        labelText: 'Report Name',
+                        labelText: 'Group Name',
                       ),
                       autovalidate: true,
                       autocorrect: false,
@@ -256,12 +256,12 @@ class _EditReportScreenState extends State<EditReportScreen> {
                       onPressed:
                       isLoginButtonEnabled() ? _onReportSaved : null,
 //                      _onReportSaved,
-                      buttonName: 'Save Report',
+                      buttonName: 'Save receipt group',
                     ),
                     ReportButton(
                       onPressed:
                       isLoginButtonEnabled() ? _onReportSubmitted : null,
-                      buttonName: 'Save & Submit Report',
+                      buttonName: 'Archive receipt group',
                     ),
                   ],
                 ),
