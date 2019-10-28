@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intelligent_receipt/authentication_bloc/bloc.dart';
+import 'package:intelligent_receipt/data_model/enums.dart';
 import 'package:intelligent_receipt/main_screen/bloc/bloc.dart';
 import 'package:intelligent_receipt/login/login.dart';
 import 'package:intelligent_receipt/main_screen/home_page/home_page.dart';
@@ -60,7 +61,9 @@ class MainScreenState extends State<MainScreen> {
           children: <Widget>[
             HomePage(userRepository: _userRepository, action: jumpTo,),
             ReceiptsPage(userRepository: _userRepository),
-            ReportsPage(userRepository: _userRepository),
+            ReportsPage(
+                userRepository: _userRepository,
+                reportStatusType: ReportStatusType.Active),
             SettingsPage(userRepository: _userRepository, name: name),
           ],
         ),
@@ -139,6 +142,18 @@ class MainScreenState extends State<MainScreen> {
                     LoggedOut(),
                   );
                   Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                title: Text('Check Archived Reports'),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) {
+                      return ReportsPage(
+                          userRepository: _userRepository,
+                          reportStatusType: ReportStatusType.Submitted);
+                    }),
+                  );
                 },
               ),
             ],
