@@ -38,6 +38,9 @@ class AddEditReiptForm extends StatefulWidget {
     } else {
       receipt = _receiptItem;
     }
+    if (receipt.gstInclusive == null) {
+      receipt.gstInclusive = true;
+    }
 
     return _AddEditReiptFormState(receipt, isNew);
   }
@@ -62,11 +65,11 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
   _AddEditReiptFormState(this.receipt, this.isNew) {
     defaultCurrency = Currency();
     defaultCurrency.code = 'AUD';
-    if (this.receipt.categoryId < 1) {
+    if ((this.receipt.categoryId == null) || (this.receipt.categoryId < 1)) {
       this.receipt.categoryId = 1;
     }
 
-    if (!isNew && receipt.image != null) {
+    if (!isNew && receipt.image != null && receipt.image.isNotEmpty) {
       var imageData = UriData.parse(receipt.image);
       var bytes = imageData.contentAsBytes();
       receiptImage = Image.memory(bytes);
@@ -113,6 +116,8 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
   void _saveForm() {
     if (this._formKey.currentState.validate()) {
       this._formKey.currentState.save();
+    } else {
+      return;
     }
 
     this.receipt.userId = this._userRepository.userId;
@@ -184,7 +189,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
   Future<ImageSource> _getImageSource() async {
     return showDialog<ImageSource>(
       context: context,
-      barrierDismissible: true, // Allow to be closed without selecting option
+      //barrierDismissible: true, // Allow to be closed without selecting option
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Select Image Source'),
@@ -344,6 +349,22 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
           }
           if (state.uploadSuccess) {
             Navigator.pop(context);
+            showDialog<void>(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text('Receipt has been saved'),
+                    content: new Text("Go to Receipts/Reviewed tab to view the receipt."),
+                    actions: <Widget>[
+                      FlatButton(
+                        child: Text('Close'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      )
+                    ],
+                  );
+                });
           }
         },
         child: BlocBuilder(
@@ -375,7 +396,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
                                 padding: EdgeInsets.only(top: 5),
                                 child: TextFormField(
                                   decoration: InputDecoration(labelText: 'Total Amount'),
-                                  initialValue: receipt.totalAmount.toString(),
+                                  initialValue: receipt.totalAmount == 0 ? "0" : receipt.totalAmount.toString(),
                                   validator: textFieldValidator,
                                   onSaved: (String value) {
                                     receipt.totalAmount = double.tryParse(value);
@@ -407,7 +428,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
                         FormField<bool>(
                           builder: (formState) => CheckboxListTile(
                             title: const Text('GST Inclusive'),
-                            value: receipt.gstInclusive,
+                            value: receipt.gstInclusive ?? true,
                             onChanged: (newValue) {
                               setState(() {
                                 receipt.gstInclusive = !receipt.gstInclusive;
@@ -441,7 +462,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
                         ),
                         TextFormField(
                           initialValue: receipt.productName,
-                          validator: textFieldValidator,
+                          //validator: textFieldValidator,
                           decoration: InputDecoration(labelText: 'Product Name'),
                           onSaved: (String value) {
                             receipt.productName = value;
