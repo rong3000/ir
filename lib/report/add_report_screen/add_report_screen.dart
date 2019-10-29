@@ -114,7 +114,7 @@ class _AddReportScreenState extends State<AddReportScreen> {
         child: Column(
           children: <Widget>[
             Expanded(
-              flex: 2,
+              flex: 3,
               child: Form(
                 child: ListView(
                   children: <Widget>[
@@ -193,7 +193,7 @@ class _AddReportScreenState extends State<AddReportScreen> {
               ),
             ),
             Expanded(
-              flex: 5,
+              flex: 4,
               child: ListView.builder(
                 itemCount: _userRepository.receiptRepository.cachedReceiptItems.length,
                 itemBuilder: (context, index) {

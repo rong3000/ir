@@ -399,25 +399,83 @@ class ReportListState extends State<ReportList> {
               children: <Widget>[
                 Row(
                   mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
-                    GestureDetector(
-                      onTap: () {
-                        _selectFromDate(context);
-                      },
-                      child: Text(
-                        "From ${DateFormat().add_yMd().format(_fromDate.toLocal())}",
-                        style: TextStyle(height: 1, fontSize: 12),
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        _selectToDate(context);
-                      },
-                      child: Text(
-                        "    To ${DateFormat().add_yMd().format(_toDate.toLocal())}",
-                        style: TextStyle(height: 1, fontSize: 12),
-                      ),
+                    Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        GestureDetector(
+                          onTap: () {
+                            _selectFromDate(context);
+                          },
+                          child: Text(
+                            "${DateFormat().add_yMd().format(_fromDate.toLocal())}",
+                            style: TextStyle(height: 1, fontSize: 12),
+                          ),
+                        ),
+                        Icon(Icons.repeat),
+                        GestureDetector(
+                          onTap: () {
+                            _selectToDate(context);
+                          },
+                          child: Text(
+                            "${DateFormat().add_yMd().format(_toDate.toLocal())}",
+                            style: TextStyle(height: 1, fontSize: 12),
+                          ),
+                        ),
+//              Expanded(
+//                child: PopupMenuButton<ReportSortType>(
+//                  padding: EdgeInsets.zero,
+//                  initialValue: _simpleValue,
+//                  onSelected: showMenuSelection,
+//                  child: ListTile(
+//                    title: Text(
+//                        'Sort By [${_simpleValue.toString().split('.')[1]}]'),
+////                                  subtitle: Text(_simpleValue),
+//                  ),
+//                  itemBuilder: (BuildContext context) =>
+//                      <PopupMenuItem<ReportSortType>>[
+//                    PopupMenuItem<ReportSortType>(
+//                      value: _simpleValue1,
+//                      child: Text(_simpleValue1.toString().split('.')[1]),
+//                    ),
+//                    PopupMenuItem<ReportSortType>(
+//                      value: _simpleValue2,
+//                      child: Text(_simpleValue2.toString().split('.')[1]),
+//                    ),
+//                    PopupMenuItem<ReportSortType>(
+//                      value: _simpleValue3,
+//                      child: Text(_simpleValue3.toString().split('.')[1]),
+//                    ),
+//                    PopupMenuItem<ReportSortType>(
+//                      value: _simpleValue4,
+//                      child: Text(_simpleValue4.toString().split('.')[1]),
+//                    ),
+//                    PopupMenuItem<ReportSortType>(
+//                      value: _simpleValue5,
+//                      child: Text(_simpleValue5.toString().split('.')[1]),
+//                    ),
+//                  ],
+//                ), //                              ListTile(
+////                                title: const Text('Simple dropdown:'),
+////                                trailing: DropdownButton<String>(
+////                                  value: dropdown1Value,
+////                                  onChanged: (String newValue) {
+////                                    setState(() {
+////                                      dropdown1Value = newValue;
+////                                    });
+////                                  },
+////                                  items: <String>['One', 'Two', 'Free', 'Four'].map<DropdownMenuItem<String>>((String value) {
+////                                    return DropdownMenuItem<String>(
+////                                      value: value,
+////                                      child: Text(value),
+////                                    );
+////                                  }).toList(),
+////                                ),
+////                              ),
+//              ),
+                      ],
                     ),
                     GestureDetector(
                         onTapDown: (details) {
@@ -433,16 +491,18 @@ class ReportListState extends State<ReportList> {
                               dy2 + 120,
                               (dx2 < MediaQuery.of(context).size.width - 200)
                                   ? (MediaQuery.of(context).size.width -
-                                      200 -
-                                      dx2)
+                                  200 -
+                                  dx2)
                                   : (MediaQuery.of(context).size.width - dx2));
                         },
                         child: Row(
-                          mainAxisSize: MainAxisSize.min,
-//                    mainAxisAlignment: MainAxisAlignment.,
+                          mainAxisSize: MainAxisSize.max,
+
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
+                            Icon(Icons.sort),
                             Text(
-                              "Sort By [${sortingType.toString().split('.')[1]}]",
+                              "[${sortingType.toString().split('.')[1]}]",
                               style: TextStyle(height: 1, fontSize: 12),
                             ),
                             Icon(
@@ -451,16 +511,22 @@ class ReportListState extends State<ReportList> {
                                   : Icons.arrow_downward,
                               color: Colors.black,
                             ),
-                            IconButton(
-                              icon: Icon(
-                                Theme.of(context).platform == TargetPlatform.iOS
-                                    ? Icons.more_horiz
-                                    : Icons.more_vert,
-                                color: Colors.black,
-                              ),
-                              tooltip: 'Show menu',
-//                      onPressed: _bottomSheet == null ? _showConfigurationSheet : null,
+                            Icon(
+                              Theme.of(context).platform == TargetPlatform.iOS
+                                  ? Icons.more_horiz
+                                  : Icons.more_vert,
+                              color: Colors.black,
                             ),
+//                            IconButton(
+//                              icon: Icon(
+//                                Theme.of(context).platform == TargetPlatform.iOS
+//                                    ? Icons.more_horiz
+//                                    : Icons.more_vert,
+//                                color: Colors.black,
+//                              ),
+//                              tooltip: 'Show menu',
+////                      onPressed: _bottomSheet == null ? _showConfigurationSheet : null,
+//                            ),
                           ],
                         )),
 //              Expanded(

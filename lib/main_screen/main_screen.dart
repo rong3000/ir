@@ -99,7 +99,7 @@ class MainScreenState extends State<MainScreen> {
                   icon: Icon(Icons.insert_chart, color: _defaultColor),
                   activeIcon: Icon(Icons.insert_chart, color: _activeColor),
                   title: Text(
-                    'Receipt Groups',
+                    'Groups',
                     style: TextStyle(
                         color:
                             _currentIndex != 2 ? _defaultColor : _activeColor),

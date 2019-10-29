@@ -147,7 +147,7 @@ class _ReceiptCardState extends State<ReceiptCard> {
                 children: <Widget>[
                   Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 2.0),
+                      padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
                       child: DefaultTextStyle(
                         softWrap: false,
                         overflow: TextOverflow.ellipsis,
@@ -159,7 +159,7 @@ class _ReceiptCardState extends State<ReceiptCard> {
                           children: <Widget>[
                             // three line description
                             Padding(
-                              padding: const EdgeInsets.only(bottom: 10.0),
+                              padding: const EdgeInsets.only(bottom: 0.0),
                               child: Text(
                                 "Uploaded ${DateFormat().add_yMd().format(widget._receiptItem.uploadDatetime.toLocal())}",
                                 style: dateStyle
@@ -189,8 +189,11 @@ class _ReceiptCardState extends State<ReceiptCard> {
                     ),
                   ),
                   ButtonTheme.bar(
+                    minWidth: 0,
+                    padding : const EdgeInsets.symmetric(horizontal: 4.0),
                     child: ButtonBar(
                       mainAxisSize: MainAxisSize.min,
+                      alignment: MainAxisAlignment.start,
                       children: widget.actions
                           .map<Widget>((ActionWithLabel action) =>
                               _actionButton(context, action))

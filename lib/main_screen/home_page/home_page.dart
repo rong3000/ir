@@ -135,7 +135,7 @@ class _HomePageState extends State<HomePage> {
                                     },
                                     child: Card(
                                       child: ListTile(
-                                        title: Text('View Reports'),
+                                        title: Text('View Receipt Groups'),
                                       ),
                                     ),
                                   ),

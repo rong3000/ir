@@ -87,7 +87,7 @@ class _ReportCardState extends State<ReportCard> {
             flex: 2,
             child: Container(
 //              decoration: myBoxDecoration(),
-              height: MediaQuery.of(context).size.height * 0.12,
+              height: MediaQuery.of(context).size.height * 0.14,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -136,7 +136,7 @@ class _ReportCardState extends State<ReportCard> {
             flex: 2,
             child: Container(
 //              decoration: myBoxDecoration(),
-              height: MediaQuery.of(context).size.height * 0.12,
+              height: MediaQuery.of(context).size.height * 0.14,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -177,8 +177,11 @@ class _ReportCardState extends State<ReportCard> {
                     ),
                   ),
                   ButtonTheme.bar(
+                    minWidth: 0,
+                    padding : const EdgeInsets.symmetric(horizontal: 6.0),
                     child: ButtonBar(
                       mainAxisSize: MainAxisSize.min,
+                      alignment: MainAxisAlignment.start,
                       children:
                       widget.actions.map<Widget>(
                               (ActionWithLable action) =>
