@@ -109,8 +109,8 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
     super.initState();
   }
 
-  void _deleteReceipt() {
-    // TODO handle delete/clear
+  Future<void> _deleteReceipt() async {
+    _receiptBloc.dispatch(ManualReceiptDelete(receipt: this.receipt));
   }
 
   void _saveForm() {
@@ -269,6 +269,25 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
     return widgets;
   }
 
+  void _showMessage(String title, String message) {
+    showDialog<void>(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(title),
+            content: new Text(message),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Close'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          );
+        });
+  }
+
   Future<void> _showFullImage(Widget childImage) async {
     await showDialog<void>(
         context: context,
@@ -291,29 +310,37 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
         });
   }
 
+  List<Widget> _getAppBarButtons() {
+    List<Widget> buttons = new List<Widget>();
+    if (!isNew) {
+      buttons.add(IconButton(
+        icon: const Icon(Icons.delete),
+        onPressed: () {
+          if (_state == null || !_state.uploadinProgress){
+            _deleteReceipt();
+          }
+        },
+      ));
+    }
+
+    buttons.add(IconButton(
+      icon: const Icon(Icons.done),
+      onPressed: () {
+        if ( _state == null || !_state.uploadinProgress){
+          this._saveForm();
+        }
+      },
+    ));
+
+    return buttons;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(isNew ? pageTitleNew : pageTitleEdit),
-        actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.delete),
-            onPressed: () {
-              if (_state == null || !_state.uploadinProgress){
-                _deleteReceipt();
-              }
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.done),
-            onPressed: () {
-              if ( _state == null || !_state.uploadinProgress){
-                this._saveForm();
-              }
-            },
-          )
-        ],
+        actions: _getAppBarButtons(),
       ),
       body: BlocListener(
         bloc: _receiptBloc,
@@ -349,22 +376,39 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
           }
           if (state.uploadSuccess) {
             Navigator.pop(context);
-            showDialog<void>(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: Text('Receipt has been saved'),
-                    content: new Text("Go to Receipts/Reviewed tab to view the receipt."),
-                    actions: <Widget>[
-                      FlatButton(
-                        child: Text('Close'),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      )
+            _showMessage("Receipt has been saved", "Go to Receipts/Reviewed tab to view the receipt.");
+          }
+          if (state.deleteSuccess) {
+            Navigator.of(context).pop();
+            _showMessage("Delete Receipt", "Receipt was successfully deleted.");
+          }
+          if (state.deleteInProgress) {
+            Scaffold.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                SnackBar(
+                  content: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Deleting Receipt...'),
+                      CircularProgressIndicator(),
                     ],
-                  );
-                });
+                  ),
+                ),
+              );
+          }
+          if (state.deleteFail) {
+            Scaffold.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                SnackBar(
+                  content: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [Text("Delete receipt failed: " + state.errorMessage), Icon(Icons.error)],
+                  ),
+                  backgroundColor: Colors.red,
+                ),
+              );
           }
         },
         child: BlocBuilder(
@@ -380,7 +424,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
                       children: <Widget>[
                         IRDateTimePicker(
                           labelText: 'Purchase Date',
-                          selectedDate: receipt.receiptDatetime,
+                          selectedDate: receipt.receiptDatetime.isBefore(DateTime(1970)) ? DateTime.now() : receipt.receiptDatetime,
                           selectDate: (newValue) {
                             setState(() {
                               receipt.receiptDatetime = newValue;

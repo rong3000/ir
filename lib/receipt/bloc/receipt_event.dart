@@ -23,5 +23,14 @@ class ManualReceiptUpdate extends ReceiptEvent {
   ManualReceiptUpdate({@required this.receipt}) : super([receipt]);
 
   @override
-  String toString() => 'ReceiptUpdate { receiptID :${receipt.id}'; 
+  String toString() => 'ReceiptUpdate { receiptID :${receipt.id}';
+}
+
+class ManualReceiptDelete extends ReceiptEvent {
+  final Receipt receipt;
+
+  ManualReceiptDelete({@required this.receipt}) : super([receipt]);
+
+  @override
+  String toString() => 'ReceiptDelete { receiptID :${receipt.id}';
 }
