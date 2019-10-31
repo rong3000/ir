@@ -81,7 +81,7 @@ class _FBState extends State<FB> {
                   //padding: new EdgeInsets.all(16.0),
                   minWidth: 150.0,
                   onPressed: () => _signIn(context)
-                      .then((FirebaseUser user) => print(user))
+                      .then((FirebaseUser user) => print('***************************${user}'))
                       .catchError((e) => print(e)),
                   child: new Text('Sign in with Facebook'),
                   color: Colors.lightBlueAccent,
