@@ -9,6 +9,7 @@ import 'package:intelligent_receipt/main_screen/settings_page/settings_page.dart
 import 'package:intelligent_receipt/main_screen/reports_page/reports_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intelligent_receipt/user_repository.dart';
+import 'FB/FB.dart';
 import 'receipts_page/receipts_page.dart';
 
 class MainScreen extends StatefulWidget {
@@ -131,6 +132,16 @@ class MainScreenState extends State<MainScreen> {
                   Navigator.of(context).push(
                     MaterialPageRoute(builder: (context) {
                       return LoginScreen(userRepository: _userRepository);
+                    }),
+                  );
+                },
+              ),
+              ListTile(
+                title: Text('FB'),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) {
+                      return FB();
                     }),
                   );
                 },
