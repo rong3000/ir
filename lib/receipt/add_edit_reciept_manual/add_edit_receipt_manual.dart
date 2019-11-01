@@ -376,7 +376,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
           }
           if (state.uploadSuccess) {
             Navigator.pop(context);
-            _showMessage("Receipt has been saved", "Go to Receipts/Reviewed tab to view the receipt.");
+            _showMessage("Receipt has been saved", "Receipt is being listed in Receipts/Reviewed tab.");
           }
           if (state.deleteSuccess) {
             Navigator.of(context).pop();
