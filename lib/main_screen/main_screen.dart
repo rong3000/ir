@@ -137,16 +137,16 @@ class MainScreenState extends State<MainScreen> {
                   );
                 },
               ),
-              ListTile(
-                title: Text('FB'),
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) {
-                      return FB2();
-                    }),
-                  );
-                },
-              ),
+//              ListTile(
+//                title: Text('FB'),
+//                onTap: () {
+//                  Navigator.of(context).push(
+//                    MaterialPageRoute(builder: (context) {
+//                      return FB();
+//                    }),
+//                  );
+//                },
+//              ),
               ListTile(
                 title: Text('Log Out'),
                 onTap: () {

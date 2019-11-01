@@ -21,15 +21,17 @@ class _FBState extends State<FB> {
 
   Future<FirebaseUser> _signIn(BuildContext context) async {
     Scaffold.of(context).showSnackBar(new SnackBar(
-          content: new Text('Sign in button clicked'),
-        ));
+      content: new Text('Sign in button clicked'),
+    ));
 
     final FacebookLoginResult result =
-        await facebookSignIn.logIn(['email']);
+    await facebookSignIn.logIn(['email']);
 
-    FirebaseUser user =
-        await _fAuth.signInWithCustomToken(token: result.accessToken.token);
+    AuthCredential credential = FacebookAuthProvider.getCredential(accessToken: result.accessToken.token);
+
+    await _fAuth.signInWithCredential(credential);
     //Token: ${accessToken.token}
+    FirebaseUser user = await _fAuth.currentUser();
 
     ProviderDetails userInfo = new ProviderDetails(
         user.providerId, user.uid, user.displayName, user.photoUrl, user.email);
@@ -60,45 +62,47 @@ class _FBState extends State<FB> {
   Future<Null> _signOut(BuildContext context) async {
     await facebookSignIn.logOut();
     Scaffold.of(context).showSnackBar(new SnackBar(
-          content: new Text('Sign out button clicked'),
-        ));
+      content: new Text('Sign out button clicked'),
+    ));
     print('Signed out');
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: new AppBar(
-        title: new Text('Fb Sign In with Firebase'),
-      ),
-      body: new Builder(
-        builder: (BuildContext context) {
-          return new Center(
-            child: new Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                new MaterialButton(
-                  //padding: new EdgeInsets.all(16.0),
-                  minWidth: 150.0,
-                  onPressed: () => _signIn(context)
-                      .then((FirebaseUser user) => print('***************************${user}'))
-                      .catchError((e) => print(e)),
-                  child: new Text('Sign in with Facebook'),
-                  color: Colors.lightBlueAccent,
-                ),
-                new Padding(
-                  padding: const EdgeInsets.all(5.0),
-                ),
-                new MaterialButton(
-                  minWidth: 150.0,
-                  onPressed: () => _signOut(context),
-                  child: new Text('Sign Out'),
-                  color: Colors.lightBlueAccent,
-                ),
-              ],
-            ),
-          );
-        },
+    return new MaterialApp(
+      home: new Scaffold(
+        appBar: new AppBar(
+          title: new Text('Fb Sign In with Firebase'),
+        ),
+        body: new Builder(
+          builder: (BuildContext context) {
+            return new Center(
+              child: new Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  new MaterialButton(
+                    //padding: new EdgeInsets.all(16.0),
+                    minWidth: 150.0,
+                    onPressed: () => _signIn(context)
+                        .then((FirebaseUser user) => print(user))
+                        .catchError((e) => print(e)),
+                    child: new Text('Sign in with Facebook'),
+                    color: Colors.lightBlueAccent,
+                  ),
+                  new Padding(
+                    padding: const EdgeInsets.all(5.0),
+                  ),
+                  new MaterialButton(
+                    minWidth: 150.0,
+                    onPressed: () => _signOut(context),
+                    child: new Text('Sign Out'),
+                    color: Colors.lightBlueAccent,
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }
