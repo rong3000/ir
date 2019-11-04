@@ -44,6 +44,7 @@ dependencies:
   rflutter_alert: ^1.0.3
   cached_network_image: ^1.1.1
   flutter_masked_text: ^0.8.0
+  flutter_facebook_login: ^3.0.0
 
 dev_dependencies:
   flutter_test:

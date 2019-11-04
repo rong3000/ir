@@ -10,7 +10,7 @@ import 'package:intelligent_receipt/main_screen/settings_page/plan_screen/plan_s
 import 'package:intelligent_receipt/receipt/add_edit_reciept_manual/add_edit_receipt_manual.dart';
 import 'package:intelligent_receipt/receipt/edit_receipt/edit_receipt.dart';
 import 'package:intelligent_receipt/receipt/receipt_list/receipt_list.dart';
-import 'package:intelligent_receipt/receipt/upload_receipt_image/update_receipt_image.dart';
+import 'package:intelligent_receipt/receipt/upload_receipt_image/upload_receipt_image.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 import 'package:intl/intl.dart';
 import 'package:cached_network_image/cached_network_image.dart';

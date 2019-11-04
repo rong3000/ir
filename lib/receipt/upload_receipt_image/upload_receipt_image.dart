@@ -6,6 +6,7 @@ import 'dart:io';
 import "package:rflutter_alert/rflutter_alert.dart";
 import 'dart:async';
 import 'package:image_cropper/image_cropper.dart';
+import '../add_edit_reciept_manual/add_edit_receipt_manual.dart';
 
 class UploadReceiptImage extends StatefulWidget {
   final UserRepository _userRepository;
@@ -90,15 +91,12 @@ class _UploadReceiptImageState extends State<UploadReceiptImage> {
     return new Icon(
       iconData,
       color: color,
-      size: 80,
+      size: 50,
     );
   }
 
-  Widget getErrorPage(String titleTxt, String message,
-      {AlertType alertType: AlertType.info}) {
-    return Scaffold(
-        appBar: AppBar(title: Text(titleTxt)),
-        body: Center(
+  Widget _getResultWidget(String message, {AlertType alertType: AlertType.info, Receipt receipt}) {
+    return Center(
             child: Container(
                 width: MediaQuery.of(context).size.width * 0.9,
                 decoration: new BoxDecoration(
@@ -119,7 +117,76 @@ class _UploadReceiptImageState extends State<UploadReceiptImage> {
                               color: Colors.indigo,
                               //fontWeight: FontWeight.bold,
                               fontSize: 16)),
-                    ]))));
+                      Container(
+                        height: 16,
+                      ),
+                      (true) ? Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          RaisedButton(
+                            textColor: Colors.white,
+                            padding: const EdgeInsets.all(0.0),
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: <Color>[
+                                    Color(0xFF0D47A1),
+                                    Color(0xFF1976D2),
+                                    Color(0xFF42A5F5),
+                                  ],
+                                ),
+                              ),
+                              padding: const EdgeInsets.all(10.0),
+                              child: const Text(
+                                  'Review Now',
+                                  style: TextStyle(fontSize: 16)
+                              ),
+                            ),
+
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                              Navigator.of(context).push(
+                                MaterialPageRoute(builder: (context) {
+                                  return AddEditReiptForm(receipt);
+                                }),
+                              );
+                            },
+                          ),
+                          Container (
+                            width: 16
+                          ),
+                          RaisedButton(
+                            textColor: Colors.white,
+                            padding: const EdgeInsets.all(0.0),
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: <Color>[
+                                    Color(0xFF0D47A1),
+                                    Color(0xFF1976D2),
+                                    Color(0xFF42A5F5),
+                                  ],
+                                ),
+                              ),
+                              padding: const EdgeInsets.all(10.0),
+                              child: const Text(
+                                  'Review Later',
+                                  style: TextStyle(fontSize: 16)
+                              ),
+                            ),
+
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+
+                        ]
+                      ) : Container(),
+                      Container(
+                        height: MediaQuery.of(context).size.height / 5,
+                      ),
+                    ])));
   }
 
   @override
@@ -140,47 +207,47 @@ class _UploadReceiptImageState extends State<UploadReceiptImage> {
                           case ConnectionState.none:
                             return new Text('Press button to start');
                           case ConnectionState.waiting:
-                            return new Text(
-                                'Submitting receipt, will be ready soon ...');
+                            return _getResultWidget('Submitting receipt, will be ready soon ...');
                           default:
                             if (snapshot.hasError)
-                              return getErrorPage(
-                                  "Error", 'Error: ${snapshot.error}');
+                              return _getResultWidget('Error: ${snapshot.error}');
                             else {
                               DataResult dataResult = snapshot.data;
                               if (dataResult.success) {
                                 Receipt receipt = dataResult.obj as Receipt;
                                 if (receipt == null ||
-                                    receipt.decodeStatus ==
-                                        DecodeStatusType.Unknown.index) {
+                                    receipt.decodeStatus == DecodeStatusType.Unknown.index) {
                                   // Show unknown error
-                                  return getErrorPage("Error",
+                                  return _getResultWidget(
                                       "We encounter an unknown error when submitting the receipt, please resubmit the receipt.");
-                                } else if (receipt.decodeStatus ==
-                                    DecodeStatusType.ExtractTextFailed.index) {
+                                } else if (receipt.decodeStatus == DecodeStatusType.ExtractTextFailed.index) {
                                   // Show extracted text failure error
-                                  return getErrorPage("Extract Text Error",
-                                      "Failed to extract the text from the image.");
-                                } else if (receipt.decodeStatus ==
-                                    DecodeStatusType
-                                        .MaybeNotValidReceipt.index) {
+                                  return _getResultWidget(
+                                      "The receipt has been submitted, but failed to extract the text from the image. Please double check whether this is a valid receipt.\n\n"
+                                          "Press 'Review Now' button to manually enter receipt information now.\n"
+                                          "Press 'Review Later' button to review the receipt later, which is listed in 'Receipts\\Unreviewed' tab.");
+                                } else if (receipt.decodeStatus == DecodeStatusType.MaybeNotValidReceipt.index) {
                                   // Show image maybe not a valid receipt error
-                                  return getErrorPage("Invalid Receipt",
-                                      "This maybe not a valid receipt, please double check.");
-                                } else if (receipt.decodeStatus ==
-                                    DecodeStatusType.UnrecognizedFormat.index) {
+                                  return _getResultWidget(
+                                      "This maybe not a valid receipt. Please double check.\n\n"
+                                          "Press 'Review Now' button to manually enter receipt information now.\n"
+                                          "Press 'Review Later' button to review the receipt later, which is listed in 'Receipts\\Unreviewed' tab.");
+                                } else if (receipt.decodeStatus == DecodeStatusType.UnrecognizedFormat.index) {
                                   // Show unrecognized format error
-                                  return getErrorPage("Recognizing",
-                                      "The receipt image has been submitted, we are now recognizing it, and will notify you after we recognize it.");
+                                  return _getResultWidget(
+                                      "The receipt image has been submitted, we are now recognizing it, and will notify you after we recognize it.\n\n"
+                                          "Press 'Review Now' button to manually enter receipt information now.\n"
+                                          "Press 'Review Later' button to review the receipt later, which is listed in 'Receipts\\Unreviewed' tab.");
                                 } else {
                                   // Show add or update receipt page
-                                  return Text(
-                                      "Receipt was uploaded successfully");
+                                  return _getResultWidget(
+                                      "The receipt image has been submitted and recognized.\n\n"
+                                          "Press 'Review Now' button to verify receipt information now.\n"
+                                          "Press 'Review Later' button to review the receipt later, which is listed in 'Receipts\\Unreviewed' tab.");
                                 }
                               } else {
                                 // Show error message
-                                return getErrorPage(
-                                    "Error",
+                                return _getResultWidget(
                                     "We encounter an error when submitting the receipt: " +
                                         dataResult.message);
                               }
