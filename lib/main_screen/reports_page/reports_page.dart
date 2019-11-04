@@ -120,7 +120,7 @@ class _ReportsPageState extends State<ReportsPage> {
             }),
           );
         },
-        backgroundColor: Colors.redAccent,
+        backgroundColor: Colors.blue,
         child: const Icon(
           Icons.add,
           semanticLabel: 'Add',

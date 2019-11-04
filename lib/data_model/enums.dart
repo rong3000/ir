@@ -14,7 +14,8 @@ enum DecodeStatusType
   Success,
   ExtractTextFailed,
   MaybeNotValidReceipt,
-  UnrecognizedFormat
+  UnrecognizedFormat,
+  PartiallyDecoded
 }
 
 enum IRImageSource

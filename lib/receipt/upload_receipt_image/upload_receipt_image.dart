@@ -232,7 +232,8 @@ class _UploadReceiptImageState extends State<UploadReceiptImage> {
                                       "This maybe not a valid receipt. Please double check.\n\n"
                                           "Press 'Review Now' button to manually enter receipt information now.\n"
                                           "Press 'Review Later' button to review the receipt later, which is listed in 'Receipts\\Unreviewed' tab.");
-                                } else if (receipt.decodeStatus == DecodeStatusType.UnrecognizedFormat.index) {
+                                } else if ((receipt.decodeStatus == DecodeStatusType.UnrecognizedFormat.index) ||
+                                           (receipt.decodeStatus == DecodeStatusType.PartiallyDecoded.index)) {
                                   // Show unrecognized format error
                                   return _getResultWidget(
                                       "The receipt image has been submitted, we are now recognizing it, and will notify you after we recognize it.\n\n"

@@ -36,13 +36,9 @@ class ReceiptsPage extends StatelessWidget {
           receiptStatusType: ReceiptStatusType.Uploaded),
       ReceiptsTabs(
           userRepository: _userRepository,
-          receiptStatusType: ReceiptStatusType.Decoded),
-      ReceiptsTabs(
-          userRepository: _userRepository,
           receiptStatusType: ReceiptStatusType.Reviewed),
     ];
     final _kTabs = <Tab>[
-      Tab(text: 'Pending'),
       Tab(text: 'Unreviewed'),
       Tab(text: 'Reviewed'),
     ];
@@ -139,46 +135,10 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: SizedBox.expand(child: RadialMenu(
+      floatingActionButton:  FancyFab(
         userRepository: _userRepository,
-      ),),
-//      Row(
-//        mainAxisSize: MainAxisSize.max,
-//        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//        children: <Widget>[
-//          FloatingActionButton(
-//            heroTag: "btn1",
-//            onPressed: () {
-//              Navigator.of(context).push(
-//                MaterialPageRoute(builder: (context) {
-//                  return AddEditReiptForm(null);
-//                }),
-//              );
-//            },
-//            backgroundColor: Colors.redAccent,
-//            child: const Icon(
-//              Icons.add,
-//              semanticLabel: 'Add Expense Manually',
-//            ),
-//          ),
-//          FloatingActionButton(
-//            heroTag: "btn2",
-//            onPressed: () {
-//              Navigator.push(
-//                context,
-//                MaterialPageRoute(
-//                    builder: (context) => UploadReceiptImage(
-//                        userRepository: _userRepository, title: "Snap new receipt",)),
-//              );
-//            },
-//            backgroundColor: Colors.redAccent,
-//            child: const Icon(
-//              Icons.camera,
-//              semanticLabel: 'Snap Receipt',
-//            ),
-//          ),
-//        ],
-//      ),
+      ),
+      //floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: Center(
         child: BlocBuilder(
             bloc: _homeBloc,
