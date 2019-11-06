@@ -188,7 +188,7 @@ class ReportListState extends State<ReportList> {
 
   static const menuItems = <String>[
     'Upload Time',
-    'Report Time',
+    'Group Time',
     'Company Name',
     'Amount',
     'Category'
@@ -203,7 +203,7 @@ class ReportListState extends State<ReportList> {
       )
       .toList();
 
-  String _btn3SelectedVal = 'Report Time';
+  String _btn3SelectedVal = 'Group Time';
 
   final ReportSortType _simpleValue1 = ReportSortType.CreateTime;
   final ReportSortType _simpleValue2 = ReportSortType.UpdateTime;
@@ -337,12 +337,12 @@ class ReportListState extends State<ReportList> {
                         onTap: () {
                           setState(() {
                             forceRefresh = false;
-                            sortingType = ReportSortType.ReportName;
+                            sortingType = ReportSortType.GroupName;
                           });
                           subMenuOverlayEntry.remove();
                           subMenuOverlayEntry = null;
                         },
-                        child: Text('Report Name'),
+                        child: Text('Group Name'),
                       ),
                     ),
                   ),

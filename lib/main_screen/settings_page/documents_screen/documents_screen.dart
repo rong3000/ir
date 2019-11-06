@@ -74,7 +74,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                           child: Card(
                             child: ListTile(
                               title: Text(
-                                  'What you can do with submitted reports'),
+                                  'What you can do with archived groups'),
                             ),
                           ),
                         ),
@@ -93,7 +93,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                           child: Card(
                             child: ListTile(
                               title: Text(
-                                  'Knowledge about creating IR reports'),
+                                  'Knowledge about creating IR groups'),
                             ),
                           ),
                         ),

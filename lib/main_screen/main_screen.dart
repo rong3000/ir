@@ -157,7 +157,7 @@ class MainScreenState extends State<MainScreen> {
                 },
               ),
               ListTile(
-                title: Text('Archived Receipt Groups'),
+                title: Text('View Archived Groups'),
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(builder: (context) {

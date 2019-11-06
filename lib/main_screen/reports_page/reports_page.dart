@@ -30,8 +30,8 @@ class ReportsPage_ extends StatelessWidget {
           reportStatusType: ReportStatusType.Submitted),
     ];
     final _kTabs = <Tab>[
-      Tab(text: 'Active Reports'),
-      Tab(text: 'Submitted Reports'),
+      Tab(text: 'Active Groups'),
+      Tab(text: 'Submitted Groups'),
     ];
     return DefaultTabController(
       length: _kTabs.length,
@@ -106,7 +106,7 @@ class _ReportsPageState extends State<ReportsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _reportStatusType == ReportStatusType.Submitted? AppBar(
-        title: Text('Archived Reports'),
+        title: Text('Archived Groups'),
       ):null,
       floatingActionButton: FloatingActionButton(
         onPressed: () {

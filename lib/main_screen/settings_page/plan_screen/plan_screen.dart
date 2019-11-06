@@ -56,7 +56,7 @@ class _PlanScreenState extends State<PlanScreen> {
                           child: Card(
                             child: ListTile(
                               title: Text(
-                                  'Your current plan is Free Trial, now you have only 3 snaps and 1 free report left.'),
+                                  'Your current plan is Free Trial, now you have only 3 snaps and 1 free group left.'),
                             ),
                           ),
                         ),
@@ -72,7 +72,7 @@ class _PlanScreenState extends State<PlanScreen> {
                           child: ListTile(
                             title: Text('Basic Plan'),
                             subtitle: Text(
-                                'With our basic plan, you can snap maximum 10 receipts per month and generate 2 reports.'),
+                                'With our basic plan, you can snap maximum 10 receipts per month and generate 2 groups.'),
                             trailing: RaisedButton(
                               onPressed: () => {
                                 Navigator.of(context).push(
@@ -99,7 +99,7 @@ class _PlanScreenState extends State<PlanScreen> {
                           child: ListTile(
                             title: Text('Premium Plan'),
                             subtitle: Text(
-                                'You will get unlimited snaps and reports.'),
+                                'You will get unlimited snaps and groups.'),
                             trailing: RaisedButton(
                               onPressed: () => {
                                 Navigator.of(context).push(

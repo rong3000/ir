@@ -108,7 +108,7 @@ class _AddReceiptsScreenState extends State<AddReceiptsScreen> {
   void addAction(int id) {
     _userRepository.receiptRepository.cachedReceiptItems.add(_userRepository.receiptRepository.getReceiptItem(id));
     candidateReceiptItems = _userRepository.receiptRepository.removeCandidateItems(id);
-        print('id ${id} add to report');
+        print('id ${id} add to group');
     setState(() {
 
     });
@@ -120,7 +120,7 @@ class _AddReceiptsScreenState extends State<AddReceiptsScreen> {
     List<ActionWithLabel> actions = [];
     ActionWithLabel a = new ActionWithLabel();
     a.action = addAction;
-    a.label = 'Add to Report';
+    a.label = 'Add to Group';
     actions.add(a);
     return Scaffold(
       appBar: new AppBar(

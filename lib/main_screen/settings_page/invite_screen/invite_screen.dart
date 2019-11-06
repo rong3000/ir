@@ -235,7 +235,7 @@ class InviteScreenState extends State<InviteScreen> {
                   TextFormField(
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
-                      hintText: 'Invite a friend and get more free snaps and reports.',
+                      hintText: 'Invite a friend and get more free snaps and groups.',
                       helperText: 'Send your friend a message.',
                       labelText: 'Message',
                     ),
