@@ -13,6 +13,15 @@ import 'package:intelligent_receipt/receipt/bloc/receipt_bloc.dart';
 import 'package:intelligent_receipt/receipt/bloc/receipt_event.dart';
 import 'package:intelligent_receipt/receipt/bloc/receipt_state.dart';
 import 'package:intelligent_receipt/user_repository.dart';
+import 'package:flutter/material.dart';
+import 'package:intelligent_receipt/data_model/receipt_repository.dart';
+import 'package:intelligent_receipt/user_repository.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
+import "package:rflutter_alert/rflutter_alert.dart";
+import 'dart:async';
+import 'package:image_cropper/image_cropper.dart';
+import '../add_edit_reciept_manual/add_edit_receipt_manual.dart';
 
 class AddEditReiptForm extends StatefulWidget {
   final Receipt _receiptItem;
@@ -212,14 +221,44 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
     );
   }
 
-  _selectImage(ImageSource imageSource) async {
+  _selectImage() async {
     var source = await _getImageSource();
     if (source != null) {
       var ri = await ImagePicker.pickImage(source: source, maxWidth: 600);
-      setState(() {
-        receiptImageFile = ri;
-        receiptImage = Image.file(ri);
-      });
+      File croppedFile = await ImageCropper.cropImage(
+        sourcePath: ri.path,
+        aspectRatioPresets: Platform.isAndroid
+            ? [
+          CropAspectRatioPreset.square,
+          CropAspectRatioPreset.ratio3x2,
+          CropAspectRatioPreset.original,
+          CropAspectRatioPreset.ratio4x3,
+          CropAspectRatioPreset.ratio16x9
+        ]
+            : [
+          CropAspectRatioPreset.original,
+          CropAspectRatioPreset.square,
+          CropAspectRatioPreset.ratio3x2,
+          CropAspectRatioPreset.ratio4x3,
+          CropAspectRatioPreset.ratio5x3,
+          CropAspectRatioPreset.ratio5x4,
+          CropAspectRatioPreset.ratio7x5,
+          CropAspectRatioPreset.ratio16x9
+        ],
+        androidUiSettings: AndroidUiSettings(
+            toolbarTitle: 'Cropper',
+            toolbarColor: Colors.deepOrange,
+            toolbarWidgetColor: Colors.white,
+            initAspectRatio: CropAspectRatioPreset.original,
+            lockAspectRatio: false),
+      );
+      if (croppedFile != null) {
+        setState(() {
+          receiptImageFile = croppedFile;
+          receiptImage = Image.file(croppedFile);
+        });
+      }
+
     }
   }
 
@@ -251,7 +290,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
         flex: 5,
         child: GestureDetector(
             onTap: () {
-              _selectImage(ImageSource.gallery);
+              _selectImage();
             },
             child: Column(
               children: <Widget>[
