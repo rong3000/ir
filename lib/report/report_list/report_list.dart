@@ -207,7 +207,7 @@ class ReportListState extends State<ReportList> {
 
   final ReportSortType _simpleValue1 = ReportSortType.CreateTime;
   final ReportSortType _simpleValue2 = ReportSortType.UpdateTime;
-  final ReportSortType _simpleValue3 = ReportSortType.ReportName;
+  final ReportSortType _simpleValue3 = ReportSortType.GroupName;
   ReportSortType _simpleValue;
 
   void showMenuSelection(ReportSortType value) {

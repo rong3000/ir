@@ -52,7 +52,7 @@ class ReportRepository {
                 selectedReports.sort(
                         (a, b) => a.updateDateTime.compareTo(b.updateDateTime));
                 break;
-              case ReportSortType.ReportName:
+              case ReportSortType.GroupName:
                 selectedReports.sort(
                         (a, b) => a.reportName.compareTo(b.reportName));
                 break;
@@ -69,7 +69,7 @@ class ReportRepository {
                 selectedReports.sort(
                         (b, a) => a.updateDateTime.compareTo(b.updateDateTime));
                 break;
-              case ReportSortType.ReportName:
+              case ReportSortType.GroupName:
                 selectedReports.sort(
                         (b, a) => a.reportName.compareTo(b.reportName));
                 break;

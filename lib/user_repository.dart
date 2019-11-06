@@ -90,7 +90,7 @@ Future<FirebaseUser> signInWithFacebook() async {
   }
 
   Future<String> getUser() async {
-    return (await _firebaseAuth.currentUser()).email;
+    return ((await _firebaseAuth.currentUser()).displayName != null) ? (await _firebaseAuth.currentUser()).displayName : (await _firebaseAuth.currentUser()).email;
   }
 
   Future<String> getUID() async {
