@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intelligent_receipt/main_screen/bloc/bloc.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:intelligent_receipt/receipt/upload_receipt_image/update_receipt_image.dart';
+import 'package:intelligent_receipt/receipt/upload_receipt_image/upload_receipt_image.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 import 'package:intelligent_receipt/data_model/enums.dart';
 
@@ -74,7 +74,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                           child: Card(
                             child: ListTile(
                               title: Text(
-                                  'What you can do with submitted reports'),
+                                  'What you can do with archived groups'),
                             ),
                           ),
                         ),
@@ -93,7 +93,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                           child: Card(
                             child: ListTile(
                               title: Text(
-                                  'Knowledge about creating IR reports'),
+                                  'Knowledge about creating IR groups'),
                             ),
                           ),
                         ),

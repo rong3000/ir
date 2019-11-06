@@ -34,7 +34,7 @@ dependencies:
   meta: ^1.1.6
   font_awesome_flutter: ^8.4.0
   auto_size_text: ^2.0.2+1
-  image_picker: ^0.6.1+4
+  image_picker: ^0.6.1+10
   slickdart: ^0.2.0+4
   intl: ^0.15.8
   json_annotation: ^2.0.0
@@ -44,6 +44,7 @@ dependencies:
   rflutter_alert: ^1.0.3
   cached_network_image: ^1.1.1
   flutter_masked_text: ^0.8.0
+  flutter_facebook_login: ^3.0.0
 
 dev_dependencies:
   flutter_test:

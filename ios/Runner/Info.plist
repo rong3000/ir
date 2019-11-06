@@ -41,5 +41,45 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+
+    <key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+        		<key>CFBundleTypeRole</key>
+        		<string>Editor</string>
+        		<key>CFBundleURLSchemes</key>
+        		<array>
+                    <string>com.googleusercontent.apps.738710784930-berok5br43skonb5749ukifcdc8tnnlh</string>
+        		</array>
+        </dict>
+
+        <dict>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>fb772430026511405</string>
+            </array>
+        </dict>
+    </array>
+
+    <key>FacebookAppID</key>
+
+    <!-- Replace "000000000000" with your Facebook App ID here. -->
+    <string>772430026511405</string>
+    <key>FacebookDisplayName</key>
+
+    <!-- Replace "YOUR_APP_NAME" with your Facebook App name. -->
+    <string>IR</string>
+
+    <key>LSApplicationQueriesSchemes</key>
+    <array>
+        <string>fbapi</string>
+        <string>fb-messenger-share-api</string>
+        <string>fbauth2</string>
+        <string>fbshareextension</string>
+    </array>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Select Receipt from Photo Library</string>
+    <key>NSCameraUsageDescription</key>
+    <string>Take photo of Receipt for recognizing</string>
 </dict>
 </plist>

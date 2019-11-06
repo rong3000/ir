@@ -9,10 +9,10 @@ import 'package:intelligent_receipt/report/add_report_screen/add_report_screen.d
 import 'package:intelligent_receipt/report/report_list/report_list.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 
-class ReportsPage extends StatelessWidget {
+class ReportsPage_ extends StatelessWidget {
   final UserRepository _userRepository;
 
-  ReportsPage({Key key, @required UserRepository userRepository})
+  ReportsPage_({Key key, @required UserRepository userRepository})
       : assert(userRepository != null),
         _userRepository = userRepository,
         super(key: key) {}
@@ -20,16 +20,18 @@ class ReportsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _kTabPages = <Widget>[
-      ReportsTabs(
+      ReportsPage(
+//          ReportsTabs(
           userRepository: _userRepository,
           reportStatusType: ReportStatusType.Active),
-      ReportsTabs(
+      ReportsPage(
+//          ReportsTabs(
           userRepository: _userRepository,
           reportStatusType: ReportStatusType.Submitted),
     ];
     final _kTabs = <Tab>[
-      Tab(text: 'Active Reports'),
-      Tab(text: 'Submitted Reports'),
+      Tab(text: 'Active Groups'),
+      Tab(text: 'Submitted Groups'),
     ];
     return DefaultTabController(
       length: _kTabs.length,
@@ -48,11 +50,13 @@ class ReportsPage extends StatelessWidget {
   }
 }
 
-class ReportsTabs extends StatefulWidget {
+//class ReportsTabs extends StatefulWidget {
+class ReportsPage extends StatefulWidget {
   final UserRepository _userRepository;
   final ReportStatusType _reportStatusType;
 
-  ReportsTabs({
+//  ReportsTabs({
+  ReportsPage({
     Key key,
     @required UserRepository userRepository,
     @required ReportStatusType reportStatusType,
@@ -62,11 +66,13 @@ class ReportsTabs extends StatefulWidget {
         super(key: key) {}
 
   @override
-  _ReportsTabsState createState() => _ReportsTabsState();
+//  _ReportsTabsState createState() => _ReportsTabsState();
+  _ReportsPageState createState() => _ReportsPageState();
 }
 
-class _ReportsTabsState extends State<ReportsTabs> {
-  HomeBloc _homeBloc;
+//class _ReportsTabsState extends State<ReportsTabs> {
+class _ReportsPageState extends State<ReportsPage> {
+//  HomeBloc _homeBloc;
 
   UserRepository get _userRepository => widget._userRepository;
   get _reportStatusType => widget._reportStatusType;
@@ -93,12 +99,15 @@ class _ReportsTabsState extends State<ReportsTabs> {
   @override
   void initState() {
     super.initState();
-    _homeBloc = BlocProvider.of<HomeBloc>(context);
+//    _homeBloc = BlocProvider.of<HomeBloc>(context);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: _reportStatusType == ReportStatusType.Submitted? AppBar(
+        title: Text('Archived Groups'),
+      ):null,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
         _userRepository.receiptRepository.resetCachedReceiptItems(_userRepository.reportRepository);
@@ -106,45 +115,41 @@ class _ReportsTabsState extends State<ReportsTabs> {
             MaterialPageRoute(builder: (context) {
               return AddReportScreen(
                   userRepository: _userRepository,
-                  title: 'Add Report',
+                  title: 'New Receipt Group',
               );
             }),
           );
         },
-        backgroundColor: Colors.redAccent,
+        backgroundColor: Colors.blue,
         child: const Icon(
           Icons.add,
           semanticLabel: 'Add',
         ),
       ),
       body: Center(
-        child: BlocBuilder(
-            bloc: _homeBloc,
-            builder: (BuildContext context, HomeState state) {
-              return Scaffold(
-                body: OrientationBuilder(builder: (context, orientation) {
-                  return Column(
-                    children: <Widget>[
-                      Flexible(
-                        flex: 2,
-                        fit: FlexFit.tight,
-                        child:
+        child: Scaffold(
+          body: OrientationBuilder(builder: (context, orientation) {
+            return Column(
+              children: <Widget>[
+                Flexible(
+                  flex: 2,
+                  fit: FlexFit.tight,
+                  child:
 //                        DataTableDemo(
-                        ReportList(
-                            userRepository: _userRepository,
-                            reportStatusType: _reportStatusType),
+                  ReportList(
+                      userRepository: _userRepository,
+                      reportStatusType: _reportStatusType),
 //                          Scaffold(
 //                            appBar: AppBar(title: SortingBar(userRepository: _userRepository),),
 //                            body: ReportList(
 //                                userRepository: _userRepository,
 //                                reportStatusType: _reportStatusType),
 //                          )
-                      ),
-                    ],
-                  );
-                }),
-              );
-            }),
+                ),
+              ],
+            );
+          }),
+        ),
       ),
     );
   }

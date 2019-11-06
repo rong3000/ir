@@ -38,6 +38,9 @@ class AddEditReiptForm extends StatefulWidget {
     } else {
       receipt = _receiptItem;
     }
+    if (receipt.gstInclusive == null) {
+      receipt.gstInclusive = true;
+    }
 
     return _AddEditReiptFormState(receipt, isNew);
   }
@@ -62,11 +65,11 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
   _AddEditReiptFormState(this.receipt, this.isNew) {
     defaultCurrency = Currency();
     defaultCurrency.code = 'AUD';
-    if (this.receipt.categoryId < 1) {
+    if ((this.receipt.categoryId == null) || (this.receipt.categoryId < 1)) {
       this.receipt.categoryId = 1;
     }
 
-    if (!isNew && receipt.image != null) {
+    if (!isNew && receipt.image != null && receipt.image.isNotEmpty) {
       var imageData = UriData.parse(receipt.image);
       var bytes = imageData.contentAsBytes();
       receiptImage = Image.memory(bytes);
@@ -106,13 +109,15 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
     super.initState();
   }
 
-  void _deleteReceipt() {
-    // TODO handle delete/clear
+  Future<void> _deleteReceipt() async {
+    _receiptBloc.dispatch(ManualReceiptDelete(receipt: this.receipt));
   }
 
   void _saveForm() {
     if (this._formKey.currentState.validate()) {
       this._formKey.currentState.save();
+    } else {
+      return;
     }
 
     this.receipt.userId = this._userRepository.userId;
@@ -184,7 +189,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
   Future<ImageSource> _getImageSource() async {
     return showDialog<ImageSource>(
       context: context,
-      barrierDismissible: true, // Allow to be closed without selecting option
+      //barrierDismissible: true, // Allow to be closed without selecting option
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Select Image Source'),
@@ -264,6 +269,25 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
     return widgets;
   }
 
+  void _showMessage(String title, String message) {
+    showDialog<void>(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(title),
+            content: new Text(message),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Close'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          );
+        });
+  }
+
   Future<void> _showFullImage(Widget childImage) async {
     await showDialog<void>(
         context: context,
@@ -286,29 +310,37 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
         });
   }
 
+  List<Widget> _getAppBarButtons() {
+    List<Widget> buttons = new List<Widget>();
+    if (!isNew) {
+      buttons.add(IconButton(
+        icon: const Icon(Icons.delete),
+        onPressed: () {
+          if (_state == null || !_state.uploadinProgress){
+            _deleteReceipt();
+          }
+        },
+      ));
+    }
+
+    buttons.add(IconButton(
+      icon: const Icon(Icons.done),
+      onPressed: () {
+        if ( _state == null || !_state.uploadinProgress){
+          this._saveForm();
+        }
+      },
+    ));
+
+    return buttons;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(isNew ? pageTitleNew : pageTitleEdit),
-        actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.delete),
-            onPressed: () {
-              if (_state == null || !_state.uploadinProgress){
-                _deleteReceipt();
-              }
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.done),
-            onPressed: () {
-              if ( _state == null || !_state.uploadinProgress){
-                this._saveForm();
-              }
-            },
-          )
-        ],
+        actions: _getAppBarButtons(),
       ),
       body: BlocListener(
         bloc: _receiptBloc,
@@ -344,6 +376,39 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
           }
           if (state.uploadSuccess) {
             Navigator.pop(context);
+            _showMessage("Receipt has been saved", "Receipt is being listed in Receipts/Reviewed tab.");
+          }
+          if (state.deleteSuccess) {
+            Navigator.of(context).pop();
+            _showMessage("Delete Receipt", "Receipt was successfully deleted.");
+          }
+          if (state.deleteInProgress) {
+            Scaffold.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                SnackBar(
+                  content: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Deleting Receipt...'),
+                      CircularProgressIndicator(),
+                    ],
+                  ),
+                ),
+              );
+          }
+          if (state.deleteFail) {
+            Scaffold.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                SnackBar(
+                  content: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [Text("Delete receipt failed: " + state.errorMessage), Icon(Icons.error)],
+                  ),
+                  backgroundColor: Colors.red,
+                ),
+              );
           }
         },
         child: BlocBuilder(
@@ -359,7 +424,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
                       children: <Widget>[
                         IRDateTimePicker(
                           labelText: 'Purchase Date',
-                          selectedDate: receipt.receiptDatetime,
+                          selectedDate: receipt.receiptDatetime.isBefore(DateTime(1970)) ? DateTime.now() : receipt.receiptDatetime,
                           selectDate: (newValue) {
                             setState(() {
                               receipt.receiptDatetime = newValue;
@@ -375,7 +440,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
                                 padding: EdgeInsets.only(top: 5),
                                 child: TextFormField(
                                   decoration: InputDecoration(labelText: 'Total Amount'),
-                                  initialValue: receipt.totalAmount.toString(),
+                                  initialValue: receipt.totalAmount == 0 ? "0" : receipt.totalAmount.toString(),
                                   validator: textFieldValidator,
                                   onSaved: (String value) {
                                     receipt.totalAmount = double.tryParse(value);
@@ -407,7 +472,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
                         FormField<bool>(
                           builder: (formState) => CheckboxListTile(
                             title: const Text('GST Inclusive'),
-                            value: receipt.gstInclusive,
+                            value: receipt.gstInclusive ?? true,
                             onChanged: (newValue) {
                               setState(() {
                                 receipt.gstInclusive = !receipt.gstInclusive;
@@ -441,7 +506,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
                         ),
                         TextFormField(
                           initialValue: receipt.productName,
-                          validator: textFieldValidator,
+                          //validator: textFieldValidator,
                           decoration: InputDecoration(labelText: 'Product Name'),
                           onSaved: (String value) {
                             receipt.productName = value;

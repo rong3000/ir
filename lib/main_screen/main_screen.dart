@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intelligent_receipt/authentication_bloc/bloc.dart';
+import 'package:intelligent_receipt/data_model/enums.dart';
 import 'package:intelligent_receipt/main_screen/bloc/bloc.dart';
 import 'package:intelligent_receipt/login/login.dart';
 import 'package:intelligent_receipt/main_screen/home_page/home_page.dart';
@@ -8,6 +9,8 @@ import 'package:intelligent_receipt/main_screen/settings_page/settings_page.dart
 import 'package:intelligent_receipt/main_screen/reports_page/reports_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intelligent_receipt/user_repository.dart';
+import 'FB/FB.dart';
+import 'FB/FB2.dart';
 import 'receipts_page/receipts_page.dart';
 
 class MainScreen extends StatefulWidget {
@@ -60,7 +63,9 @@ class MainScreenState extends State<MainScreen> {
           children: <Widget>[
             HomePage(userRepository: _userRepository, action: jumpTo,),
             ReceiptsPage(userRepository: _userRepository),
-            ReportsPage(userRepository: _userRepository),
+            ReportsPage(
+                userRepository: _userRepository,
+                reportStatusType: ReportStatusType.Active),
             SettingsPage(userRepository: _userRepository, name: name),
           ],
         ),
@@ -96,7 +101,7 @@ class MainScreenState extends State<MainScreen> {
                   icon: Icon(Icons.insert_chart, color: _defaultColor),
                   activeIcon: Icon(Icons.insert_chart, color: _activeColor),
                   title: Text(
-                    'Reports',
+                    'Groups',
                     style: TextStyle(
                         color:
                             _currentIndex != 2 ? _defaultColor : _activeColor),
@@ -132,6 +137,16 @@ class MainScreenState extends State<MainScreen> {
                   );
                 },
               ),
+//              ListTile(
+//                title: Text('FB'),
+//                onTap: () {
+//                  Navigator.of(context).push(
+//                    MaterialPageRoute(builder: (context) {
+//                      return FB();
+//                    }),
+//                  );
+//                },
+//              ),
               ListTile(
                 title: Text('Log Out'),
                 onTap: () {
@@ -139,6 +154,18 @@ class MainScreenState extends State<MainScreen> {
                     LoggedOut(),
                   );
                   Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                title: Text('View Archived Groups'),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) {
+                      return ReportsPage(
+                          userRepository: _userRepository,
+                          reportStatusType: ReportStatusType.Submitted);
+                    }),
+                  );
                 },
               ),
             ],

@@ -98,6 +98,11 @@ class ReceiptListState extends State<ReceiptList> {
       subMenuOverlayEntry.remove();
       subMenuOverlayEntry = null;
     }
+    if (_receiptStatusType == ReceiptStatusType.Uploaded) {
+      _simpleValue = _simpleValue1;
+    } else {
+      _simpleValue = _simpleValue2;
+    }
   }
 
   static const menuItems = <String>[
@@ -133,7 +138,6 @@ class ReceiptListState extends State<ReceiptList> {
     print('You selected: $value');
     setState(() {
       forceRefresh = false;
-      ascending = !ascending;
       sortingType = value;
       print("${ascending} ${forceRefresh}");
     });
@@ -393,86 +397,105 @@ class ReceiptListState extends State<ReceiptList> {
         _fromDate,
         _toDate);
 
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: Size(60.0, 60.0),
+        child: Container(
+          height: 60.0,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              GestureDetector(
-                onTap: () {
-                  _selectFromDate(context);
-                },
-                child: Text(
-                  "From   ${DateFormat().add_yMd().format(_fromDate.toLocal())}",
-                  style: DefaultTextStyle.of(context)
-                      .style
-                      .apply(fontSizeFactor: 0.8),
-                ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  _selectToDate(context);
-                },
-                child: Text(
-                  "    To   ${DateFormat().add_yMd().format(_toDate.toLocal())}",
-                  style: DefaultTextStyle.of(context)
-                      .style
-                      .apply(fontSizeFactor: 0.8),
-                ),
-              ),
-              GestureDetector(
-                  onTapDown: (details) {
-                    return _onTapDown(details, context);
-                  },
-                  onTap: () {
-                    if (subMenuOverlayEntry != null) {
-                      subMenuOverlayEntry.remove();
-                      subMenuOverlayEntry = null;
-                      return Future.value(false);
-                    }
-                    showSubMenuView(
-                        dy2 + 120,
-                        (dx2 < MediaQuery.of(context).size.width - 200)
-                            ? (MediaQuery.of(context).size.width - 200 - dx2)
-                            : (MediaQuery.of(context).size.width - dx2));
-                  },
-                  child: Row(
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
-                      Text(
-                        "Sort By [${sortingType.toString().split('.')[1]}]",
-                        style: DefaultTextStyle.of(context)
-                            .style
-                            .apply(fontSizeFactor: 0.8),
-                      ),
-                      Icon(
-                        ascending ? Icons.arrow_upward : Icons.arrow_downward,
-                        color: Colors.black,
-                      ),
-                      IconButton(
-                        icon: Icon(
-                          Theme.of(context).platform == TargetPlatform.iOS
-                              ? Icons.more_horiz
-                              : Icons.more_vert,
+                      GestureDetector(
+                        onTap: () {
+                          _selectFromDate(context);
+                        },
+                        child: Text(
+                          "${DateFormat().add_yMd().format(_fromDate.toLocal())}",
+                          style: TextStyle(height: 1, fontSize: 12),
                         ),
-                        tooltip: 'Show menu',
-//                      onPressed: _bottomSheet == null ? _showConfigurationSheet : null,
+                      ),
+                      Icon(Icons.repeat),
+                      GestureDetector(
+                        onTap: () {
+                          _selectToDate(context);
+                        },
+                        child: Text(
+                          "${DateFormat().add_yMd().format(_toDate.toLocal())}",
+                          style: TextStyle(height: 1, fontSize: 12),
+                        ),
                       ),
                     ],
-                  )),
+                  ),
+                  PopupMenuButton<ReceiptSortType>(
+                    padding: EdgeInsets.zero,
+                    initialValue: _simpleValue,
+                    onSelected: showMenuSelection,
+                    child:
+                        Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
+                      Icon(Icons.sort),
+                      Text(
+                        "[${_simpleValue.toString().split('.')[1]}]",
+                        style: TextStyle(height: 1, fontSize: 12),
+                      ),
+                    ]),
+                    itemBuilder: (BuildContext context) =>
+                        <PopupMenuItem<ReceiptSortType>>[
+                      PopupMenuItem<ReceiptSortType>(
+                        value: _simpleValue1,
+                        child: Text(_simpleValue1.toString().split('.')[1]),
+                      ),
+                      PopupMenuItem<ReceiptSortType>(
+                        value: _simpleValue2,
+                        child: Text(_simpleValue2.toString().split('.')[1]),
+                      ),
+                      PopupMenuItem<ReceiptSortType>(
+                        value: _simpleValue3,
+                        child: Text(_simpleValue3.toString().split('.')[1]),
+                      ),
+                      PopupMenuItem<ReceiptSortType>(
+                        value: _simpleValue4,
+                        child: Text(_simpleValue4.toString().split('.')[1]),
+                      ),
+                      PopupMenuItem<ReceiptSortType>(
+                        value: _simpleValue5,
+                        child: Text(_simpleValue5.toString().split('.')[1]),
+                      ),
+                    ],
+                  ),
+                  IconButton(
+                    icon: Icon(
+                      ascending ? Icons.arrow_upward : Icons.arrow_downward,
+                      color: Colors.black,
+                    ),
+                    tooltip: 'Toggle ascending',
+                    onPressed: () {
+                      setState(() {
+                        ascending = !ascending;
+                      });
+                    },
+                  ),
+                ],
+              ),
             ],
           ),
         ),
-        body: ListView.builder(
-            itemCount: sortedReceiptItems.length,
-            itemBuilder: (context, index) {
-              return ReceiptCard(
-                receiptItem: sortedReceiptItems[index],
-                actions: widget._actions,
-              );
-            }),
       ),
+      body: ListView.builder(
+          itemCount: sortedReceiptItems.length,
+          itemBuilder: (context, index) {
+            return ReceiptCard(
+              receiptItem: sortedReceiptItems[index],
+              actions: widget._actions,
+            );
+          }),
     );
   }
 }

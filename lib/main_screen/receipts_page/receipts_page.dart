@@ -10,7 +10,7 @@ import 'package:intelligent_receipt/main_screen/settings_page/plan_screen/plan_s
 import 'package:intelligent_receipt/receipt/add_edit_reciept_manual/add_edit_receipt_manual.dart';
 import 'package:intelligent_receipt/receipt/edit_receipt/edit_receipt.dart';
 import 'package:intelligent_receipt/receipt/receipt_list/receipt_list.dart';
-import 'package:intelligent_receipt/receipt/upload_receipt_image/update_receipt_image.dart';
+import 'package:intelligent_receipt/receipt/upload_receipt_image/upload_receipt_image.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 import 'package:intl/intl.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -36,13 +36,9 @@ class ReceiptsPage extends StatelessWidget {
           receiptStatusType: ReceiptStatusType.Uploaded),
       ReceiptsTabs(
           userRepository: _userRepository,
-          receiptStatusType: ReceiptStatusType.Decoded),
-      ReceiptsTabs(
-          userRepository: _userRepository,
           receiptStatusType: ReceiptStatusType.Reviewed),
     ];
     final _kTabs = <Tab>[
-      Tab(text: 'Pending'),
       Tab(text: 'Unreviewed'),
       Tab(text: 'Reviewed'),
     ];
@@ -139,46 +135,10 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: SizedBox.expand(child: RadialMenu(
+      floatingActionButton:  FancyFab(
         userRepository: _userRepository,
-      ),),
-//      Row(
-//        mainAxisSize: MainAxisSize.max,
-//        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//        children: <Widget>[
-//          FloatingActionButton(
-//            heroTag: "btn1",
-//            onPressed: () {
-//              Navigator.of(context).push(
-//                MaterialPageRoute(builder: (context) {
-//                  return AddEditReiptForm(null);
-//                }),
-//              );
-//            },
-//            backgroundColor: Colors.redAccent,
-//            child: const Icon(
-//              Icons.add,
-//              semanticLabel: 'Add Expense Manually',
-//            ),
-//          ),
-//          FloatingActionButton(
-//            heroTag: "btn2",
-//            onPressed: () {
-//              Navigator.push(
-//                context,
-//                MaterialPageRoute(
-//                    builder: (context) => UploadReceiptImage(
-//                        userRepository: _userRepository, title: "Snap new receipt",)),
-//              );
-//            },
-//            backgroundColor: Colors.redAccent,
-//            child: const Icon(
-//              Icons.camera,
-//              semanticLabel: 'Snap Receipt',
-//            ),
-//          ),
-//        ],
-//      ),
+      ),
+      //floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: Center(
         child: BlocBuilder(
             bloc: _homeBloc,

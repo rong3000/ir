@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:intelligent_receipt/data_model/receipt_repository.dart';
 import 'package:intelligent_receipt/data_model/category_repository.dart';
 import 'package:intelligent_receipt/data_model/report_repository.dart';
@@ -9,6 +10,7 @@ import 'package:intelligent_receipt/data_model/setting_repository.dart';
 class UserRepository {
   final FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn;
+  final FacebookLogin _facebookLogin;
 
   ReceiptRepository receiptRepository;
   CategoryRepository categoryRepository;
@@ -18,9 +20,10 @@ class UserRepository {
   String userGuid;
   int userId = 1; // The id stored in our service database
 
-  UserRepository({FirebaseAuth firebaseAuth, GoogleSignIn googleSignin})
+  UserRepository({FirebaseAuth firebaseAuth, GoogleSignIn googleSignin, FacebookLogin facebookLogin})
       : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
-        _googleSignIn = googleSignin ?? GoogleSignIn() {
+        _googleSignIn = googleSignin ?? GoogleSignIn(),
+        _facebookLogin = facebookLogin ?? FacebookLogin()		{
      receiptRepository = new ReceiptRepository(this);
      categoryRepository = new CategoryRepository(this);
      settingRepository = new SettingRepository(this);
@@ -41,6 +44,19 @@ class UserRepository {
     userGuid = currentUser?.uid;
     return currentUser;
   }
+
+Future<FirebaseUser> signInWithFacebook() async {
+    final FacebookLoginResult result =
+        await _facebookLogin.logIn(['email']);
+		
+		final AuthCredential credential = FacebookAuthProvider.getCredential(accessToken: result.accessToken.token);
+		
+    
+    await _firebaseAuth.signInWithCredential(credential);
+    FirebaseUser currentUser = await _firebaseAuth.currentUser();
+    userGuid = currentUser?.uid;
+    return currentUser;
+}
 
   Future<void> signInWithCredentials(String email, String password) async {
     FirebaseUser currentUser = await _firebaseAuth.signInWithEmailAndPassword(
@@ -63,6 +79,7 @@ class UserRepository {
     return Future.wait([
       _firebaseAuth.signOut(),
       _googleSignIn.signOut(),
+	  _facebookLogin.logOut(),
     ]);
   }
 
@@ -73,7 +90,7 @@ class UserRepository {
   }
 
   Future<String> getUser() async {
-    return (await _firebaseAuth.currentUser()).email;
+    return ((await _firebaseAuth.currentUser()).displayName != null) ? (await _firebaseAuth.currentUser()).displayName : (await _firebaseAuth.currentUser()).email;
   }
 
   Future<String> getUID() async {

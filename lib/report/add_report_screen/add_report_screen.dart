@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:intelligent_receipt/data_model/action_with_lable.dart';
 import 'package:intelligent_receipt/data_model/data_result.dart';
@@ -114,7 +115,7 @@ class _AddReportScreenState extends State<AddReportScreen> {
         child: Column(
           children: <Widget>[
             Expanded(
-              flex: 2,
+              flex: 3,
               child: Form(
                 child: ListView(
                   children: <Widget>[
@@ -122,7 +123,7 @@ class _AddReportScreenState extends State<AddReportScreen> {
                       controller: _emailController,
                       decoration: InputDecoration(
                         icon: Icon(Icons.title),
-                        labelText: 'Report Name',
+                        labelText: 'Receipt Group Name',
                       ),
                       autovalidate: true,
                       autocorrect: false,
@@ -151,7 +152,7 @@ class _AddReportScreenState extends State<AddReportScreen> {
                         children: <Widget>[
                           FutureBuilder<DataResult>(
                               future: _userRepository.settingRepository
-                                  .getCurrenciesFromServer(),
+                                  .getSettingsFromServer(),
                               builder: (BuildContext context,
                                   AsyncSnapshot<DataResult> snapshot) {
                                 switch (snapshot.connectionState) {
@@ -164,20 +165,58 @@ class _AddReportScreenState extends State<AddReportScreen> {
                                     return new Text('');
                                   case ConnectionState.done:
                                     {
-                                      _currency = _userRepository
-                                          .settingRepository
-                                          .getDefaultCurrency();
-                                      double _tempAmount = 0;
-                                      for (var i = 0; i < _userRepository.receiptRepository.cachedReceiptItems.length; i++) {
-                                        _tempAmount += _userRepository.receiptRepository.cachedReceiptItems[i]?.totalAmount;}
-                                      _totalAmount = _tempAmount.toStringAsFixed(2);
-                                      return Expanded(
-                                        child: Text("Total: ${_currency.symbol} ${_totalAmount}"),
+                                      return FutureBuilder<DataResult>(
+                                          future: _userRepository.settingRepository
+                                              .getCurrenciesFromServer(),
+                                          builder: (BuildContext context,
+                                              AsyncSnapshot<DataResult> snapshot) {
+                                            switch (snapshot.connectionState) {
+                                              case ConnectionState.none:
+                                                return new Text('Loading...');
+                                              case ConnectionState.waiting:
+                                                return new Center(
+                                                    child: new CircularProgressIndicator());
+                                              case ConnectionState.active:
+                                                return new Text('');
+                                              case ConnectionState.done:
+                                                if (snapshot.hasError) {
+                                                  return
+//                                                    new Text(
+//                                                    '${snapshot.error}',
+//                                                    style: TextStyle(color: Colors.red),
+//                                                  );
+                                                    AutoSizeText(
+                                                      '${snapshot.error}',
+                                                      style: TextStyle(fontSize: 14),
+                                                      minFontSize: 1,
+                                                      maxLines: 3,
+                                                      overflow: TextOverflow.ellipsis,
+                                                    );
+                                                } else {
+                                                  _currency = _userRepository
+                                                      .settingRepository
+                                                      .getDefaultCurrency();
+                                                  double _tempAmount = 0;
+                                                  for (var i = 0; i < _userRepository.receiptRepository.cachedReceiptItems.length; i++) {
+                                                    _tempAmount += _userRepository.receiptRepository.cachedReceiptItems[i]?.totalAmount;}
+                                                  _totalAmount = _tempAmount.toStringAsFixed(2);
+                                                  return (_currency != null) ? Expanded(
+                                                    child: Text("Total: ${_currency.symbol} ${_totalAmount}"),
 //                                        children: <Widget>[//
 ////                                          Text("${_currency.name} "),
 ////                                          Text("${_currency.symbol}"),
 //                                        ],
-                                      );
+                                                  ) : AutoSizeText(
+                                                    'Network Error',
+                                                    style: TextStyle(fontSize: 10),
+                                                    minFontSize: 4,
+                                                    maxLines: 3,
+                                                    overflow: TextOverflow.ellipsis,
+                                                  );
+                                                }
+
+                                            }
+                                          });
                                     }
                                 }
                               }),
@@ -193,7 +232,7 @@ class _AddReportScreenState extends State<AddReportScreen> {
               ),
             ),
             Expanded(
-              flex: 5,
+              flex: 4,
               child: ListView.builder(
                 itemCount: _userRepository.receiptRepository.cachedReceiptItems.length,
                 itemBuilder: (context, index) {
@@ -218,13 +257,13 @@ class _AddReportScreenState extends State<AddReportScreen> {
                       onPressed:
                       isLoginButtonEnabled() ? _onReportSaved : null,
 //                      _onReportSaved,
-                      buttonName: 'Save Report',
+                      buttonName: 'Save Receipt Group',
                     ),
-                    ReportButton(
-                      onPressed:
-                      isLoginButtonEnabled() ? _onReportSubmitted : null,
-                      buttonName: 'Save & Submit Report',
-                    ),
+//                    ReportButton(
+//                      onPressed:
+//                      isLoginButtonEnabled() ? _onReportSubmitted : null,
+//                      buttonName: 'Save & Submit Report',
+//                    ),
                   ],
                 ),
               ),

@@ -24,6 +24,9 @@ class ReceiptBloc extends Bloc<ReceiptEvent, ReceiptState> {
     else if (event is ManualReceiptUpdate){
       yield*  _handleManualReceiptUpdate(event);
     }
+    else if (event is ManualReceiptDelete){
+      yield*  _handleManualReceiptDelete(event);
+    }
     // More cases here for different events
   }
 
@@ -44,6 +47,16 @@ class ReceiptBloc extends Bloc<ReceiptEvent, ReceiptState> {
       yield ReceiptState.uploadSucess();
     } else {
       yield ReceiptState.uploadFail();
+    }
+  }
+
+  Stream<ReceiptState> _handleManualReceiptDelete(ManualReceiptDelete event) async* {
+    yield ReceiptState.deleting();
+    var receiptResult = await _receiptRepository.deleteReceipts([event.receipt.id]);
+    if (receiptResult.success) {
+      yield ReceiptState.deleteSucess();
+    } else {
+      yield ReceiptState.deleteFail(receiptResult.message);
     }
   }
 }

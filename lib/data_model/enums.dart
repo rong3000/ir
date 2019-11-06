@@ -14,7 +14,8 @@ enum DecodeStatusType
   Success,
   ExtractTextFailed,
   MaybeNotValidReceipt,
-  UnrecognizedFormat
+  UnrecognizedFormat,
+  PartiallyDecoded
 }
 
 enum IRImageSource
@@ -42,5 +43,5 @@ enum ReceiptSortType {
 enum ReportSortType {
   CreateTime,
   UpdateTime,
-  ReportName,
+  GroupName,
 }
