@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -28,8 +29,8 @@ class _ReceiptCardState extends State<ReceiptCard> {
   CategoryRepository _categoryRepository;
 
   Image getImage(String imagePath) {
-    var  imageUrl = Urls.GetImage + "/" + Uri.encodeComponent(imagePath);
-    return Image.network(imageUrl) ;
+    var imageUrl = Urls.GetImage + "/" + Uri.encodeComponent(imagePath);
+    return Image.network(imageUrl);
   }
 
   @override
@@ -95,7 +96,7 @@ class _ReceiptCardState extends State<ReceiptCard> {
             child: Column(
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+                  padding: const EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
                   child: DefaultTextStyle(
                     softWrap: false,
                     overflow: TextOverflow.ellipsis,
@@ -103,7 +104,7 @@ class _ReceiptCardState extends State<ReceiptCard> {
                     child: Container(
                       height: MediaQuery.of(context).size.height * 0.16,
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.max,
                         children: <Widget>[
@@ -119,11 +120,22 @@ class _ReceiptCardState extends State<ReceiptCard> {
                           Padding(
                             padding:
                                 const EdgeInsets.only(top: 0.0, bottom: 0.0),
-                            child: Text(
-                              '${widget._receiptItem.companyName}',
-                              style: companyNameStyle,
+                            child: AutoSizeText(
+                              (widget._receiptItem.companyName == null)?"Being processed at the server":'${widget._receiptItem.companyName}',
+                              style: TextStyle(fontSize: 12),
+                              minFontSize: 6,
+                              maxLines: 3,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
+//                          Padding(
+//                            padding:
+//                                const EdgeInsets.only(top: 0.0, bottom: 0.0),
+//                            child: Text(
+//                              '${widget._receiptItem.companyName}',
+//                              style: companyNameStyle,
+//                            ),
+//                          ),
                           Text(
                             'Total ${widget._receiptItem.totalAmount}',
                             style: amountStyle,
@@ -141,19 +153,19 @@ class _ReceiptCardState extends State<ReceiptCard> {
             child: Container(
               height: MediaQuery.of(context).size.height * 0.16,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
                   Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+                      padding: const EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 0.0),
                       child: DefaultTextStyle(
                         softWrap: false,
                         overflow: TextOverflow.ellipsis,
                         style: dateStyle,
                         child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.max,
                           children: <Widget>[
@@ -167,30 +179,45 @@ class _ReceiptCardState extends State<ReceiptCard> {
                                     .apply(fontSizeFactor: 0.75),
                               ),
                             ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 0.0, bottom: 0.0),
-                              child: Text(
-                                _categoryRepository.categories
-                                    .singleWhere(
-                                      (c) =>
-                                          c.id ==
-                                          widget._receiptItem.categoryId,
-                                      orElse: () =>
-                                          Category()..categoryName = "Unknown",
-                                    )
-                                    ?.categoryName,
-                                style: companyNameStyle,
-                              ),
-                            ),
+//                            Padding(
+//                              padding:
+//                                  const EdgeInsets.only(top: 0.0, bottom: 0.0),
+//                              child: AutoSizeText(
+//                                _categoryRepository.categories
+//                                    .singleWhere(
+//                                      (c) =>
+//                                  c.id ==
+//                                      widget._receiptItem.categoryId,
+//                                  orElse: () =>
+//                                  Category()..categoryName = "To be selected during review",
+//                                )
+//                                    ?.categoryName,
+//                                style: TextStyle(fontSize: 12),
+//                                minFontSize: 6,
+//                                maxLines: 2,
+//                                overflow: TextOverflow.ellipsis,
+//                              ),
+////                              Text(
+////                                _categoryRepository.categories
+////                                    .singleWhere(
+////                                      (c) =>
+////                                          c.id ==
+////                                          widget._receiptItem.categoryId,
+////                                      orElse: () =>
+////                                          Category()..categoryName = "Being Processed at backend",
+////                                    )
+////                                    ?.categoryName,
+////                                style: companyNameStyle,
+////                              ),
+//                            ),
                           ],
                         ),
                       ),
                     ),
                   ),
                   ButtonTheme.bar(
-                    minWidth: 0,
-                    padding : const EdgeInsets.symmetric(horizontal: 4.0),
+                    minWidth: 56,
+                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
                     child: ButtonBar(
                       mainAxisSize: MainAxisSize.min,
                       alignment: MainAxisAlignment.start,
