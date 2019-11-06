@@ -177,7 +177,7 @@ class _ReportCardState extends State<ReportCard> {
                     ),
                   ),
                   ButtonTheme.bar(
-                    minWidth: 0,
+                    minWidth: 56,
                     padding : const EdgeInsets.symmetric(horizontal: 6.0),
                     child: ButtonBar(
                       mainAxisSize: MainAxisSize.min,
