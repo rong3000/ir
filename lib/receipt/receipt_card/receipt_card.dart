@@ -1,4 +1,3 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,6 +7,7 @@ import 'package:intelligent_receipt/data_model/receipt_repository.dart';
 import 'package:intelligent_receipt/data_model/webservice.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 import 'package:intl/intl.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 class ReceiptCard extends StatefulWidget {
   const ReceiptCard({
@@ -29,8 +29,8 @@ class _ReceiptCardState extends State<ReceiptCard> {
   CategoryRepository _categoryRepository;
 
   Image getImage(String imagePath) {
-    var imageUrl = Urls.GetImage + "/" + Uri.encodeComponent(imagePath);
-    return Image.network(imageUrl);
+    var  imageUrl = Urls.GetImage + "/" + Uri.encodeComponent(imagePath);
+    return Image.network(imageUrl) ;
   }
 
   @override
@@ -38,6 +38,28 @@ class _ReceiptCardState extends State<ReceiptCard> {
     _categoryRepository =
         RepositoryProvider.of<UserRepository>(context).categoryRepository;
     super.initState();
+  }
+
+  String _getTextShownInCategoryField(ReceiptListItem receipt) {
+    String text = _categoryRepository.categories
+        .singleWhere(
+          (c) =>
+              c.id ==
+              widget._receiptItem.categoryId,
+          orElse: () =>
+              Category()..categoryName = "Unknown",
+        )
+        ?.categoryName;
+
+    if ((text == "Unknown") && (receipt.statusId == ReceiptStatusType.Uploaded.index)) {
+      if (receipt.decodeStatus == DecodeStatusType.Success.index) {
+        text = "We have processed your receipt, please click Review button to verify receipt data.";
+      } else {
+        text = "Your receipt is being process. You can click Review button to manually enter receipt data.";
+      }
+    }
+
+    return text;
   }
 
   @override
@@ -96,7 +118,7 @@ class _ReceiptCardState extends State<ReceiptCard> {
             child: Column(
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
+                  padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
                   child: DefaultTextStyle(
                     softWrap: false,
                     overflow: TextOverflow.ellipsis,
@@ -104,7 +126,7 @@ class _ReceiptCardState extends State<ReceiptCard> {
                     child: Container(
                       height: MediaQuery.of(context).size.height * 0.16,
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.max,
                         children: <Widget>[
@@ -120,22 +142,11 @@ class _ReceiptCardState extends State<ReceiptCard> {
                           Padding(
                             padding:
                                 const EdgeInsets.only(top: 0.0, bottom: 0.0),
-                            child: AutoSizeText(
-                              (widget._receiptItem.companyName == null)?"Being processed at the server":'${widget._receiptItem.companyName}',
-                              style: TextStyle(fontSize: 12),
-                              minFontSize: 6,
-                              maxLines: 3,
-                              overflow: TextOverflow.ellipsis,
+                            child: Text(
+                              '${widget._receiptItem.companyName}',
+                              style: companyNameStyle,
                             ),
                           ),
-//                          Padding(
-//                            padding:
-//                                const EdgeInsets.only(top: 0.0, bottom: 0.0),
-//                            child: Text(
-//                              '${widget._receiptItem.companyName}',
-//                              style: companyNameStyle,
-//                            ),
-//                          ),
                           Text(
                             'Total ${widget._receiptItem.totalAmount}',
                             style: amountStyle,
@@ -153,19 +164,19 @@ class _ReceiptCardState extends State<ReceiptCard> {
             child: Container(
               height: MediaQuery.of(context).size.height * 0.16,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
                   Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 0.0),
+                      padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
                       child: DefaultTextStyle(
-                        softWrap: false,
+                        softWrap: true,
                         overflow: TextOverflow.ellipsis,
                         style: dateStyle,
                         child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.max,
                           children: <Widget>[
@@ -179,36 +190,40 @@ class _ReceiptCardState extends State<ReceiptCard> {
                                     .apply(fontSizeFactor: 0.75),
                               ),
                             ),
-//                            Padding(
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 0.0),
+                              child: AutoSizeText(
+                                _getTextShownInCategoryField(widget._receiptItem),
+                                style: TextStyle(fontSize: 12)
+                                      .copyWith(color: Colors.black54)
+                                      .apply(fontSizeFactor: 0.85),
+                                minFontSize: 6,
+                                maxLines: 3,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+//                            Container(
+//                              width: MediaQuery.of(context).size.width*0.8,
 //                              padding:
 //                                  const EdgeInsets.only(top: 0.0, bottom: 0.0),
-//                              child: AutoSizeText(
+//                              child: new Column (
+//                                children: <Widget>[
+//                                  new Text ("Long text 1 Long text 1 Long text 1 Long text 1 Long text 1 Long text 1 Long text 1 Long text 1 Long text 1 Long text 1 Long text 1 Long text 1 Long text 1 Long text 1 ", textAlign: TextAlign.left),
+//                                ],
+//                              ),
+//                              child: Text(
+//                                "this is what we want ddddfdf dffd asdfsdfsdf asdfsdaf wwwddf ggdssgsd sdfsd sgsdf ppodkkd"
 //                                _categoryRepository.categories
 //                                    .singleWhere(
 //                                      (c) =>
-//                                  c.id ==
-//                                      widget._receiptItem.categoryId,
-//                                  orElse: () =>
-//                                  Category()..categoryName = "To be selected during review",
-//                                )
+//                                          c.id ==
+//                                          widget._receiptItem.categoryId,
+//                                      orElse: () =>
+//                                          Category()..categoryName = "Unknown",
+//                                    )
 //                                    ?.categoryName,
-//                                style: TextStyle(fontSize: 12),
-//                                minFontSize: 6,
-//                                maxLines: 2,
-//                                overflow: TextOverflow.ellipsis,
+//                                style: companyNameStyle,
 //                              ),
-////                              Text(
-////                                _categoryRepository.categories
-////                                    .singleWhere(
-////                                      (c) =>
-////                                          c.id ==
-////                                          widget._receiptItem.categoryId,
-////                                      orElse: () =>
-////                                          Category()..categoryName = "Being Processed at backend",
-////                                    )
-////                                    ?.categoryName,
-////                                style: companyNameStyle,
-////                              ),
 //                            ),
                           ],
                         ),
@@ -216,8 +231,8 @@ class _ReceiptCardState extends State<ReceiptCard> {
                     ),
                   ),
                   ButtonTheme.bar(
-                    minWidth: 56,
-                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                    minWidth: 0,
+                    padding : const EdgeInsets.symmetric(horizontal: 4.0),
                     child: ButtonBar(
                       mainAxisSize: MainAxisSize.min,
                       alignment: MainAxisAlignment.start,

@@ -23,6 +23,7 @@ class ReceiptListItem {
   String notes; 
   bool gstInclusive; 
   double warrantyPeriod;
+  int decodeStatus;
 
   ReceiptListItem();
 
