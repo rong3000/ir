@@ -38,6 +38,10 @@ class ReceiptRepository {
     candidateReceiptItems = _candidateReceiptsSet.difference(_receiptsInReportSet).toList();
   }
 
+  Future<String> getToken() async {
+    return await _userRepository.currentUser.getIdToken();
+  }
+
   List<ReceiptListItem> removeCandidateItems(int id) {
     candidateReceiptItems.removeWhere((ReceiptListItem item){
       return item.id == id;
@@ -112,7 +116,7 @@ class ReceiptRepository {
       }
 
       result = await webserviceGet(
-          Urls.GetReceipts + _userRepository.userId.toString(), "",
+          Urls.GetReceipts + _userRepository.userId.toString(), await getToken(),
           timeout: 50000);
       if (result.success) {
         Iterable l = result.obj;
@@ -128,7 +132,7 @@ class ReceiptRepository {
 
   Future<DataResult> getReceipt(int receiptId) async {
     DataResult result =
-        await webserviceGet(Urls.GetReceipt + receiptId.toString(), "");
+        await webserviceGet(Urls.GetReceipt + receiptId.toString(), await getToken());
     if (result.success) {
       result.obj = Receipt.fromJason(result.obj);
     }
@@ -138,7 +142,7 @@ class ReceiptRepository {
 
   Future<DataResult> updateReceipt(Receipt receipt) async {
     DataResult result =
-        await webservicePost(Urls.UpdateReceipt, "", jsonEncode(receipt));
+        await webservicePost(Urls.UpdateReceipt, await getToken(), jsonEncode(receipt));
     if (result.success) {
       result.obj = Receipt.fromJason(result.obj);
     }
@@ -148,7 +152,7 @@ class ReceiptRepository {
   
   Future<DataResult> addReceipts(List<Receipt> receipts) async {
     DataResult result =
-        await webservicePost(Urls.AddReceipts, "", jsonEncode(receipts));
+        await webservicePost(Urls.AddReceipts, await getToken(), jsonEncode(receipts));
     if (result.success) {
       var receipts = List<Receipt>();
       for (var receipt in result.obj){
@@ -167,7 +171,7 @@ class ReceiptRepository {
 
     DataResult result = await uploadFile(
         Urls.UploadReceiptImages + _userRepository.userId.toString(),
-        "",
+        await getToken(),
         imageFile, timeout: 50000);
     if (result.success) {
       Iterable l = result.obj;
@@ -190,7 +194,7 @@ class ReceiptRepository {
 
   Future<DataResult> deleteReceipts(List<int> receiptIds) async {
     DataResult result =
-        await webservicePost(Urls.DeleteReceipts, "", jsonEncode(receiptIds));
+        await webservicePost(Urls.DeleteReceipts, await getToken(), jsonEncode(receiptIds));
     if (result.success) {
       // Delete the local cache of the receipts
       for (int i = 0; i < receiptIds.length; i++) {

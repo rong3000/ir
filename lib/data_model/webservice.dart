@@ -49,7 +49,7 @@ const int default_timeout = 2000; // millisecons
 Future<DataResult> webservicePost(String url, String token, String body, {int timeout: default_timeout}) async
 {
   final headers = {
-//    "Authorization": "Bearer " + token,
+    "Authorization": "Bearer " + token,
     "accept": "application/json",
     "Content-type": "application/json",
   };
@@ -103,7 +103,7 @@ Future<DataResult> webservicePut(String url, String token, String body, {int tim
 Future<DataResult> webserviceGet(String url, String token, {int timeout: default_timeout}) async
 {
   final headers = {
-    //"Authorization": "Bearer " + token,
+    "Authorization": "Bearer " + token,
     "accept": "application/json",
     "Content-type": "application/json",
   };
