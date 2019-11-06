@@ -11,9 +11,10 @@ import '../add_edit_reciept_manual/add_edit_receipt_manual.dart';
 class UploadReceiptImage extends StatefulWidget {
   final UserRepository _userRepository;
   final String title;
+  File imageFile;
 
   UploadReceiptImage(
-      {Key key, @required UserRepository userRepository, this.title})
+      {Key key, @required UserRepository userRepository, this.title, this.imageFile})
       : assert(userRepository != null),
         _userRepository = userRepository,
         super(key: key) {}
@@ -31,12 +32,13 @@ enum AppState {
 class _UploadReceiptImageState extends State<UploadReceiptImage> {
   UserRepository get _userRepository => widget._userRepository;
   AppState state;
-  File imageFile;
+  File imageFileToCrop;
 
   @override
   void initState() {
     super.initState();
-    state = AppState.free;
+    imageFileToCrop = widget.imageFile;
+    state = AppState.picked;
   }
 
   Future<DataResult> _uploadReceipt(File imageFile) async {
@@ -103,7 +105,7 @@ class _UploadReceiptImageState extends State<UploadReceiptImage> {
                   image: new DecorationImage(
                     colorFilter: new ColorFilter.mode(
                         Colors.black.withOpacity(0.1), BlendMode.dstATop),
-                    image: new MemoryImage(imageFile.readAsBytesSync()),
+                    image: new MemoryImage(imageFileToCrop.readAsBytesSync()),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -196,11 +198,11 @@ class _UploadReceiptImageState extends State<UploadReceiptImage> {
           title: Text(widget.title),
         ),
         body: Center(
-          child: (imageFile != null)
+          child: (imageFileToCrop != null)
               ? (state == AppState.cropped
                   ? FutureBuilder<DataResult>(
                       future:
-                          _uploadReceipt(imageFile), // a Future<String> or null
+                          _uploadReceipt(imageFileToCrop), // a Future<String> or null
                       builder: (BuildContext context,
                           AsyncSnapshot<DataResult> snapshot) {
                         switch (snapshot.connectionState) {
@@ -256,7 +258,7 @@ class _UploadReceiptImageState extends State<UploadReceiptImage> {
                         }
                       },
                     )
-                  : Image.file(imageFile))
+                  : Image.file(imageFileToCrop))
               : Container(),
         ),
         floatingActionButton: state == AppState.cropped
@@ -269,8 +271,10 @@ class _UploadReceiptImageState extends State<UploadReceiptImage> {
                     heroTag: "camera",
                     onPressed: () {
                       if (state == AppState.free)
-                        _pickImageCamera();
-                      else if (state == AppState.picked) _cropImage();
+                        {
+//                          _pickImageCamera();
+                        }
+                      else if (state == AppState.picked) {_cropImage();}
                     },
                     child: _buildButtonIconCamera(),
                   ),
@@ -288,8 +292,10 @@ class _UploadReceiptImageState extends State<UploadReceiptImage> {
                           heroTag: "gallery",
                           onPressed: () {
                             if (state == AppState.free)
-                              _pickImageGallery();
-                            else if (state == AppState.picked) _cropImage();
+                              {
+//                                _pickImageGallery();
+                              }
+                            else if (state == AppState.picked) {_cropImage();}
                           },
                           child: _buildButtonIconGallery(),
                         ),
@@ -319,29 +325,29 @@ class _UploadReceiptImageState extends State<UploadReceiptImage> {
       return Container();
   }
 
-  Future<Null> _pickImageCamera() async {
-    imageFile =
-        await ImagePicker.pickImage(source: ImageSource.camera, maxWidth: 600);
-    if (imageFile != null) {
-      setState(() {
-        state = AppState.picked;
-      });
-    }
-  }
-
-  Future<Null> _pickImageGallery() async {
-    imageFile =
-        await ImagePicker.pickImage(source: ImageSource.gallery, maxWidth: 600);
-    if (imageFile != null) {
-      setState(() {
-        state = AppState.picked;
-      });
-    }
-  }
+//  Future<Null> _pickImageCamera() async {
+//    imageFile =
+//        await ImagePicker.pickImage(source: ImageSource.camera, maxWidth: 600);
+//    if (imageFile != null) {
+//      setState(() {
+//        state = AppState.picked;
+//      });
+//    }
+//  }
+//
+//  Future<Null> _pickImageGallery() async {
+//    imageFile =
+//        await ImagePicker.pickImage(source: ImageSource.gallery, maxWidth: 600);
+//    if (imageFile != null) {
+//      setState(() {
+//        state = AppState.picked;
+//      });
+//    }
+//  }
 
   Future<Null> _cropImage() async {
     File croppedFile = await ImageCropper.cropImage(
-      sourcePath: imageFile.path,
+      sourcePath: imageFileToCrop.path,
       aspectRatioPresets: Platform.isAndroid
           ? [
               CropAspectRatioPreset.square,
@@ -368,17 +374,17 @@ class _UploadReceiptImageState extends State<UploadReceiptImage> {
           lockAspectRatio: false),
     );
     if (croppedFile != null) {
-      imageFile = croppedFile;
+      imageFileToCrop = croppedFile;
       setState(() {
         state = AppState.cropped;
       });
     }
   }
 
-  void _clearImage() {
-    imageFile = null;
-    setState(() {
-      state = AppState.free;
-    });
-  }
+//  void _clearImage() {
+//    imageFile = null;
+//    setState(() {
+//      state = AppState.free;
+//    });
+//  }
 }

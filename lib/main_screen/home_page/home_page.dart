@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intelligent_receipt/main_screen/bloc/bloc.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:intelligent_receipt/receipt/add_edit_reciept_manual/add_edit_receipt_manual.dart';
@@ -29,6 +30,43 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _homeBloc = BlocProvider.of<HomeBloc>(context);
+  }
+
+  _selectImage() async {
+    var source = await _getImageSource();
+    if (source != null) {
+      var ri = await ImagePicker.pickImage(source: source, maxWidth: 600);
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => UploadReceiptImage(userRepository: _userRepository, title: "Snap new receipt", imageFile: ri,)),
+      );
+    }
+  }
+
+  Future<ImageSource> _getImageSource() async {
+    return showDialog<ImageSource>(
+      context: context,
+      //barrierDismissible: true, // Allow to be closed without selecting option
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Select Image Source'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Camera'),
+              onPressed: () {
+                Navigator.of(context).pop(ImageSource.camera);
+              },
+            ),
+            FlatButton(
+              child: Text('Gallery'),
+              onPressed: () {
+                Navigator.of(context).pop(ImageSource.gallery);
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -74,10 +112,7 @@ class _HomePageState extends State<HomePage> {
                                   height: MediaQuery.of(context).size.height * (orientation == Orientation.portrait ? 0.2: 0.4),
                                   child: GestureDetector(
                                     onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(builder: (context) => UploadReceiptImage(userRepository: _userRepository, title: "Snap new receipt",)),
-                                      );
+                                      _selectImage();
                                     },
                                     child: Card(
                                       child: ListTile(
