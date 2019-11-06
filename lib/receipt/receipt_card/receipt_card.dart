@@ -141,7 +141,7 @@ class _ReceiptCardState extends State<ReceiptCard> {
                           ),
                           Padding(
                             padding:
-                                const EdgeInsets.only(top: 0.0, bottom: 0.0),
+                            const EdgeInsets.only(top: 0.0, bottom: 0.0),
                             child: Text(
                               '${widget._receiptItem.companyName}',
                               style: companyNameStyle,
@@ -159,6 +159,64 @@ class _ReceiptCardState extends State<ReceiptCard> {
               ],
             ),
           ),
+//          Expanded(
+//            flex: 2,
+//            child: Column(
+//              children: <Widget>[
+//                Padding(
+//                  padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+//                  child: DefaultTextStyle(
+//                    softWrap: false,
+//                    overflow: TextOverflow.ellipsis,
+//                    style: dateStyle,
+//                    child: Container(
+//                      height: MediaQuery.of(context).size.height * 0.16,
+//                      child: Column(
+//                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//                        crossAxisAlignment: CrossAxisAlignment.start,
+//                        mainAxisSize: MainAxisSize.max,
+//                        children: <Widget>[
+//                          Padding(
+//                            padding: const EdgeInsets.only(bottom: 0.0),
+//                            child: Text(
+//                              "Uploaded ${DateFormat().add_yMd().format(widget._receiptItem.uploadDatetime.toLocal())}",
+//                              style: dateStyle
+//                                  .copyWith(color: Colors.black54)
+//                                  .apply(fontSizeFactor: 0.75),
+//                            ),
+//                          ),
+//                          Padding(
+//                            padding: const EdgeInsets.only(bottom: 0.0),
+//                            child: AutoSizeText(
+//                              _getTextShownInCategoryField(widget._receiptItem),
+//                              style: TextStyle(fontSize: 12)
+//                                  .copyWith(color: Colors.black54)
+//                                  .apply(fontSizeFactor: 0.85),
+//                              minFontSize: 6,
+//                              maxLines: 3,
+//                              overflow: TextOverflow.ellipsis,
+//                            ),
+//                          ),
+//                          ButtonTheme.bar(
+//                            minWidth: 56,
+//                            padding : const EdgeInsets.symmetric(horizontal: 4.0),
+//                            child: ButtonBar(
+//                              mainAxisSize: MainAxisSize.min,
+//                              alignment: MainAxisAlignment.start,
+//                              children: widget.actions
+//                                  .map<Widget>((ActionWithLabel action) =>
+//                                  _actionButton(context, action))
+//                                  .toList(),
+//                            ),
+//                          ),
+//                        ],
+//                      ),
+//                    ),
+//                  ),
+//                ),
+//              ],
+//            ),
+//          ),
           Expanded(
             flex: 2,
             child: Container(
@@ -231,7 +289,7 @@ class _ReceiptCardState extends State<ReceiptCard> {
                     ),
                   ),
                   ButtonTheme.bar(
-                    minWidth: 0,
+                    minWidth: 56,
                     padding : const EdgeInsets.symmetric(horizontal: 4.0),
                     child: ButtonBar(
                       mainAxisSize: MainAxisSize.min,

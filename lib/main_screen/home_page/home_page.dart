@@ -81,7 +81,8 @@ class _HomePageState extends State<HomePage> {
                                     },
                                     child: Card(
                                       child: ListTile(
-                                        title: Text('Add Your (First) Receipt'),
+                                        title: Text('Snap Your (First) Receipt'),
+                                        subtitle: Icon(Icons.photo_camera, size: MediaQuery.of(context).size.height * 0.1,),
                                       ),
                                     ),
                                   ),
@@ -103,6 +104,7 @@ class _HomePageState extends State<HomePage> {
                                       Card(
                                       child: ListTile(
                                         title: Text('Manually Add Your (First) Receipt'),
+                                        subtitle: Icon(Icons.edit, size: MediaQuery.of(context).size.height * 0.1,),
                                       ),
                                     ),
                                   ),
@@ -119,6 +121,7 @@ class _HomePageState extends State<HomePage> {
                                     child: Card(
                                       child: ListTile(
                                         title: Text('View Imported Receipts'),
+                                        subtitle: Icon(Icons.receipt, size: MediaQuery.of(context).size.height * 0.1,),
                                       ),
                                     ),
                                   ),
@@ -136,6 +139,7 @@ class _HomePageState extends State<HomePage> {
                                     child: Card(
                                       child: ListTile(
                                         title: Text('View Receipt Groups'),
+                                        subtitle: Icon(Icons.collections_bookmark, size: MediaQuery.of(context).size.height * 0.1,),
                                       ),
                                     ),
                                   ),
@@ -145,70 +149,70 @@ class _HomePageState extends State<HomePage> {
                             ],
                           ),
                         ),
-                        Flexible(
-                            fit: FlexFit.tight,
-                            child: Wrap(
-                              children: <Widget>[
-                                FractionallySizedBox(
-                                  widthFactor: orientation == Orientation.portrait ? 1: 0.33,
-                                  child: Container(
-                                    height: MediaQuery.of(context).size.height * (orientation == Orientation.portrait ? 0.125: 0.32),
-                                    child:
-                                    Card(
-                                      child: ListTile(
-                                        leading: Icon(Icons.album),
-                                        title: AutoSizeText(
-                                          'Intelligent Receipt',
-                                          style: TextStyle(fontSize: 18),
-                                          minFontSize: 8,
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        subtitle: AutoSizeText(
-                                          'Invite your friends to join IR then receive more free automatically scans',
-                                          style: TextStyle(fontSize: 18),
-                                          minFontSize: 8,
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                FractionallySizedBox(
-                                  widthFactor: orientation == Orientation.portrait ? 1: 0.33,
-                                  child: Container(
-                                    height: MediaQuery.of(context).size.height * (orientation == Orientation.portrait ? 0.125: 0.32),
-                                    child:
-                                    Card(
-                                      child: ListTile(
-                                        leading: Icon(Icons.album),
-                                        title: Text('Intelligent Receipt'),
-                                        subtitle:
-                                        Text('Get unlimited automatically scans'),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                FractionallySizedBox(
-                                  widthFactor: orientation == Orientation.portrait ? 1: 0.33,
-                                  child: Container(
-                                    height: MediaQuery.of(context).size.height * (orientation == Orientation.portrait ? 0.125: 0.32),
-                                    child:
-                                    Card(
-                                      child: ListTile(
-                                        leading: Icon(Icons.album),
-                                        title: Text('Intelligent Receipt'),
-                                        subtitle: Text(
-                                            'We have sent you an email, please click confirm'),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            )
-                        ),
+//                        Flexible(
+//                            fit: FlexFit.tight,
+//                            child: Wrap(
+//                              children: <Widget>[
+//                                FractionallySizedBox(
+//                                  widthFactor: orientation == Orientation.portrait ? 1: 0.33,
+//                                  child: Container(
+//                                    height: MediaQuery.of(context).size.height * (orientation == Orientation.portrait ? 0.125: 0.32),
+//                                    child:
+//                                    Card(
+//                                      child: ListTile(
+//                                        leading: Icon(Icons.album),
+//                                        title: AutoSizeText(
+//                                          'Intelligent Receipt',
+//                                          style: TextStyle(fontSize: 18),
+//                                          minFontSize: 8,
+//                                          maxLines: 1,
+//                                          overflow: TextOverflow.ellipsis,
+//                                        ),
+//                                        subtitle: AutoSizeText(
+//                                          'Invite your friends to join IR then receive more free automatically scans',
+//                                          style: TextStyle(fontSize: 18),
+//                                          minFontSize: 8,
+//                                          maxLines: 2,
+//                                          overflow: TextOverflow.ellipsis,
+//                                        ),
+//
+//                                      ),
+//                                    ),
+//                                  ),
+//                                ),
+//                                FractionallySizedBox(
+//                                  widthFactor: orientation == Orientation.portrait ? 1: 0.33,
+//                                  child: Container(
+//                                    height: MediaQuery.of(context).size.height * (orientation == Orientation.portrait ? 0.125: 0.32),
+//                                    child:
+//                                    Card(
+//                                      child: ListTile(
+//                                        leading: Icon(Icons.album),
+//                                        title: Text('Intelligent Receipt'),
+//                                        subtitle:
+//                                        Text('Get unlimited automatically scans'),
+//                                      ),
+//                                    ),
+//                                  ),
+//                                ),
+//                                FractionallySizedBox(
+//                                  widthFactor: orientation == Orientation.portrait ? 1: 0.33,
+//                                  child: Container(
+//                                    height: MediaQuery.of(context).size.height * (orientation == Orientation.portrait ? 0.125: 0.32),
+//                                    child:
+//                                    Card(
+//                                      child: ListTile(
+//                                        leading: Icon(Icons.album),
+//                                        title: Text('Intelligent Receipt'),
+//                                        subtitle: Text(
+//                                            'We have sent you an email, please click confirm'),
+//                                      ),
+//                                    ),
+//                                  ),
+//                                ),
+//                              ],
+//                            )
+//                        ),
                       ],
                     );
                 }),

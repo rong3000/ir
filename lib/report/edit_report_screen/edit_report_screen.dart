@@ -294,12 +294,12 @@ class _EditReportScreenState extends State<EditReportScreen> {
                       onPressed:
                       isLoginButtonEnabled() ? _onReportSaved : null,
 //                      _onReportSaved,
-                      buttonName: 'Save receipt group',
+                      buttonName: 'Save group',
                     ),
                     ReportButton(
                       onPressed:
                       isLoginButtonEnabled() ? _onReportSubmitted : null,
-                      buttonName: 'Archive receipt group',
+                      buttonName: 'Archive group',
                     ),
                   ],
                 ),
