@@ -12,10 +12,10 @@ class Urls {
   static String ServiceBaseUrl = "http://10.0.2.2:3001/";
 
   // Receipt related APIs
-  static String GetReceipts = ServiceBaseUrl + "Receipt/GetReceipts/";
+  static String GetReceipts = ServiceBaseUrl + "Receipt/GetReceipts";
   static String GetReceipt = ServiceBaseUrl + "Receipt/GetReceiptByReceiptId/";
   static String UpdateReceipt = ServiceBaseUrl + "Receipt/UpdateReceipt";
-  static String UploadReceiptImages = ServiceBaseUrl + "Receipt/UploadReceiptImages/1/";
+  static String UploadReceiptImages = ServiceBaseUrl + "Receipt/UploadReceiptImages/1/"; //TODO hardcoded 1 here might be problem
   static String DeleteReceipts = ServiceBaseUrl + "Receipt/DeleteReceipts";
   static String GetImage = ServiceBaseUrl + "Receipt/GetImage";
   static String AddReceipts = ServiceBaseUrl + "Receipt/AddReceipts";

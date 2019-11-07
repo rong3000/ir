@@ -116,7 +116,7 @@ class ReceiptRepository {
       }
 
       result = await webserviceGet(
-          Urls.GetReceipts + _userRepository.userId.toString(), await getToken(),
+          Urls.GetReceipts, await getToken(),
           timeout: 50000);
       if (result.success) {
         Iterable l = result.obj;
@@ -170,7 +170,7 @@ class ReceiptRepository {
     }
 
     DataResult result = await uploadFile(
-        Urls.UploadReceiptImages + _userRepository.userId.toString(),
+        Urls.UploadReceiptImages,
         await getToken(),
         imageFile, timeout: 50000);
     if (result.success) {
