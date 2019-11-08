@@ -98,6 +98,28 @@ class _ReceiptCardState extends State<ReceiptCard> {
       );
     }
 
+    Future<void> _showFullImage(String imagePath) async {
+      await showDialog<void>(
+          context: context,
+          builder: (BuildContext context) {
+            return SimpleDialog(
+              children: <Widget>[
+                SimpleDialogOption(
+                  child: getImage(imagePath),
+                ),
+                SimpleDialogOption(
+                  child: FlatButton(
+                    child: Text('Close'),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                )
+              ],
+            );
+          });
+    }
+
     return Card(
       clipBehavior: Clip.antiAlias,
       child: Row(
@@ -107,11 +129,15 @@ class _ReceiptCardState extends State<ReceiptCard> {
         children: <Widget>[
           Expanded(
             flex: 1,
-            child: SizedBox(
-              height: MediaQuery.of(context).size.height * 0.16,
-//          width: MediaQuery.of(context).size.width * 0.1,
-              child: getImage(widget._receiptItem.imagePath),
-            ),
+            child: GestureDetector(
+              onTap: () {
+                _showFullImage(widget._receiptItem.imagePath);
+              },
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height * 0.16,
+                child: getImage(widget._receiptItem.imagePath),
+              ),
+            )
           ),
           Expanded(
             flex: 2,
@@ -159,64 +185,6 @@ class _ReceiptCardState extends State<ReceiptCard> {
               ],
             ),
           ),
-//          Expanded(
-//            flex: 2,
-//            child: Column(
-//              children: <Widget>[
-//                Padding(
-//                  padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
-//                  child: DefaultTextStyle(
-//                    softWrap: false,
-//                    overflow: TextOverflow.ellipsis,
-//                    style: dateStyle,
-//                    child: Container(
-//                      height: MediaQuery.of(context).size.height * 0.16,
-//                      child: Column(
-//                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//                        crossAxisAlignment: CrossAxisAlignment.start,
-//                        mainAxisSize: MainAxisSize.max,
-//                        children: <Widget>[
-//                          Padding(
-//                            padding: const EdgeInsets.only(bottom: 0.0),
-//                            child: Text(
-//                              "Uploaded ${DateFormat().add_yMd().format(widget._receiptItem.uploadDatetime.toLocal())}",
-//                              style: dateStyle
-//                                  .copyWith(color: Colors.black54)
-//                                  .apply(fontSizeFactor: 0.75),
-//                            ),
-//                          ),
-//                          Padding(
-//                            padding: const EdgeInsets.only(bottom: 0.0),
-//                            child: AutoSizeText(
-//                              _getTextShownInCategoryField(widget._receiptItem),
-//                              style: TextStyle(fontSize: 12)
-//                                  .copyWith(color: Colors.black54)
-//                                  .apply(fontSizeFactor: 0.85),
-//                              minFontSize: 6,
-//                              maxLines: 3,
-//                              overflow: TextOverflow.ellipsis,
-//                            ),
-//                          ),
-//                          ButtonTheme.bar(
-//                            minWidth: 56,
-//                            padding : const EdgeInsets.symmetric(horizontal: 4.0),
-//                            child: ButtonBar(
-//                              mainAxisSize: MainAxisSize.min,
-//                              alignment: MainAxisAlignment.start,
-//                              children: widget.actions
-//                                  .map<Widget>((ActionWithLabel action) =>
-//                                  _actionButton(context, action))
-//                                  .toList(),
-//                            ),
-//                          ),
-//                        ],
-//                      ),
-//                    ),
-//                  ),
-//                ),
-//              ],
-//            ),
-//          ),
           Expanded(
             flex: 2,
             child: Container(
@@ -260,29 +228,6 @@ class _ReceiptCardState extends State<ReceiptCard> {
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
-//                            Container(
-//                              width: MediaQuery.of(context).size.width*0.8,
-//                              padding:
-//                                  const EdgeInsets.only(top: 0.0, bottom: 0.0),
-//                              child: new Column (
-//                                children: <Widget>[
-//                                  new Text ("Long text 1 Long text 1 Long text 1 Long text 1 Long text 1 Long text 1 Long text 1 Long text 1 Long text 1 Long text 1 Long text 1 Long text 1 Long text 1 Long text 1 ", textAlign: TextAlign.left),
-//                                ],
-//                              ),
-//                              child: Text(
-//                                "this is what we want ddddfdf dffd asdfsdfsdf asdfsdaf wwwddf ggdssgsd sdfsd sgsdf ppodkkd"
-//                                _categoryRepository.categories
-//                                    .singleWhere(
-//                                      (c) =>
-//                                          c.id ==
-//                                          widget._receiptItem.categoryId,
-//                                      orElse: () =>
-//                                          Category()..categoryName = "Unknown",
-//                                    )
-//                                    ?.categoryName,
-//                                style: companyNameStyle,
-//                              ),
-//                            ),
                           ],
                         ),
                       ),
