@@ -13,15 +13,10 @@ import 'package:intelligent_receipt/receipt/bloc/receipt_bloc.dart';
 import 'package:intelligent_receipt/receipt/bloc/receipt_event.dart';
 import 'package:intelligent_receipt/receipt/bloc/receipt_state.dart';
 import 'package:intelligent_receipt/user_repository.dart';
-import 'package:flutter/material.dart';
 import 'package:intelligent_receipt/data_model/receipt_repository.dart';
-import 'package:intelligent_receipt/user_repository.dart';
-import 'package:image_picker/image_picker.dart';
-import 'dart:io';
-import "package:rflutter_alert/rflutter_alert.dart";
 import 'dart:async';
 import 'package:image_cropper/image_cropper.dart';
-import '../add_edit_reciept_manual/add_edit_receipt_manual.dart';
+import 'package:zoomable_image/zoomable_image.dart';
 
 class AddEditReiptForm extends StatefulWidget {
   final Receipt _receiptItem;
@@ -327,16 +322,22 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
         });
   }
 
-  Future<void> _showFullImage(Widget childImage) async {
+  Future<void> _showFullImage(Image childImage) async {
     await showDialog<void>(
         context: context,
         builder: (BuildContext context) {
           return SimpleDialog(
             children: <Widget>[
-              SimpleDialogOption(
-                child: childImage,
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height * 0.8,
+                child:
+                childImage != null ?
+                ZoomableImage(childImage.image, backgroundColor: Colors.white) :
+                Center(child: Text("No Image!", textAlign: TextAlign.center)),
               ),
-              SimpleDialogOption(
+              Container(
+                height: 30,
                 child: FlatButton(
                   child: Text('Close'),
                   onPressed: () {

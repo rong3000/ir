@@ -8,6 +8,7 @@ import 'package:intelligent_receipt/data_model/webservice.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 import 'package:intl/intl.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:zoomable_image/zoomable_image.dart';
 
 class ReceiptCard extends StatefulWidget {
   const ReceiptCard({
@@ -104,10 +105,16 @@ class _ReceiptCardState extends State<ReceiptCard> {
           builder: (BuildContext context) {
             return SimpleDialog(
               children: <Widget>[
-                SimpleDialogOption(
-                  child: getImage(imagePath),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height * 0.8,
+                  child:
+                    !imagePath.isEmpty ?
+                    ZoomableImage(new NetworkImage(Urls.GetImage + "/" + Uri.encodeComponent(imagePath)), backgroundColor: Colors.white) :
+                    Center(child: Text("No Image!", textAlign: TextAlign.center)),
                 ),
-                SimpleDialogOption(
+                Container(
+                  height: 30,
                   child: FlatButton(
                     child: Text('Close'),
                     onPressed: () {
