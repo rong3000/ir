@@ -1,3 +1,5 @@
+import 'package:flutter/widgets.dart';
+import 'package:intelligent_receipt/data_model/ir_repository.dart';
 import "receipt.dart";
 import 'report_repository.dart';
 import "webservice.dart";
@@ -10,12 +12,11 @@ export "receipt.dart";
 export 'data_result.dart';
 export 'enums.dart';
 
-class ReceiptRepository {
+class ReceiptRepository extends IRRepository {
   List<ReceiptListItem> receipts = new List<ReceiptListItem>();
   List<ReceiptListItem> selectedReceipts = new List<ReceiptListItem>();
   List<ReceiptListItem> cachedReceiptItems;
   List<ReceiptListItem> candidateReceiptItems;
-  UserRepository _userRepository;
   bool _dataFetched = false;
   Lock _lock = new Lock();
 
@@ -38,10 +39,6 @@ class ReceiptRepository {
     candidateReceiptItems = _candidateReceiptsSet.difference(_receiptsInReportSet).toList();
   }
 
-  Future<String> getToken() async {
-    return await _userRepository.currentUser.getIdToken();
-  }
-
   List<ReceiptListItem> removeCandidateItems(int id) {
     candidateReceiptItems.removeWhere((ReceiptListItem item){
       return item.id == id;
@@ -49,12 +46,10 @@ class ReceiptRepository {
     return candidateReceiptItems;
   }
 
-  ReceiptRepository(UserRepository userRepository) {
-    _userRepository = userRepository;
-  }
+  ReceiptRepository(UserRepository userRepository) : super(userRepository);
 
   ReceiptListItem getReceiptItem(int receiptId) {
-    ReceiptListItem receiptListItem = null;
+    ReceiptListItem receiptListItem;
     for (var i = 0; i < receipts.length; i++) {
       if (receipts[i].id == receiptId) {
         receiptListItem = receipts[i];
@@ -110,7 +105,7 @@ class ReceiptRepository {
         result = DataResult.success(receipts);
       }
 
-      if ((_userRepository == null) || (_userRepository.userId <= 0)) {
+      if ((userRepository == null) || (userRepository.userId <= 0)) {
         // Log an error
         result = DataResult.fail();
       }
@@ -164,7 +159,7 @@ class ReceiptRepository {
   }
 
   Future<DataResult> uploadReceiptImage(File imageFile) async {
-    if ((_userRepository == null) || (_userRepository.userId <= 0)) {
+    if ((userRepository == null) || (userRepository.userId <= 0)) {
       // Log an error
       return DataResult.fail(msg: "No user logged in.");
     }
@@ -210,5 +205,11 @@ class ReceiptRepository {
     }
 
     return result;
+  }
+
+  Future<Image> getNetworkImage(String url) async {
+    final token = await getToken();
+
+    return await getImageFromNetwork(url, token);
   }
 }

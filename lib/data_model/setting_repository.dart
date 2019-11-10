@@ -1,3 +1,5 @@
+import 'package:intelligent_receipt/data_model/ir_repository.dart';
+
 import "currency.dart";
 import "setting.dart";
 import "webservice.dart";
@@ -6,15 +8,13 @@ import 'package:synchronized/synchronized.dart';
 
 export 'currency.dart';
 
-class SettingRepository {
+class SettingRepository extends IRRepository {
   List<Currency> _currencies;
   List<Setting> _generalSettings;
-  final UserRepository _userRepository;
   Lock _lockCurrencies = new Lock();
   Lock _lockSettings = new Lock();
 
-  SettingRepository(UserRepository userRepository)
-      : _userRepository = userRepository {
+  SettingRepository(UserRepository userRepository) : super (userRepository) {
     _currencies = new List<Currency>();
     _generalSettings = new List<Setting>();
   }
@@ -40,13 +40,13 @@ class SettingRepository {
   Future<DataResult> getCurrenciesFromServer() async {
     DataResult result = new DataResult(false, "Unknown");
     await _lockCurrencies.synchronized(() async {
-      if ((_userRepository == null) || (_userRepository.userId <= 0)) {
-        // Log an error
+      if ((userRepository == null) || (userRepository.userId <= 0)) {
+        // Log an error //TODO: better check
         result = DataResult.fail();
       }
 
       result = await webserviceGet(
-          Urls.GetCurrencies, "",
+          Urls.GetCurrencies, await getToken(),
           timeout: 3000);
       if (result.success) {
         Iterable l = result.obj;
@@ -61,13 +61,13 @@ class SettingRepository {
   Future<DataResult> getSettingsFromServer() async {
     DataResult result = new DataResult(false, "Unknown");
     await _lockSettings.synchronized(() async {
-      if ((_userRepository == null) || (_userRepository.userId <= 0)) {
+      if ((userRepository == null) || (userRepository.userId <= 0)) {
         // Log an error
         result = DataResult.fail();
       }
 
       result = await webserviceGet(
-          Urls.GetSystemSettings + _userRepository.userId.toString(), "",
+          Urls.GetSystemSettings + userRepository.userId.toString(), "",
           timeout: 3000);
       if (result.success) {
         Iterable l = result.obj;
@@ -106,7 +106,7 @@ class SettingRepository {
   }
 
   Future<DataResult> _addOrUpdateSystemSetting(String key, String value) async {
-    DataResult result = await webservicePost(Urls.AddOrUpdateSystemSetting + _userRepository.userId.toString() + "/" + Uri.encodeComponent(key) + "/" + Uri.encodeComponent(value), "", "");
+    DataResult result = await webservicePost(Urls.AddOrUpdateSystemSetting + userRepository.userId.toString() + "/" + Uri.encodeComponent(key) + "/" + Uri.encodeComponent(value), "", "");
     if (result.success) {
       Setting setting = Setting.fromJason(result.obj);
       result.obj = setting;

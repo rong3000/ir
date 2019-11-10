@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:path/path.dart';
@@ -21,7 +22,7 @@ class Urls {
   static String AddReceipts = ServiceBaseUrl + "Receipt/AddReceipts";
 
   // Category related APIs
-  static String GetCategories = ServiceBaseUrl + "Settings/GetCategories/";
+  static String GetCategories = ServiceBaseUrl + "Settings/GetCategories";
   static String AddCategory = ServiceBaseUrl + "Settings/AddCategory/";
   static String UpdateCategory = ServiceBaseUrl + "Settings/UpdateCategory/";
   static String DeleteCategory = ServiceBaseUrl + "Settings/DeleteCategory/";
@@ -153,3 +154,17 @@ Future<DataResult> uploadFile(String url, String token, File imageFile, {int tim
     return DataResult.fail(msgCode: MessageCode.UNKNOWN, msg: e.toString());
   }
 }
+
+
+/// Url: image URL
+/// token: token string
+Future<Image> getImageFromNetwork(String url, String token)  async {
+  final headers = {
+    "Authorization": "Bearer " + token,
+    "accept": "application/json",
+    "Content-type": "application/json",
+  };
+
+  return Image.network(url, headers: headers);
+}
+

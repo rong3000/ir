@@ -183,6 +183,9 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
         DropdownMenuItem<int>(value: cat.id, child: Text(cat.categoryName)),
       );
     }
+    if (!categoryList.any((c) => c.id == receipt.categoryId) && categoryList.length > 0){
+      receipt.categoryId = categoryList[0].id;
+    }
     return list;
   }
 

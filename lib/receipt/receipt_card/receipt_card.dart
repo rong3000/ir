@@ -27,16 +27,32 @@ class ReceiptCard extends StatefulWidget {
 
 class _ReceiptCardState extends State<ReceiptCard> {
   CategoryRepository _categoryRepository;
+  ReceiptRepository _receiptRepository;
+  Image receiptImage;
 
-  Image getImage(String imagePath) {
+  retrieveImage(String imagePath) async {
     var imageUrl = Urls.GetImage + "/" + Uri.encodeComponent(imagePath);
-    return Image.network(imageUrl);
+    var image  = await _receiptRepository.getNetworkImage(imageUrl);
+    if (image != null){
+      setState(() {
+       receiptImage = image; 
+      });
+    }
+  }
+
+  getImage(String imagePath){
+    if (receiptImage == null){
+      retrieveImage(imagePath);
+    }
+    return receiptImage;
   }
 
   @override
   void initState() {
     _categoryRepository =
         RepositoryProvider.of<UserRepository>(context).categoryRepository;
+    _receiptRepository =
+        RepositoryProvider.of<UserRepository>(context).receiptRepository;
     super.initState();
   }
 
