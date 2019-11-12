@@ -10,7 +10,7 @@ import 'message_code.dart';
 export 'data_result.dart';
 
 class Urls {
-  static String ServiceBaseUrl = "http://10.0.2.2:3001/";
+  static String ServiceBaseUrl = "http://10.0.0.1:3001/";
 
   // Receipt related APIs
   static String GetReceipts = ServiceBaseUrl + "Receipt/GetReceipts";
@@ -40,6 +40,9 @@ class Urls {
   static String RemoveReceiptFromReport = ServiceBaseUrl + "Report/RemoveReceiptFromReport/";
   static String UpdateReportWithReceipts = ServiceBaseUrl + "Report/UpdateReportWithReceipts";
   static String UpdateReportWithoutReceipts = ServiceBaseUrl + "Report/UpdateReportWithoutReceipts";
+
+  // User Urls
+  static String CreateNewUser = ServiceBaseUrl + "User/create";
 }
 
 const int default_timeout = 2000; // millisecons

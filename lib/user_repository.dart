@@ -1,11 +1,15 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+import 'package:intelligent_receipt/data_model/user.dart';
 import 'package:intelligent_receipt/data_model/receipt_repository.dart';
 import 'package:intelligent_receipt/data_model/category_repository.dart';
 import 'package:intelligent_receipt/data_model/report_repository.dart';
 import 'package:intelligent_receipt/data_model/setting_repository.dart';
+
+import 'data_model/webservice.dart';
 
 class UserRepository {
   final FirebaseAuth _firebaseAuth;
@@ -41,7 +45,7 @@ class UserRepository {
       idToken: googleAuth.idToken,
     );
     await _firebaseAuth.signInWithCredential(credential);
-    FirebaseUser currentUser = await _firebaseAuth.currentUser();
+    currentUser = await _firebaseAuth.currentUser();
     userGuid = currentUser?.uid;
     return currentUser;
   }
@@ -54,7 +58,7 @@ Future<FirebaseUser> signInWithFacebook() async {
 		
     
     await _firebaseAuth.signInWithCredential(credential);
-    FirebaseUser currentUser = await _firebaseAuth.currentUser();
+    currentUser = await _firebaseAuth.currentUser();
     userGuid = currentUser?.uid;
     return currentUser;
 }
@@ -98,6 +102,18 @@ Future<FirebaseUser> signInWithFacebook() async {
     FirebaseUser currentUser = await _firebaseAuth.currentUser();
     userGuid = currentUser?.uid;
     return userGuid;
+  }
+
+  Future<User> registerNewUser() async { // Maybe not needed
+    User newUser = User();
+    newUser.firstname = currentUser.displayName;
+    newUser.email = currentUser.email;
+    newUser.mobile = currentUser.phoneNumber;
+    var result = await webservicePost(Urls.CreateNewUser, await currentUser.getIdToken(), jsonEncode(newUser));
+    if (result.success){
+      return result.obj as User;
+    }
+    return null;
   }
 
   Future<void> postSignIn() async {

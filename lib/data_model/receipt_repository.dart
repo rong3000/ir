@@ -110,9 +110,7 @@ class ReceiptRepository extends IRRepository {
         result = DataResult.fail();
       }
 
-      result = await webserviceGet(
-          Urls.GetReceipts, await getToken(),
-          timeout: 50000);
+      result = await webserviceGet(Urls.GetReceipts, await getToken(), timeout: 50000);
       if (result.success) {
         Iterable l = result.obj;
         receipts = l.map((model) => ReceiptListItem.fromJason(model)).toList();
