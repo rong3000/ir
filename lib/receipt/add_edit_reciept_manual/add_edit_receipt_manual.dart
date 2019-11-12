@@ -16,7 +16,7 @@ import 'package:intelligent_receipt/user_repository.dart';
 import 'package:intelligent_receipt/data_model/receipt_repository.dart';
 import 'dart:async';
 import 'package:image_cropper/image_cropper.dart';
-import 'package:zoomable_image/zoomable_image.dart';
+import '../../helper_widgets/zoomable_image.dart';
 
 class AddEditReiptForm extends StatefulWidget {
   final Receipt _receiptItem;

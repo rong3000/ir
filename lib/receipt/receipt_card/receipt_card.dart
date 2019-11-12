@@ -8,7 +8,7 @@ import 'package:intelligent_receipt/data_model/webservice.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 import 'package:intl/intl.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:zoomable_image/zoomable_image.dart';
+import '../../helper_widgets/zoomable_image.dart';
 
 class ReceiptCard extends StatefulWidget {
   const ReceiptCard({
