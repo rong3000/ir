@@ -181,7 +181,7 @@ class _ReceiptCardState extends State<ReceiptCard> {
                             ),
                           ),
                           Text(
-                            'Total ${widget._receiptItem.totalAmount}',
+                            'Total ${widget._receiptItem.currencyCode} ${widget._receiptItem.totalAmount}',
                             style: amountStyle,
                           ),
                         ],

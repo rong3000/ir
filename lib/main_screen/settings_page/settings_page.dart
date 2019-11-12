@@ -88,114 +88,114 @@ class _SettingsPageState extends State<SettingsPage> {
 //                ),
               ),
             ),
-//            Card(
-//              child: ListTile(
-////                leading: Icon(Icons.album),
-//                title: AutoSizeText(
-//                  'Default Currency',
-//                  style: TextStyle(fontSize: 18),
-//                  minFontSize: 8,
-//                  maxLines: 1,
-//                  overflow: TextOverflow.ellipsis,
-//                ),
-//                trailing: SizedBox(
-//                  width: 140,
-//                  child: FlatButton(
-//                    onPressed: () => {
-//                      Navigator.of(context).push(
-//                        MaterialPageRoute(builder: (context) {
-//                          return CurrencyScreen(
-//                              userRepository: _userRepository,
-//                              title: 'Choose Currency',
-//                              defaultCurrency: _currency);
-//                        }),
-//                      )
-//                    },
-////                    color: Colors.orange,
-////                    padding: EdgeInsets.all(10.0),
-//                    child: Row(
-//                        // Replace with a Row for horizontal icon + text
-//                        mainAxisAlignment: MainAxisAlignment.end,
-//                        mainAxisSize: MainAxisSize.max,
-//                        children: <Widget>[
-//                          FutureBuilder<DataResult>(
-//                              future: _userRepository.settingRepository
-//                                  .getSettingsFromServer(),
-//                              builder: (BuildContext context,
-//                                  AsyncSnapshot<DataResult> snapshot) {
-//                                switch (snapshot.connectionState) {
-//                                  case ConnectionState.none:
-//                                    return new Text('Loading...');
-//                                  case ConnectionState.waiting:
-//                                    return new Center(
-//                                        child: new CircularProgressIndicator());
-//                                  case ConnectionState.active:
-//                                    return new Text('');
-//                                  case ConnectionState.done:
-//                                    {
-//                                      return FutureBuilder<DataResult>(
-//                                          future: _userRepository.settingRepository
-//                                              .getCurrenciesFromServer(),
-//                                          builder: (BuildContext context,
-//                                              AsyncSnapshot<DataResult> snapshot) {
-//                                            switch (snapshot.connectionState) {
-//                                              case ConnectionState.none:
-//                                                return new Text('Loading...');
-//                                              case ConnectionState.waiting:
-//                                                return new Center(
-//                                                    child: new CircularProgressIndicator());
-//                                              case ConnectionState.active:
-//                                                return new Text('');
-//                                              case ConnectionState.done:
-//                                                if (snapshot.hasError) {
-//                                                  return
-////                                                    new Text(
-////                                                    '${snapshot.error}',
-////                                                    style: TextStyle(color: Colors.red),
-////                                                  );
-//                                                  AutoSizeText(
+            Card(
+              child: ListTile(
+//                leading: Icon(Icons.album),
+                title: AutoSizeText(
+                  'Default Currency',
+                  style: TextStyle(fontSize: 18),
+                  minFontSize: 8,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                trailing: SizedBox(
+                  width: 140,
+                  child: FlatButton(
+                    onPressed: () => {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) {
+                          return CurrencyScreen(
+                              userRepository: _userRepository,
+                              title: 'Choose Currency',
+                              defaultCurrency: _currency);
+                        }),
+                      )
+                    },
+//                    color: Colors.orange,
+//                    padding: EdgeInsets.all(10.0),
+                    child: Row(
+                        // Replace with a Row for horizontal icon + text
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        mainAxisSize: MainAxisSize.max,
+                        children: <Widget>[
+                          FutureBuilder<DataResult>(
+                              future: _userRepository.settingRepository
+                                  .getSettingsFromServer(),
+                              builder: (BuildContext context,
+                                  AsyncSnapshot<DataResult> snapshot) {
+                                switch (snapshot.connectionState) {
+                                  case ConnectionState.none:
+                                    return new Text('Loading...');
+                                  case ConnectionState.waiting:
+                                    return new Center(
+                                        child: new CircularProgressIndicator());
+                                  case ConnectionState.active:
+                                    return new Text('');
+                                  case ConnectionState.done:
+                                    {
+                                      return FutureBuilder<DataResult>(
+                                          future: _userRepository.settingRepository
+                                              .getCurrenciesFromServer(),
+                                          builder: (BuildContext context,
+                                              AsyncSnapshot<DataResult> snapshot) {
+                                            switch (snapshot.connectionState) {
+                                              case ConnectionState.none:
+                                                return new Text('Loading...');
+                                              case ConnectionState.waiting:
+                                                return new Center(
+                                                    child: new CircularProgressIndicator());
+                                              case ConnectionState.active:
+                                                return new Text('');
+                                              case ConnectionState.done:
+                                                if (snapshot.hasError) {
+                                                  return
+//                                                    new Text(
 //                                                    '${snapshot.error}',
-//                                                    style: TextStyle(fontSize: 14),
-//                                                    minFontSize: 1,
-//                                                    maxLines: 3,
-//                                                    overflow: TextOverflow.ellipsis,
+//                                                    style: TextStyle(color: Colors.red),
 //                                                  );
-//                                                } else {
-//                                                  _currency = _userRepository
-//                                                      .settingRepository
-//                                                      .getDefaultCurrency();
-//                                                  return (_currency != null) ? Expanded(
-//                                                    child: AutoSizeText(
-//                                                      "${_currency.name} ${_currency.symbol}",
-//                                                      style: TextStyle(fontSize: 14),
-//                                                      minFontSize: 1,
-//                                                      maxLines: 3,
-//                                                      overflow: TextOverflow.ellipsis,
-//                                                    ),
-////                                        children: <Widget>[//
-//////                                          Text("${_currency.name} "),
-//////                                          Text("${_currency.symbol}"),
-////                                        ],
-//                                                  ) : AutoSizeText(
-//                                                    'Network Error',
-//                                                    style: TextStyle(fontSize: 10),
-//                                                    minFontSize: 4,
-//                                                    maxLines: 3,
-//                                                    overflow: TextOverflow.ellipsis,
-//                                                  );
-//                                                }
-//
-//                                            }
-//                                          });
-//                                    }
-//                                }
-//                              }),
-//                          Icon(Icons.more_horiz),
-//                        ]),
-//                  ),
-//                ),
-//              ),
-//            ),
+                                                  AutoSizeText(
+                                                    '${snapshot.error}',
+                                                    style: TextStyle(fontSize: 14),
+                                                    minFontSize: 1,
+                                                    maxLines: 3,
+                                                    overflow: TextOverflow.ellipsis,
+                                                  );
+                                                } else {
+                                                  _currency = _userRepository
+                                                      .settingRepository
+                                                      .getDefaultCurrency();
+                                                  return (_currency != null) ? Expanded(
+                                                    child: AutoSizeText(
+                                                      "${_currency.name} ${_currency.symbol}",
+                                                      style: TextStyle(fontSize: 14),
+                                                      minFontSize: 1,
+                                                      maxLines: 3,
+                                                      overflow: TextOverflow.ellipsis,
+                                                    ),
+//                                        children: <Widget>[//
+////                                          Text("${_currency.name} "),
+////                                          Text("${_currency.symbol}"),
+//                                        ],
+                                                  ) : AutoSizeText(
+                                                    'Network Error',
+                                                    style: TextStyle(fontSize: 10),
+                                                    minFontSize: 4,
+                                                    maxLines: 3,
+                                                    overflow: TextOverflow.ellipsis,
+                                                  );
+                                                }
+
+                                            }
+                                          });
+                                    }
+                                }
+                              }),
+                          Icon(Icons.more_horiz),
+                        ]),
+                  ),
+                ),
+              ),
+            ),
             Card(
               child: ListTile(
 //                leading: Icon(Icons.album),
