@@ -9,7 +9,6 @@ part 'setting.g.dart';
 // Used for receipt list
 class Setting {
   int id;
-  int userId;
   String key;
   String value;
 

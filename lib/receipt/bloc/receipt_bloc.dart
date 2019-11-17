@@ -14,7 +14,7 @@ class ReceiptBloc extends Bloc<ReceiptEvent, ReceiptState> {
 
   @override
   ReceiptState get initialState => ReceiptState(
-      uploadFail: false, uploadSuccess: false, uploadinProgress: false);
+      uploadFail: false, uploadSuccess: false, uploadinProgress: false, deleteFail: false, deleteInProgress: false, deleteSuccess: false);
 
   @override
   Stream<ReceiptState> mapEventToState(ReceiptEvent event) async* {

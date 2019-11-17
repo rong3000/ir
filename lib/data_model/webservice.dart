@@ -10,13 +10,13 @@ import 'message_code.dart';
 export 'data_result.dart';
 
 class Urls {
-  static String ServiceBaseUrl = "http://10.0.0.1:3001/";
+  static String ServiceBaseUrl = "http://10.0.2.2:3001/";
 
   // Receipt related APIs
   static String GetReceipts = ServiceBaseUrl + "Receipt/GetReceipts";
   static String GetReceipt = ServiceBaseUrl + "Receipt/GetReceiptByReceiptId/";
   static String UpdateReceipt = ServiceBaseUrl + "Receipt/UpdateReceipt";
-  static String UploadReceiptImages = ServiceBaseUrl + "Receipt/UploadReceiptImages/1/"; //TODO hardcoded 1 here might be problem
+  static String UploadReceiptImages = ServiceBaseUrl + "Receipt/UploadReceiptImages/"; 
   static String DeleteReceipts = ServiceBaseUrl + "Receipt/DeleteReceipts";
   static String GetImage = ServiceBaseUrl + "Receipt/GetImage";
   static String AddReceipts = ServiceBaseUrl + "Receipt/AddReceipts";
@@ -139,7 +139,8 @@ Future<DataResult> uploadFile(String url, String token, File imageFile, {int tim
     var request = new http.MultipartRequest("POST", uri);
     var multipartFile = new http.MultipartFile('file', stream, length,
         filename: basename(imageFile.path));
-    //contentType: new MediaType('image', 'png'));
+    
+    request.headers.addEntries([ new MapEntry("Authorization", "Bearer " + token)]);
 
     request.files.add(multipartFile);
     var response = await request.send().timeout(Duration(milliseconds: timeout));

@@ -1,7 +1,4 @@
-import 'package:flutter/material.dart' as prefix0;
 import 'package:json_annotation/json_annotation.dart';
-
-import 'enums.dart';
 
 part 'category.g.dart';
 
@@ -21,4 +18,3 @@ class Category {
   Map<String, dynamic> toJson() => _$CategoryToJson(this);
 
 }
-

@@ -104,7 +104,7 @@ class ReportRepository extends IRRepository {
   }
 
   Report getReport(int reportId) {
-    Report report = null;
+    Report report;
     _lock.synchronized(() {
       for (var i = 0; i < reports.length; i++) {
         if (reports[i].id == reportId) {
@@ -123,13 +123,13 @@ class ReportRepository extends IRRepository {
         result = DataResult.success(reports);
       }
 
-      if ((userRepository == null) || (userRepository.userId <= 0))
+      if ((userRepository == null) || (userRepository.userGuid == null))
       {
-        // Log an error //TODO: better check
+        // Log an error
         result = DataResult.fail();
       }
 
-      result = await webserviceGet(Urls.GetReports + userRepository.userId.toString(), "", timeout: 5000);
+      result = await webserviceGet(Urls.GetReports, await getToken(), timeout: 5000);
       if (result.success) {
         Iterable l = result.obj;
         reports = l.map((model) => Report.fromJason(model)).toList();
@@ -143,7 +143,7 @@ class ReportRepository extends IRRepository {
   }
 
   Future<DataResult> addReport(Report report) async {
-    DataResult result = await webservicePost(Urls.AddReport  + userRepository.userId.toString(), "", jsonEncode(report));
+    DataResult result = await webservicePost(Urls.AddReport, await getToken(), jsonEncode(report));
     if (result.success) {
       Report newReport = Report.fromJason(result.obj);
       result.obj = newReport;

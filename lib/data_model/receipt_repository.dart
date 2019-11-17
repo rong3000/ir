@@ -105,7 +105,7 @@ class ReceiptRepository extends IRRepository {
         result = DataResult.success(receipts);
       }
 
-      if ((userRepository == null) || (userRepository.userId <= 0)) {
+      if ((userRepository == null) || (userRepository.userGuid == null)) {
         // Log an error
         result = DataResult.fail();
       }
@@ -156,14 +156,15 @@ class ReceiptRepository extends IRRepository {
     return result;
   }
 
-  Future<DataResult> uploadReceiptImage(File imageFile) async {
-    if ((userRepository == null) || (userRepository.userId <= 0)) {
+  Future<DataResult> uploadReceiptImage(File imageFile, {receiptTypeId = 1}) async {
+    if ((userRepository == null) || (userRepository.userGuid == null)) {
       // Log an error
       return DataResult.fail(msg: "No user logged in.");
     }
 
+    var url = Urls.UploadReceiptImages + receiptTypeId.toString() + "/";
     DataResult result = await uploadFile(
-        Urls.UploadReceiptImages,
+        url,
         await getToken(),
         imageFile, timeout: 50000);
     if (result.success) {

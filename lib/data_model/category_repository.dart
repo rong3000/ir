@@ -22,9 +22,9 @@ class CategoryRepository extends IRRepository {
       return DataResult.success(categories);
     }
 
-    if ((userRepository == null) || (userRepository.userId <= 0))
+    if ((userRepository == null) || (userRepository.userGuid == null))
     {
-      // Log an error // TODO: check for guid or something better
+      // Log an error 
       return DataResult.fail(msg: "No user logged in.");
     }
 

@@ -23,7 +23,6 @@ class UserRepository {
 
   FirebaseUser currentUser;
   String userGuid;
-  int userId = 1; // The id stored in our service database
 
   UserRepository({FirebaseAuth firebaseAuth, GoogleSignIn googleSignin, FacebookLogin facebookLogin})
       : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
@@ -80,7 +79,7 @@ Future<FirebaseUser> signInWithFacebook() async {
   }
 
   Future<void> signOut() async {
-    userGuid = "";
+    userGuid = null;
     return Future.wait([
       _firebaseAuth.signOut(),
       _googleSignIn.signOut(),
@@ -117,10 +116,7 @@ Future<FirebaseUser> signInWithFacebook() async {
   }
 
   Future<void> postSignIn() async {
-    // Get user ID from server
-    userId = 1;
     currentUser = await _firebaseAuth.currentUser();
-
     receiptRepository.getReceiptsFromServer(forceRefresh: true);
     categoryRepository.getCategoriesFromServer(forceRefresh: true);
     settingRepository.getCurrenciesFromServer();

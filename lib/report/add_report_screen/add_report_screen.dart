@@ -2,12 +2,9 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:intelligent_receipt/data_model/action_with_lable.dart';
 import 'package:intelligent_receipt/data_model/data_result.dart';
-import 'package:intelligent_receipt/data_model/enums.dart';
-import 'package:intelligent_receipt/data_model/receipt.dart';
 import 'package:intelligent_receipt/data_model/report.dart';
 import 'package:intelligent_receipt/data_model/setting_repository.dart';
 import 'package:intelligent_receipt/receipt/receipt_card/receipt_card.dart';
-import 'package:intelligent_receipt/receipt/receipt_list/receipt_list.dart';
 import 'package:intelligent_receipt/report/add_receipts_screen/add_receipts_screen.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 
@@ -293,7 +290,6 @@ class _AddReportScreenState extends State<AddReportScreen> {
   void _onReportSaved() {
     Report newReport = new Report();
     newReport.id = 0;
-    newReport.userId = _userRepository.userId;
     newReport.statusId = 1;
     newReport.createDateTime = DateTime.now();
     newReport.updateDateTime = DateTime.now();
@@ -311,7 +307,6 @@ class _AddReportScreenState extends State<AddReportScreen> {
   void _onReportSubmitted() {
     Report newReport = new Report();
     newReport.id = 0;
-    newReport.userId = _userRepository.userId;
     newReport.statusId = 2;
     newReport.createDateTime = DateTime.now();
     newReport.updateDateTime = DateTime.now();

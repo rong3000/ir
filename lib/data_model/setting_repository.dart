@@ -40,8 +40,8 @@ class SettingRepository extends IRRepository {
   Future<DataResult> getCurrenciesFromServer() async {
     DataResult result = new DataResult(false, "Unknown");
     await _lockCurrencies.synchronized(() async {
-      if ((userRepository == null) || (userRepository.userId <= 0)) {
-        // Log an error //TODO: better check
+      if ((userRepository == null) || (userRepository.userGuid == null)) {
+        // Log an error
         result = DataResult.fail();
       }
 
@@ -61,13 +61,14 @@ class SettingRepository extends IRRepository {
   Future<DataResult> getSettingsFromServer() async {
     DataResult result = new DataResult(false, "Unknown");
     await _lockSettings.synchronized(() async {
-      if ((userRepository == null) || (userRepository.userId <= 0)) {
+      if ((userRepository == null) || (userRepository.userGuid == null)) {
         // Log an error
         result = DataResult.fail();
       }
 
       result = await webserviceGet(
-          Urls.GetSystemSettings + userRepository.userId.toString(), "",
+          Urls.GetSystemSettings, 
+          await getToken(),
           timeout: 3000);
       if (result.success) {
         Iterable l = result.obj;
@@ -80,7 +81,7 @@ class SettingRepository extends IRRepository {
   }
 
   Currency _getCurrencyById(int currencyId) {
-    Currency currency = null;
+    Currency currency;
     _lockCurrencies.synchronized(() {
       for (int i = 0; i < _currencies.length; i++) {
         if (_currencies[i].id == currencyId) {
@@ -106,7 +107,7 @@ class SettingRepository extends IRRepository {
   }
 
   Future<DataResult> _addOrUpdateSystemSetting(String key, String value) async {
-    DataResult result = await webservicePost(Urls.AddOrUpdateSystemSetting + userRepository.userId.toString() + "/" + Uri.encodeComponent(key) + "/" + Uri.encodeComponent(value), "", "");
+    DataResult result = await webservicePost(Urls.AddOrUpdateSystemSetting + Uri.encodeComponent(key) + "/" + Uri.encodeComponent(value), "", await getToken());
     if (result.success) {
       Setting setting = Setting.fromJason(result.obj);
       result.obj = setting;
