@@ -72,6 +72,18 @@ class Rate {
         this.MYR,
         this.HRK});
 
+  double getRate(String currentCode) {
+    double rate;
+    switch(currentCode) {
+      case 'CAD':
+        return rate = this.CAD;
+      case 'USD':
+        return rate = this.USD;
+      default:
+        break;
+    }
+  }
+
   factory Rate.fromJson(Map<String, dynamic> json) => _$RateFromJson(json);
 
   Map<String, dynamic> toJson() => _$RateToJson(this);

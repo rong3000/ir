@@ -8,8 +8,10 @@ import 'data_result.dart';
 import 'message_code.dart';
 export 'data_result.dart';
 
+
 class Urls {
-  static String ServiceBaseUrl = "http://10.0.2.2:3001/";
+  static String ServiceBaseUrl = "http://10.152.0.2:3001/";
+  static String ExchangeRateBaseUrl = "https://api.exchangeratesapi.io/";
 
   // Receipt related APIs
   static String GetReceipts = ServiceBaseUrl + "Receipt/GetReceipts/";
@@ -39,6 +41,8 @@ class Urls {
   static String RemoveReceiptFromReport = ServiceBaseUrl + "Report/RemoveReceiptFromReport/";
   static String UpdateReportWithReceipts = ServiceBaseUrl + "Report/UpdateReportWithReceipts";
   static String UpdateReportWithoutReceipts = ServiceBaseUrl + "Report/UpdateReportWithoutReceipts";
+
+  static String GetExchangeRate = ExchangeRateBaseUrl;
 }
 
 const int default_timeout = 2000; // millisecons

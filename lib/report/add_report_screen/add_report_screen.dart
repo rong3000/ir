@@ -6,6 +6,7 @@ import 'package:intelligent_receipt/data_model/action_with_lable.dart';
 import 'package:intelligent_receipt/data_model/data_result.dart';
 import 'package:intelligent_receipt/data_model/enums.dart';
 import 'package:intelligent_receipt/data_model/exchange_rate/exchange.dart';
+import 'package:intelligent_receipt/data_model/exchange_rate/rate.dart';
 import 'package:intelligent_receipt/data_model/receipt.dart';
 import 'package:intelligent_receipt/data_model/report.dart';
 import 'package:intelligent_receipt/data_model/setting_repository.dart';
@@ -13,9 +14,11 @@ import 'package:intelligent_receipt/receipt/receipt_card/receipt_card.dart';
 import 'package:intelligent_receipt/receipt/receipt_list/receipt_list.dart';
 import 'package:intelligent_receipt/report/add_receipts_screen/add_receipts_screen.dart';
 import 'package:intelligent_receipt/user_repository.dart';
+import 'package:intl/intl.dart';
 
 import 'report_button.dart';
 import 'package:http/http.dart' as http;
+import 'package:intelligent_receipt/data_model/webservice.dart';
 
 class AddReportScreen extends StatefulWidget {
   final String title;
@@ -38,6 +41,7 @@ class _AddReportScreenState extends State<AddReportScreen> {
   bool show;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  double _tempAmount;
 
   bool get isPopulated => _emailController.text.isNotEmpty;
 
@@ -46,7 +50,7 @@ class _AddReportScreenState extends State<AddReportScreen> {
   }
 
   var items = List<Currency>();
-  String _totalAmount = '0';
+  String _totalAmount;
   Currency _currency = new Currency();
 
   @override
@@ -115,6 +119,27 @@ class _AddReportScreenState extends State<AddReportScreen> {
       // If that response was not OK, throw an error.
       throw Exception('Failed to load post');
     }
+  }
+
+  Future<Exchange> getExchangeRateFromServer(DateTime receiptDatetime, String baseCurrencyCode) async {
+    final response =
+    await http.get(Urls.GetExchangeRate + DateFormat("yyyy-MM-dd").format(receiptDatetime.toLocal()).toString() + "?base=" + baseCurrencyCode);
+    if (response.statusCode == 200) {
+      // If server returns an OK response, parse the JSON.
+      return Exchange.fromJson(json.decode(response.body));
+    } else {
+      // If that response was not OK, throw an error.
+      throw Exception('Failed to load exchange rate from server');
+    }
+  }
+
+  Future<void> calculateExchange(double amount, DateTime receiptDatetime, String baseCurrencyCode, String targetCurrencyCode) async {
+    Exchange exchange = await getExchangeRateFromServer(receiptDatetime, baseCurrencyCode);
+    _tempAmount += (amount / exchange.rates.getRate(targetCurrencyCode));
+    _totalAmount =
+        _tempAmount
+            .toStringAsFixed(
+            2);
   }
 
   @override
@@ -244,8 +269,8 @@ class _AddReportScreenState extends State<AddReportScreen> {
                                                             _currency = _userRepository
                                                                 .settingRepository
                                                                 .getDefaultCurrency();
-                                                            double _tempAmount =
-                                                                0;
+                                                            _tempAmount = 0;
+//                                                            _totalAmount = '0';
                                                             for (var i = 0;
                                                                 i <
                                                                     _userRepository
@@ -266,13 +291,18 @@ class _AddReportScreenState extends State<AddReportScreen> {
                                                                         i]
                                                                     ?.totalAmount;
                                                               } else {
-                                                                _tempAmount += (_userRepository.receiptRepository.cachedReceiptItems[i]?.totalAmount / snapshot.data.rates.USD);
+                                                                calculateExchange(_userRepository.receiptRepository.cachedReceiptItems[i]?.totalAmount,
+                                                                    _userRepository.receiptRepository.cachedReceiptItems[i]?.receiptDatetime,
+                                                                  _currency.code,
+                                                                    _userRepository.receiptRepository.cachedReceiptItems[i].currencyCode,
+                                                                );
+//                                                                _tempAmount += (_userRepository.receiptRepository.cachedReceiptItems[i]?.totalAmount / snapshot.data.rates.USD);
                                                               }
                                                             }
                                                             _totalAmount =
                                                                 _tempAmount
                                                                     .toStringAsFixed(
-                                                                        2);
+                                                                    2);
                                                             return (_currency !=
                                                                     null)
                                                                 ? Expanded(
