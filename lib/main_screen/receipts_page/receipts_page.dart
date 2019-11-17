@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intelligent_receipt/data_model/action_with_lable.dart';
 import 'package:intelligent_receipt/data_model/enums.dart';
 import 'package:intelligent_receipt/data_model/receipt_repository.dart';
@@ -232,6 +233,43 @@ class _FancyFabState extends State<FancyFab>
   double _fabHeight = 56.0;
   UserRepository get _userRepository => widget._userRepository;
 
+  _selectImage() async {
+    var source = await _getImageSource();
+    if (source != null) {
+      var ri = await ImagePicker.pickImage(source: source, maxWidth: 600);
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => UploadReceiptImage(userRepository: _userRepository, title: "Snap new receipt", imageFile: ri,)),
+      );
+    }
+  }
+
+  Future<ImageSource> _getImageSource() async {
+    return showDialog<ImageSource>(
+      context: context,
+      //barrierDismissible: true, // Allow to be closed without selecting option
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Select Image Source'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Camera'),
+              onPressed: () {
+                Navigator.of(context).pop(ImageSource.camera);
+              },
+            ),
+            FlatButton(
+              child: Text('Gallery'),
+              onPressed: () {
+                Navigator.of(context).pop(ImageSource.gallery);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   initState() {
     _animationController =
@@ -298,14 +336,7 @@ class _FancyFabState extends State<FancyFab>
         heroTag: "camera",
         onPressed: () {
           animate();
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => UploadReceiptImage(
-                      userRepository: _userRepository,
-                      title: "Snap new receipt",
-                    )),
-          );
+          _selectImage();
           setState(() {
 
           });

@@ -13,6 +13,10 @@ import 'package:intelligent_receipt/receipt/bloc/receipt_bloc.dart';
 import 'package:intelligent_receipt/receipt/bloc/receipt_event.dart';
 import 'package:intelligent_receipt/receipt/bloc/receipt_state.dart';
 import 'package:intelligent_receipt/user_repository.dart';
+import 'package:intelligent_receipt/data_model/receipt_repository.dart';
+import 'dart:async';
+import 'package:image_cropper/image_cropper.dart';
+import '../../helper_widgets/zoomable_image.dart';
 
 class AddEditReiptForm extends StatefulWidget {
   final Receipt _receiptItem;
@@ -215,14 +219,44 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
     );
   }
 
-  _selectImage(ImageSource imageSource) async {
+  _selectImage() async {
     var source = await _getImageSource();
     if (source != null) {
       var ri = await ImagePicker.pickImage(source: source, maxWidth: 600);
-      setState(() {
-        receiptImageFile = ri;
-        receiptImage = Image.file(ri);
-      });
+      File croppedFile = await ImageCropper.cropImage(
+        sourcePath: ri.path,
+        aspectRatioPresets: Platform.isAndroid
+            ? [
+          CropAspectRatioPreset.square,
+          CropAspectRatioPreset.ratio3x2,
+          CropAspectRatioPreset.original,
+          CropAspectRatioPreset.ratio4x3,
+          CropAspectRatioPreset.ratio16x9
+        ]
+            : [
+          CropAspectRatioPreset.original,
+          CropAspectRatioPreset.square,
+          CropAspectRatioPreset.ratio3x2,
+          CropAspectRatioPreset.ratio4x3,
+          CropAspectRatioPreset.ratio5x3,
+          CropAspectRatioPreset.ratio5x4,
+          CropAspectRatioPreset.ratio7x5,
+          CropAspectRatioPreset.ratio16x9
+        ],
+        androidUiSettings: AndroidUiSettings(
+            toolbarTitle: 'Cropper',
+            toolbarColor: Colors.deepOrange,
+            toolbarWidgetColor: Colors.white,
+            initAspectRatio: CropAspectRatioPreset.original,
+            lockAspectRatio: false),
+      );
+      if (croppedFile != null) {
+        setState(() {
+          receiptImageFile = croppedFile;
+          receiptImage = Image.file(croppedFile);
+        });
+      }
+
     }
   }
 
@@ -254,7 +288,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
         flex: 5,
         child: GestureDetector(
             onTap: () {
-              _selectImage(ImageSource.gallery);
+              _selectImage();
             },
             child: Column(
               children: <Widget>[
@@ -291,16 +325,22 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
         });
   }
 
-  Future<void> _showFullImage(Widget childImage) async {
+  Future<void> _showFullImage(Image childImage) async {
     await showDialog<void>(
         context: context,
         builder: (BuildContext context) {
           return SimpleDialog(
             children: <Widget>[
-              SimpleDialogOption(
-                child: childImage,
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height * 0.8,
+                child:
+                childImage != null ?
+                ZoomableImage(childImage.image, backgroundColor: Colors.white) :
+                Center(child: Text("No Image!", textAlign: TextAlign.center)),
               ),
-              SimpleDialogOption(
+              Container(
+                height: 30,
                 child: FlatButton(
                   child: Text('Close'),
                   onPressed: () {

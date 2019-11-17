@@ -418,7 +418,7 @@ class ReportListState extends State<ReportList> {
                             style: TextStyle(height: 1, fontSize: 12),
                           ),
                         ),
-                        Icon(Icons.repeat),
+                        Icon(Icons.arrow_forward),
                         GestureDetector(
                           onTap: () {
                             _selectToDate(context);

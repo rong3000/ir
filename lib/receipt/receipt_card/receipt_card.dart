@@ -1,4 +1,3 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,6 +7,8 @@ import 'package:intelligent_receipt/data_model/receipt_repository.dart';
 import 'package:intelligent_receipt/data_model/webservice.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 import 'package:intl/intl.dart';
+import 'package:auto_size_text/auto_size_text.dart';
+import '../../helper_widgets/zoomable_image.dart';
 
 class ReceiptCard extends StatefulWidget {
   const ReceiptCard({
@@ -56,6 +57,28 @@ class _ReceiptCardState extends State<ReceiptCard> {
     super.initState();
   }
 
+  String _getTextShownInCategoryField(ReceiptListItem receipt) {
+    String text = _categoryRepository.categories
+        .singleWhere(
+          (c) =>
+              c.id ==
+              widget._receiptItem.categoryId,
+          orElse: () =>
+              Category()..categoryName = "Unknown",
+        )
+        ?.categoryName;
+
+    if ((text == "Unknown") && (receipt.statusId == ReceiptStatusType.Uploaded.index)) {
+      if (receipt.decodeStatus == DecodeStatusType.Success.index) {
+        text = "We have processed your receipt, please click Review button to verify receipt data.";
+      } else {
+        text = "Your receipt is being process. You can click Review button to manually enter receipt data.";
+      }
+    }
+
+    return text;
+  }
+
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
@@ -92,6 +115,34 @@ class _ReceiptCardState extends State<ReceiptCard> {
       );
     }
 
+    Future<void> _showFullImage(String imagePath) async {
+      await showDialog<void>(
+          context: context,
+          builder: (BuildContext context) {
+            return SimpleDialog(
+              children: <Widget>[
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height * 0.8,
+                  child:
+                    !imagePath.isEmpty ?
+                    ZoomableImage(new NetworkImage(Urls.GetImage + "/" + Uri.encodeComponent(imagePath)), backgroundColor: Colors.white) :
+                    Center(child: Text("No Image!", textAlign: TextAlign.center)),
+                ),
+                Container(
+                  height: 30,
+                  child: FlatButton(
+                    child: Text('Close'),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                )
+              ],
+            );
+          });
+    }
+
     return Card(
       clipBehavior: Clip.antiAlias,
       child: Row(
@@ -101,18 +152,22 @@ class _ReceiptCardState extends State<ReceiptCard> {
         children: <Widget>[
           Expanded(
             flex: 1,
-            child: SizedBox(
-              height: MediaQuery.of(context).size.height * 0.16,
-//          width: MediaQuery.of(context).size.width * 0.1,
-              child: getImage(widget._receiptItem.imagePath),
-            ),
+            child: GestureDetector(
+              onTap: () {
+                _showFullImage(widget._receiptItem.imagePath);
+              },
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height * 0.16,
+                child: getImage(widget._receiptItem.imagePath),
+              ),
+            )
           ),
           Expanded(
             flex: 2,
             child: Column(
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
+                  padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
                   child: DefaultTextStyle(
                     softWrap: false,
                     overflow: TextOverflow.ellipsis,
@@ -120,7 +175,7 @@ class _ReceiptCardState extends State<ReceiptCard> {
                     child: Container(
                       height: MediaQuery.of(context).size.height * 0.16,
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.max,
                         children: <Widget>[
@@ -135,23 +190,12 @@ class _ReceiptCardState extends State<ReceiptCard> {
                           ),
                           Padding(
                             padding:
-                                const EdgeInsets.only(top: 0.0, bottom: 0.0),
-                            child: AutoSizeText(
-                              (widget._receiptItem.companyName == null)?"Being processed at the server":'${widget._receiptItem.companyName}',
-                              style: TextStyle(fontSize: 12),
-                              minFontSize: 6,
-                              maxLines: 3,
-                              overflow: TextOverflow.ellipsis,
+                            const EdgeInsets.only(top: 0.0, bottom: 0.0),
+                            child: Text(
+                              '${widget._receiptItem.companyName}',
+                              style: companyNameStyle,
                             ),
                           ),
-//                          Padding(
-//                            padding:
-//                                const EdgeInsets.only(top: 0.0, bottom: 0.0),
-//                            child: Text(
-//                              '${widget._receiptItem.companyName}',
-//                              style: companyNameStyle,
-//                            ),
-//                          ),
                           Text(
                             'Total ${widget._receiptItem.totalAmount}',
                             style: amountStyle,
@@ -169,19 +213,19 @@ class _ReceiptCardState extends State<ReceiptCard> {
             child: Container(
               height: MediaQuery.of(context).size.height * 0.16,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
                   Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 0.0),
+                      padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
                       child: DefaultTextStyle(
-                        softWrap: false,
+                        softWrap: true,
                         overflow: TextOverflow.ellipsis,
                         style: dateStyle,
                         child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.max,
                           children: <Widget>[
@@ -195,37 +239,18 @@ class _ReceiptCardState extends State<ReceiptCard> {
                                     .apply(fontSizeFactor: 0.75),
                               ),
                             ),
-//                            Padding(
-//                              padding:
-//                                  const EdgeInsets.only(top: 0.0, bottom: 0.0),
-//                              child: AutoSizeText(
-//                                _categoryRepository.categories
-//                                    .singleWhere(
-//                                      (c) =>
-//                                  c.id ==
-//                                      widget._receiptItem.categoryId,
-//                                  orElse: () =>
-//                                  Category()..categoryName = "To be selected during review",
-//                                )
-//                                    ?.categoryName,
-//                                style: TextStyle(fontSize: 12),
-//                                minFontSize: 6,
-//                                maxLines: 2,
-//                                overflow: TextOverflow.ellipsis,
-//                              ),
-////                              Text(
-////                                _categoryRepository.categories
-////                                    .singleWhere(
-////                                      (c) =>
-////                                          c.id ==
-////                                          widget._receiptItem.categoryId,
-////                                      orElse: () =>
-////                                          Category()..categoryName = "Being Processed at backend",
-////                                    )
-////                                    ?.categoryName,
-////                                style: companyNameStyle,
-////                              ),
-//                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 0.0),
+                              child: AutoSizeText(
+                                _getTextShownInCategoryField(widget._receiptItem),
+                                style: TextStyle(fontSize: 12)
+                                      .copyWith(color: Colors.black54)
+                                      .apply(fontSizeFactor: 0.85),
+                                minFontSize: 6,
+                                maxLines: 3,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -233,7 +258,7 @@ class _ReceiptCardState extends State<ReceiptCard> {
                   ),
                   ButtonTheme.bar(
                     minWidth: 56,
-                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                    padding : const EdgeInsets.symmetric(horizontal: 4.0),
                     child: ButtonBar(
                       mainAxisSize: MainAxisSize.min,
                       alignment: MainAxisAlignment.start,

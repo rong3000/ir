@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -103,7 +104,7 @@ class _ReportCardState extends State<ReportCard> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Padding(
-                            padding: const EdgeInsets.only(bottom: 10.0),
+                            padding: const EdgeInsets.only(bottom: 6.0),
                             child: Text(
                               '${widget._reportItem.reportName}',
                               style: dateStyle
@@ -112,17 +113,30 @@ class _ReportCardState extends State<ReportCard> {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(top: 0.0, bottom: 0.0),
+                            padding: const EdgeInsets.only(top: 0.0, bottom: 6.0),
                             child: Text(
                               'Total: ${widget._reportItem.getTotalAmount(_userRepository.receiptRepository)}',
                               style: companyNameStyle.apply(fontSizeFactor: 1.2),
 
                             ),
                           ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 0.0, bottom: 0.0),
+                            child: AutoSizeText(
+                              '${widget._reportItem.description}',
+                              style: TextStyle(fontSize: 12)
+                                  .copyWith(color: Colors.black54)
+                                  .apply(fontSizeFactor: 0.85),
+                              minFontSize: 6,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
 //                            Text(
 //                              '${widget._reportItem.description}',
 //                              style: amountStyle,
 //                            ),
+                          ),
+
                         ],
                       ),
                     ),
@@ -144,7 +158,7 @@ class _ReportCardState extends State<ReportCard> {
                 children: <Widget>[
                   Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 0.0),
+                      padding: const EdgeInsets.fromLTRB(0.0, 6.0, 0.0, 0.0),
                       child: DefaultTextStyle(
                         softWrap: false,
                         overflow: TextOverflow.ellipsis,
@@ -177,11 +191,11 @@ class _ReportCardState extends State<ReportCard> {
                     ),
                   ),
                   ButtonTheme.bar(
-                    minWidth: 56,
+                    minWidth: 56.0,
                     padding : const EdgeInsets.symmetric(horizontal: 6.0),
                     child: ButtonBar(
-                      mainAxisSize: MainAxisSize.min,
-                      alignment: MainAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.max,
+                      alignment: MainAxisAlignment.center,
                       children:
                       widget.actions.map<Widget>(
                               (ActionWithLable action) =>

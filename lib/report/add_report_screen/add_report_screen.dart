@@ -257,7 +257,7 @@ class _AddReportScreenState extends State<AddReportScreen> {
                       onPressed:
                       isLoginButtonEnabled() ? _onReportSaved : null,
 //                      _onReportSaved,
-                      buttonName: 'Save Receipt Group',
+                      buttonName: 'Save Group',
                     ),
 //                    ReportButton(
 //                      onPressed:

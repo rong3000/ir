@@ -26,7 +26,8 @@ ReceiptListItem _$ReceiptListItemFromJson(Map<String, dynamic> json) {
     ..currencyCode = json['currencyCode'] as String
     ..notes = json['notes'] as String
     ..gstInclusive = json['gstInclusive'] as bool
-    ..warrantyPeriod = (json['warrantyPeriod'] as num)?.toDouble();
+    ..warrantyPeriod = (json['warrantyPeriod'] as num)?.toDouble()
+    ..decodeStatus = json['decodeStatus'] as int;
 }
 
 Map<String, dynamic> _$ReceiptListItemToJson(ReceiptListItem instance) =>
@@ -45,7 +46,8 @@ Map<String, dynamic> _$ReceiptListItemToJson(ReceiptListItem instance) =>
       'currencyCode': instance.currencyCode,
       'notes': instance.notes,
       'gstInclusive': instance.gstInclusive,
-      'warrantyPeriod': instance.warrantyPeriod
+      'warrantyPeriod': instance.warrantyPeriod,
+      'decodeStatus': instance.decodeStatus
     };
 
 Receipt _$ReceiptFromJson(Map<String, dynamic> json) {
