@@ -1,9 +1,7 @@
+import 'package:intelligent_receipt/data_model/ir_repository.dart';
 import "report.dart";
-import "receipt.dart";
 import "webservice.dart";
 import "../user_repository.dart";
-import 'dart:io';
-import 'package:image_picker/image_picker.dart';
 import 'dart:convert';
 import "enums.dart";
 import 'package:synchronized/synchronized.dart';
@@ -11,15 +9,12 @@ export "receipt.dart";
 export 'data_result.dart';
 export 'enums.dart';
 
-class ReportRepository {
+class ReportRepository extends IRRepository {
   List<Report> reports = new List<Report>();
-  UserRepository _userRepository;
   bool _dataFetched = false;
   Lock _lock = new Lock();
 
-  ReportRepository(UserRepository userRepository) {
-    _userRepository = userRepository;
-  }
+  ReportRepository(UserRepository userRepository) : super(userRepository);
 
   List<Report> getReportItems(ReportStatusType reportStatus) {
     List<Report> selectedReports = new List<Report>();
@@ -109,7 +104,7 @@ class ReportRepository {
   }
 
   Report getReport(int reportId) {
-    Report report = null;
+    Report report;
     _lock.synchronized(() {
       for (var i = 0; i < reports.length; i++) {
         if (reports[i].id == reportId) {
@@ -128,13 +123,13 @@ class ReportRepository {
         result = DataResult.success(reports);
       }
 
-      if ((_userRepository == null) || (_userRepository.userId <= 0))
+      if ((userRepository == null) || (userRepository.userGuid == null))
       {
         // Log an error
         result = DataResult.fail();
       }
 
-      result = await webserviceGet(Urls.GetReports + _userRepository.userId.toString(), "", timeout: 5000);
+      result = await webserviceGet(Urls.GetReports, await getToken(), timeout: 5000);
       if (result.success) {
         Iterable l = result.obj;
         reports = l.map((model) => Report.fromJason(model)).toList();
@@ -148,7 +143,7 @@ class ReportRepository {
   }
 
   Future<DataResult> addReport(Report report) async {
-    DataResult result = await webservicePost(Urls.AddReport  + _userRepository.userId.toString(), "", jsonEncode(report));
+    DataResult result = await webservicePost(Urls.AddReport, await getToken(), jsonEncode(report));
     if (result.success) {
       Report newReport = Report.fromJason(result.obj);
       result.obj = newReport;

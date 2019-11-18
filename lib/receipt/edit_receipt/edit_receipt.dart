@@ -7,7 +7,10 @@ class EditReceiptScreen extends StatefulWidget {
   final UserRepository _userRepository;
   final int _receiptId;
 
-  EditReceiptScreen({Key key, @required UserRepository userRepository, @required int receiptId})
+  EditReceiptScreen(
+      {Key key,
+      @required UserRepository userRepository,
+      @required int receiptId})
       : assert(userRepository != null),
         _userRepository = userRepository,
         _receiptId = receiptId,
@@ -31,16 +34,13 @@ class EditReceiptScreenState extends State<EditReceiptScreen> {
     return Scaffold(
       appBar: AppBar(title: Text('Receipt editing')),
       body: FutureBuilder<DataResult>(
-          future: _userRepository.receiptRepository
-              .getReceipt(_receiptId),
-          builder: (BuildContext context,
-              AsyncSnapshot<DataResult> snapshot) {
+          future: _userRepository.receiptRepository.getReceipt(_receiptId),
+          builder: (BuildContext context, AsyncSnapshot<DataResult> snapshot) {
             switch (snapshot.connectionState) {
               case ConnectionState.none:
                 return new Text('Loading...');
               case ConnectionState.waiting:
-                return new Center(
-                    child: new CircularProgressIndicator());
+                return new Center(child: new CircularProgressIndicator());
               case ConnectionState.active:
                 return new Text('');
               case ConnectionState.done:
@@ -59,16 +59,11 @@ class EditReceiptScreenState extends State<EditReceiptScreen> {
                       Text("${(snapshot.data.obj as Receipt).categoryId}"),
                       Text("${(snapshot.data.obj as Receipt).companyName}"),
                       Text("${(snapshot.data.obj as Receipt).image}"),
-                      Text("${(snapshot.data.obj as Receipt).userId}"),
                     ],
                   );
-
                 }
-                ;
             }
           }),
-
-
     );
   }
 }

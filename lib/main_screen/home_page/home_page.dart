@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intelligent_receipt/main_screen/bloc/bloc.dart';
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:intelligent_receipt/receipt/add_edit_reciept_manual/add_edit_receipt_manual.dart';
 import 'package:intelligent_receipt/receipt/upload_receipt_image/upload_receipt_image.dart';
 import 'package:intelligent_receipt/user_repository.dart';
-import 'package:intelligent_receipt/data_model/enums.dart';
 
 
 class HomePage extends StatefulWidget {
@@ -16,7 +14,7 @@ class HomePage extends StatefulWidget {
   HomePage({Key key, @required UserRepository userRepository, this.action,})
       : assert(userRepository != null),
         _userRepository = userRepository,
-        super(key: key) {}
+        super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();

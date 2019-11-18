@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intelligent_receipt/data_model/receipt_repository.dart';
 import 'package:intelligent_receipt/user_repository.dart';
-import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import "package:rflutter_alert/rflutter_alert.dart";
 import 'dart:async';
@@ -17,7 +16,7 @@ class UploadReceiptImage extends StatefulWidget {
       {Key key, @required UserRepository userRepository, this.title, this.imageFile})
       : assert(userRepository != null),
         _userRepository = userRepository,
-        super(key: key) {}
+        super(key: key);
 
   @override
   _UploadReceiptImageState createState() => _UploadReceiptImageState();

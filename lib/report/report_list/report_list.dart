@@ -1,5 +1,3 @@
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intelligent_receipt/data_model/enums.dart';
@@ -434,17 +432,18 @@ class ReportListState extends State<ReportList> {
                       padding: EdgeInsets.zero,
                       initialValue: _simpleValue,
                       onSelected: showMenuSelection,
-                      child:
-                      Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
-                        Icon(Icons.sort),
-                        Text(
+                      child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Icon(Icons.sort),
+                            Text(
 //                          'x',
-                          "[${_simpleValue.toString().split('.')[1]}]",
-                          style: TextStyle(height: 1, fontSize: 12),
-                        ),
-                      ]),
+                              "[${_simpleValue.toString().split('.')[1]}]",
+                              style: TextStyle(height: 1, fontSize: 12),
+                            ),
+                          ]),
                       itemBuilder: (BuildContext context) =>
-                      <PopupMenuItem<ReportSortType>>[
+                          <PopupMenuItem<ReportSortType>>[
                         PopupMenuItem<ReportSortType>(
                           value: _simpleValue1,
                           child: Text(_simpleValue1.toString().split('.')[1]),
@@ -728,7 +727,6 @@ class ReportListState extends State<ReportList> {
                       );
                     }
                   }
-                  ;
               }
             }),
       ),
