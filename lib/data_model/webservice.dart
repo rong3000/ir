@@ -164,9 +164,7 @@ Future<DataResult> uploadFile(String url, String token, File imageFile, {int tim
 /// token: token string
 Future<Image> getImageFromNetwork(String url, String token)  async {
   final headers = {
-    "Authorization": "Bearer " + token,
-    "accept": "application/json",
-    "Content-type": "application/json",
+    "Authorization": "Bearer " + token
   };
 
   return Image.network(url, headers: headers);
