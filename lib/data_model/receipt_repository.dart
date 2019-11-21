@@ -29,6 +29,7 @@ class ReceiptRepository {
 
   void resetCachedReceiptItems(ReportRepository reportRepository, {int reportID = 0}) {
     cachedReceiptItems = [];
+    cachedReceiptItemsAmount = [];
     candidateReceiptItems = [];
     candidateReceiptItems = getReceiptItems(ReceiptStatusType.Reviewed);
     var _receiptsInReportSet = new Set<ReceiptListItem>();

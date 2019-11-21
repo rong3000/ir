@@ -7,6 +7,7 @@ import 'package:intelligent_receipt/data_model/data_result.dart';
 import 'package:intelligent_receipt/data_model/enums.dart';
 import 'package:intelligent_receipt/data_model/exchange_rate/exchange.dart';
 import 'package:intelligent_receipt/data_model/receipt.dart';
+import 'package:intelligent_receipt/data_model/receipt_repository.dart';
 import 'package:intelligent_receipt/data_model/report.dart';
 import 'package:intelligent_receipt/data_model/setting_repository.dart';
 import 'package:intelligent_receipt/receipt/receipt_card/receipt_card.dart';
@@ -15,6 +16,10 @@ import 'package:intelligent_receipt/report/add_receipts_screen/add_receipts_scre
 import 'package:intelligent_receipt/report/add_report_screen/report_button.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
+
+import 'package:intelligent_receipt/data_model/webservice.dart';
 
 class EditReportScreen extends StatefulWidget {
   final String title;
@@ -44,6 +49,7 @@ class _EditReportScreenState extends State<EditReportScreen> {
   final TextEditingController _passwordController = TextEditingController();
 
   bool get isPopulated => _emailController.text.isNotEmpty;
+  double _tempAmount;
 
   bool isLoginButtonEnabled() {
     return isPopulated;
@@ -55,7 +61,53 @@ class _EditReportScreenState extends State<EditReportScreen> {
   Report _report;
   List<ReceiptListItem> _receiptList;
   String _totalAmount;
-  Currency _currency;
+  Currency baseCurrency;
+
+  Future<Exchange> getExchangeRateFromServer(DateTime receiptDatetime, String baseCurrencyCode) async {
+    final response =
+    await http.get(Urls.GetExchangeRate + DateFormat("yyyy-MM-dd").format(receiptDatetime.toLocal()).toString() + "?base=" + baseCurrencyCode);
+    if (response.statusCode == 200) {
+      // If server returns an OK response, parse the JSON.
+      return Exchange.fromJson(json.decode(response.body));
+    } else {
+      // If that response was not OK, throw an error.
+      throw Exception('Failed to load exchange rate from server');
+    }
+  }
+
+  Future<void> calculateExchange() async {
+    await _userRepository.settingRepository.getSettingsFromServer();
+    baseCurrency = _userRepository.settingRepository.getDefaultCurrency();
+    for (int i = 0; i < _userRepository.receiptRepository.cachedReceiptItems.length; i++ ) {
+      if (_userRepository.receiptRepository.cachedReceiptItems[i].currencyCode == baseCurrency.code)
+      {
+        amountPair cachedReceiptItemsAmount2 = new amountPair();
+        cachedReceiptItemsAmount2.amount = _userRepository.receiptRepository.cachedReceiptItems[i].totalAmount;
+        cachedReceiptItemsAmount2.id = _userRepository.receiptRepository.cachedReceiptItems[i].id;
+        _userRepository.receiptRepository.cachedReceiptItemsAmount.add(cachedReceiptItemsAmount2);
+        print('id ${_userRepository.receiptRepository.cachedReceiptItems[i].id} add to group and ${cachedReceiptItemsAmount2}');
+      }
+      if (_userRepository.receiptRepository.cachedReceiptItems[i].currencyCode != baseCurrency.code) {
+        amountPair cachedReceiptItemsAmount1 = new amountPair();
+
+        Exchange exchange = await getExchangeRateFromServer(
+            _userRepository.receiptRepository
+                .cachedReceiptItems[i]
+                .receiptDatetime, baseCurrency.code);
+        cachedReceiptItemsAmount1.amount = _userRepository.receiptRepository
+            .cachedReceiptItems[i]
+            .totalAmount /
+            exchange.rates.getRate(_userRepository.receiptRepository
+                .cachedReceiptItems[i]
+                .currencyCode);
+        cachedReceiptItemsAmount1.id = _userRepository.receiptRepository.cachedReceiptItems[i].id;
+        _userRepository.receiptRepository.cachedReceiptItemsAmount.add(
+            cachedReceiptItemsAmount1);
+      }}
+    setState(() {
+
+    });
+  }
 
   @override
   void initState() {
@@ -73,12 +125,16 @@ class _EditReportScreenState extends State<EditReportScreen> {
 //    _totalAmount = _userRepository.reportRepository.getReport(widget._reportId).getTotalAmount(_userRepository.receiptRepository);
     _report = _userRepository.reportRepository.getReport(widget._reportId);
     _receiptList = _report.getReceiptList(_userRepository.receiptRepository);
-    _totalAmount = _report
-        .getTotalAmount(_userRepository.receiptRepository)
-        .toStringAsFixed(2);
+//    _totalAmount = _report
+//        .getTotalAmount(_userRepository.receiptRepository)
+//        .toStringAsFixed(2);
     print('${_report} ${_receiptList} ${_totalAmount}');
     _userRepository.receiptRepository.cachedReceiptItems = _receiptList;
+
+    calculateExchange();
+
     List<int> _receiptIds = [];
+
 
     //get rid of duplicated items and set candidate
 //    var _receiptsInReportSet = new Set();
@@ -133,6 +189,7 @@ class _EditReportScreenState extends State<EditReportScreen> {
 
   void removeAction(int inputId) {
     int toBeRemoved;
+    int amountToBeRemoved;
     for (int i = 0;
         i < _userRepository.receiptRepository.cachedReceiptItems.length;
         i++) {
@@ -141,9 +198,20 @@ class _EditReportScreenState extends State<EditReportScreen> {
         toBeRemoved = i;
       }
     }
+
+    for (int i = 0;
+    i < _userRepository.receiptRepository.cachedReceiptItemsAmount.length;
+    i++) {
+      if (_userRepository.receiptRepository.cachedReceiptItemsAmount[i].id ==
+          inputId) {
+        amountToBeRemoved = i;
+      }
+    }
+
     _userRepository.receiptRepository.candidateReceiptItems
         .add(_userRepository.receiptRepository.cachedReceiptItems[toBeRemoved]);
     _userRepository.receiptRepository.cachedReceiptItems.removeAt(toBeRemoved);
+    _userRepository.receiptRepository.cachedReceiptItemsAmount.removeAt(amountToBeRemoved);
     setState(() {});
   }
 
@@ -167,6 +235,24 @@ class _EditReportScreenState extends State<EditReportScreen> {
     d.action = removeAction;
     d.label = 'Remove';
     actions.add(d);
+
+    _tempAmount = 0;
+    for (var i = 0;
+    i <
+        _userRepository
+            .receiptRepository
+            .cachedReceiptItemsAmount
+            .length;
+    i++) {
+      _tempAmount += (_userRepository
+          .receiptRepository
+          .cachedReceiptItemsAmount[i]?.amount);
+
+    }
+    _totalAmount =
+        _tempAmount
+            .toStringAsFixed(
+            2);
     return new Scaffold(
       appBar: new AppBar(
         title: Text(widget.title),
@@ -212,170 +298,9 @@ class _EditReportScreenState extends State<EditReportScreen> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
-                          FutureBuilder<DataResult>(
-                              future: _userRepository.settingRepository
-                                  .getSettingsFromServer(),
-                              builder: (BuildContext context,
-                                  AsyncSnapshot<DataResult> snapshot) {
-                                switch (snapshot.connectionState) {
-                                  case ConnectionState.none:
-                                    return new Text('Loading...');
-                                  case ConnectionState.waiting:
-                                    return new Center(
-                                        child: new CircularProgressIndicator());
-                                  case ConnectionState.active:
-                                    return new Text('');
-                                  case ConnectionState.done:
-                                    {
-                                      return FutureBuilder<DataResult>(
-                                          future: _userRepository
-                                              .settingRepository
-                                              .getCurrenciesFromServer(),
-                                          builder: (BuildContext context,
-                                              AsyncSnapshot<DataResult>
-                                                  snapshot) {
-                                            switch (snapshot.connectionState) {
-                                              case ConnectionState.none:
-                                                return new Text('Loading...');
-                                              case ConnectionState.waiting:
-                                                return new Center(
-                                                    child:
-                                                        new CircularProgressIndicator());
-                                              case ConnectionState.active:
-                                                return new Text('');
-                                              case ConnectionState.done:
-                                                if (snapshot.hasError) {
-                                                  return
-//                                                    new Text(
-//                                                    '${snapshot.error}',
-//                                                    style: TextStyle(color: Colors.red),
-//                                                  );
-                                                      AutoSizeText(
-                                                    '${snapshot.error}',
-                                                    style:
-                                                        TextStyle(fontSize: 14),
-                                                    minFontSize: 1,
-                                                    maxLines: 3,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                  );
-                                                } else {
-                                                  return FutureBuilder<
-                                                          Exchange>(
-                                                      future: fetchExchange(),
-                                                      builder:
-                                                          (BuildContext context,
-                                                              AsyncSnapshot<
-                                                                      Exchange>
-                                                                  snapshot) {
-                                                        switch (snapshot
-                                                            .connectionState) {
-                                                          case ConnectionState
-                                                              .none:
-                                                            return new Text(
-                                                                'Loading...');
-                                                          case ConnectionState
-                                                              .waiting:
-                                                            return new Center(
-                                                                child:
-                                                                    new CircularProgressIndicator());
-                                                          case ConnectionState
-                                                              .active:
-                                                            return new Text('');
-                                                          case ConnectionState
-                                                              .done:
-                                                            if (snapshot
-                                                                .hasError) {
-                                                              return
-//                                                    new Text(
-//                                                    '${snapshot.error}',
-//                                                    style: TextStyle(color: Colors.red),
-//                                                  );
-                                                                  AutoSizeText(
-                                                                '${snapshot.error}',
-                                                                style: TextStyle(
-                                                                    fontSize:
-                                                                        14),
-                                                                minFontSize: 1,
-                                                                maxLines: 3,
-                                                                overflow:
-                                                                    TextOverflow
-                                                                        .ellipsis,
-                                                              );
-                                                            } else {
-                                                              _currency = _userRepository
-                                                                  .settingRepository
-                                                                  .getDefaultCurrency();
-                                                              double
-                                                                  _tempAmount =
-                                                                  0;
-                                                              for (var i = 0;
-                                                                  i <
-                                                                      _userRepository
-                                                                          .receiptRepository
-                                                                          .cachedReceiptItems
-                                                                          .length;
-                                                                  i++) {
-                                                                if (_userRepository
-                                                                        .receiptRepository
-                                                                        .cachedReceiptItems[
-                                                                            i]
-                                                                        .currencyCode ==
-                                                                    _currency
-                                                                        .code) {
-                                                                  _tempAmount += _userRepository
-                                                                      .receiptRepository
-                                                                      .cachedReceiptItems[
-                                                                          i]
-                                                                      ?.totalAmount;
-                                                                } else {
-                                                                  _tempAmount += (_userRepository
-                                                                          .receiptRepository
-                                                                          .cachedReceiptItems[
-                                                                              i]
-                                                                          ?.totalAmount /
-                                                                      snapshot
-                                                                          .data
-                                                                          .rates
-                                                                          .USD);
-                                                                }
-                                                              }
-                                                              _totalAmount =
-                                                                  _tempAmount
-                                                                      .toStringAsFixed(
-                                                                          2);
-                                                              return (_currency !=
-                                                                      null)
-                                                                  ? Expanded(
-                                                                      child: Text(
-                                                                          "Total: ${_currency.code} ${_currency.symbol} ${_totalAmount}"),
-//                                        children: <Widget>[//
-////                                          Text("${_currency.name} "),
-////                                          Text("${_currency.symbol}"),
-//                                        ],
-                                                                    )
-                                                                  : AutoSizeText(
-                                                                      'Network Error',
-                                                                      style: TextStyle(
-                                                                          fontSize:
-                                                                              10),
-                                                                      minFontSize:
-                                                                          4,
-                                                                      maxLines:
-                                                                          3,
-                                                                      overflow:
-                                                                          TextOverflow
-                                                                              .ellipsis,
-                                                                    );
-                                                            }
-                                                        }
-                                                      });
-                                                }
-                                            }
-                                          });
-                                    }
-                                }
-                              }),
+                          Text(
+                              "${_totalAmount}"
+                          ),
                           ReportButton(
                             onPressed: _onAddReceipts,
                             buttonName: 'Add Receipts',
