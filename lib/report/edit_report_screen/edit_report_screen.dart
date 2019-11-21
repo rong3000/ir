@@ -299,7 +299,7 @@ class _EditReportScreenState extends State<EditReportScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
                           Text(
-                              "${_totalAmount}"
+                              "Total: ${baseCurrency != null ? baseCurrency.code: ''} ${baseCurrency != null ? baseCurrency.symbol: ''} ${_totalAmount}"
                           ),
                           ReportButton(
                             onPressed: _onAddReceipts,

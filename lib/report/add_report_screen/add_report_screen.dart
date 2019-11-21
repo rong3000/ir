@@ -42,6 +42,7 @@ class _AddReportScreenState extends State<AddReportScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   double _tempAmount;
+  Currency baseCurrency;
 
   bool get isPopulated => _emailController.text.isNotEmpty;
 
@@ -58,6 +59,7 @@ class _AddReportScreenState extends State<AddReportScreen> {
     duplicateItems = _userRepository.settingRepository.getCurrencies();
     items.addAll(duplicateItems);
     super.initState();
+    getBaseCurrency();
   }
 
   void filterSearchResults(String query) {
@@ -154,12 +156,21 @@ class _AddReportScreenState extends State<AddReportScreen> {
             2);
   }
 
+  Future<void> getBaseCurrency() async {
+    await _userRepository.settingRepository.getSettingsFromServer();
+    baseCurrency = _userRepository.settingRepository.getDefaultCurrency();
+    setState(() {
+
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
 //    duplicateItems = _userRepository.settingRepository.getCurrencies();
 
     List<ActionWithLabel> actions = [];
     ActionWithLabel d = new ActionWithLabel();
+    String empty = '';
     d.action = removeAction;
     d.label = 'Remove';
     actions.add(d);
@@ -228,7 +239,7 @@ class _AddReportScreenState extends State<AddReportScreen> {
 //                          ),
 
                           Text(
-                              "${_totalAmount}"
+                              "Total: ${baseCurrency != null ? baseCurrency.code: ''} ${baseCurrency != null ? baseCurrency.symbol: ''} ${_totalAmount}"
                           ),
                           ReportButton(
                             onPressed: _onAddReceipts,
