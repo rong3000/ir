@@ -94,6 +94,7 @@ class _AddReportScreenState extends State<AddReportScreen> {
 
   void removeAction(int inputId) {
     int toBeRemoved;
+    int amountToBeRemoved;
     for (int i = 0;
         i < _userRepository.receiptRepository.cachedReceiptItems.length;
         i++) {
@@ -102,9 +103,20 @@ class _AddReportScreenState extends State<AddReportScreen> {
         toBeRemoved = i;
       }
     }
+
+    for (int i = 0;
+    i < _userRepository.receiptRepository.cachedReceiptItemsAmount.length;
+    i++) {
+      if (_userRepository.receiptRepository.cachedReceiptItemsAmount[i].id ==
+          inputId) {
+        amountToBeRemoved = i;
+      }
+    }
+
     _userRepository.receiptRepository.candidateReceiptItems
         .add(_userRepository.receiptRepository.cachedReceiptItems[toBeRemoved]);
     _userRepository.receiptRepository.cachedReceiptItems.removeAt(toBeRemoved);
+    _userRepository.receiptRepository.cachedReceiptItemsAmount.removeAt(amountToBeRemoved);
     setState(() {});
   }
 
@@ -151,6 +163,23 @@ class _AddReportScreenState extends State<AddReportScreen> {
     d.action = removeAction;
     d.label = 'Remove';
     actions.add(d);
+    _tempAmount = 0;
+    for (var i = 0;
+    i <
+        _userRepository
+            .receiptRepository
+            .cachedReceiptItemsAmount
+            .length;
+    i++) {
+      _tempAmount += (_userRepository
+          .receiptRepository
+          .cachedReceiptItemsAmount[i]?.amount);
+
+    }
+    _totalAmount =
+        _tempAmount
+            .toStringAsFixed(
+            2);
     return new Scaffold(
       appBar: new AppBar(
         title: Text(widget.title),
@@ -194,145 +223,13 @@ class _AddReportScreenState extends State<AddReportScreen> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
-                          FutureBuilder<DataResult>(
-                              future: _userRepository.settingRepository
-                                  .getSettingsFromServer(),
-                              builder: (BuildContext context,
-                                  AsyncSnapshot<DataResult> snapshot) {
-                                switch (snapshot.connectionState) {
-                                  case ConnectionState.none:
-                                    return new Text('Loading...');
-                                  case ConnectionState.waiting:
-                                    return new Center(
-                                        child: new CircularProgressIndicator());
-                                  case ConnectionState.active:
-                                    return new Text('');
-                                  case ConnectionState.done:
-                                    {
-                                      return FutureBuilder<DataResult>(
-                                          future: _userRepository
-                                              .settingRepository
-                                              .getCurrenciesFromServer(),
-                                          builder: (BuildContext context,
-                                              AsyncSnapshot<DataResult>
-                                                  snapshot) {
-                                            switch (snapshot.connectionState) {
-                                              case ConnectionState.none:
-                                                return new Text('Loading...');
-                                              case ConnectionState.waiting:
-                                                return new Center(
-                                                    child:
-                                                        new CircularProgressIndicator());
-                                              case ConnectionState.active:
-                                                return new Text('');
-                                              case ConnectionState.done:
-                                                return FutureBuilder<Exchange>(
-                                                    future: fetchExchange(),
-                                                    builder: (BuildContext
-                                                            context,
-                                                        AsyncSnapshot<Exchange>
-                                                            snapshot) {
-                                                      switch (snapshot
-                                                          .connectionState) {
-                                                        case ConnectionState
-                                                            .none:
-                                                          return new Text(
-                                                              'Loading...');
-                                                        case ConnectionState
-                                                            .waiting:
-                                                          return new Center(
-                                                              child:
-                                                                  new CircularProgressIndicator());
-                                                        case ConnectionState
-                                                            .active:
-                                                          return new Text('');
-                                                        case ConnectionState
-                                                            .done:
-                                                          if (snapshot
-                                                              .hasError) {
-                                                            return
-//                                                    new Text(
-//                                                    '${snapshot.error}',
-//                                                    style: TextStyle(color: Colors.red),
-//                                                  );
-                                                                AutoSizeText(
-                                                              '${snapshot.error}',
-                                                              style: TextStyle(
-                                                                  fontSize: 14),
-                                                              minFontSize: 1,
-                                                              maxLines: 3,
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis,
-                                                            );
-                                                          } else {
-                                                            _currency = _userRepository
-                                                                .settingRepository
-                                                                .getDefaultCurrency();
-                                                            _tempAmount = 0;
-//                                                            _totalAmount = '0';
-                                                            for (var i = 0;
-                                                                i <
-                                                                    _userRepository
-                                                                        .receiptRepository
-                                                                        .cachedReceiptItems
-                                                                        .length;
-                                                                i++) {
-                                                              if (_userRepository
-                                                                      .receiptRepository
-                                                                      .cachedReceiptItems[
-                                                                          i]
-                                                                      .currencyCode ==
-                                                                  _currency
-                                                                      .code) {
-                                                                _tempAmount += _userRepository
-                                                                    .receiptRepository
-                                                                    .cachedReceiptItems[
-                                                                        i]
-                                                                    ?.totalAmount;
-                                                              } else {
-                                                                calculateExchange(_userRepository.receiptRepository.cachedReceiptItems[i]?.totalAmount,
-                                                                    _userRepository.receiptRepository.cachedReceiptItems[i]?.receiptDatetime,
-                                                                  _currency.code,
-                                                                    _userRepository.receiptRepository.cachedReceiptItems[i].currencyCode,
-                                                                );
-//                                                                _tempAmount += (_userRepository.receiptRepository.cachedReceiptItems[i]?.totalAmount / snapshot.data.rates.USD);
-                                                              }
-                                                            }
-                                                            _totalAmount =
-                                                                _tempAmount
-                                                                    .toStringAsFixed(
-                                                                    2);
-                                                            return (_currency !=
-                                                                    null)
-                                                                ? Expanded(
-                                                                    child: Text(
-                                                                        "Total: ${_currency.code} ${_currency.symbol} ${_totalAmount}"),
-//                                        children: <Widget>[//
-////                                          Text("${_currency.name} "),
-////                                          Text("${_currency.symbol}"),
-//                                        ],
-                                                                  )
-                                                                : AutoSizeText(
-                                                                    'Network Error',
-                                                                    style: TextStyle(
-                                                                        fontSize:
-                                                                            10),
-                                                                    minFontSize:
-                                                                        4,
-                                                                    maxLines: 3,
-                                                                    overflow:
-                                                                        TextOverflow
-                                                                            .ellipsis,
-                                                                  );
-                                                          }
-                                                      }
-                                                    });
-                                            }
-                                          });
-                                    }
-                                }
-                              }),
+//                          Text(
+//                              "Total: ${_currency.code} ${_currency.symbol} ${_totalAmount}"
+//                          ),
+
+                          Text(
+                              "${_totalAmount}"
+                          ),
                           ReportButton(
                             onPressed: _onAddReceipts,
                             buttonName: 'Add Receipts',

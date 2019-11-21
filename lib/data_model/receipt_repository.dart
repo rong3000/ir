@@ -10,10 +10,18 @@ export "receipt.dart";
 export 'data_result.dart';
 export 'enums.dart';
 
+class amountPair {
+  double amount;
+  int id;
+
+  amountPair({this.amount, this.id});
+}
+
 class ReceiptRepository {
   List<ReceiptListItem> receipts = new List<ReceiptListItem>();
   List<ReceiptListItem> selectedReceipts = new List<ReceiptListItem>();
   List<ReceiptListItem> cachedReceiptItems;
+  List<amountPair> cachedReceiptItemsAmount;
   List<ReceiptListItem> candidateReceiptItems;
   UserRepository _userRepository;
   bool _dataFetched = false;

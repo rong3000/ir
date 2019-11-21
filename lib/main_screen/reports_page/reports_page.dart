@@ -110,6 +110,7 @@ class _ReportsPageState extends State<ReportsPage> {
       ):null,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
+        _userRepository.receiptRepository.cachedReceiptItemsAmount = [];
         _userRepository.receiptRepository.resetCachedReceiptItems(_userRepository.reportRepository);
           Navigator.of(context).push(
             MaterialPageRoute(builder: (context) {
