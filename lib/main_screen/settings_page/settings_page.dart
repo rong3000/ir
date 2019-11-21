@@ -4,6 +4,7 @@ import 'package:intelligent_receipt/data_model/data_result.dart';
 import 'package:intelligent_receipt/data_model/setting_repository.dart';
 import 'package:intelligent_receipt/main_screen/settings_page/category_screen/category_screen.dart';
 import 'package:intelligent_receipt/main_screen/settings_page/contact_screen/contact.dart';
+import 'package:intelligent_receipt/main_screen/settings_page/currency_screen/currency_screen.dart';
 import 'package:intelligent_receipt/main_screen/settings_page/documents_screen/documents_screen.dart';
 import 'package:intelligent_receipt/main_screen/settings_page/invite_screen/invite_screen.dart';
 import 'package:intelligent_receipt/main_screen/settings_page/plan_screen/plan_screen.dart';

@@ -311,7 +311,6 @@ class _AddReportScreenState extends State<AddReportScreen> {
   void _onReportSaved() {
     Report newReport = new Report();
     newReport.id = 0;
-    newReport.userId = _userRepository.userId;
     newReport.statusId = 1;
     newReport.createDateTime = DateTime.now();
     newReport.updateDateTime = DateTime.now();
@@ -333,7 +332,6 @@ class _AddReportScreenState extends State<AddReportScreen> {
   void _onReportSubmitted() {
     Report newReport = new Report();
     newReport.id = 0;
-    newReport.userId = _userRepository.userId;
     newReport.statusId = 2;
     newReport.createDateTime = DateTime.now();
     newReport.updateDateTime = DateTime.now();
