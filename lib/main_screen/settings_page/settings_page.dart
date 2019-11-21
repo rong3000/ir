@@ -7,8 +7,8 @@ import 'package:intelligent_receipt/main_screen/settings_page/contact_screen/con
 import 'package:intelligent_receipt/main_screen/settings_page/documents_screen/documents_screen.dart';
 import 'package:intelligent_receipt/main_screen/settings_page/invite_screen/invite_screen.dart';
 import 'package:intelligent_receipt/main_screen/settings_page/plan_screen/plan_screen.dart';
+import 'package:intelligent_receipt/user_repository.dart';
 
-import '../../user_repository.dart';
 
 class SettingsPage extends StatefulWidget {
   final UserRepository _userRepository;

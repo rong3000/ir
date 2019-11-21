@@ -6,13 +6,18 @@ import 'package:intelligent_receipt/authentication_bloc/bloc.dart';
 import 'package:intelligent_receipt/login/login.dart';
 import 'package:intelligent_receipt/main_screen/main_screen.dart';
 import 'package:intelligent_receipt/receipt/bloc/receipt_bloc.dart';
+import 'package:intelligent_receipt/translations/bloc/translation_state.dart';
+import 'package:intelligent_receipt/translations/bloc/traslation_bloc.dart';
+import 'package:intelligent_receipt/translations/global_translations.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 import 'package:intelligent_receipt/splash_screen.dart';
 import 'package:intelligent_receipt/simple_bloc_delegate.dart';
 
-void main() {
+void main() async {
   BlocSupervisor.delegate = SimpleBlocDelegate();
   final UserRepository userRepository = UserRepository();
+  await userRepository.preferencesRepository.initialisePrefsInstance();
+  await allTranslations.init(userRepository.preferencesRepository);
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
@@ -28,6 +33,10 @@ void main() {
           BlocProvider<ReceiptBloc>(
             builder: (context) => ReceiptBloc(
                 receiptRepository: userRepository.receiptRepository),
+          ),
+          BlocProvider<TranslationBloc>(
+            builder: (context) =>
+                TranslationBloc(userRepository: userRepository),
           )
         ],
         child: App(userRepository: userRepository),
@@ -48,22 +57,27 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return RepositoryProvider(
       builder: (context) => _userRepository,
-      child: MaterialApp(
-        home: BlocBuilder(
-          bloc: BlocProvider.of<AuthenticationBloc>(context),
-          builder: (BuildContext context, AuthenticationState state) {
-            if (state is Uninitialized) {
-              return SplashScreen();
-            }
-            if (state is Unauthenticated) {
-              return LoginScreen(userRepository: _userRepository);
-            }
-            if (state is Authenticated) {
-              return MainScreen(
-                  userRepository: _userRepository, name: state.displayName);
-            }
-          },
-        ),
+      child: BlocBuilder(
+        bloc: BlocProvider.of<TranslationBloc>(context),
+        builder: (BuildContext context, TranslationState translationState) {
+          return MaterialApp(
+            home: BlocBuilder(
+              bloc: BlocProvider.of<AuthenticationBloc>(context),
+              builder: (BuildContext context, AuthenticationState state) {
+                if (state is Uninitialized) {
+                  return SplashScreen();
+                }
+                if (state is Unauthenticated) {
+                  return LoginScreen(userRepository: _userRepository);
+                }
+                if (state is Authenticated) {
+                  return MainScreen(
+                      userRepository: _userRepository, name: state.displayName);
+                }
+              },
+            ),
+          );
+        },
       ),
     );
   }

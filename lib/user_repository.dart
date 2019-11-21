@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+import 'package:intelligent_receipt/data_model/preferences/preferences_repository.dart';
 import 'package:intelligent_receipt/data_model/user.dart';
 import 'package:intelligent_receipt/data_model/receipt_repository.dart';
 import 'package:intelligent_receipt/data_model/category_repository.dart';
@@ -20,6 +21,8 @@ class UserRepository {
   CategoryRepository categoryRepository;
   SettingRepository settingRepository;
   ReportRepository reportRepository;
+  PreferencesRepository preferencesRepository;
+
 
   FirebaseUser currentUser;
   String userGuid;
@@ -32,6 +35,7 @@ class UserRepository {
      categoryRepository = new CategoryRepository(this);
      settingRepository = new SettingRepository(this);
      reportRepository = new ReportRepository(this);
+     preferencesRepository = new PreferencesRepository();
      postSignIn(); // xxx temporary put the code here
   }
 

@@ -8,6 +8,7 @@ import 'package:intelligent_receipt/main_screen/search_bar/search_bar.dart';
 import 'package:intelligent_receipt/main_screen/settings_page/settings_page.dart';
 import 'package:intelligent_receipt/main_screen/reports_page/reports_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intelligent_receipt/translations/global_translations.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 import 'receipts_page/receipts_page.dart';
 
@@ -26,6 +27,7 @@ class MainScreen extends StatefulWidget {
 }
 
 class MainScreenState extends State<MainScreen> {
+  var appTitle = allTranslations.text('app.title');
   final _defaultColor = Colors.grey;
   final _activeColor = Colors.blue;
   int _currentIndex = 0;
@@ -120,6 +122,7 @@ class MainScreenState extends State<MainScreen> {
               DrawerHeader(
                 child: Column(
                   children: <Widget>[
+                    Text(appTitle),
                     Icon(Icons.verified_user),
                     Text('$name'),
                   ],
