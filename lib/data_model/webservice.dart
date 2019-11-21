@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:path/path.dart';
@@ -8,22 +9,21 @@ import 'data_result.dart';
 import 'message_code.dart';
 export 'data_result.dart';
 
-
 class Urls {
   static String ServiceBaseUrl = "http://10.0.2.2:3001/";
   static String ExchangeRateBaseUrl = "https://api.exchangeratesapi.io/";
 
   // Receipt related APIs
-  static String GetReceipts = ServiceBaseUrl + "Receipt/GetReceipts/";
+  static String GetReceipts = ServiceBaseUrl + "Receipt/GetReceipts";
   static String GetReceipt = ServiceBaseUrl + "Receipt/GetReceiptByReceiptId/";
   static String UpdateReceipt = ServiceBaseUrl + "Receipt/UpdateReceipt";
-  static String UploadReceiptImages = ServiceBaseUrl + "Receipt/UploadReceiptImages/1/";
+  static String UploadReceiptImages = ServiceBaseUrl + "Receipt/UploadReceiptImages/"; 
   static String DeleteReceipts = ServiceBaseUrl + "Receipt/DeleteReceipts";
   static String GetImage = ServiceBaseUrl + "Receipt/GetImage";
   static String AddReceipts = ServiceBaseUrl + "Receipt/AddReceipts";
 
   // Category related APIs
-  static String GetCategories = ServiceBaseUrl + "Settings/GetCategories/";
+  static String GetCategories = ServiceBaseUrl + "Settings/GetCategories";
   static String AddCategory = ServiceBaseUrl + "Settings/AddCategory/";
   static String UpdateCategory = ServiceBaseUrl + "Settings/UpdateCategory/";
   static String DeleteCategory = ServiceBaseUrl + "Settings/DeleteCategory/";
@@ -43,6 +43,8 @@ class Urls {
   static String UpdateReportWithoutReceipts = ServiceBaseUrl + "Report/UpdateReportWithoutReceipts";
 
   static String GetExchangeRate = ExchangeRateBaseUrl;
+  // User Urls
+  static String CreateNewUser = ServiceBaseUrl + "User/create";
 }
 
 const int default_timeout = 2000; // millisecons
@@ -53,7 +55,7 @@ const int default_timeout = 2000; // millisecons
 Future<DataResult> webservicePost(String url, String token, String body, {int timeout: default_timeout}) async
 {
   final headers = {
-//    "Authorization": "Bearer " + token,
+    "Authorization": "Bearer " + token,
     "accept": "application/json",
     "Content-type": "application/json",
   };
@@ -107,7 +109,7 @@ Future<DataResult> webservicePut(String url, String token, String body, {int tim
 Future<DataResult> webserviceGet(String url, String token, {int timeout: default_timeout}) async
 {
   final headers = {
-    //"Authorization": "Bearer " + token,
+    "Authorization": "Bearer " + token,
     "accept": "application/json",
     "Content-type": "application/json",
   };
@@ -139,7 +141,8 @@ Future<DataResult> uploadFile(String url, String token, File imageFile, {int tim
     var request = new http.MultipartRequest("POST", uri);
     var multipartFile = new http.MultipartFile('file', stream, length,
         filename: basename(imageFile.path));
-    //contentType: new MediaType('image', 'png'));
+    
+    request.headers.addEntries([ new MapEntry("Authorization", "Bearer " + token)]);
 
     request.files.add(multipartFile);
     var response = await request.send().timeout(Duration(milliseconds: timeout));
@@ -157,3 +160,15 @@ Future<DataResult> uploadFile(String url, String token, File imageFile, {int tim
     return DataResult.fail(msgCode: MessageCode.UNKNOWN, msg: e.toString());
   }
 }
+
+
+/// Url: image URL
+/// token: token string
+Future<Image> getImageFromNetwork(String url, String token)  async {
+  final headers = {
+    "Authorization": "Bearer " + token
+  };
+
+  return Image.network(url, headers: headers);
+}
+

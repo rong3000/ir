@@ -1,3 +1,5 @@
+import 'package:flutter/widgets.dart';
+import 'package:intelligent_receipt/data_model/ir_repository.dart';
 import "receipt.dart";
 import 'report_repository.dart';
 import "webservice.dart";
@@ -16,14 +18,12 @@ class amountPair {
 
   amountPair({this.amount, this.id});
 }
-
-class ReceiptRepository {
+class ReceiptRepository extends IRRepository {
   List<ReceiptListItem> receipts = new List<ReceiptListItem>();
   List<ReceiptListItem> selectedReceipts = new List<ReceiptListItem>();
   List<ReceiptListItem> cachedReceiptItems;
   List<amountPair> cachedReceiptItemsAmount;
   List<ReceiptListItem> candidateReceiptItems;
-  UserRepository _userRepository;
   bool _dataFetched = false;
   Lock _lock = new Lock();
 
@@ -54,12 +54,10 @@ class ReceiptRepository {
     return candidateReceiptItems;
   }
 
-  ReceiptRepository(UserRepository userRepository) {
-    _userRepository = userRepository;
-  }
+  ReceiptRepository(UserRepository userRepository) : super(userRepository);
 
   ReceiptListItem getReceiptItem(int receiptId) {
-    ReceiptListItem receiptListItem = null;
+    ReceiptListItem receiptListItem;
     for (var i = 0; i < receipts.length; i++) {
       if (receipts[i].id == receiptId) {
         receiptListItem = receipts[i];
@@ -115,14 +113,12 @@ class ReceiptRepository {
         result = DataResult.success(receipts);
       }
 
-      if ((_userRepository == null) || (_userRepository.userId <= 0)) {
+      if ((userRepository == null) || (userRepository.userGuid == null)) {
         // Log an error
         result = DataResult.fail();
       }
 
-      result = await webserviceGet(
-          Urls.GetReceipts + _userRepository.userId.toString(), "",
-          timeout: 50000);
+      result = await webserviceGet(Urls.GetReceipts, await getToken(), timeout: 50000);
       if (result.success) {
         Iterable l = result.obj;
         receipts = l.map((model) => ReceiptListItem.fromJason(model)).toList();
@@ -137,7 +133,7 @@ class ReceiptRepository {
 
   Future<DataResult> getReceipt(int receiptId) async {
     DataResult result =
-        await webserviceGet(Urls.GetReceipt + receiptId.toString(), "");
+        await webserviceGet(Urls.GetReceipt + receiptId.toString(), await getToken());
     if (result.success) {
       result.obj = Receipt.fromJason(result.obj);
     }
@@ -147,7 +143,7 @@ class ReceiptRepository {
 
   Future<DataResult> updateReceipt(Receipt receipt) async {
     DataResult result =
-        await webservicePost(Urls.UpdateReceipt, "", jsonEncode(receipt));
+        await webservicePost(Urls.UpdateReceipt, await getToken(), jsonEncode(receipt));
     if (result.success) {
       result.obj = Receipt.fromJason(result.obj);
     }
@@ -157,7 +153,7 @@ class ReceiptRepository {
   
   Future<DataResult> addReceipts(List<Receipt> receipts) async {
     DataResult result =
-        await webservicePost(Urls.AddReceipts, "", jsonEncode(receipts));
+        await webservicePost(Urls.AddReceipts, await getToken(), jsonEncode(receipts));
     if (result.success) {
       var receipts = List<Receipt>();
       for (var receipt in result.obj){
@@ -168,15 +164,16 @@ class ReceiptRepository {
     return result;
   }
 
-  Future<DataResult> uploadReceiptImage(File imageFile) async {
-    if ((_userRepository == null) || (_userRepository.userId <= 0)) {
+  Future<DataResult> uploadReceiptImage(File imageFile, {receiptTypeId = 1}) async {
+    if ((userRepository == null) || (userRepository.userGuid == null)) {
       // Log an error
       return DataResult.fail(msg: "No user logged in.");
     }
 
+    var url = Urls.UploadReceiptImages + receiptTypeId.toString() + "/";
     DataResult result = await uploadFile(
-        Urls.UploadReceiptImages + _userRepository.userId.toString(),
-        "",
+        url,
+        await getToken(),
         imageFile, timeout: 50000);
     if (result.success) {
       Iterable l = result.obj;
@@ -199,7 +196,7 @@ class ReceiptRepository {
 
   Future<DataResult> deleteReceipts(List<int> receiptIds) async {
     DataResult result =
-        await webservicePost(Urls.DeleteReceipts, "", jsonEncode(receiptIds));
+        await webservicePost(Urls.DeleteReceipts, await getToken(), jsonEncode(receiptIds));
     if (result.success) {
       // Delete the local cache of the receipts
       for (int i = 0; i < receiptIds.length; i++) {
@@ -215,5 +212,11 @@ class ReceiptRepository {
     }
 
     return result;
+  }
+
+  Future<Image> getNetworkImage(String url) async {
+    final token = await getToken();
+
+    return await getImageFromNetwork(url, token);
   }
 }
