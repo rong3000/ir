@@ -9,7 +9,6 @@ part of 'report.dart';
 Report _$ReportFromJson(Map<String, dynamic> json) {
   return Report()
     ..id = json['id'] as int
-    ..userId = json['userId'] as int
     ..statusId = json['statusId'] as int
     ..createDateTime = json['createDateTime'] == null
         ? null
@@ -24,7 +23,6 @@ Report _$ReportFromJson(Map<String, dynamic> json) {
 
 Map<String, dynamic> _$ReportToJson(Report instance) => <String, dynamic>{
       'id': instance.id,
-      'userId': instance.userId,
       'statusId': instance.statusId,
       'createDateTime': instance.createDateTime?.toIso8601String(),
       'updateDateTime': instance.updateDateTime?.toIso8601String(),

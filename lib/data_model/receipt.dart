@@ -9,7 +9,6 @@ part 'receipt.g.dart';
 // Used for receipt list
 class ReceiptListItem {
   int id;
-  int userId;
   int statusId;
   int categoryId;
   int receiptTypeId;

@@ -9,7 +9,6 @@ part of 'receipt.dart';
 ReceiptListItem _$ReceiptListItemFromJson(Map<String, dynamic> json) {
   return ReceiptListItem()
     ..id = json['id'] as int
-    ..userId = json['userId'] as int
     ..statusId = json['statusId'] as int
     ..categoryId = json['categoryId'] as int
     ..receiptTypeId = json['receiptTypeId'] as int
@@ -33,7 +32,6 @@ ReceiptListItem _$ReceiptListItemFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$ReceiptListItemToJson(ReceiptListItem instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'userId': instance.userId,
       'statusId': instance.statusId,
       'categoryId': instance.categoryId,
       'receiptTypeId': instance.receiptTypeId,
@@ -53,7 +51,6 @@ Map<String, dynamic> _$ReceiptListItemToJson(ReceiptListItem instance) =>
 Receipt _$ReceiptFromJson(Map<String, dynamic> json) {
   return Receipt()
     ..id = json['id'] as int
-    ..userId = json['userId'] as int
     ..statusId = json['statusId'] as int
     ..categoryId = json['categoryId'] as int
     ..receiptTypeId = json['receiptTypeId'] as int
@@ -89,7 +86,6 @@ Receipt _$ReceiptFromJson(Map<String, dynamic> json) {
 
 Map<String, dynamic> _$ReceiptToJson(Receipt instance) => <String, dynamic>{
       'id': instance.id,
-      'userId': instance.userId,
       'statusId': instance.statusId,
       'categoryId': instance.categoryId,
       'receiptTypeId': instance.receiptTypeId,

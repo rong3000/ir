@@ -1,3 +1,4 @@
+import 'package:intelligent_receipt/data_model/ir_repository.dart';
 import "category.dart";
 import "webservice.dart";
 import "../user_repository.dart";
@@ -5,28 +6,29 @@ import 'dart:convert';
 
 export 'category.dart';
 
-class CategoryRepository {
+class CategoryRepository extends IRRepository {
   List<Category> categories;
-  final UserRepository _userRepository;
   bool _dataFetched = false;
 
   CategoryRepository(UserRepository userRepository)
-    : _userRepository = userRepository {
+    : super(userRepository) {
     categories = new List<Category>();
   }
+
+
 
   Future<DataResult> getCategoriesFromServer({bool forceRefresh = false}) async {
     if (_dataFetched && !forceRefresh) {
       return DataResult.success(categories);
     }
 
-    if ((_userRepository == null) || (_userRepository.userId <= 0))
+    if ((userRepository == null) || (userRepository.userGuid == null))
     {
-      // Log an error
+      // Log an error 
       return DataResult.fail(msg: "No user logged in.");
     }
 
-    DataResult result = await webserviceGet(Urls.GetCategories + _userRepository.userId.toString(), "", timeout: 5000);
+    DataResult result = await webserviceGet(Urls.GetCategories, await getToken(), timeout: 5000);
     if (result.success) {
       Iterable l = result.obj;
       categories = l.map((model) => Category.fromJason(model)).toList();
@@ -38,7 +40,7 @@ class CategoryRepository {
   }
 
   Future<DataResult> addCategory(String categoryName) async {
-    DataResult result = await webservicePost(Urls.AddCategory + _userRepository.userId.toString(), "", jsonEncode(categoryName));
+    DataResult result = await webservicePost(Urls.AddCategory, await getToken(), jsonEncode(categoryName));
     if (result.success) {
       Category category = Category.fromJason(result.obj);
       categories.add(category);
@@ -49,7 +51,7 @@ class CategoryRepository {
   }
 
   Future<DataResult> updateCategory(Category category) async {
-    DataResult result = await webservicePost(Urls.UpdateCategory + _userRepository.userId.toString(), "", jsonEncode(category));
+    DataResult result = await webservicePost(Urls.UpdateCategory, await getToken(), jsonEncode(category));
     if (result.success) {
       category = Category.fromJason(result.obj);
       result.obj = category;
@@ -66,7 +68,7 @@ class CategoryRepository {
   }
 
   Future<DataResult> deleteCategory(int categoryId) async {
-    DataResult result = await webservicePost(Urls.DeleteCategory + categoryId.toString(), "", jsonEncode(categoryId));
+    DataResult result = await webservicePost(Urls.DeleteCategory + categoryId.toString(), await getToken(), jsonEncode(categoryId));
     if (result.success) {
       // delete local cache
       for (int i = 0; i < categories.length; i++) {

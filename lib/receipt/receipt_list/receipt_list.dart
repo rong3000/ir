@@ -25,7 +25,7 @@ class ReceiptList extends StatefulWidget {
         _receiptStatusType = receiptStatusType,
         _receiptItems = receiptItems,
         _actions = actions,
-        super(key: key) {}
+        super(key: key);
 
   @override
   ReceiptListState createState() => ReceiptListState();
@@ -33,8 +33,6 @@ class ReceiptList extends StatefulWidget {
 
 class ReceiptListState extends State<ReceiptList> {
   final List<String> items = List<String>.generate(10000, (i) => "Item $i");
-  ScrollController _scrollController = ScrollController();
-//  List<ReceiptListItem> receipts;
   bool sort;
   int start = 0;
   int end;

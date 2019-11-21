@@ -3,6 +3,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intelligent_receipt/authentication_bloc/bloc.dart';
+import 'package:intelligent_receipt/login/login.dart';
 import 'package:intelligent_receipt/main_screen/main_screen.dart';
 import 'package:intelligent_receipt/receipt/bloc/receipt_bloc.dart';
 import 'package:intelligent_receipt/user_repository.dart';
@@ -55,8 +56,7 @@ class App extends StatelessWidget {
               return SplashScreen();
             }
             if (state is Unauthenticated) {
-              return MainScreen(
-                  userRepository: _userRepository, name: state.displayName);
+              return LoginScreen(userRepository: _userRepository);
             }
             if (state is Authenticated) {
               return MainScreen(

@@ -124,8 +124,6 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
       return;
     }
 
-    this.receipt.userId = this._userRepository.userId;
-
     //common save logic
     this.receipt.statusId = ReceiptStatusType.Reviewed.index;
     this.receipt.statusUpdateDatetime = DateTime.now();
@@ -153,8 +151,6 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
 
       _receiptBloc.dispatch(ManualReceiptUpload(receipt: this.receipt));
     } else {
-      //TODO: update if not new
-
       _receiptBloc.dispatch(ManualReceiptUpdate(receipt: this.receipt));
     }
   }
@@ -186,6 +182,9 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
       list.add(
         DropdownMenuItem<int>(value: cat.id, child: Text(cat.categoryName)),
       );
+    }
+    if (!categoryList.any((c) => c.id == receipt.categoryId) && categoryList.length > 0){
+      receipt.categoryId = categoryList[0].id;
     }
     return list;
   }

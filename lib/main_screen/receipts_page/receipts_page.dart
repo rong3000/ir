@@ -1,4 +1,3 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -7,16 +6,11 @@ import 'package:intelligent_receipt/data_model/enums.dart';
 import 'package:intelligent_receipt/data_model/receipt_repository.dart';
 import 'package:intelligent_receipt/main_screen/bloc/bloc.dart';
 import 'package:flutter/rendering.dart';
-import 'package:intelligent_receipt/main_screen/settings_page/plan_screen/plan_screen.dart';
 import 'package:intelligent_receipt/receipt/add_edit_reciept_manual/add_edit_receipt_manual.dart';
-import 'package:intelligent_receipt/receipt/edit_receipt/edit_receipt.dart';
 import 'package:intelligent_receipt/receipt/receipt_list/receipt_list.dart';
 import 'package:intelligent_receipt/receipt/upload_receipt_image/upload_receipt_image.dart';
 import 'package:intelligent_receipt/user_repository.dart';
-import 'package:intl/intl.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:intelligent_receipt/data_model/webservice.dart';
-import 'package:flutter/material.dart';
 import 'dart:math';
 import 'package:vector_math/vector_math.dart' show radians;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -27,7 +21,7 @@ class ReceiptsPage extends StatelessWidget {
   ReceiptsPage({Key key, @required UserRepository userRepository})
       : assert(userRepository != null),
         _userRepository = userRepository,
-        super(key: key) {}
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +65,7 @@ class ReceiptsTabs extends StatefulWidget {
   })  : assert(userRepository != null),
         _userRepository = userRepository,
         _receiptStatusType = receiptStatusType,
-        super(key: key) {}
+        super(key: key);
 
   @override
   _ReceiptsTabsState createState() => _ReceiptsTabsState();

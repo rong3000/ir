@@ -10,7 +10,6 @@ part 'report.g.dart';
 // Used for receipt list
 class Report {
   int id;
-  int userId;
   int statusId;
   DateTime createDateTime;
   DateTime updateDateTime;

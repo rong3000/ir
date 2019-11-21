@@ -3,12 +3,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intelligent_receipt/data_model/report.dart';
+import 'package:intelligent_receipt/data_model/webservice.dart';
 import 'package:intelligent_receipt/report/report_list/report_list.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 import 'package:intl/intl.dart';
 
-import '../../data_model/enums.dart';
-import '../../data_model/webservice.dart';
 
 class ReportCard extends StatefulWidget {
   final UserRepository _userRepository;
