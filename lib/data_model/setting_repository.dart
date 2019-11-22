@@ -107,7 +107,7 @@ class SettingRepository extends IRRepository {
   }
 
   Future<DataResult> _addOrUpdateSystemSetting(String key, String value) async {
-    DataResult result = await webservicePost(Urls.AddOrUpdateSystemSetting + Uri.encodeComponent(key) + "/" + Uri.encodeComponent(value), "", await getToken());
+    DataResult result = await webservicePost(Urls.AddOrUpdateSystemSetting + Uri.encodeComponent(key) + "/" + Uri.encodeComponent(value), await getToken(), "");
     if (result.success) {
       Setting setting = Setting.fromJason(result.obj);
       result.obj = setting;
