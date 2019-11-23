@@ -156,7 +156,7 @@ class ReportRepository extends IRRepository {
   }
 
   Future<DataResult> addReceiptToReport(int reportId, int receiptId, {updateLocal: true}) async {
-    DataResult result = await webservicePost(Urls.AddReceiptToReport  + reportId.toString() + "/" + receiptId.toString(), "", "");
+    DataResult result = await webservicePost(Urls.AddReceiptToReport  + reportId.toString() + "/" + receiptId.toString(), await getToken(), "");
     if (result.success) {
       if (updateLocal) {
         Report report = getReport(reportId);
@@ -170,7 +170,7 @@ class ReportRepository extends IRRepository {
   }
 
   Future<DataResult> deleteReport(int reportId, {updateLocal: true}) async {
-    DataResult result = await webservicePost(Urls.DeleteReport  + reportId.toString(), "", "");
+    DataResult result = await webservicePost(Urls.DeleteReport  + reportId.toString(), await getToken(), "");
     if (result.success) {
       if (updateLocal) {
         reports.removeWhere((r) => r.id == reportId);
@@ -181,7 +181,7 @@ class ReportRepository extends IRRepository {
   }
 
   Future<DataResult> removeReceiptFromReport(int reportId, int receiptId, {updateLocal: true}) async {
-    DataResult result = await webservicePost(Urls.RemoveReceiptFromReport  + reportId.toString() + "/" + receiptId.toString(), "", "");
+    DataResult result = await webservicePost(Urls.RemoveReceiptFromReport  + reportId.toString() + "/" + receiptId.toString(), await getToken(), "");
     if (result.success) {
       if (updateLocal) {
         Report report = getReport(reportId);
@@ -195,7 +195,7 @@ class ReportRepository extends IRRepository {
   }
 
   Future<DataResult> updateReport(Report report, bool updateReceiptList, {updateLocal: true}) async {
-    DataResult result = await webservicePost(updateReceiptList ? Urls.UpdateReportWithReceipts : Urls.UpdateReportWithoutReceipts, "", jsonEncode(report));
+    DataResult result = await webservicePost(updateReceiptList ? Urls.UpdateReportWithReceipts : Urls.UpdateReportWithoutReceipts, await getToken(), jsonEncode(report));
     if (result.success) {
       result.obj = Report.fromJason(result.obj);
       if (updateLocal) {

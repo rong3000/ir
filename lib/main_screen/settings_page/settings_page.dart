@@ -176,7 +176,7 @@ class _SettingsPageState extends State<SettingsPage> {
 ////                                          Text("${_currency.symbol}"),
 //                                        ],
                                                   ) : AutoSizeText(
-                                                    'Network Error',
+                                                    '',
                                                     style: TextStyle(fontSize: 10),
                                                     minFontSize: 4,
                                                     maxLines: 3,
