@@ -226,26 +226,30 @@ class _UploadReceiptImageState extends State<UploadReceiptImage> {
                                   return _getResultWidget(
                                       "The receipt has been submitted, but failed to extract the text from the image. Please double check whether this is a valid receipt.\n\n"
                                           "Press 'Review Now' button to manually enter receipt information now.\n"
-                                          "Press 'Review Later' button to review the receipt later, which is listed in 'Receipts\\Unreviewed' tab.");
+                                          "Press 'Review Later' button to review the receipt later, which is listed in 'Receipts\\Unreviewed' tab.",
+                                      receipt: receipt);
                                 } else if (receipt.decodeStatus == DecodeStatusType.MaybeNotValidReceipt.index) {
                                   // Show image maybe not a valid receipt error
                                   return _getResultWidget(
                                       "This maybe not a valid receipt. Please double check.\n\n"
                                           "Press 'Review Now' button to manually enter receipt information now.\n"
-                                          "Press 'Review Later' button to review the receipt later, which is listed in 'Receipts\\Unreviewed' tab.");
+                                          "Press 'Review Later' button to review the receipt later, which is listed in 'Receipts\\Unreviewed' tab.",
+                                      receipt: receipt);
                                 } else if ((receipt.decodeStatus == DecodeStatusType.UnrecognizedFormat.index) ||
                                            (receipt.decodeStatus == DecodeStatusType.PartiallyDecoded.index)) {
                                   // Show unrecognized format error
                                   return _getResultWidget(
                                       "The receipt image has been submitted, we are now recognizing it, and will notify you after we recognize it.\n\n"
                                           "Press 'Review Now' button to manually enter receipt information now.\n"
-                                          "Press 'Review Later' button to review the receipt later, which is listed in 'Receipts\\Unreviewed' tab.");
+                                          "Press 'Review Later' button to review the receipt later, which is listed in 'Receipts\\Unreviewed' tab.",
+                                      receipt: receipt);
                                 } else {
                                   // Show add or update receipt page
                                   return _getResultWidget(
                                       "The receipt image has been submitted and recognized.\n\n"
                                           "Press 'Review Now' button to verify receipt information now.\n"
-                                          "Press 'Review Later' button to review the receipt later, which is listed in 'Receipts\\Unreviewed' tab.");
+                                          "Press 'Review Later' button to review the receipt later, which is listed in 'Receipts\\Unreviewed' tab.",
+                                      receipt: receipt);
                                 }
                               } else {
                                 // Show error message

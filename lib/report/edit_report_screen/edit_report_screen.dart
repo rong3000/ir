@@ -1,21 +1,35 @@
+import 'dart:convert';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:intelligent_receipt/data_model/action_with_lable.dart';
 import 'package:intelligent_receipt/data_model/data_result.dart';
+import 'package:intelligent_receipt/data_model/enums.dart';
+import 'package:intelligent_receipt/data_model/exchange_rate/exchange.dart';
 import 'package:intelligent_receipt/data_model/receipt.dart';
+import 'package:intelligent_receipt/data_model/receipt_repository.dart';
 import 'package:intelligent_receipt/data_model/report.dart';
 import 'package:intelligent_receipt/data_model/setting_repository.dart';
 import 'package:intelligent_receipt/receipt/receipt_card/receipt_card.dart';
+import 'package:intelligent_receipt/receipt/receipt_list/receipt_list.dart';
 import 'package:intelligent_receipt/report/add_receipts_screen/add_receipts_screen.dart';
 import 'package:intelligent_receipt/report/add_report_screen/report_button.dart';
 import 'package:intelligent_receipt/user_repository.dart';
+import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
+
+import 'package:intelligent_receipt/data_model/webservice.dart';
 
 class EditReportScreen extends StatefulWidget {
   final String title;
   final UserRepository _userRepository;
   final int _reportId;
   EditReportScreen(
-      {Key key, @required UserRepository userRepository, this.title, int reportId})
+      {Key key,
+      @required UserRepository userRepository,
+      this.title,
+      int reportId})
       : assert(userRepository != null),
         _userRepository = userRepository,
         _reportId = reportId,
@@ -35,6 +49,7 @@ class _EditReportScreenState extends State<EditReportScreen> {
   final TextEditingController _passwordController = TextEditingController();
 
   bool get isPopulated => _emailController.text.isNotEmpty;
+  double _tempAmount;
 
   bool isLoginButtonEnabled() {
     return isPopulated;
@@ -46,25 +61,78 @@ class _EditReportScreenState extends State<EditReportScreen> {
   Report _report;
   List<ReceiptListItem> _receiptList;
   String _totalAmount;
-  Currency _currency;
+  Currency baseCurrency;
 
+  Future<Exchange> getExchangeRateFromServer(DateTime receiptDatetime, String baseCurrencyCode) async {
+    final response =
+    await http.get(Urls.GetExchangeRate + DateFormat("yyyy-MM-dd").format(receiptDatetime.toLocal()).toString() + "?base=" + baseCurrencyCode);
+    if (response.statusCode == 200) {
+      // If server returns an OK response, parse the JSON.
+      return Exchange.fromJson(json.decode(response.body));
+    } else {
+      // If that response was not OK, throw an error.
+      throw Exception('Failed to load exchange rate from server');
+    }
+  }
+
+  Future<void> calculateExchange() async {
+    await _userRepository.settingRepository.getSettingsFromServer();
+    baseCurrency = _userRepository.settingRepository.getDefaultCurrency();
+    for (int i = 0; i < _userRepository.receiptRepository.cachedReceiptItems.length; i++ ) {
+      if (_userRepository.receiptRepository.cachedReceiptItems[i].currencyCode == baseCurrency.code)
+      {
+        amountPair cachedReceiptItemsAmount2 = new amountPair();
+        cachedReceiptItemsAmount2.amount = _userRepository.receiptRepository.cachedReceiptItems[i].totalAmount;
+        cachedReceiptItemsAmount2.id = _userRepository.receiptRepository.cachedReceiptItems[i].id;
+        _userRepository.receiptRepository.cachedReceiptItemsAmount.add(cachedReceiptItemsAmount2);
+        print('id ${_userRepository.receiptRepository.cachedReceiptItems[i].id} add to group and ${cachedReceiptItemsAmount2}');
+      }
+      if (_userRepository.receiptRepository.cachedReceiptItems[i].currencyCode != baseCurrency.code) {
+        amountPair cachedReceiptItemsAmount1 = new amountPair();
+
+        Exchange exchange = await getExchangeRateFromServer(
+            _userRepository.receiptRepository
+                .cachedReceiptItems[i]
+                .receiptDatetime, baseCurrency.code);
+        cachedReceiptItemsAmount1.amount = _userRepository.receiptRepository
+            .cachedReceiptItems[i]
+            .totalAmount /
+            exchange.rates.getRate(_userRepository.receiptRepository
+                .cachedReceiptItems[i]
+                .currencyCode);
+        cachedReceiptItemsAmount1.id = _userRepository.receiptRepository.cachedReceiptItems[i].id;
+        _userRepository.receiptRepository.cachedReceiptItemsAmount.add(
+            cachedReceiptItemsAmount1);
+      }}
+    setState(() {
+
+    });
+  }
 
   @override
   void initState() {
     duplicateItems = _userRepository.settingRepository.getCurrencies();
     items.addAll(duplicateItems);
     super.initState();
-    _reportName = _userRepository.reportRepository.getReport(widget._reportId).reportName;
-    _reportDescription = _userRepository.reportRepository.getReport(widget._reportId).description;
+    _reportName =
+        _userRepository.reportRepository.getReport(widget._reportId).reportName;
+    _reportDescription = _userRepository.reportRepository
+        .getReport(widget._reportId)
+        .description;
     _emailController.text = _reportName;
     _passwordController.text = _reportDescription;
 //    _receiptList = _userRepository.reportRepository.getReport(widget._reportId).getReceiptList(_userRepository.receiptRepository);
 //    _totalAmount = _userRepository.reportRepository.getReport(widget._reportId).getTotalAmount(_userRepository.receiptRepository);
     _report = _userRepository.reportRepository.getReport(widget._reportId);
     _receiptList = _report.getReceiptList(_userRepository.receiptRepository);
-    _totalAmount = _report.getTotalAmount(_userRepository.receiptRepository).toStringAsFixed(2);
+//    _totalAmount = _report
+//        .getTotalAmount(_userRepository.receiptRepository)
+//        .toStringAsFixed(2);
     print('${_report} ${_receiptList} ${_totalAmount}');
     _userRepository.receiptRepository.cachedReceiptItems = _receiptList;
+
+    calculateExchange();
+
     List<int> _receiptIds = [];
 
 
@@ -121,16 +189,43 @@ class _EditReportScreenState extends State<EditReportScreen> {
 
   void removeAction(int inputId) {
     int toBeRemoved;
-    for (int i = 0; i < _userRepository.receiptRepository.cachedReceiptItems.length; i++) {
-      if (_userRepository.receiptRepository.cachedReceiptItems[i].id == inputId) {
+    int amountToBeRemoved;
+    for (int i = 0;
+        i < _userRepository.receiptRepository.cachedReceiptItems.length;
+        i++) {
+      if (_userRepository.receiptRepository.cachedReceiptItems[i].id ==
+          inputId) {
         toBeRemoved = i;
       }
     }
-    _userRepository.receiptRepository.candidateReceiptItems.add(_userRepository.receiptRepository.cachedReceiptItems[toBeRemoved]);
-    _userRepository.receiptRepository.cachedReceiptItems.removeAt(toBeRemoved);
-    setState(() {
 
-    });
+    for (int i = 0;
+    i < _userRepository.receiptRepository.cachedReceiptItemsAmount.length;
+    i++) {
+      if (_userRepository.receiptRepository.cachedReceiptItemsAmount[i].id ==
+          inputId) {
+        amountToBeRemoved = i;
+      }
+    }
+
+    _userRepository.receiptRepository.candidateReceiptItems
+        .add(_userRepository.receiptRepository.cachedReceiptItems[toBeRemoved]);
+    _userRepository.receiptRepository.cachedReceiptItems.removeAt(toBeRemoved);
+    _userRepository.receiptRepository.cachedReceiptItemsAmount.removeAt(amountToBeRemoved);
+    setState(() {});
+  }
+
+  Future<Exchange> fetchExchange() async {
+    final response =
+    await http.get('https://api.exchangeratesapi.io/2019-11-10?base=AUD');
+
+    if (response.statusCode == 200) {
+      // If server returns an OK response, parse the JSON.
+      return Exchange.fromJson(json.decode(response.body));
+    } else {
+      // If that response was not OK, throw an error.
+      throw Exception('Failed to load post');
+    }
   }
 
   @override
@@ -140,6 +235,24 @@ class _EditReportScreenState extends State<EditReportScreen> {
     d.action = removeAction;
     d.label = 'Remove';
     actions.add(d);
+
+    _tempAmount = 0;
+    for (var i = 0;
+    i <
+        _userRepository
+            .receiptRepository
+            .cachedReceiptItemsAmount
+            .length;
+    i++) {
+      _tempAmount += (_userRepository
+          .receiptRepository
+          .cachedReceiptItemsAmount[i]?.amount);
+
+    }
+    _totalAmount =
+        _tempAmount
+            .toStringAsFixed(
+            2);
     return new Scaffold(
       appBar: new AppBar(
         title: Text(widget.title),
@@ -185,76 +298,9 @@ class _EditReportScreenState extends State<EditReportScreen> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
-                          FutureBuilder<DataResult>(
-                              future: _userRepository.settingRepository
-                                  .getSettingsFromServer(),
-                              builder: (BuildContext context,
-                                  AsyncSnapshot<DataResult> snapshot) {
-                                switch (snapshot.connectionState) {
-                                  case ConnectionState.none:
-                                    return new Text('Loading...');
-                                  case ConnectionState.waiting:
-                                    return new Center(
-                                        child: new CircularProgressIndicator());
-                                  case ConnectionState.active:
-                                    return new Text('');
-                                  case ConnectionState.done:
-                                    {
-                                      return FutureBuilder<DataResult>(
-                                          future: _userRepository.settingRepository
-                                              .getCurrenciesFromServer(),
-                                          builder: (BuildContext context,
-                                              AsyncSnapshot<DataResult> snapshot) {
-                                            switch (snapshot.connectionState) {
-                                              case ConnectionState.none:
-                                                return new Text('Loading...');
-                                              case ConnectionState.waiting:
-                                                return new Center(
-                                                    child: new CircularProgressIndicator());
-                                              case ConnectionState.active:
-                                                return new Text('');
-                                              case ConnectionState.done:
-                                                if (snapshot.hasError) {
-                                                  return
-//                                                    new Text(
-//                                                    '${snapshot.error}',
-//                                                    style: TextStyle(color: Colors.red),
-//                                                  );
-                                                    AutoSizeText(
-                                                      '${snapshot.error}',
-                                                      style: TextStyle(fontSize: 14),
-                                                      minFontSize: 1,
-                                                      maxLines: 3,
-                                                      overflow: TextOverflow.ellipsis,
-                                                    );
-                                                } else {
-                                                  _currency = _userRepository
-                                                      .settingRepository
-                                                      .getDefaultCurrency();
-                                                  double _tempAmount = 0;
-                                                  for (var i = 0; i < _userRepository.receiptRepository.cachedReceiptItems.length; i++) {
-                                                    _tempAmount += _userRepository.receiptRepository.cachedReceiptItems[i]?.totalAmount;}
-                                                  _totalAmount = _tempAmount.toStringAsFixed(2);
-                                                  return (_currency != null) ? Expanded(
-                                                    child: Text("Total: ${_currency.symbol} ${_totalAmount}"),
-//                                        children: <Widget>[//
-////                                          Text("${_currency.name} "),
-////                                          Text("${_currency.symbol}"),
-//                                        ],
-                                                  ) : AutoSizeText(
-                                                    'Network Error',
-                                                    style: TextStyle(fontSize: 10),
-                                                    minFontSize: 4,
-                                                    maxLines: 3,
-                                                    overflow: TextOverflow.ellipsis,
-                                                  );
-                                                }
-
-                                            }
-                                          });
-                                    }
-                                }
-                              }),
+                          Text(
+                              "Total: ${baseCurrency != null ? baseCurrency.code: ''} ${baseCurrency != null ? baseCurrency.symbol: ''} ${_totalAmount}"
+                          ),
                           ReportButton(
                             onPressed: _onAddReceipts,
                             buttonName: 'Add Receipts',
@@ -267,43 +313,42 @@ class _EditReportScreenState extends State<EditReportScreen> {
               ),
             ),
             Expanded(
-              flex: 4,
-              child: ListView.builder(
-                itemCount: _userRepository.receiptRepository.cachedReceiptItems.length,
-                itemBuilder: (context, index) {
-                  return ReceiptCard(
-                    receiptItem: _userRepository.receiptRepository.cachedReceiptItems[index],
-                    actions: actions,
-                  );
-                })
+                flex: 4,
+                child: ListView.builder(
+                    itemCount: _userRepository
+                        .receiptRepository.cachedReceiptItems.length,
+                    itemBuilder: (context, index) {
+                      return ReceiptCard(
+                        receiptItem: _userRepository
+                            .receiptRepository.cachedReceiptItems[index],
+                        actions: actions,
+                      );
+                    })
 //              ReceiptList(
 //                  userRepository: _userRepository,
 //                  receiptStatusType: ReceiptStatusType.Reviewed),
-            ),
+                ),
             Expanded(
               flex: 1,
-              child:
-              Padding(
+              child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 20),
                 child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
                     ReportButton(
-                      onPressed:
-                      isLoginButtonEnabled() ? _onReportSaved : null,
+                      onPressed: isLoginButtonEnabled() ? _onReportSaved : null,
 //                      _onReportSaved,
                       buttonName: 'Save group',
                     ),
                     ReportButton(
                       onPressed:
-                      isLoginButtonEnabled() ? _onReportSubmitted : null,
+                          isLoginButtonEnabled() ? _onReportSubmitted : null,
                       buttonName: 'Archive group',
                     ),
                   ],
                 ),
               ),
             ),
-
           ],
         ),
       ),
@@ -317,25 +362,22 @@ class _EditReportScreenState extends State<EditReportScreen> {
     super.dispose();
   }
 
-  Future<void> addReport(Report report) async{
+  Future<void> addReport(Report report) async {
     await _userRepository.reportRepository.addReport(report);
 //    await _userRepository.reportRepository.updateReport(report, true);
-    setState(() {
-
-    });
+    setState(() {});
   }
 
-  Future<void> saveReport(Report report) async{
+  Future<void> saveReport(Report report) async {
     await _userRepository.reportRepository.updateReport(report, true);
 //    await _userRepository.reportRepository.updateReport(report, true);
-    setState(() {
-
-    });
+    setState(() {});
   }
 
 //  void _onReportSaved() {
 //    Report newReport = new Report();
 //    newReport.id = 0;
+//    newReport.userId = _userRepository.userId;
 //    newReport.statusId = 1;
 //    newReport.createDateTime = DateTime.now();
 //    newReport.updateDateTime = DateTime.now();
@@ -354,11 +396,15 @@ class _EditReportScreenState extends State<EditReportScreen> {
     _report.reportName = _emailController.text;
     _report.description = _passwordController.text;
     _report.receiptIds = [];
-    for (int i = 0; i < _userRepository.receiptRepository.cachedReceiptItems.length; i++) {
-      _report.receiptIds.add(_userRepository.receiptRepository.cachedReceiptItems[i].id);
+    for (int i = 0;
+        i < _userRepository.receiptRepository.cachedReceiptItems.length;
+        i++) {
+      _report.receiptIds
+          .add(_userRepository.receiptRepository.cachedReceiptItems[i].id);
     }
     saveReport(_report);
-    print('Save ${_emailController.text} ${_passwordController.text} ${_userRepository.receiptRepository.cachedReceiptItems}');
+    print(
+        'Save ${_emailController.text} ${_passwordController.text} ${_userRepository.receiptRepository.cachedReceiptItems}');
     Navigator.pop(context);
   }
 
@@ -370,6 +416,7 @@ class _EditReportScreenState extends State<EditReportScreen> {
 //  void _onReportSubmitted() {
 //    Report newReport = new Report();
 //    newReport.id = 0;
+//    newReport.userId = _userRepository.userId;
 //    newReport.statusId = 2;
 //    newReport.createDateTime = DateTime.now();
 //    newReport.updateDateTime = DateTime.now();
@@ -385,13 +432,13 @@ class _EditReportScreenState extends State<EditReportScreen> {
 //  }
 
   void _onAddReceipts() {
-      Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) {
-          return AddReceiptsScreen(
-            userRepository: _userRepository,
-            title: 'Add Receipts',
-          );
-        }),
-      );
-    }
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) {
+        return AddReceiptsScreen(
+          userRepository: _userRepository,
+          title: 'Add Receipts',
+        );
+      }),
+    );
+  }
 }

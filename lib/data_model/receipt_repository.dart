@@ -12,16 +12,24 @@ export "receipt.dart";
 export 'data_result.dart';
 export 'enums.dart';
 
+class amountPair {
+  double amount;
+  int id;
+
+  amountPair({this.amount, this.id});
+}
 class ReceiptRepository extends IRRepository {
   List<ReceiptListItem> receipts = new List<ReceiptListItem>();
   List<ReceiptListItem> selectedReceipts = new List<ReceiptListItem>();
   List<ReceiptListItem> cachedReceiptItems;
+  List<amountPair> cachedReceiptItemsAmount;
   List<ReceiptListItem> candidateReceiptItems;
   bool _dataFetched = false;
   Lock _lock = new Lock();
 
   void resetCachedReceiptItems(ReportRepository reportRepository, {int reportID = 0}) {
     cachedReceiptItems = [];
+    cachedReceiptItemsAmount = [];
     candidateReceiptItems = [];
     candidateReceiptItems = getReceiptItems(ReceiptStatusType.Reviewed);
     var _receiptsInReportSet = new Set<ReceiptListItem>();

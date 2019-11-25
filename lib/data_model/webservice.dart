@@ -11,6 +11,7 @@ export 'data_result.dart';
 
 class Urls {
   static String ServiceBaseUrl = "http://10.0.2.2:3001/";
+  static String ExchangeRateBaseUrl = "https://api.exchangeratesapi.io/";
 
   // Receipt related APIs
   static String GetReceipts = ServiceBaseUrl + "Receipt/GetReceipts";
@@ -41,6 +42,7 @@ class Urls {
   static String UpdateReportWithReceipts = ServiceBaseUrl + "Report/UpdateReportWithReceipts";
   static String UpdateReportWithoutReceipts = ServiceBaseUrl + "Report/UpdateReportWithoutReceipts";
 
+  static String GetExchangeRate = ExchangeRateBaseUrl;
   // User Urls
   static String CreateNewUser = ServiceBaseUrl + "User/create";
 }

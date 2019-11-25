@@ -98,7 +98,7 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
                 itemBuilder: (context, index) {
                   return ListTile(
                     title: Text('${items[index].name} ${items[index].symbol} ${items[index].country}'),
-                    trailing: (items[index].id == selectedCurrency.id) ?
+                    trailing: (items[index].id == selectedCurrency?.id) ?
                     Icon(Icons.check) : null,
                     onTap: () {
                       _setAsDefaultCurrency(items[index].id);
