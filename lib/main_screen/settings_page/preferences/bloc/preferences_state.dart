@@ -2,16 +2,16 @@ import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
 @immutable
-abstract class TranslationState extends Equatable {
-  TranslationState([List props = const []]) : super(props);
+abstract class PreferencesState extends Equatable {
+  PreferencesState([List props = const []]) : super(props);
 }
 
-class NoLanguageSet extends TranslationState {
+class NoLanguageSet extends PreferencesState {
   @override
   String toString() => 'Language Uninitialized';
 }
 
-class SetNewLanguage extends TranslationState {
+class SetNewLanguage extends PreferencesState {
   final String newLanguagePref;
 
   SetNewLanguage(this.newLanguagePref) : super([newLanguagePref]);
@@ -20,7 +20,7 @@ class SetNewLanguage extends TranslationState {
   String toString() => 'New Language Preference Requested { requestedLanguage: $newLanguagePref }';
 }
 
-class SetNewLanguageSuccess extends TranslationState {
+class SetNewLanguageSuccess extends PreferencesState {
   final String newLanguage;
 
   SetNewLanguageSuccess(this.newLanguage) : super([newLanguage]);
@@ -29,7 +29,7 @@ class SetNewLanguageSuccess extends TranslationState {
   String toString() => 'New Language Set Success { newLangauge: $newLanguage }';
 }
 
-class SetNewLanguageFail extends TranslationState {
+class SetNewLanguageFail extends PreferencesState {
   final String requestedLanguage;
 
   SetNewLanguageFail(this.requestedLanguage) : super([requestedLanguage]);

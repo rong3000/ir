@@ -8,6 +8,7 @@ import 'package:intelligent_receipt/main_screen/settings_page/currency_screen/cu
 import 'package:intelligent_receipt/main_screen/settings_page/documents_screen/documents_screen.dart';
 import 'package:intelligent_receipt/main_screen/settings_page/invite_screen/invite_screen.dart';
 import 'package:intelligent_receipt/main_screen/settings_page/plan_screen/plan_screen.dart';
+import 'package:intelligent_receipt/main_screen/settings_page/preferences/preferences_menu_card.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 
 
@@ -87,6 +88,7 @@ class _SettingsPageState extends State<SettingsPage> {
 //                ),
               ),
             ),
+            PreferencesMenuCard(),
             Card(
               child: ListTile(
 //                leading: Icon(Icons.album),

@@ -1,5 +1,11 @@
 {
   "app": {
-    "title": "Intelligent Receipt"
+    "title": "Intelligent Receipt",
+    "settings-page": {
+      "preferences-menu-item-title": "Preferences"
+    },
+    "preferences-page": {
+      "title": "App Preferences"
+    }
   }
 }

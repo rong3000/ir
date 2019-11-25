@@ -5,9 +5,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intelligent_receipt/authentication_bloc/bloc.dart';
 import 'package:intelligent_receipt/login/login.dart';
 import 'package:intelligent_receipt/main_screen/main_screen.dart';
+import 'package:intelligent_receipt/main_screen/settings_page/preferences/bloc/preferences_bloc.dart';
+import 'package:intelligent_receipt/main_screen/settings_page/preferences/bloc/preferences_state.dart';
 import 'package:intelligent_receipt/receipt/bloc/receipt_bloc.dart';
-import 'package:intelligent_receipt/translations/bloc/translation_state.dart';
-import 'package:intelligent_receipt/translations/bloc/traslation_bloc.dart';
 import 'package:intelligent_receipt/translations/global_translations.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 import 'package:intelligent_receipt/splash_screen.dart';
@@ -34,9 +34,9 @@ void main() async {
             builder: (context) => ReceiptBloc(
                 receiptRepository: userRepository.receiptRepository),
           ),
-          BlocProvider<TranslationBloc>(
+          BlocProvider<PreferencesBloc>(
             builder: (context) =>
-                TranslationBloc(userRepository: userRepository),
+                PreferencesBloc(userRepository: userRepository),
           )
         ],
         child: App(userRepository: userRepository),
@@ -58,8 +58,8 @@ class App extends StatelessWidget {
     return RepositoryProvider(
       builder: (context) => _userRepository,
       child: BlocBuilder(
-        bloc: BlocProvider.of<TranslationBloc>(context),
-        builder: (BuildContext context, TranslationState translationState) {
+        bloc: BlocProvider.of<PreferencesBloc>(context),
+        builder: (BuildContext context, PreferencesState translationState) {
           return MaterialApp(
             home: BlocBuilder(
               bloc: BlocProvider.of<AuthenticationBloc>(context),

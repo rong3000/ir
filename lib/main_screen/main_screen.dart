@@ -27,7 +27,9 @@ class MainScreen extends StatefulWidget {
 }
 
 class MainScreenState extends State<MainScreen> {
+  
   var appTitle = allTranslations.text('app.title');
+
   final _defaultColor = Colors.grey;
   final _activeColor = Colors.blue;
   int _currentIndex = 0;

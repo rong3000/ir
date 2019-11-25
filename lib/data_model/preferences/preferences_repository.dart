@@ -3,6 +3,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 //ISO 639-1 codes
 const List<String> _supportedLanguages = ["en","zh"];
 const String _defaultLanguage = "en";
+const Map<String, String> _supportedLanguageMap = {
+  'en': 'English',
+  'zh': '中文'
+};
 
 class PreferencesRepository {
 
@@ -26,5 +30,9 @@ class PreferencesRepository {
 
   String getPreferredLanguage() {
     return this.prefs.getString('language') ?? _defaultLanguage;
-  } 
+  }
+
+  Map<String, String> getSupportedLanguages() {
+    return _supportedLanguageMap;
+  }
 }
