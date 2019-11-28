@@ -28,7 +28,11 @@ class MainScreen extends StatefulWidget {
 
 class MainScreenState extends State<MainScreen> {
   
-  var appTitle = allTranslations.text('app.title');
+  String get appTitle => allTranslations.text('app.title');
+  String get homeTabLabel => allTranslations.text('app.main-screen.home-tab-label');
+  String get receiptsTabLabel => allTranslations.text('app.main-screen.receipts-tab-label');
+  String get groupsTabLabel => allTranslations.text('app.main-screen.groups-tab-label');
+  String get settingsTabLabel => allTranslations.text('app.main-screen.settings-tab-label');
 
   final _defaultColor = Colors.grey;
   final _activeColor = Colors.blue;
@@ -39,6 +43,7 @@ class MainScreenState extends State<MainScreen> {
 
   UserRepository get _userRepository => widget._userRepository;
   get name => widget.name;
+
 
   void jumpTo(int i) {
     _controller.jumpToPage(i);
@@ -85,7 +90,7 @@ class MainScreenState extends State<MainScreen> {
                   icon: Icon(Icons.home, color: _defaultColor),
                   activeIcon: Icon(Icons.home, color: _activeColor),
                   title: Text(
-                    'Home',
+                    homeTabLabel,
                     style: TextStyle(
                         color:
                             _currentIndex != 0 ? _defaultColor : _activeColor),
@@ -94,7 +99,7 @@ class MainScreenState extends State<MainScreen> {
                   icon: Icon(Icons.receipt, color: _defaultColor),
                   activeIcon: Icon(Icons.receipt, color: _activeColor),
                   title: Text(
-                    'Receipts',
+                    receiptsTabLabel,
                     style: TextStyle(
                         color:
                             _currentIndex != 1 ? _defaultColor : _activeColor),
@@ -103,7 +108,7 @@ class MainScreenState extends State<MainScreen> {
                   icon: Icon(Icons.insert_chart, color: _defaultColor),
                   activeIcon: Icon(Icons.insert_chart, color: _activeColor),
                   title: Text(
-                    'Groups',
+                    groupsTabLabel,
                     style: TextStyle(
                         color:
                             _currentIndex != 2 ? _defaultColor : _activeColor),
@@ -112,7 +117,7 @@ class MainScreenState extends State<MainScreen> {
                   icon: Icon(Icons.settings, color: _defaultColor),
                   activeIcon: Icon(Icons.settings, color: _activeColor),
                   title: Text(
-                    'Settings',
+                    settingsTabLabel,
                     style: TextStyle(
                         color:
                             _currentIndex != 3 ? _defaultColor : _activeColor),

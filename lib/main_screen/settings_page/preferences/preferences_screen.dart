@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intelligent_receipt/data_model/preferences/preferences_repository.dart';
 import 'package:intelligent_receipt/main_screen/settings_page/preferences/bloc/preferences_bloc.dart';
+import 'package:intelligent_receipt/main_screen/settings_page/preferences/bloc/preferences_event.dart';
 import 'package:intelligent_receipt/main_screen/settings_page/preferences/bloc/preferences_state.dart';
 import 'package:intelligent_receipt/translations/global_translations.dart';
 import 'package:intelligent_receipt/user_repository.dart';
@@ -18,7 +19,7 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
   PreferencesRepository _prefsRepository;
   PreferencesBloc _prefsBloc;
   String selectedLanguage;
-  String pageTitle = allTranslations.text('app.preferences-page.title');
+  String get pageTitle => allTranslations.text('app.preferences-page.title');
 
   @override
   void initState() {
@@ -40,7 +41,7 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
   }
 
   String getDefaultLanguage(){
-    return _prefsRepository.getDefaultLanguage();
+    return _prefsRepository.getPreferredLanguage();
   }
 
   @override
@@ -61,6 +62,7 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
                   setState(() {
                     selectedLanguage = newValue;
                   });
+                  _prefsBloc.dispatch(LanguageChanged(preferredLanguage: newValue));
                 },)
             ],
           ),

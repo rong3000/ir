@@ -36,7 +36,7 @@ void main() async {
           ),
           BlocProvider<PreferencesBloc>(
             builder: (context) =>
-                PreferencesBloc(userRepository: userRepository),
+                PreferencesBloc(prefsRepository: userRepository.preferencesRepository),
           )
         ],
         child: App(userRepository: userRepository),
@@ -59,7 +59,10 @@ class App extends StatelessWidget {
       builder: (context) => _userRepository,
       child: BlocBuilder(
         bloc: BlocProvider.of<PreferencesBloc>(context),
-        builder: (BuildContext context, PreferencesState translationState) {
+        builder: (BuildContext context, PreferencesState prefsState) {
+          if (prefsState is SetNewLanguageSuccess){
+            allTranslations.setNewLanguage(prefsState.newLanguage);
+          }
           return MaterialApp(
             home: BlocBuilder(
               bloc: BlocProvider.of<AuthenticationBloc>(context),

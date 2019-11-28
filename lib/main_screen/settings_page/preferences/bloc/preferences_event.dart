@@ -12,6 +12,10 @@ class DefaultLanguageSet extends PreferencesEvent {
 }
 
 class LanguageChanged extends PreferencesEvent {
+  final String preferredLanguage;
+
+  LanguageChanged({@required this.preferredLanguage}): super([preferredLanguage]);
+  
   @override
   String toString() => 'New Language Set';
 }

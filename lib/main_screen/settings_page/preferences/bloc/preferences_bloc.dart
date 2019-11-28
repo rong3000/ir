@@ -1,17 +1,17 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
+import 'package:intelligent_receipt/data_model/preferences/preferences_repository.dart';
 import 'package:intelligent_receipt/main_screen/settings_page/preferences/bloc/preferences_event.dart';
 import 'package:intelligent_receipt/main_screen/settings_page/preferences/bloc/preferences_state.dart';
 import 'package:meta/meta.dart';
-import 'package:intelligent_receipt/user_repository.dart';
 
 class PreferencesBloc
     extends Bloc<PreferencesEvent, PreferencesState> {
-  final UserRepository _userRepository;
+  final PreferencesRepository _prefsRepository;
 
-  PreferencesBloc({@required UserRepository userRepository})
-      : assert(userRepository != null),
-        _userRepository = userRepository;
+  PreferencesBloc({@required PreferencesRepository prefsRepository})
+      : assert(prefsRepository != null),
+        _prefsRepository = prefsRepository;
 
   @override
   PreferencesState get initialState => NoLanguageSet();
@@ -24,7 +24,7 @@ class PreferencesBloc
     if (event is DefaultLanguageSet) {
       yield* mapSetDefaultLangugeToState();
     } else if (event is LanguageChanged) {
-      yield* _mapLanguageChangeToState();
+      yield* _mapLanguageChangeToState(event);
     }
   }
 
@@ -32,7 +32,12 @@ class PreferencesBloc
     yield null; //TODO: set default  language
   }
 
-  Stream<PreferencesState> _mapLanguageChangeToState() async* {
-    yield null; //TODO: change language
+  Stream<PreferencesState> _mapLanguageChangeToState(LanguageChanged event) async* {
+    if (await _prefsRepository.setPreferredLanguage(event.preferredLanguage)){
+      yield SetNewLanguageSuccess(event.preferredLanguage);
+    }
+    else {
+      yield SetNewLanguageFail(event.preferredLanguage);
+    }
   }
 }

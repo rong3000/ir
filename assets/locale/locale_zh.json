@@ -1,5 +1,17 @@
 {
   "app": {
-    "title": "智能收据"
+    "title": "智能收据",
+    "settings-page": {
+      "preferences-menu-item-title": "选项"
+    },
+    "preferences-page": {
+      "title": "应用程式偏好设定"
+    },
+    "main-screen": {
+      "home-tab-label": "家",
+      "receipts-tab-label": "收据",
+      "groups-tab-label": "团体",
+      "settings-tab-label": "设定值"
+    }
   }
 }
