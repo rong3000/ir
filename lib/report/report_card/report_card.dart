@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intelligent_receipt/data_model/currency.dart';
 import 'package:intelligent_receipt/data_model/report.dart';
 import 'package:intelligent_receipt/data_model/webservice.dart';
 import 'package:intelligent_receipt/report/report_list/report_list.dart';
@@ -11,15 +12,18 @@ import 'package:intl/intl.dart';
 
 class ReportCard extends StatefulWidget {
   final UserRepository _userRepository;
+  final Currency _baseCurrency;
 
   const ReportCard({
     Key key,
     @required Report reportItem,
     @required UserRepository userRepository,
+    @required Currency baseCurrency,
     this.actions,
   })  : assert(reportItem != null && userRepository != null),
         _userRepository = userRepository,
         _reportItem = reportItem,
+        _baseCurrency = baseCurrency,
         super(key: key);
 
   final Report _reportItem;
@@ -114,7 +118,7 @@ class _ReportCardState extends State<ReportCard> {
                           Padding(
                             padding: const EdgeInsets.only(top: 0.0, bottom: 6.0),
                             child: Text(
-                              'Total: ${widget._reportItem.getTotalAmount(_userRepository.receiptRepository)}',
+                              'Total: ${widget._baseCurrency != null ? widget._baseCurrency.code: ''} ${widget._baseCurrency != null ? widget._baseCurrency.symbol: ''} ${widget._reportItem.getTotalAmount(_userRepository.receiptRepository)}',
                               style: companyNameStyle.apply(fontSizeFactor: 1.2),
 
                             ),
