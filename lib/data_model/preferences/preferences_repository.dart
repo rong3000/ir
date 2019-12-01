@@ -1,3 +1,4 @@
+import 'package:intelligent_receipt/translations/global_translations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 //ISO 639-1 codes
@@ -25,9 +26,13 @@ class PreferencesRepository {
     if (!_supportedLanguages.contains(lang)) {
       return Future.value(false);
     }
+    allTranslations.setNewLanguage(lang);
     return this.prefs.setString('language', lang);
   } 
 
+  ///
+  /// Get the preferred langauge code, e.g. 'en' or 'zh'
+  ///
   String getPreferredLanguage() {
     return this.prefs.getString('language') ?? _defaultLanguage;
   }

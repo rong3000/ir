@@ -20,6 +20,8 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
   PreferencesBloc _prefsBloc;
   String selectedLanguage;
   String get pageTitle => allTranslations.text('app.preferences-page.title');
+  String get languageDropDownLabel => allTranslations.text('app.preferences-page.language-dropdown-label');
+
 
   @override
   void initState() {
@@ -30,17 +32,17 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
     super.initState();
   }
 
-  List<DropdownMenuItem> getLanguageChoices(){
+  List<DropdownMenuItem> getLanguageChoices() {
     var supportedLanguages = _prefsRepository.getSupportedLanguages();
     var items = List<DropdownMenuItem>();
-    supportedLanguages.forEach((key, value){
+    supportedLanguages.forEach((key, value) {
       items.add(DropdownMenuItem(value: key, child: Text(value)));
     });
 
     return items;
   }
 
-  String getDefaultLanguage(){
+  String getDefaultLanguage() {
     return _prefsRepository.getPreferredLanguage();
   }
 
@@ -53,18 +55,20 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
           appBar: AppBar(
             title: Text(pageTitle),
           ),
-          body: Column(
-            children: <Widget>[
-              DropdownButtonFormField(
-                items: getLanguageChoices(),
-                value: selectedLanguage,
-                onChanged: (newValue) {
-                  setState(() {
-                    selectedLanguage = newValue;
-                  });
-                  _prefsBloc.dispatch(LanguageChanged(preferredLanguage: newValue));
-                },)
-            ],
+          body: Padding(
+            padding: EdgeInsets.all(8),
+            child: Column(
+              children: <Widget>[
+                DropdownButtonFormField(
+                  decoration: InputDecoration(labelText: languageDropDownLabel),
+                  items: getLanguageChoices(),
+                  value: state.language,
+                  onChanged: (newValue) {
+                    _prefsBloc.dispatch(LanguageChanged(preferredLanguage: newValue));
+                  },
+                )
+              ],
+            ),
           ),
         );
       },

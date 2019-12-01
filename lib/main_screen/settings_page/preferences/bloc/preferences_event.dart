@@ -6,7 +6,7 @@ abstract class PreferencesEvent extends Equatable {
   PreferencesEvent([List props = const []]) : super(props);
 }
 
-class DefaultLanguageSet extends PreferencesEvent {
+class SetPreferredLanguage extends PreferencesEvent {
   @override
   String toString() => 'Default Language Selected';
 }

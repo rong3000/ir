@@ -3,37 +3,34 @@ import 'package:meta/meta.dart';
 
 @immutable
 abstract class PreferencesState extends Equatable {
-  PreferencesState([List props = const []]) : super(props);
+  final String language;
+  PreferencesState(this.language, [List props = const []]) : super(props);
 }
 
 class NoLanguageSet extends PreferencesState {
+  NoLanguageSet(String language) : super(language);
+
   @override
   String toString() => 'Language Uninitialized';
 }
 
 class SetNewLanguage extends PreferencesState {
-  final String newLanguagePref;
-
-  SetNewLanguage(this.newLanguagePref) : super([newLanguagePref]);
+  SetNewLanguage(String language) : super(language, [language]);
 
   @override
-  String toString() => 'New Language Preference Requested { requestedLanguage: $newLanguagePref }';
+  String toString() => 'New Language Preference Requested { requestedLanguage: $language }';
 }
 
 class SetNewLanguageSuccess extends PreferencesState {
-  final String newLanguage;
-
-  SetNewLanguageSuccess(this.newLanguage) : super([newLanguage]);
+  SetNewLanguageSuccess(String language) : super(language, [language]);
 
   @override
-  String toString() => 'New Language Set Success { newLangauge: $newLanguage }';
+  String toString() => 'New Language Set Success { newLangauge: $language }';
 }
 
 class SetNewLanguageFail extends PreferencesState {
-  final String requestedLanguage;
-
-  SetNewLanguageFail(this.requestedLanguage) : super([requestedLanguage]);
+  SetNewLanguageFail(String language) : super(language, [language]);
 
   @override
-  String toString() => 'New Language Change Failed { requestedLanguage: $requestedLanguage }';
+  String toString() => 'New Language Change Failed { requestedLanguage: $language }';
 }

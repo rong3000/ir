@@ -6,6 +6,7 @@ import 'package:intelligent_receipt/authentication_bloc/bloc.dart';
 import 'package:intelligent_receipt/login/login.dart';
 import 'package:intelligent_receipt/main_screen/main_screen.dart';
 import 'package:intelligent_receipt/main_screen/settings_page/preferences/bloc/preferences_bloc.dart';
+import 'package:intelligent_receipt/main_screen/settings_page/preferences/bloc/preferences_event.dart';
 import 'package:intelligent_receipt/main_screen/settings_page/preferences/bloc/preferences_state.dart';
 import 'package:intelligent_receipt/receipt/bloc/receipt_bloc.dart';
 import 'package:intelligent_receipt/translations/global_translations.dart';
@@ -36,7 +37,8 @@ void main() async {
           ),
           BlocProvider<PreferencesBloc>(
             builder: (context) =>
-                PreferencesBloc(prefsRepository: userRepository.preferencesRepository),
+                PreferencesBloc(prefsRepository: userRepository.preferencesRepository)
+                ..dispatch(SetPreferredLanguage())
           )
         ],
         child: App(userRepository: userRepository),
@@ -60,9 +62,6 @@ class App extends StatelessWidget {
       child: BlocBuilder(
         bloc: BlocProvider.of<PreferencesBloc>(context),
         builder: (BuildContext context, PreferencesState prefsState) {
-          if (prefsState is SetNewLanguageSuccess){
-            allTranslations.setNewLanguage(prefsState.newLanguage);
-          }
           return MaterialApp(
             home: BlocBuilder(
               bloc: BlocProvider.of<AuthenticationBloc>(context),
