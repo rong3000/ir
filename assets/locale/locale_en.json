@@ -5,13 +5,29 @@
       "preferences-menu-item-title": "Preferences"
     },
     "preferences-page": {
-      "title": "App Preferences"
+      "title": "App Preferences",
+      "language-dropdown-label": "Select App Language"
     },
     "main-screen": {
       "home-tab-label": "Home",
       "receipts-tab-label": "Rceipts",
       "groups-tab-label": "Groups",
       "settings-tab-label": "Settings"
+    },
+    "login-screen": {
+      "create-account-label": "Create an Account",
+      "login-button-label": "Login",
+      "fb-signin-label": "Sign in with Facebook",
+      "google-signin-label": "Sign in with Google",
+      "login-fail-message": "Login Failed",
+      "logging-in-status-message": "Logging In...",
+      "invalid-email-message": "Invalid Email",
+      "invalid-password-message" : "Invalid Password"
     }
+  },
+  "words" : {
+    "email": "Email",
+    "password": "Password",
+    "login": "Login"
   }
 }

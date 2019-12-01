@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intelligent_receipt/translations/global_translations.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 import 'package:intelligent_receipt/authentication_bloc/bloc.dart';
 import 'package:intelligent_receipt/login/login.dart';
@@ -50,7 +51,7 @@ class _LoginFormState extends State<LoginForm> {
               SnackBar(
                 content: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [Text('Login Failure'), Icon(Icons.error)],
+                  children: [Text(allTranslations.text('app.login-screen.login-fail-message')), Icon(Icons.error)],
                 ),
                 backgroundColor: Colors.red,
               ),
@@ -64,7 +65,7 @@ class _LoginFormState extends State<LoginForm> {
                 content: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Logging In...'),
+                    Text(allTranslations.text('app.login-screen.logging-in-status-message')),
                     CircularProgressIndicator(),
                   ],
                 ),
@@ -91,25 +92,25 @@ class _LoginFormState extends State<LoginForm> {
                     controller: _emailController,
                     decoration: InputDecoration(
                       icon: Icon(Icons.email),
-                      labelText: 'Email',
+                      labelText: allTranslations.text('words.email'),
                     ),
                     autovalidate: true,
                     autocorrect: false,
                     validator: (_) {
-                      return !state.isEmailValid ? 'Invalid Email' : null;
+                      return !state.isEmailValid ?  allTranslations.text('app.login-screen.invalid-email-message') : null;
                     },
                   ),
                   TextFormField(
                     controller: _passwordController,
                     decoration: InputDecoration(
                       icon: Icon(Icons.lock),
-                      labelText: 'Password',
+                      labelText:  allTranslations.text('words.password'),
                     ),
                     obscureText: true,
                     autovalidate: true,
                     autocorrect: false,
                     validator: (_) {
-                      return !state.isPasswordValid ? 'Invalid Password' : null;
+                      return !state.isPasswordValid ? allTranslations.text('app.login-screen.invalid-password-message') : null;
                     },
                   ),
                   Padding(
