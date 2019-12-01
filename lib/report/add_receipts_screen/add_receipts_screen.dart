@@ -28,6 +28,7 @@ class AddReceiptsScreen extends StatefulWidget {
 }
 
 class _AddReceiptsScreenState extends State<AddReceiptsScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   UserRepository get _userRepository => widget._userRepository;
   TextEditingController editingController = TextEditingController();
   List<Currency> duplicateItems;
@@ -37,7 +38,6 @@ class _AddReceiptsScreenState extends State<AddReceiptsScreen> {
   final TextEditingController _passwordController = TextEditingController();
   List<ReceiptListItem> candidateReceiptItems;
   Currency baseCurrency;
-
 
   bool get isPopulated => _emailController.text.isNotEmpty;
 
@@ -67,7 +67,8 @@ class _AddReceiptsScreenState extends State<AddReceiptsScreen> {
     duplicateItems = _userRepository.settingRepository.getCurrencies();
     items.addAll(duplicateItems);
     super.initState();
-    candidateReceiptItems = _userRepository.receiptRepository.candidateReceiptItems;
+    candidateReceiptItems =
+        _userRepository.receiptRepository.candidateReceiptItems;
 //    getBaseCurrency();
   }
 
@@ -114,9 +115,12 @@ class _AddReceiptsScreenState extends State<AddReceiptsScreen> {
 //    setState(() {});
 //  }
 
-  Future<Exchange> getExchangeRateFromServer(DateTime receiptDatetime, String baseCurrencyCode) async {
-    final response =
-    await http.get(Urls.GetExchangeRate + DateFormat("yyyy-MM-dd").format(receiptDatetime.toLocal()).toString() + "?base=" + baseCurrencyCode);
+  Future<Exchange> getExchangeRateFromServer(
+      DateTime receiptDatetime, String baseCurrencyCode) async {
+    final response = await http.get(Urls.GetExchangeRate +
+        DateFormat("yyyy-MM-dd").format(receiptDatetime.toLocal()).toString() +
+        "?base=" +
+        baseCurrencyCode);
     if (response.statusCode == 200) {
       // If server returns an OK response, parse the JSON.
       return Exchange.fromJson(json.decode(response.body));
@@ -134,46 +138,53 @@ class _AddReceiptsScreenState extends State<AddReceiptsScreen> {
   }
 
   Future<void> calculateExchange(int id) async {
-
     await _userRepository.settingRepository.getSettingsFromServer();
     baseCurrency = _userRepository.settingRepository.getDefaultCurrency();
-    if (_userRepository.receiptRepository.getReceiptItem(id).currencyCode == baseCurrency.code)
-    {
+    if (_userRepository.receiptRepository.getReceiptItem(id).currencyCode ==
+        baseCurrency.code) {
       amountPair cachedReceiptItemsAmount2 = new amountPair();
-      cachedReceiptItemsAmount2.amount = _userRepository.receiptRepository.getReceiptItem(id).totalAmount;
+      cachedReceiptItemsAmount2.amount =
+          _userRepository.receiptRepository.getReceiptItem(id).totalAmount;
       cachedReceiptItemsAmount2.id = id;
-      _userRepository.receiptRepository.cachedReceiptItemsAmount.add(cachedReceiptItemsAmount2);
+      _userRepository.receiptRepository.cachedReceiptItemsAmount
+          .add(cachedReceiptItemsAmount2);
       print('id ${id} add to group and ${cachedReceiptItemsAmount2}');
     }
-    if (_userRepository.receiptRepository.getReceiptItem(id).currencyCode != baseCurrency.code) {
+    if (_userRepository.receiptRepository.getReceiptItem(id).currencyCode !=
+        baseCurrency.code) {
       amountPair cachedReceiptItemsAmount1 = new amountPair();
 
       Exchange exchange = await getExchangeRateFromServer(
-          _userRepository.receiptRepository
-              .getReceiptItem(id)
-              .receiptDatetime, baseCurrency.code);
-      cachedReceiptItemsAmount1.amount = _userRepository.receiptRepository
-          .getReceiptItem(id)
-          .totalAmount /
-          exchange.rates.getRate(_userRepository.receiptRepository
-              .getReceiptItem(id)
-              .currencyCode);
+          _userRepository.receiptRepository.getReceiptItem(id).receiptDatetime,
+          baseCurrency.code);
+      cachedReceiptItemsAmount1.amount =
+          _userRepository.receiptRepository.getReceiptItem(id).totalAmount /
+              exchange.rates.getRate(_userRepository.receiptRepository
+                  .getReceiptItem(id)
+                  .currencyCode);
 
       cachedReceiptItemsAmount1.id = id;
-      _userRepository.receiptRepository.cachedReceiptItemsAmount.add(
-          cachedReceiptItemsAmount1);
+      _userRepository.receiptRepository.cachedReceiptItemsAmount
+          .add(cachedReceiptItemsAmount1);
     }
   }
 
+  void showInSnackBar(String value) {
+    _scaffoldKey.currentState.showSnackBar(SnackBar(
+      content: Text(value),
+    ));
+  }
+
   void addAction(int id) {
-    _userRepository.receiptRepository.cachedReceiptItems.add(_userRepository.receiptRepository.getReceiptItem(id));
+    _userRepository.receiptRepository.cachedReceiptItems
+        .add(_userRepository.receiptRepository.getReceiptItem(id));
     calculateExchange(id);
 
-    candidateReceiptItems = _userRepository.receiptRepository.removeCandidateItems(id);
-        print('id ${id} add to group and ');
-    setState(() {
-
-    });
+    candidateReceiptItems =
+        _userRepository.receiptRepository.removeCandidateItems(id);
+    print('id ${id} add to group and ');
+    showInSnackBar('Receipt id ${id} add to group');
+    setState(() {});
   }
 
   @override
@@ -185,6 +196,7 @@ class _AddReceiptsScreenState extends State<AddReceiptsScreen> {
     a.label = 'Add to Group';
     actions.add(a);
     return Scaffold(
+      key: _scaffoldKey,
       appBar: new AppBar(
         title: Text(widget.title),
       ),

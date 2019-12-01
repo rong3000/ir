@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:intelligent_receipt/data_model/currency.dart';
 import 'package:intelligent_receipt/data_model/enums.dart';
 import 'package:intelligent_receipt/data_model/report.dart';
 import 'package:intelligent_receipt/report/edit_report_screen/edit_report_screen.dart';
@@ -91,14 +92,17 @@ class _DateTimePicker extends StatelessWidget {
 class ReportList extends StatefulWidget {
   final UserRepository _userRepository;
   final ReportStatusType _reportStatusType;
+  final Currency _baseCurrency;
 
   ReportList({
     Key key,
     @required UserRepository userRepository,
     @required ReportStatusType reportStatusType,
+    @required Currency baseCurrency,
   })  : assert(userRepository != null),
         _userRepository = userRepository,
         _reportStatusType = reportStatusType,
+        _baseCurrency = baseCurrency,
         super(key: key) {}
 
   @override
@@ -715,6 +719,7 @@ class ReportListState extends State<ReportList> {
                               reportItem: sortedReportItems[index],
                               userRepository: _userRepository,
                               actions: actions,
+                              baseCurrency: widget._baseCurrency,
                             );
                           });
                     } else {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/rendering.dart';
+import 'package:intelligent_receipt/data_model/currency.dart';
 import 'package:intelligent_receipt/data_model/enums.dart';
 import 'package:intelligent_receipt/data_model/receipt.dart';
 import 'package:intelligent_receipt/main_screen/bloc/home_bloc.dart';
@@ -76,6 +77,7 @@ class _ReportsPageState extends State<ReportsPage> {
 
   UserRepository get _userRepository => widget._userRepository;
   get _reportStatusType => widget._reportStatusType;
+  Currency baseCurrency;
 
   void _showMessage() {
     showDialog<void>(
@@ -96,9 +98,18 @@ class _ReportsPageState extends State<ReportsPage> {
     );
   }
 
+  Future<void> getBaseCurrency() async {
+    await _userRepository.settingRepository.getSettingsFromServer();
+    baseCurrency = _userRepository.settingRepository.getDefaultCurrency();
+    setState(() {
+
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+    getBaseCurrency();
 //    _homeBloc = BlocProvider.of<HomeBloc>(context);
   }
 
@@ -138,7 +149,9 @@ class _ReportsPageState extends State<ReportsPage> {
 //                        DataTableDemo(
                   ReportList(
                       userRepository: _userRepository,
-                      reportStatusType: _reportStatusType),
+                      reportStatusType: _reportStatusType,
+                      baseCurrency: baseCurrency,
+                  ),
 //                          Scaffold(
 //                            appBar: AppBar(title: SortingBar(userRepository: _userRepository),),
 //                            body: ReportList(
