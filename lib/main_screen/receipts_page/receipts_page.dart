@@ -9,6 +9,7 @@ import 'package:flutter/rendering.dart';
 import 'package:intelligent_receipt/receipt/add_edit_reciept_manual/add_edit_receipt_manual.dart';
 import 'package:intelligent_receipt/receipt/receipt_list/receipt_list.dart';
 import 'package:intelligent_receipt/receipt/upload_receipt_image/upload_receipt_image.dart';
+import 'package:intelligent_receipt/translations/global_translations.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 import 'package:intelligent_receipt/data_model/webservice.dart';
 import 'dart:math';
@@ -34,8 +35,8 @@ class ReceiptsPage extends StatelessWidget {
           receiptStatusType: ReceiptStatusType.Reviewed),
     ];
     final _kTabs = <Tab>[
-      Tab(text: 'Unreviewed'),
-      Tab(text: 'Reviewed'),
+      Tab(text: allTranslations.text('app.receipts-page.unreviewed-tab-title')),
+      Tab(text: allTranslations.text('app.receipts-page.reviewed-tab-title')),
     ];
     return DefaultTabController(
       length: _kTabs.length,
@@ -145,7 +146,7 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
                       AsyncSnapshot<DataResult> snapshot) {
                     switch (snapshot.connectionState) {
                       case ConnectionState.none:
-                        return new Text('Loading...');
+                        return new Text(allTranslations.text('app.common.loading-status'));
                       case ConnectionState.waiting:
                         return new Center(
                             child: new CircularProgressIndicator());
@@ -160,10 +161,10 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
                           List<ActionWithLabel> actions = [];
                           ActionWithLabel r = new ActionWithLabel();
                           r.action = reviewAction;
-                          r.label = 'Review';
+                          r.label = allTranslations.text('words.review');
                           ActionWithLabel d = new ActionWithLabel();
                           d.action = deleteAction;
-                          d.label = 'Delete';
+                          d.label = allTranslations.text('words.delete');
                           actions.add(r);
                           actions.add(d);
                           return Scaffold(
@@ -233,7 +234,7 @@ class _FancyFabState extends State<FancyFab>
       var ri = await ImagePicker.pickImage(source: source, maxWidth: 600);
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => UploadReceiptImage(userRepository: _userRepository, title: "Snap new receipt", imageFile: ri,)),
+        MaterialPageRoute(builder: (context) => UploadReceiptImage(userRepository: _userRepository, title: allTranslations.text('app.snap-receipt-page.title'), imageFile: ri,)),
       );
     }
   }
@@ -244,16 +245,16 @@ class _FancyFabState extends State<FancyFab>
       //barrierDismissible: true, // Allow to be closed without selecting option
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Select Image Source'),
+          title: Text(allTranslations.text('app.select-image-source-dialog.title')),
           actions: <Widget>[
             FlatButton(
-              child: Text('Camera'),
+              child: Text(allTranslations.text('words.camera')),
               onPressed: () {
                 Navigator.of(context).pop(ImageSource.camera);
               },
             ),
             FlatButton(
-              child: Text('Gallery'),
+              child: Text(allTranslations.text('words.gallery')),
               onPressed: () {
                 Navigator.of(context).pop(ImageSource.gallery);
               },
@@ -318,7 +319,7 @@ class _FancyFabState extends State<FancyFab>
       child: FloatingActionButton(
         heroTag: "add",
         onPressed: null,
-        tooltip: 'Add',
+        tooltip: allTranslations.text('words.add'),
         child: Icon(Icons.add),
       ),
     );
@@ -336,7 +337,7 @@ class _FancyFabState extends State<FancyFab>
           });
         },
 
-        tooltip: 'From Camera or gallery',
+        tooltip: allTranslations.text('app.receipts-page.add-receipt-tooltip'),
         child: Icon(Icons.camera),
 //        label: Text("From Camera"),
       ),
@@ -358,7 +359,7 @@ class _FancyFabState extends State<FancyFab>
 
           });
         },
-        tooltip: 'Manually add receipt',
+        tooltip: allTranslations.text('app.receipts-page.add-receipt-manual-tooltip'),
         child: Icon(Icons.mode_edit),
 //        label: Text("From Gallery"),
       ),
@@ -371,7 +372,7 @@ class _FancyFabState extends State<FancyFab>
         heroTag: "toggle",
         backgroundColor: _buttonColor.value,
         onPressed: animate,
-        tooltip: 'Toggle',
+        tooltip: allTranslations.text('words.toggle'),
         child: Icon(
           Icons.add,
 //          progress: _animateIcon,
@@ -517,13 +518,12 @@ class RadialAnimation extends StatelessWidget {
                       MaterialPageRoute(
                           builder: (context) => UploadReceiptImage(
                             userRepository: userRepository,
-                            title: "Snap new receipt",
+                            title: allTranslations.text('app.snap-receipt-page.title'),
                           )),
                     );
                   },
-                  tooltip: 'From Camera or gallery',
+                  tooltip: allTranslations.text('app.receipts-page.add-receipt-tooltip'),
                   child: Icon(Icons.camera),
-//        label: Text("From Camera"),
                 ),
             ),
                     Transform(
@@ -541,9 +541,8 @@ class RadialAnimation extends StatelessWidget {
                             }),
                           );
                         },
-                        tooltip: 'Manually add receipt',
+                        tooltip: allTranslations.text('app.receipts-page.add-receipt-manual-tooltip'),
                         child: Icon(Icons.mode_edit),
-//        label: Text("From Gallery"),
                       ),
                     ),
                     Transform.scale(

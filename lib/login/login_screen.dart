@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intelligent_receipt/translations/global_translations.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 import 'package:intelligent_receipt/login/login.dart';
 import 'package:upgrader/upgrader.dart';
@@ -25,7 +26,7 @@ class LoginScreen extends StatelessWidget {
     final cfg = AppcastConfiguration(url: appcastURL, supportedOS: ["android"]);
 
     return Scaffold(
-      appBar: AppBar(title: Text('Login')),
+      appBar: AppBar(title: Text(allTranslations.text('words.login'))),
       body: UpgradeAlert(
         appcastConfig: cfg,
         debugLogging: true,

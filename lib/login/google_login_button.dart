@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intelligent_receipt/login/login.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intelligent_receipt/translations/global_translations.dart';
 
 class GoogleLoginButton extends StatelessWidget {
   @override
@@ -16,7 +17,7 @@ class GoogleLoginButton extends StatelessWidget {
           LoginWithGooglePressed(),
         );
       },
-      label: Text('Sign in with Google', style: TextStyle(color: Colors.white)),
+      label: Text(allTranslations.text('app.login-screen.google-signin-label'), style: TextStyle(color: Colors.white)),
       color: Colors.redAccent,
     );
   }
