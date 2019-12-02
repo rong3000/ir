@@ -9,6 +9,7 @@ import 'package:intelligent_receipt/main_screen/settings_page/settings_page.dart
 import 'package:intelligent_receipt/main_screen/reports_page/reports_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intelligent_receipt/user_repository.dart';
+import 'package:upgrader/upgrader.dart';
 import 'receipts_page/receipts_page.dart';
 
 class MainScreen extends StatefulWidget {
@@ -45,27 +46,41 @@ class MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Upgrader().clearSavedSettings();
+
+    // On Android, setup the Appcast.
+    // On iOS, the default behavior will be to use the App Store version of
+    // the app, so update the Bundle Identifier in example/ios/Runner with a
+    // valid identifier already in the App Store.
+    final String appcastURL =
+        'https://raw.githubusercontent.com/larryaasen/upgrader/master/test/testappcast.xml';
+    final cfg = AppcastConfiguration(url: appcastURL, supportedOS: ["android"]);
+
     return BlocProvider<HomeBloc>(
       builder: (context) => HomeBloc(userRepository: _userRepository),
       child: Scaffold(
         appBar: AppBar(
           title: SearchBar(name: name),
         ),
-        body: PageView(
-          controller: _controller,
-          onPageChanged: (index) {
-            setState(() {
-              _currentIndex = index;
-            });
-          },
-          children: <Widget>[
-            HomePage(userRepository: _userRepository, action: jumpTo,),
-            ReceiptsPage(userRepository: _userRepository),
-            ReportsPage(
-                userRepository: _userRepository,
-                reportStatusType: ReportStatusType.Active),
-            SettingsPage(userRepository: _userRepository, name: name),
-          ],
+        body: UpgradeAlert(
+          appcastConfig: cfg,
+          debugLogging: true,
+          child: PageView(
+            controller: _controller,
+            onPageChanged: (index) {
+              setState(() {
+                _currentIndex = index;
+              });
+            },
+            children: <Widget>[
+              HomePage(userRepository: _userRepository, action: jumpTo,),
+              ReceiptsPage(userRepository: _userRepository),
+              ReportsPage(
+                  userRepository: _userRepository,
+                  reportStatusType: ReportStatusType.Active),
+              SettingsPage(userRepository: _userRepository, name: name),
+            ],
+          ),
         ),
         bottomNavigationBar: BottomNavigationBar(
             currentIndex: _currentIndex,
