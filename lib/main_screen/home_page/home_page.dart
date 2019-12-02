@@ -4,6 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intelligent_receipt/main_screen/bloc/bloc.dart';
 import 'package:intelligent_receipt/receipt/add_edit_reciept_manual/add_edit_receipt_manual.dart';
 import 'package:intelligent_receipt/receipt/upload_receipt_image/upload_receipt_image.dart';
+import 'package:intelligent_receipt/translations/global_translations.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 
 
@@ -47,16 +48,16 @@ class _HomePageState extends State<HomePage> {
       //barrierDismissible: true, // Allow to be closed without selecting option
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Select Image Source'),
+          title: Text(allTranslations.text('app.select-image-source-dialog.title')),
           actions: <Widget>[
             FlatButton(
-              child: Text('Camera'),
+              child: Text(allTranslations.text('words.camera')),
               onPressed: () {
                 Navigator.of(context).pop(ImageSource.camera);
               },
             ),
             FlatButton(
-              child: Text('Gallery'),
+              child: Text(allTranslations.text('words.gallery')),
               onPressed: () {
                 Navigator.of(context).pop(ImageSource.gallery);
               },
@@ -114,7 +115,7 @@ class _HomePageState extends State<HomePage> {
                                     },
                                     child: Card(
                                       child: ListTile(
-                                        title: Text('Snap Your (First) Receipt'),
+                                        title: Text(allTranslations.text('app.home-page.snap-receipt-card-title')),
                                         subtitle: Icon(Icons.photo_camera, size: MediaQuery.of(context).size.height * 0.1,),
                                       ),
                                     ),
@@ -136,7 +137,7 @@ class _HomePageState extends State<HomePage> {
                                     child: 
                                       Card(
                                       child: ListTile(
-                                        title: Text('Manually Add Your (First) Receipt'),
+                                        title: Text(allTranslations.text('app.home-page.manual-add-card-title')),
                                         subtitle: Icon(Icons.edit, size: MediaQuery.of(context).size.height * 0.1,),
                                       ),
                                     ),
@@ -153,7 +154,7 @@ class _HomePageState extends State<HomePage> {
                                     },
                                     child: Card(
                                       child: ListTile(
-                                        title: Text('View Imported Receipts'),
+                                        title: Text(allTranslations.text('app.home-page.view-imported-receipts-card-title')),
                                         subtitle: Icon(Icons.receipt, size: MediaQuery.of(context).size.height * 0.1,),
                                       ),
                                     ),
@@ -171,7 +172,7 @@ class _HomePageState extends State<HomePage> {
                                     },
                                     child: Card(
                                       child: ListTile(
-                                        title: Text('View Receipt Groups'),
+                                        title: Text(allTranslations.text('app.home-page.view-receipts-group-card-title')),
                                         subtitle: Icon(Icons.collections_bookmark, size: MediaQuery.of(context).size.height * 0.1,),
                                       ),
                                     ),

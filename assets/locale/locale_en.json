@@ -22,12 +22,40 @@
       "login-fail-message": "Login Failed",
       "logging-in-status-message": "Logging In...",
       "invalid-email-message": "Invalid Email",
-      "invalid-password-message" : "Invalid Password"
+      "invalid-password-message": "Invalid Password"
+    },
+    "select-image-source-dialog": {
+      "title": "Select Image Source"
+    },
+    "home-page": {
+      "snap-receipt-card-title": "Snap Your (First) Receipt",
+      "manual-add-card-title": "Manually Add Your (First) Receipt",
+      "view-imported-receipts-card-title": "View Imported Receipts",
+      "view-receipts-group-card-title": "View Receipt Groups"
+    },
+    "receipts-page" :{
+      "unreviewed-tab-title": "Unreviewed",
+      "reviewed-tab-title": "Reviewed",
+      "add-receipt-tooltip": "From Camera or Gallery",
+      "add-receipt-manual-tooltip": "Manually Add Receipt"
+
+    },
+    "common": {
+      "loading-status" :"Loading..."
+    },
+    "snap-receipt-page":{
+      "title": "Snap new receipt"
     }
   },
-  "words" : {
+  "words": {
     "email": "Email",
     "password": "Password",
-    "login": "Login"
+    "login": "Login",
+    "camera": "Camera",
+    "gallery": "Gallery",
+    "review": "Review",
+    "delete": "Delete",
+    "add": "Add",
+    "toggle": "Toggle"
   }
 }
