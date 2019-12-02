@@ -6,11 +6,6 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:intelligent_receipt/data_model/preferences/preferences_repository.dart';
 
-const String _storageKey = "Appli_";
-
-//Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-
-//PreferencesRepository preferences = PreferencesRepository();
 
 class GlobalTranslations {
   Locale _locale;
@@ -103,12 +98,6 @@ class GlobalTranslations {
         }
       }
     }
-    
-    // Check if we are supporting the language
-    // if not consider the default one
-    // if (!_kSupportedLanguages.contains(language)){ ///TODO
-    //   language = _kDefaultLanguage;
-    // }
     
     // Set the Locale
     _locale = Locale(language, "");

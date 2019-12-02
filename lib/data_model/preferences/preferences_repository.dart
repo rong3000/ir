@@ -8,6 +8,7 @@ const Map<String, String> _supportedLanguageMap = {
   'en': 'English',
   'zh': '中文'
 };
+const String _storageKey = "IR_"; //TODO: use this
 
 class PreferencesRepository {
 
