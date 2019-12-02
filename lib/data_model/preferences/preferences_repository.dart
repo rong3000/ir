@@ -9,6 +9,10 @@ const Map<String, String> _supportedLanguageMap = {
   'zh': '中文'
 };
 const String _storageKey = "IR_"; //TODO: use this
+  ///
+  /// Returns the list of supported locales
+  ///
+  //Iterable<Locale> supportedLocales() => _kSupportedLanguages.map<Locale>((lang) => Locale(lang, '')); //TODO
 
 class PreferencesRepository {
 

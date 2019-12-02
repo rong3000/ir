@@ -12,10 +12,6 @@ class GlobalTranslations {
   Map<dynamic, dynamic> _localizedValues;
   Map<String, String> _cache = {};
   PreferencesRepository preferences;
-  ///
-  /// Returns the list of supported locales
-  ///
-  //Iterable<Locale> supportedLocales() => _kSupportedLanguages.map<Locale>((lang) => Locale(lang, '')); //TODO
 
   ///
   /// Return the translation that corresponds to the [key]
