@@ -11,6 +11,7 @@ import 'package:synchronized/synchronized.dart';
 export "receipt.dart";
 export 'data_result.dart';
 export 'enums.dart';
+import 'message_code.dart';
 
 class amountPair {
   double amount;
@@ -111,18 +112,16 @@ class ReceiptRepository extends IRRepository {
     await _lock.synchronized(() async {
       if (_dataFetched && !forceRefresh) {
         result = DataResult.success(receipts);
-      }
-
-      if ((userRepository == null) || (userRepository.userGuid == null)) {
+      } else if ((userRepository == null) || (userRepository.userGuid == null)) {
         // Log an error
         result = DataResult.fail();
-      }
-
-      result = await webserviceGet(Urls.GetReceipts, await getToken(), timeout: 50000);
-      if (result.success) {
-        Iterable l = result.obj;
-        receipts = l.map((model) => ReceiptListItem.fromJason(model)).toList();
-        result.obj = receipts;
+      } else {
+        result = await webserviceGet(Urls.GetReceipts, await getToken(), timeout: 5000);
+        if (result.success) {
+          Iterable l = result.obj;
+          receipts = l.map((model) => ReceiptListItem.fromJason(model)).toList();
+          result.obj = receipts;
+        }
       }
 
       _dataFetched = result.success;
@@ -145,19 +144,31 @@ class ReceiptRepository extends IRRepository {
     DataResult result =
         await webservicePost(Urls.UpdateReceipt, await getToken(), jsonEncode(receipt));
     if (result.success) {
-      result.obj = Receipt.fromJason(result.obj);
+      Receipt newReceipt = Receipt.fromJason(result.obj);
+      _lock.synchronized(() {
+        // update local cache
+        for (int j = 0; j < receipts.length; j++) {
+          if (receipts[j].id == newReceipt.id) {
+            receipts[j] = newReceipt;
+            break;
+          }
+        }
+      });
     }
 
     return result;
   }
   
-  Future<DataResult> addReceipts(List<Receipt> receipts) async {
+  Future<DataResult> addReceipts(List<Receipt> newReceipts) async {
     DataResult result =
-        await webservicePost(Urls.AddReceipts, await getToken(), jsonEncode(receipts));
+        await webservicePost(Urls.AddReceipts, await getToken(), jsonEncode(newReceipts));
     if (result.success) {
-      var receipts = List<Receipt>();
-      for (var receipt in result.obj){
-        receipts.add(Receipt.fromJason(receipt));
+      Iterable l = result.obj;
+      var addedReceipts = l.map((model) => ReceiptListItem.fromJason(model)).toList();
+      for (var receipt in addedReceipts){
+        _lock.synchronized(() {
+          receipts.add(receipt);
+        });
       }
     }
 

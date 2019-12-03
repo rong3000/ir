@@ -77,15 +77,6 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
 
   UserRepository get _userRepository => widget._userRepository;
   get _receiptStatusType => widget._receiptStatusType;
-  DataResult dataResult;
-//  List<ReceiptListItem> ReceiptItems = [];
-
-  Future<void> getDataResultFromServer() async {
-//    dataResult = await _userRepository.receiptRepository.getReceiptsFromServer(forceRefresh: true);
-    dataResult = await _userRepository.receiptRepository
-        .getReceiptsFromServer(forceRefresh: true);
-    setState(() {});
-  }
 
   Future<void> reviewAction(int receiptId) async {
     // Try to get the receipt detailed information from server
@@ -123,7 +114,6 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
 
   @override
   void initState() {
-//    getDataResultFromServer();
     super.initState();
     _homeBloc = BlocProvider.of<HomeBloc>(context);
   }
@@ -140,8 +130,7 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
             bloc: _homeBloc,
             builder: (BuildContext context, HomeState state) {
               return FutureBuilder<DataResult>(
-                  future: _userRepository.receiptRepository
-                      .getReceiptsFromServer(forceRefresh: true),
+                  future: _userRepository.receiptRepository.getReceiptsFromServer(forceRefresh: false),
                   builder: (BuildContext context,
                       AsyncSnapshot<DataResult> snapshot) {
                     switch (snapshot.connectionState) {
@@ -154,37 +143,47 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
                         return new Text('');
                       case ConnectionState.done:
                         {
-                          List<ReceiptListItem> ReceiptItems = _userRepository
-                              .receiptRepository
-                              .getReceiptItems(_receiptStatusType);
+                          if (snapshot.data.success) {
+                            List<ReceiptListItem> ReceiptItems = _userRepository
+                                .receiptRepository
+                                .getReceiptItems(_receiptStatusType);
 
-                          List<ActionWithLabel> actions = [];
-                          ActionWithLabel r = new ActionWithLabel();
-                          r.action = reviewAction;
-                          r.label = allTranslations.text('words.review');
-                          ActionWithLabel d = new ActionWithLabel();
-                          d.action = deleteAction;
-                          d.label = allTranslations.text('words.delete');
-                          actions.add(r);
-                          actions.add(d);
-                          return Scaffold(
-                            body: OrientationBuilder(
-                                builder: (context, orientation) {
-                              return Column(
-                                children: <Widget>[
-                                  Flexible(
-                                      flex: 2,
-                                      fit: FlexFit.tight,
-                                      child: ReceiptList(
-                                        userRepository: _userRepository,
-                                        receiptStatusType: _receiptStatusType,
-                                        receiptItems: ReceiptItems,
-                                        actions: actions,
-                                      )),
-                                ],
-                              );
-                            }),
-                          );
+                            List<ActionWithLabel> actions = [];
+                            ActionWithLabel r = new ActionWithLabel();
+                            r.action = reviewAction;
+                            r.label = allTranslations.text('words.review');
+                            ActionWithLabel d = new ActionWithLabel();
+                            d.action = deleteAction;
+                            d.label = allTranslations.text('words.delete');
+                            actions.add(r);
+                            actions.add(d);
+                            return Scaffold(
+                              body: OrientationBuilder(
+                                  builder: (context, orientation) {
+                                return Column(
+                                  children: <Widget>[
+                                    Flexible(
+                                        flex: 2,
+                                        fit: FlexFit.tight,
+                                        child: ReceiptList(
+                                          userRepository: _userRepository,
+                                          receiptStatusType: _receiptStatusType,
+                                          receiptItems: ReceiptItems,
+                                          actions: actions,
+                                        )),
+                                  ],
+                                );
+                              }),
+                            );
+                          } else {
+                            return Column(
+                              children: <Widget>[
+                                Text(
+                                    'Failed retrieving data, error code is ${snapshot.data.messageCode}'),
+                                Text('Error message is ${snapshot.data.message}'),
+                              ],
+                            );
+                          }
                         }
                     }
                   });

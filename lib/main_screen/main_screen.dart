@@ -15,13 +15,22 @@ import 'receipts_page/receipts_page.dart';
 
 class MainScreen extends StatefulWidget {
   final UserRepository _userRepository;
+  HomePage _homePage;
+  ReceiptsPage _receiptsPage;
+  ReportsPage _reportsPage;
+  SettingsPage _settingsPage;
 
   final String name;
   MainScreen(
       {Key key, @required UserRepository userRepository, @required this.name})
       : assert(userRepository != null),
         _userRepository = userRepository,
-        super(key: key);
+        super(key: key) {
+    _homePage = new HomePage(userRepository: userRepository);
+    _receiptsPage = new ReceiptsPage(userRepository: userRepository);
+    _reportsPage = new ReportsPage(userRepository: userRepository, reportStatusType: ReportStatusType.Active);
+    _settingsPage = new SettingsPage(userRepository: userRepository, name: name);
+  }
 
   @override
   MainScreenState createState() => MainScreenState();
@@ -45,7 +54,6 @@ class MainScreenState extends State<MainScreen> {
   UserRepository get _userRepository => widget._userRepository;
   get name => widget.name;
 
-
   void jumpTo(int i) {
     _controller.jumpToPage(i);
     setState(() {
@@ -56,7 +64,7 @@ class MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     Upgrader().clearSavedSettings();
-
+    widget._homePage.setAction(jumpTo);
     // On Android, setup the Appcast.
     // On iOS, the default behavior will be to use the App Store version of
     // the app, so update the Bundle Identifier in example/ios/Runner with a
@@ -82,12 +90,10 @@ class MainScreenState extends State<MainScreen> {
               });
             },
             children: <Widget>[
-              HomePage(userRepository: _userRepository, action: jumpTo,),
-              ReceiptsPage(userRepository: _userRepository),
-              ReportsPage(
-                  userRepository: _userRepository,
-                  reportStatusType: ReportStatusType.Active),
-              SettingsPage(userRepository: _userRepository, name: name),
+              widget._homePage,
+              widget._receiptsPage,
+              widget._reportsPage,
+              widget._settingsPage,
             ],
           ),
         ),

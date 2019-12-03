@@ -41,7 +41,7 @@ class ReceiptState {
     );
   }
   
-  factory ReceiptState.uploadFail() {
+  factory ReceiptState.uploadFail(String errorMsg) {
     return ReceiptState(
       uploadinProgress: false,
       uploadSuccess: false,
@@ -49,6 +49,7 @@ class ReceiptState {
       deleteInProgress: false,
       deleteSuccess: false,
       deleteFail: false,
+      errorMessage: errorMsg
     );
   }
 

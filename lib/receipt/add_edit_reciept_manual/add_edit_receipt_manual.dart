@@ -392,7 +392,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
                 SnackBar(
                   content: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [Text('Upload Failed'), Icon(Icons.error)],
+                    children: [Text('Upload Failed: ' + state.errorMessage), Icon(Icons.error)],
                   ),
                   backgroundColor: Colors.red,
                 ),

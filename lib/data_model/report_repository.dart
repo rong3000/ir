@@ -121,19 +121,16 @@ class ReportRepository extends IRRepository {
     await _lock.synchronized(() async {
       if (_dataFetched && !forceRefresh) {
         result = DataResult.success(reports);
-      }
-
-      if ((userRepository == null) || (userRepository.userGuid == null))
-      {
+      } else if ((userRepository == null) || (userRepository.userGuid == null)) {
         // Log an error
         result = DataResult.fail();
-      }
-
-      result = await webserviceGet(Urls.GetReports, await getToken(), timeout: 5000);
-      if (result.success) {
-        Iterable l = result.obj;
-        reports = l.map((model) => Report.fromJason(model)).toList();
-        result.obj = reports;
+      } else {
+        result = await webserviceGet(Urls.GetReports, await getToken(), timeout: 5000);
+        if (result.success) {
+          Iterable l = result.obj;
+          reports = l.map((model) => Report.fromJason(model)).toList();
+          result.obj = reports;
+        }
       }
 
       _dataFetched = result.success;

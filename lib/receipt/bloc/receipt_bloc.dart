@@ -36,7 +36,7 @@ class ReceiptBloc extends Bloc<ReceiptEvent, ReceiptState> {
     if (receiptResult.success) {
       yield ReceiptState.uploadSucess();
     } else {
-      yield ReceiptState.uploadFail();
+      yield ReceiptState.uploadFail(receiptResult.message);
     }
   }
 
@@ -46,7 +46,7 @@ class ReceiptBloc extends Bloc<ReceiptEvent, ReceiptState> {
     if (receiptResult.success) {
       yield ReceiptState.uploadSucess();
     } else {
-      yield ReceiptState.uploadFail();
+      yield ReceiptState.uploadFail(receiptResult.message);
     }
   }
 

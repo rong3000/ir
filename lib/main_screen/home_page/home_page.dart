@@ -10,12 +10,16 @@ import 'package:intelligent_receipt/user_repository.dart';
 
 class HomePage extends StatefulWidget {
   final UserRepository _userRepository;
-  final Function(int) action;
+  Function(int) action;
 
   HomePage({Key key, @required UserRepository userRepository, this.action,})
       : assert(userRepository != null),
         _userRepository = userRepository,
         super(key: key);
+
+  void setAction(Function(int) newAction) {
+    action = newAction;
+  }
 
   @override
   _HomePageState createState() => _HomePageState();
