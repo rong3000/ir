@@ -36,7 +36,6 @@ class UserRepository {
      settingRepository = new SettingRepository(this);
      reportRepository = new ReportRepository(this);
      preferencesRepository = new PreferencesRepository();
-     postSignIn(); // xxx temporary put the code here
   }
 
   Future<FirebaseUser> signInWithGoogle() async {
@@ -50,6 +49,7 @@ class UserRepository {
     await _firebaseAuth.signInWithCredential(credential);
     currentUser = await _firebaseAuth.currentUser();
     userGuid = currentUser?.uid;
+    postSignIn();
     return currentUser;
   }
 
@@ -63,26 +63,30 @@ Future<FirebaseUser> signInWithFacebook() async {
     await _firebaseAuth.signInWithCredential(credential);
     currentUser = await _firebaseAuth.currentUser();
     userGuid = currentUser?.uid;
+    postSignIn();
     return currentUser;
 }
 
   Future<void> signInWithCredentials(String email, String password) async {
-    FirebaseUser currentUser = await _firebaseAuth.signInWithEmailAndPassword(
+    currentUser = await _firebaseAuth.signInWithEmailAndPassword(
       email: email,
       password: password,
     );
     userGuid = currentUser?.uid;
+    postSignIn();
   }
 
   Future<void> signUp({String email, String password}) async {
-    FirebaseUser currentUser =  await _firebaseAuth.createUserWithEmailAndPassword(
+    currentUser =  await _firebaseAuth.createUserWithEmailAndPassword(
       email: email,
       password: password,
     );
     userGuid = currentUser?.uid;
+    postSignIn();
   }
 
   Future<void> signOut() async {
+    currentUser = null;
     userGuid = null;
     return Future.wait([
       _firebaseAuth.signOut(),
@@ -92,7 +96,7 @@ Future<FirebaseUser> signInWithFacebook() async {
   }
 
   Future<bool> isSignedIn() async {
-    final currentUser = await _firebaseAuth.currentUser();
+    currentUser = await _firebaseAuth.currentUser();
     userGuid = currentUser?.uid;
     return currentUser != null;
   }
@@ -120,12 +124,13 @@ Future<FirebaseUser> signInWithFacebook() async {
   }
 
   Future<void> postSignIn() async {
-    currentUser = await _firebaseAuth.currentUser();
-    receiptRepository.getReceiptsFromServer(forceRefresh: true);
-    categoryRepository.getCategoriesFromServer(forceRefresh: true);
-    settingRepository.getCurrenciesFromServer();
-    settingRepository.getSettingsFromServer();
-    reportRepository.getReportsFromServer(forceRefresh: true);
+    if (currentUser != null) {
+      receiptRepository.getReceiptsFromServer(forceRefresh: true);
+      categoryRepository.getCategoriesFromServer(forceRefresh: true);
+      settingRepository.getCurrenciesFromServer();
+      settingRepository.getSettingsFromServer();
+      reportRepository.getReportsFromServer(forceRefresh: true);
+    }
     /*
     // Get receipts from server;
 

@@ -33,6 +33,7 @@ class AuthenticationBloc
       final isSignedIn = await _userRepository.isSignedIn();
       if (isSignedIn) {
         final name = await _userRepository.getUser();
+        _userRepository.postSignIn();
         yield Authenticated(name);
       } else {
 	    final name = 'Trial User';
