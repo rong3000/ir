@@ -179,8 +179,8 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
                             return Column(
                               children: <Widget>[
                                 Text(
-                                    'Failed retrieving data, error code is ${snapshot.data.messageCode}'),
-                                Text('Error message is ${snapshot.data.message}'),
+                                    'Failed retrieving data, error code is ${snapshot.data.messageCode}'), //no translation - looks like debug code
+                                Text( '${allTranslations.text("app.receipts-page.failed-load-receipts-message")} ${snapshot.data.message}'),
                               ],
                             );
                           }

@@ -41,7 +41,7 @@ class _HomePageState extends State<HomePage> {
       var ri = await ImagePicker.pickImage(source: source, maxWidth: 600);
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => UploadReceiptImage(userRepository: _userRepository, title: "Snap new receipt", imageFile: ri,)),
+        MaterialPageRoute(builder: (context) => UploadReceiptImage(userRepository: _userRepository, title: allTranslations.text('app.snap-receipt-page.title'), imageFile: ri,)),
       );
     }
   }
