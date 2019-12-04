@@ -102,8 +102,26 @@ Future<FirebaseUser> signInWithFacebook() async {
   }
 
   Future<String> getUser() async {
-    return ((await _firebaseAuth.currentUser()).displayName != null) ? (await _firebaseAuth.currentUser()).displayName : (await _firebaseAuth.currentUser()).email;
-  }
+    String userName = "";
+    if (currentUser == null) {
+      currentUser = await _firebaseAuth.currentUser();
+    }
+    if (currentUser != null) {
+      userName = currentUser.displayName;
+      if ((userName == null) || userName.isEmpty) {
+        userName = currentUser.email;
+      }
+      if ((userName == null) || userName.isEmpty) {
+        if (currentUser.providerData.length > 0) {
+          userName = currentUser.providerData[0].displayName;
+          if ((userName == null) || userName.isEmpty) {
+            userName = currentUser.providerData[0].email;
+          }
+        }
+      }
+    }
+    return (userName == null) ? "" : userName;
+}
 
   Future<String> getUID() async {
     FirebaseUser currentUser = await _firebaseAuth.currentUser();
