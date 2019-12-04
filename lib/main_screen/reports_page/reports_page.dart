@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intelligent_receipt/data_model/currency.dart';
 import 'package:intelligent_receipt/data_model/enums.dart';
-import 'package:intelligent_receipt/data_model/receipt.dart';
-import 'package:intelligent_receipt/main_screen/bloc/home_bloc.dart';
-import 'package:intelligent_receipt/main_screen/bloc/home_state.dart';
 import 'package:intelligent_receipt/report/add_report_screen/add_report_screen.dart';
 import 'package:intelligent_receipt/report/report_list/report_list.dart';
+import 'package:intelligent_receipt/translations/global_translations.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 
 class ReportsPage_ extends StatelessWidget {
@@ -31,8 +28,8 @@ class ReportsPage_ extends StatelessWidget {
           reportStatusType: ReportStatusType.Submitted),
     ];
     final _kTabs = <Tab>[
-      Tab(text: 'Active Groups'),
-      Tab(text: 'Submitted Groups'),
+      Tab(text: allTranslations.text('app.reports-page.active-groups-tab-label')),
+      Tab(text: allTranslations.text('app.reports-page.submitted-groups-tab-label')),
     ];
     return DefaultTabController(
       length: _kTabs.length,
@@ -90,7 +87,7 @@ class _ReportsPageState extends State<ReportsPage> {
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: const Text('OK'),
+              child: Text(allTranslations.text('words.ok')),
             ),
           ],
         );
@@ -117,7 +114,7 @@ class _ReportsPageState extends State<ReportsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _reportStatusType == ReportStatusType.Submitted? AppBar(
-        title: Text('Archived Groups'),
+        title: Text(allTranslations.text('app.reports-page.archived-groups-page-label')),
       ):null,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -126,7 +123,7 @@ class _ReportsPageState extends State<ReportsPage> {
             MaterialPageRoute(builder: (context) {
               return AddReportScreen(
                   userRepository: _userRepository,
-                  title: 'New Receipt Group',
+                  title: allTranslations.text('app.add-reports-page.title'),
               );
             }),
           );

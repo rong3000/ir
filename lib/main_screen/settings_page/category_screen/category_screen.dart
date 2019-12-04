@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intelligent_receipt/data_model/category_repository.dart';
 import 'package:intelligent_receipt/data_model/data_result.dart';
 import 'package:intelligent_receipt/data_model/setting_repository.dart';
+import 'package:intelligent_receipt/translations/global_translations.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 
 enum DialogDemoAction {
@@ -142,7 +143,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                       context: context,
                       child: AlertDialog(
                         title: Text(
-                          "Add New Category",
+                          allTranslations.text('app.category-screen.title'),
                           style: dialogTextStyle,
                         ),
                         content: TextField(
@@ -150,13 +151,13 @@ class _CategoryScreenState extends State<CategoryScreen> {
                         ),
                         actions: <Widget>[
                           FlatButton(
-                            child: const Text('CANCEL'),
+                            child: Text(allTranslations.text('words.cancel')),
                             onPressed: () {
                               Navigator.pop(context, DialogDemoAction.cancel);
                             },
                           ),
                           FlatButton(
-                            child: const Text('ADD'),
+                            child: Text(allTranslations.text('words.add')),
                             onPressed: () {
                               _addCategory(_textFieldController.text);
                               Navigator.pop(context, DialogDemoAction.rename);
@@ -182,8 +183,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 },
                 controller: editingController,
                 decoration: InputDecoration(
-                    labelText: "Search",
-                    hintText: "Search",
+                    labelText: allTranslations.text('app.category-screen.search-label'),
+                    hintText: allTranslations.text('app.category-screen.search-label'),
                     prefixIcon: Icon(Icons.search),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(25.0)))),
@@ -203,7 +204,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                         context: context,
                         child: AlertDialog(
                           title: Text(
-                            "Modify/Delete Category",
+                            allTranslations.text('app.category-screen.modify-alert-title'),
                             style: dialogTextStyle,
                           ),
                           content: TextField(
@@ -212,13 +213,13 @@ class _CategoryScreenState extends State<CategoryScreen> {
                           ),
                           actions: <Widget>[
                             FlatButton(
-                              child: const Text('CANCEL'),
+                              child: Text(allTranslations.text('words.cancel')),
                               onPressed: () {
                                 Navigator.pop(context, DialogDemoAction.cancel);
                               },
                             ),
                             FlatButton(
-                              child: const Text('RENAME'),
+                              child: Text(allTranslations.text('words.rename')),
                               onPressed: () {
                                 items[index].categoryName =
                                     _textFieldController.text;
@@ -227,7 +228,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                               },
                             ),
                             FlatButton(
-                              child: const Text('DELETE'),
+                              child: Text(allTranslations.text('words.delete')),
                               onPressed: () {
                                 _deleteCategory(items[index].id);
                                 Navigator.pop(context, DialogDemoAction.delete);
