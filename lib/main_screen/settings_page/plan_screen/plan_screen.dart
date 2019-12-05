@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intelligent_receipt/translations/global_translations.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 
 import 'credit_card_page.dart';
@@ -28,7 +29,7 @@ class _PlanScreenState extends State<PlanScreen> {
     final Orientation orientation = MediaQuery.of(context).orientation;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Plan Information'),
+        title: Text(allTranslations.text('app.plan-screen.title')),
       ),
       body: OrientationBuilder(builder: (context, orientation) {
         return Center(
@@ -65,9 +66,8 @@ class _PlanScreenState extends State<PlanScreen> {
                             (orientation == Orientation.portrait ? 0.3 : 0.4),
                         child: Card(
                           child: ListTile(
-                            title: Text('Basic Plan'),
-                            subtitle: Text(
-                                'With our basic plan, you can snap maximum 10 receipts per month and generate 2 groups.'),
+                            title: Text(allTranslations.text('app.plan-screen.basic-plan-label')),
+                            subtitle: Text(allTranslations.text('app.plan-screen.basic-plan-label-subtitle')),
                             trailing: RaisedButton(
                               onPressed: () => {
                                 Navigator.of(context).push(
@@ -78,7 +78,7 @@ class _PlanScreenState extends State<PlanScreen> {
                                   }),
                                 )
                               },
-                              child: Text('Upgrade Now'),
+                              child: Text(allTranslations.text('app.plan-screen.upgrade-now-label')),
                             ),
                           ),
                         ),
@@ -92,9 +92,8 @@ class _PlanScreenState extends State<PlanScreen> {
                             (orientation == Orientation.portrait ? 0.3 : 0.4),
                         child: Card(
                           child: ListTile(
-                            title: Text('Premium Plan'),
-                            subtitle: Text(
-                                'You will get unlimited snaps and groups.'),
+                            title: Text(allTranslations.text('app.plan-screen.premium-plan-label')),
+                            subtitle: Text(allTranslations.text('app.plan-screen.premium-plan-label-subtitle')),
                             trailing: RaisedButton(
                               onPressed: () => {
                                 Navigator.of(context).push(
@@ -105,7 +104,7 @@ class _PlanScreenState extends State<PlanScreen> {
                                   }),
                                 )
                               },
-                              child: Text('Upgrade Now'),
+                              child: Text(allTranslations.text('app.plan-screen.upgrade-now-label')),
                             ),
                           ),
                         ),

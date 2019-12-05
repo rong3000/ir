@@ -33,18 +33,53 @@
       "view-imported-receipts-card-title": "View Imported Receipts",
       "view-receipts-group-card-title": "View Receipt Groups"
     },
-    "receipts-page" :{
+    "receipts-page": {
       "unreviewed-tab-title": "Unreviewed",
       "reviewed-tab-title": "Reviewed",
       "add-receipt-tooltip": "From Camera or Gallery",
-      "add-receipt-manual-tooltip": "Manually Add Receipt"
-
+      "add-receipt-manual-tooltip": "Manually Add Receipt",
+      "failed-load-receipts-message": "Failed to load receipts: "
     },
     "common": {
-      "loading-status" :"Loading..."
+      "loading-status": "Loading..."
     },
-    "snap-receipt-page":{
+    "snap-receipt-page": {
       "title": "Snap new receipt"
+    },
+    "reports-page": {
+      "active-groups-tab-label": "Active Groups",
+      "submitted-groups-tab-label": "Submitted Groups",
+      "archived-groups-page-label": "Archived Groups"
+    },
+    "add-reports-page": {
+      "title": "New Receipt Group"
+    },
+    "category-screen": {
+      "title": "Add New Category",
+      "search-label": "Search",
+      "modify-alert-title": "Modify/Delete Category"
+    },
+    "document-screen": {
+      "title": "Document & Knowledge Center",
+      "snap-receipt-process-label": "How to snap a receipt",
+      "archived-group-features-label": "What you can do with archived groups",
+      "receipt-group-information":"Information about receipt groups"
+    },
+    "credit-card-page": {
+      "title": "Credit Card",
+      "initial-name": "Your Name",
+      "expiry-label": "Expiry",
+      "cvv-label": "CVV",
+      "card-number-label": "Credit Card Number",
+      "card-name-label": "Name on card"
+    },
+    "plan-screen": {
+      "title": "Plan Information",
+      "basic-plan-label": "Basic Plan",
+      "basic-plan-label-subtitle": "With our basic plan, you can snap maximum 10 receipts per month and generate 2 groups.",
+      "upgrade-now-label": "Upgrade Now",
+      "premium-plan-label": "Premium Plan",
+      "premium-plan-label-subtitle": "You will get unlimited snaps and groups."
     }
   },
   "words": {
@@ -56,6 +91,12 @@
     "review": "Review",
     "delete": "Delete",
     "add": "Add",
-    "toggle": "Toggle"
+    "toggle": "Toggle",
+    "ok": "OK",
+    "cancel": "Cancel",
+    "rename": "Rename",
+    "search": "Search",
+    "continue": "Continue"
+
   }
 }

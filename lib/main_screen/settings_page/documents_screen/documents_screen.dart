@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intelligent_receipt/translations/global_translations.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 
 class DocumentsScreen extends StatefulWidget {
@@ -26,7 +27,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
     final Orientation orientation = MediaQuery.of(context).orientation;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Documents & Knowledge Center'),
+        title: Text(allTranslations.text('app.document-screen.title')),
       ),
       body: OrientationBuilder(builder: (context, orientation) {
         return Center(
@@ -48,8 +49,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                           },
                           child: Card(
                             child: ListTile(
-                              title: Text(
-                                  'The process to handle Snapped receipts'),
+                              title: Text(allTranslations.text('app.document-screen.snap-receipt-process-label')),
                             ),
                           ),
                         ),
@@ -67,8 +67,8 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                           },
                           child: Card(
                             child: ListTile(
-                              title: Text(
-                                  'What you can do with archived groups'),
+                              title: Text(allTranslations.text('app.document-screen.archived-group-features-label')
+                                 ),
                             ),
                           ),
                         ),
@@ -86,8 +86,8 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                           },
                           child: Card(
                             child: ListTile(
-                              title: Text(
-                                  'Knowledge about creating IR groups'),
+                              title: Text(allTranslations.text('app.document-screen.receipt-group-information')
+                                  ),
                             ),
                           ),
                         ),
