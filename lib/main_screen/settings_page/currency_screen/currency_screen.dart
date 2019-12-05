@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intelligent_receipt/data_model/data_result.dart';
 import 'package:intelligent_receipt/data_model/setting_repository.dart';
+import 'package:intelligent_receipt/translations/global_translations.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 
 class CurrencyScreen extends StatefulWidget {
@@ -84,8 +85,8 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
                 },
                 controller: editingController,
                 decoration: InputDecoration(
-                    labelText: "Search",
-                    hintText: "Search",
+                    labelText: allTranslations.text('words.search'),
+                    hintText:  allTranslations.text('words.search'),
                     prefixIcon: Icon(Icons.search),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(25.0)))),
