@@ -18,7 +18,9 @@ Report _$ReportFromJson(Map<String, dynamic> json) {
         : DateTime.parse(json['updateDateTime'] as String)
     ..reportName = json['reportName'] as String
     ..description = json['description'] as String
-    ..receiptIds = (json['receiptIds'] as List)?.map((e) => e as int)?.toList();
+    ..receiptIds = (json['receiptIds'] as List)?.map((e) => e as int)?.toList()
+    ..totalAmount = (json['totalAmount'] as num)?.toDouble()
+    ..currencyCode = json['currencyCode'] as String;
 }
 
 Map<String, dynamic> _$ReportToJson(Report instance) => <String, dynamic>{
@@ -28,5 +30,7 @@ Map<String, dynamic> _$ReportToJson(Report instance) => <String, dynamic>{
       'updateDateTime': instance.updateDateTime?.toIso8601String(),
       'reportName': instance.reportName,
       'description': instance.description,
-      'receiptIds': instance.receiptIds
+      'receiptIds': instance.receiptIds,
+      'totalAmount': instance.totalAmount,
+      'currencyCode': instance.currencyCode
     };

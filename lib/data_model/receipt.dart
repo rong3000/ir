@@ -23,6 +23,8 @@ class ReceiptListItem {
   bool gstInclusive; 
   double warrantyPeriod;
   int decodeStatus;
+  double altTotalAmount;
+  String altCurrencyCode;
 
   ReceiptListItem();
 
@@ -40,10 +42,6 @@ class Receipt extends ReceiptListItem {
   String statusName;
   String image;
   String imageFileExtension;
-  double imageCropLeft;
-  double imageCropTop;
-  double imageCropWidth;
-  double imageCropHeight;
   DateTime statusUpdateDatetime;
 
   Receipt() : super();
