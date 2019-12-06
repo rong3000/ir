@@ -1,8 +1,10 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 class SearchBar extends StatefulWidget {
   final String name;
-  SearchBar({Key key, @required this.name}) : super(key: key);
+  final bool verified;
+  SearchBar({Key key, @required this.name, @required this.verified}) : super(key: key);
   @override
   _SearchBarState createState() => _SearchBarState();
 }
@@ -22,7 +24,14 @@ class _SearchBarState extends State<SearchBar> {
   Widget build(BuildContext context) {
     return Container(
       child: Row(children: <Widget>[
-        Text(name),
+//        Text('${name}(${widget.verified ? '' : 'Email not verified'})'),
+        AutoSizeText(
+          '${name} ${widget.verified ? '' : '(Not Verified)'}',
+          style: TextStyle(fontSize: 16),
+          minFontSize: 6,
+          maxLines: 3,
+          overflow: TextOverflow.ellipsis,
+        ),
 //        Expanded(
 //          flex: 1,
 //          child: TextField(

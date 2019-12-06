@@ -47,6 +47,7 @@ class MainScreenState extends State<MainScreen> {
   final _defaultColor = Colors.grey;
   final _activeColor = Colors.blue;
   int _currentIndex = 0;
+  bool _verified;
   final PageController _controller = PageController(
     initialPage: 0,
   );
@@ -59,6 +60,14 @@ class MainScreenState extends State<MainScreen> {
     setState(() {
       _currentIndex = i;
     });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _userRepository.currentUser.reload();
+    _verified = _userRepository.currentUser.isEmailVerified;
   }
 
   @override
@@ -77,7 +86,7 @@ class MainScreenState extends State<MainScreen> {
       builder: (context) => HomeBloc(userRepository: _userRepository),
       child: Scaffold(
         appBar: AppBar(
-          title: SearchBar(name: name),
+          title: SearchBar(name: name, verified: _verified),
         ),
         body: UpgradeAlert(
           appcastConfig: cfg,
@@ -87,6 +96,8 @@ class MainScreenState extends State<MainScreen> {
             onPageChanged: (index) {
               setState(() {
                 _currentIndex = index;
+                _userRepository.currentUser.reload();
+                _verified = _userRepository.currentUser.isEmailVerified;
               });
             },
             children: <Widget>[
@@ -103,6 +114,8 @@ class MainScreenState extends State<MainScreen> {
               _controller.jumpToPage(index);
               setState(() {
                 _currentIndex = index;
+                _userRepository.currentUser.reload();
+                _verified = _userRepository.currentUser.isEmailVerified;
               });
             },
             type: BottomNavigationBarType.fixed,

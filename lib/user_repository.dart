@@ -82,6 +82,12 @@ Future<FirebaseUser> signInWithFacebook() async {
       password: password,
     );
     userGuid = currentUser?.uid;
+    try {
+      await currentUser.sendEmailVerification();
+    } catch (e) {
+      print("An error occured while trying to send email verification");
+      print(e.message);
+    }
     postSignIn();
   }
 
