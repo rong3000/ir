@@ -37,6 +37,25 @@ class _SearchBarState extends State<SearchBar> {
     }
   }
 
+  void _showMessage(String title, String message) {
+    showDialog<void>(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(title),
+            content: new Text(message),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Close'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -55,6 +74,7 @@ class _SearchBarState extends State<SearchBar> {
           child: RaisedButton(
             onPressed: (){
               sendVerification();
+              _showMessage('Verification Email sent', "We have sent you the email verification again, please check if it's in the SPAM mail if it cannot be found in your inbox.");
             },
             child: AutoSizeText(
               'Resend Verification',
