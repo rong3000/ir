@@ -136,8 +136,7 @@ class _ReportsPageState extends State<ReportsPage> {
       ),
       body: Center(
         child: Scaffold(
-          body: OrientationBuilder(builder: (context, orientation) {
-            return Column(
+          body: Column(
               children: <Widget>[
                 Flexible(
                   flex: 2,
@@ -157,8 +156,7 @@ class _ReportsPageState extends State<ReportsPage> {
 //                          )
                 ),
               ],
-            );
-          }),
+            )
         ),
       ),
     );

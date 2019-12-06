@@ -157,23 +157,18 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
                             d.label = allTranslations.text('words.delete');
                             actions.add(r);
                             actions.add(d);
-                            return Scaffold(
-                              body: OrientationBuilder(
-                                  builder: (context, orientation) {
-                                return Column(
-                                  children: <Widget>[
-                                    Flexible(
-                                        flex: 2,
-                                        fit: FlexFit.tight,
-                                        child: ReceiptList(
-                                          userRepository: _userRepository,
-                                          receiptStatusType: _receiptStatusType,
-                                          receiptItems: ReceiptItems,
-                                          actions: actions,
-                                        )),
-                                  ],
-                                );
-                              }),
+                            return  Column(
+                              children: <Widget>[
+                                Flexible(
+                                    flex: 2,
+                                    fit: FlexFit.tight,
+                                    child: ReceiptList(
+                                      userRepository: _userRepository,
+                                      receiptStatusType: _receiptStatusType,
+                                      receiptItems: ReceiptItems,
+                                      actions: actions,
+                                    )),
+                              ],
                             );
                           } else {
                             return Column(
@@ -354,9 +349,9 @@ class _FancyFabState extends State<FancyFab>
               return AddEditReiptForm(null);
             }),
           );
-          setState(() {
-
-          });
+//          setState(() {
+//
+//          });
         },
         tooltip: allTranslations.text('app.receipts-page.add-receipt-manual-tooltip'),
         child: Icon(Icons.mode_edit),
