@@ -26,7 +26,9 @@ ReceiptListItem _$ReceiptListItemFromJson(Map<String, dynamic> json) {
     ..notes = json['notes'] as String
     ..gstInclusive = json['gstInclusive'] as bool
     ..warrantyPeriod = (json['warrantyPeriod'] as num)?.toDouble()
-    ..decodeStatus = json['decodeStatus'] as int;
+    ..decodeStatus = json['decodeStatus'] as int
+    ..altTotalAmount = (json['altTotalAmount'] as num)?.toDouble()
+    ..altCurrencyCode = json['altCurrencyCode'] as String;
 }
 
 Map<String, dynamic> _$ReceiptListItemToJson(ReceiptListItem instance) =>
@@ -45,7 +47,9 @@ Map<String, dynamic> _$ReceiptListItemToJson(ReceiptListItem instance) =>
       'notes': instance.notes,
       'gstInclusive': instance.gstInclusive,
       'warrantyPeriod': instance.warrantyPeriod,
-      'decodeStatus': instance.decodeStatus
+      'decodeStatus': instance.decodeStatus,
+      'altTotalAmount': instance.altTotalAmount,
+      'altCurrencyCode': instance.altCurrencyCode
     };
 
 Receipt _$ReceiptFromJson(Map<String, dynamic> json) {
@@ -67,6 +71,8 @@ Receipt _$ReceiptFromJson(Map<String, dynamic> json) {
     ..notes = json['notes'] as String
     ..gstInclusive = json['gstInclusive'] as bool
     ..warrantyPeriod = (json['warrantyPeriod'] as num)?.toDouble()
+    ..altTotalAmount = (json['altTotalAmount'] as num)?.toDouble()
+    ..altCurrencyCode = json['altCurrencyCode'] as String
     ..decodeStatus = json['decodeStatus'] as int
     ..imagePath = json['imagePath'] as String
     ..extractedContent = json['extractedContent'] as String
@@ -75,10 +81,6 @@ Receipt _$ReceiptFromJson(Map<String, dynamic> json) {
     ..statusName = json['statusName'] as String
     ..image = json['image'] as String
     ..imageFileExtension = json['imageFileExtension'] as String
-    ..imageCropLeft = (json['imageCropLeft'] as num)?.toDouble()
-    ..imageCropTop = (json['imageCropTop'] as num)?.toDouble()
-    ..imageCropWidth = (json['imageCropWidth'] as num)?.toDouble()
-    ..imageCropHeight = (json['imageCropHeight'] as num)?.toDouble()
     ..statusUpdateDatetime = json['statusUpdateDatetime'] == null
         ? null
         : DateTime.parse(json['statusUpdateDatetime'] as String);
@@ -98,6 +100,8 @@ Map<String, dynamic> _$ReceiptToJson(Receipt instance) => <String, dynamic>{
       'notes': instance.notes,
       'gstInclusive': instance.gstInclusive,
       'warrantyPeriod': instance.warrantyPeriod,
+      'altTotalAmount': instance.altTotalAmount,
+      'altCurrencyCode': instance.altCurrencyCode,
       'decodeStatus': instance.decodeStatus,
       'imagePath': instance.imagePath,
       'extractedContent': instance.extractedContent,
@@ -106,9 +110,5 @@ Map<String, dynamic> _$ReceiptToJson(Receipt instance) => <String, dynamic>{
       'statusName': instance.statusName,
       'image': instance.image,
       'imageFileExtension': instance.imageFileExtension,
-      'imageCropLeft': instance.imageCropLeft,
-      'imageCropTop': instance.imageCropTop,
-      'imageCropWidth': instance.imageCropWidth,
-      'imageCropHeight': instance.imageCropHeight,
       'statusUpdateDatetime': instance.statusUpdateDatetime?.toIso8601String()
     };

@@ -16,6 +16,8 @@ class Report {
   String reportName;
   String description;
   List<int> receiptIds;
+  double totalAmount;
+  String currencyCode;
 
   Report();
 

@@ -74,6 +74,7 @@ class ReceiptsTabs extends StatefulWidget {
 
 class _ReceiptsTabsState extends State<ReceiptsTabs> {
   HomeBloc _homeBloc;
+  Future<DataResult> _getReceiptsFromServerFuture = null;
 
   UserRepository get _userRepository => widget._userRepository;
   get _receiptStatusType => widget._receiptStatusType;
@@ -93,8 +94,19 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
     }
   }
 
+  Future<void> _getReceiptsFromServer ({bool forceRefresh : false}) {
+    _getReceiptsFromServerFuture = _userRepository.receiptRepository.getReceiptsFromServer(forceRefresh: forceRefresh);
+  }
+
+  Future<void> _forceGetReceiptsFromServer() async {
+    _getReceiptsFromServerFuture = _userRepository.receiptRepository.getReceiptsFromServer(forceRefresh: true);
+    setState(() {
+    });
+  }
+
   Future<void> deleteAndSetState(List<int> receiptIds) async {
     await _userRepository.receiptRepository.deleteReceipts(receiptIds);
+    _getReceiptsFromServer();
     setState(() {});
   }
 
@@ -115,6 +127,7 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
   @override
   void initState() {
     super.initState();
+    _getReceiptsFromServer();
     _homeBloc = BlocProvider.of<HomeBloc>(context);
   }
 
@@ -130,7 +143,7 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
             bloc: _homeBloc,
             builder: (BuildContext context, HomeState state) {
               return FutureBuilder<DataResult>(
-                  future: _userRepository.receiptRepository.getReceiptsFromServer(forceRefresh: false),
+                  future: _getReceiptsFromServerFuture,
                   builder: (BuildContext context,
                       AsyncSnapshot<DataResult> snapshot) {
                     switch (snapshot.connectionState) {
@@ -157,23 +170,19 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
                             d.label = allTranslations.text('words.delete');
                             actions.add(r);
                             actions.add(d);
-                            return Scaffold(
-                              body: OrientationBuilder(
-                                  builder: (context, orientation) {
-                                return Column(
-                                  children: <Widget>[
-                                    Flexible(
-                                        flex: 2,
-                                        fit: FlexFit.tight,
-                                        child: ReceiptList(
-                                          userRepository: _userRepository,
-                                          receiptStatusType: _receiptStatusType,
-                                          receiptItems: ReceiptItems,
-                                          actions: actions,
-                                        )),
-                                  ],
-                                );
-                              }),
+                            return  Column(
+                              children: <Widget>[
+                                Flexible(
+                                    flex: 2,
+                                    fit: FlexFit.tight,
+                                    child: ReceiptList(
+                                      userRepository: _userRepository,
+                                      receiptStatusType: _receiptStatusType,
+                                      receiptItems: ReceiptItems,
+                                      actions: actions,
+                                      forceGetReceiptsFromServer: _forceGetReceiptsFromServer,
+                                    )),
+                              ],
                             );
                           } else {
                             return Column(
@@ -187,9 +196,6 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
                         }
                     }
                   });
-//              if (dataResult == null || dataResult.success == false) {
-//                return Text('Loading...');
-//              } else
             }),
       ),
     );
@@ -354,9 +360,9 @@ class _FancyFabState extends State<FancyFab>
               return AddEditReiptForm(null);
             }),
           );
-          setState(() {
-
-          });
+//          setState(() {
+//
+//          });
         },
         tooltip: allTranslations.text('app.receipts-page.add-receipt-manual-tooltip'),
         child: Icon(Icons.mode_edit),

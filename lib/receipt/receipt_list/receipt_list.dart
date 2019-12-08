@@ -13,6 +13,7 @@ class ReceiptList extends StatefulWidget {
   final ReceiptStatusType _receiptStatusType;
   final List<ReceiptListItem> _receiptItems;
   final List<ActionWithLabel> _actions;
+  final Future<void> Function() _forceGetReceiptsFromServer;
 
   ReceiptList({
     Key key,
@@ -20,11 +21,13 @@ class ReceiptList extends StatefulWidget {
     @required ReceiptStatusType receiptStatusType,
     @required List<ReceiptListItem> receiptItems,
     @required List<ActionWithLabel> actions,
+    @required Future<void> Function() forceGetReceiptsFromServer,
   })  : assert(userRepository != null),
         _userRepository = userRepository,
         _receiptStatusType = receiptStatusType,
         _receiptItems = receiptItems,
         _actions = actions,
+        _forceGetReceiptsFromServer = forceGetReceiptsFromServer,
         super(key: key);
 
   @override
@@ -284,22 +287,6 @@ class ReceiptListState extends State<ReceiptList> {
                       ],
                     ),
                   ),
-//                      Expanded(
-//                        child: new ListTile(
-//                          leading: Icon(
-//                            Icons.cancel,
-////                              color: Colors.white
-//                          ),
-//                          title: GestureDetector(
-//                            onTap: () {
-//                              subMenuOverlayEntry.remove();
-//                              subMenuOverlayEntry = null;
-//                              return Future.value(false);
-//                            },
-//                            child: Text('Cancel'),
-//                          ),
-//                        ),
-//                      ),
                 ],
               ),
             ),
@@ -486,7 +473,9 @@ class ReceiptListState extends State<ReceiptList> {
           ),
         ),
       ),
-      body: ListView.builder(
+      body: RefreshIndicator(
+        onRefresh: widget._forceGetReceiptsFromServer,
+        child: ListView.builder(
           itemCount: sortedReceiptItems.length,
           itemBuilder: (context, index) {
             return ReceiptCard(
@@ -494,6 +483,7 @@ class ReceiptListState extends State<ReceiptList> {
               actions: widget._actions,
             );
           }),
+      )
     );
   }
 }

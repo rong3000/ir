@@ -391,7 +391,7 @@ class _EditReportScreenState extends State<EditReportScreen> {
 //    print('Save ${_emailController.text} ${_passwordController.text} ${_userRepository.receiptRepository.cachedReceiptItems}');
 //    Navigator.pop(context);
 //  }
-  void _onReportSaved() {
+  Future<void> _onReportSaved() async {
     _report.updateDateTime = DateTime.now();
     _report.reportName = _emailController.text;
     _report.description = _passwordController.text;
@@ -402,10 +402,13 @@ class _EditReportScreenState extends State<EditReportScreen> {
       _report.receiptIds
           .add(_userRepository.receiptRepository.cachedReceiptItems[i].id);
     }
-    saveReport(_report);
-    print(
-        'Save ${_emailController.text} ${_passwordController.text} ${_userRepository.receiptRepository.cachedReceiptItems}');
-    Navigator.pop(context);
+
+    DataResult dataResult =  await _userRepository.reportRepository.updateReport(_report, true);
+    if (dataResult.success) {
+      Navigator.pop(context);
+    } else {
+      // Show message on snack bar
+    }
   }
 
   void _onReportSubmitted() {

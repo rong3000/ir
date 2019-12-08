@@ -32,30 +32,18 @@ class _UploadReceiptImageState extends State<UploadReceiptImage> {
   UserRepository get _userRepository => widget._userRepository;
   AppState state;
   File imageFileToCrop;
+  Future<DataResult> _uploadReceiptFulture = null;
 
   @override
   void initState() {
     super.initState();
     imageFileToCrop = widget.imageFile;
     state = AppState.picked;
+    _uploadReceipt(imageFileToCrop);
   }
 
-  Future<DataResult> _uploadReceipt(File imageFile) async {
-//    imageFile = await ImagePicker.pickImage(
-//        source: (widget._imageSource == IRImageSource.Gallary)
-//            ? ImageSource.gallery
-//            : ImageSource.camera,
-//        maxWidth: 600);
-//    File croppedFile = await ImageCropper.cropImage(
-//      sourcePath: image.path,
-//        ratioX: 1.0,
-//        ratioY: 1.0,
-//        maxWidth: 512,
-//        maxHeight: 512);
-
-    DataResult dataResult =
-        await _userRepository.receiptRepository.uploadReceiptImage(imageFile);
-    return dataResult;
+  void _uploadReceipt(File imageFile) async {
+    _uploadReceiptFulture = _userRepository.receiptRepository.uploadReceiptImage(imageFile);
   }
 
   void showAlert(String message, AlertType alertType) {
@@ -200,8 +188,7 @@ class _UploadReceiptImageState extends State<UploadReceiptImage> {
           child: (imageFileToCrop != null)
               ? (state == AppState.cropped
                   ? FutureBuilder<DataResult>(
-                      future:
-                          _uploadReceipt(imageFileToCrop), // a Future<String> or null
+                      future: _uploadReceiptFulture,
                       builder: (BuildContext context,
                           AsyncSnapshot<DataResult> snapshot) {
                         switch (snapshot.connectionState) {
