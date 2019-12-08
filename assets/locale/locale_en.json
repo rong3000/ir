@@ -2,11 +2,15 @@
   "app": {
     "title": "Intelligent Receipt",
     "settings-page": {
-      "preferences-menu-item-title": "Preferences"
+      "preferences-menu-item-title": "Preferences",
+      "currency-menu-item-title": "Default Currency"
     },
     "preferences-page": {
       "title": "App Preferences",
       "language-dropdown-label": "Select App Language"
+    },
+    "currency-screen":{
+      "title": "Choose Currency"
     },
     "main-screen": {
       "home-tab-label": "Home",
