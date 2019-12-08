@@ -7,7 +7,7 @@ import 'package:intelligent_receipt/main_screen/settings_page/currency_menu_card
 import 'package:intelligent_receipt/main_screen/settings_page/documents_screen/documents_screen.dart';
 import 'package:intelligent_receipt/main_screen/settings_page/invite_screen/invite_screen.dart';
 import 'package:intelligent_receipt/main_screen/settings_page/plan_screen/plan_screen.dart';
-import 'package:intelligent_receipt/main_screen/settings_page/preferences/preferences_menu_card.dart';
+import 'package:intelligent_receipt/main_screen/settings_page/preferences_menu_card.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 
 

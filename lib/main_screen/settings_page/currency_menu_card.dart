@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intelligent_receipt/data_model/data_result.dart';
 import 'package:intelligent_receipt/data_model/setting_repository.dart';
 import 'package:intelligent_receipt/main_screen/settings_page/currency_screen/currency_screen.dart';
+import 'package:intelligent_receipt/translations/global_translations.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 
 class CurrencyMenuCard extends StatefulWidget {
@@ -41,7 +42,7 @@ class _CurrencyMenuCardState extends State {
     return Card(
       child: ListTile(
         title: AutoSizeText(
-          'Default Currency',
+          allTranslations.text('app.settings-page.currency-menu-item-title'),
           style: TextStyle(fontSize: 18),
           minFontSize: 8,
           maxLines: 1,
@@ -55,7 +56,6 @@ class _CurrencyMenuCardState extends State {
                 MaterialPageRoute(builder: (context) {
                   return CurrencyScreen(
                       userRepository: _userRepository,
-                      title: 'Choose Currency',
                       defaultCurrency: _userRepository.settingRepository
                           .getDefaultCurrency());
                 }),
@@ -72,7 +72,7 @@ class _CurrencyMenuCardState extends State {
                       AsyncSnapshot<DataResult> snapshot) {
                     switch (snapshot.connectionState) {
                       case ConnectionState.none:
-                        return new Text('Loading...');
+                        return new Text(allTranslations.text('app.common.loading-status'));
                       case ConnectionState.waiting:
                         return new Center(
                             child: new CircularProgressIndicator());
@@ -86,7 +86,7 @@ class _CurrencyMenuCardState extends State {
                                 AsyncSnapshot<DataResult> snapshot) {
                               switch (snapshot.connectionState) {
                                 case ConnectionState.none:
-                                  return new Text('Loading...');
+                                  return new Text(allTranslations.text('app.common.loading-status'));
                                 case ConnectionState.waiting:
                                   return new Center(
                                       child: new CircularProgressIndicator());
