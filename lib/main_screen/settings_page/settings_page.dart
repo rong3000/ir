@@ -29,22 +29,27 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   UserRepository get _userRepository => widget._userRepository;
   DataResult dataResult;
-  Currency _currency;
+  Future<DataResult> _getCategoriesFuture = null;
+  Future<DataResult> _getSettingsFuture = null;
+  Future<DataResult> _getCurrenciesFuture = null;
 
-  Future<void> getDataResultFromServer() async {
-    dataResult = await _userRepository.receiptRepository
-        .getReceiptsFromServer(forceRefresh: true);
-    setState(() {});
+  void getCategoriesFromServer({bool forceRefresh : false}) {
+    _getCategoriesFuture = _userRepository.categoryRepository.getCategoriesFromServer(forceRefresh: forceRefresh);
   }
 
-  Future<void> getSettingFromServer() async {
-    DataResult result =
-        await _userRepository.settingRepository.getSettingsFromServer();
+  void getSettingsFromServer() {
+    _getSettingsFuture = _userRepository.settingRepository.getSettingsFromServer();
+  }
+
+  void getCurrenciesFromServer() {
+    _getCurrenciesFuture = _userRepository.settingRepository.getCurrenciesFromServer();
   }
 
   @override
   void initState() {
-//    getDataResultFromServer();
+    getCategoriesFromServer();
+    getSettingsFromServer();
+    getCurrenciesFromServer();
     super.initState();
   }
 
@@ -108,7 +113,7 @@ class _SettingsPageState extends State<SettingsPage> {
                           return CurrencyScreen(
                               userRepository: _userRepository,
                               title: 'Choose Currency',
-                              defaultCurrency: _currency);
+                              defaultCurrency: _userRepository.settingRepository.getDefaultCurrency());
                         }),
                       )
                     },
@@ -120,8 +125,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         mainAxisSize: MainAxisSize.max,
                         children: <Widget>[
                           FutureBuilder<DataResult>(
-                              future: _userRepository.settingRepository
-                                  .getSettingsFromServer(),
+                              future: _getSettingsFuture,
                               builder: (BuildContext context,
                                   AsyncSnapshot<DataResult> snapshot) {
                                 switch (snapshot.connectionState) {
@@ -135,8 +139,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                   case ConnectionState.done:
                                     {
                                       return FutureBuilder<DataResult>(
-                                          future: _userRepository.settingRepository
-                                              .getCurrenciesFromServer(),
+                                          future: _getCurrenciesFuture,
                                           builder: (BuildContext context,
                                               AsyncSnapshot<DataResult> snapshot) {
                                             switch (snapshot.connectionState) {
@@ -162,21 +165,17 @@ class _SettingsPageState extends State<SettingsPage> {
                                                     overflow: TextOverflow.ellipsis,
                                                   );
                                                 } else {
-                                                  _currency = _userRepository
+                                                  Currency defaultCurrency = _userRepository
                                                       .settingRepository
                                                       .getDefaultCurrency();
-                                                  return (_currency != null) ? Expanded(
+                                                  return (defaultCurrency != null) ? Expanded(
                                                     child: AutoSizeText(
-                                                      "${_currency.name} ${_currency.symbol}",
+                                                      "${defaultCurrency.name} ${defaultCurrency.symbol}",
                                                       style: TextStyle(fontSize: 14),
                                                       minFontSize: 1,
                                                       maxLines: 3,
                                                       overflow: TextOverflow.ellipsis,
                                                     ),
-//                                        children: <Widget>[//
-////                                          Text("${_currency.name} "),
-////                                          Text("${_currency.symbol}"),
-//                                        ],
                                                   ) : AutoSizeText(
                                                     '',
                                                     style: TextStyle(fontSize: 10),
@@ -216,7 +215,7 @@ class _SettingsPageState extends State<SettingsPage> {
                           return CategoryScreen(
                               userRepository: _userRepository,
                               title: 'Edit Categories',
-                              defaultCurrency: _currency);
+                              defaultCurrency: _userRepository.settingRepository.getDefaultCurrency());
                         }),
                       )
                     },
@@ -228,7 +227,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         mainAxisSize: MainAxisSize.max,
                         children: <Widget>[
                           FutureBuilder<DataResult>(
-                              future: _userRepository.categoryRepository.getCategoriesFromServer(),
+                              future: _getCategoriesFuture,
                               builder: (BuildContext context,
                                   AsyncSnapshot<DataResult> snapshot) {
                                 switch (snapshot.connectionState) {
@@ -245,8 +244,6 @@ class _SettingsPageState extends State<SettingsPage> {
                                     }
                                 }
                               }),
-//                          Text("AUD A\$"),
-//                          Icon(Icons.more_horiz),
                         ]),
                   ),
                 ),

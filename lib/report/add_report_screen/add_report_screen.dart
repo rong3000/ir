@@ -308,7 +308,7 @@ class _AddReportScreenState extends State<AddReportScreen> {
     setState(() {});
   }
 
-  void _onReportSaved() {
+  Future<void> _onReportSaved() async {
     Report newReport = new Report();
     newReport.id = 0;
     newReport.statusId = 1;
@@ -323,31 +323,12 @@ class _AddReportScreenState extends State<AddReportScreen> {
       newReport.receiptIds
           .add(_userRepository.receiptRepository.cachedReceiptItems[i].id);
     }
-    addReport(newReport);
-    print(
-        'Save ${_emailController.text} ${_passwordController.text} ${_userRepository.receiptRepository.cachedReceiptItems}');
-    Navigator.pop(context);
-  }
-
-  void _onReportSubmitted() {
-    Report newReport = new Report();
-    newReport.id = 0;
-    newReport.statusId = 2;
-    newReport.createDateTime = DateTime.now();
-    newReport.updateDateTime = DateTime.now();
-    newReport.reportName = _emailController.text;
-    newReport.description = _passwordController.text;
-    newReport.receiptIds = [];
-    for (int i = 0;
-        i < _userRepository.receiptRepository.cachedReceiptItems.length;
-        i++) {
-      newReport.receiptIds
-          .add(_userRepository.receiptRepository.cachedReceiptItems[i].id);
+    DataResult dataResult = await _userRepository.reportRepository.addReport(newReport);
+    if (dataResult.success) {
+      Navigator.pop(context);
+    } else {
+      // Show message on snack bar
     }
-    addReport(newReport);
-    print(
-        'Submit ${_emailController.text} ${_passwordController.text} ${_userRepository.receiptRepository.cachedReceiptItems}');
-    Navigator.pop(context);
   }
 
   void _onAddReceipts() {

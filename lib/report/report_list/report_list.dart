@@ -92,17 +92,14 @@ class _DateTimePicker extends StatelessWidget {
 class ReportList extends StatefulWidget {
   final UserRepository _userRepository;
   final ReportStatusType _reportStatusType;
-  final Currency _baseCurrency;
 
   ReportList({
     Key key,
     @required UserRepository userRepository,
     @required ReportStatusType reportStatusType,
-    @required Currency baseCurrency,
   })  : assert(userRepository != null),
         _userRepository = userRepository,
         _reportStatusType = reportStatusType,
-        _baseCurrency = baseCurrency,
         super(key: key) {}
 
   @override
@@ -122,21 +119,18 @@ class ReportListState extends State<ReportList> {
   bool sort;
   int start = 0;
   int end;
-  bool forceRefresh;
   int reportItemCount;
   bool fromServer;
   int refreshCount = 0;
   int loadMoreCount = 0;
   OverlayEntry subMenuOverlayEntry;
   GlobalKey anchorKey = GlobalKey();
-  double dx;
-  double dy;
-  double dx2;
-  double dy2;
   bool ascending;
   ReportSortType sortingType;
   DateTime _fromDate = DateTime.now().subtract(Duration(days: 180));
   DateTime _toDate = DateTime.now();
+  Future<DataResult> _getReportsFuture = null;
+  Currency _baseCurrency;
 
   UserRepository get _userRepository => widget._userRepository;
   get _reportStatusType => widget._reportStatusType;
@@ -167,9 +161,29 @@ class ReportListState extends State<ReportList> {
       });
   }
 
+  Future<void> _getReportsFromServer({forceRefresh : false}) {
+    _getReportsFuture = _userRepository.reportRepository.getReportsFromServer(forceRefresh: forceRefresh);
+  }
+
+  Future<void> _forceGetReportsFromServer() async {
+    _getReportsFuture = _userRepository.reportRepository.getReportsFromServer(forceRefresh: true);
+    setState(() {});
+  }
+
+  Future<void> _getBaseCurrency() async {
+    _baseCurrency = _userRepository.settingRepository.getDefaultCurrency();
+    if (_baseCurrency == null) {
+      await _userRepository.settingRepository.getSettingsFromServer();
+      _baseCurrency = _userRepository.settingRepository.getDefaultCurrency();
+      setState(() {
+      });
+    }
+  }
+
   @override
   void initState() {
-    forceRefresh = true;
+    _getReportsFromServer();
+    _getBaseCurrency();
     ascending = false;
     super.initState();
     if (_reportStatusType == ReportStatusType.Active) {
@@ -218,9 +232,7 @@ class ReportListState extends State<ReportList> {
 //    showInSnackBar('You selected: $value');
     print('You selected: $value');
     setState(() {
-      forceRefresh = false;
       sortingType = value;
-      print("${ascending} ${forceRefresh}");
     });
   }
 
@@ -258,27 +270,6 @@ class ReportListState extends State<ReportList> {
     deleteAndSetState(id);
   }
 
-  void addAction(int id) {
-    print('Add ${id}');
-  }
-
-  void removeAction(int id) {
-    print('Add ${id}');
-  }
-
-  void _onTapDown(TapDownDetails details, BuildContext context) {
-    print('_onLongPressDragStart details: ${details.globalPosition}');
-    RenderBox renderBox = context.findRenderObject();
-    var offset = renderBox
-//                            .localToGlobal(Offset(0.0, renderBox.size.height));
-        .globalToLocal(details.globalPosition);
-    print('${offset.dx} ${offset.dy} ');
-    dx = details.globalPosition.dx;
-    dy = details.globalPosition.dy;
-    dx2 = offset.dx;
-    dy2 = offset.dy;
-  }
-
   void showSubMenuView(double t, double r) {
     subMenuOverlayEntry = new OverlayEntry(builder: (context) {
       return new Positioned(
@@ -300,7 +291,6 @@ class ReportListState extends State<ReportList> {
                       title: GestureDetector(
                         onTap: () {
                           setState(() {
-                            forceRefresh = false;
                             sortingType = ReportSortType.CreateTime;
                           });
                           subMenuOverlayEntry.remove();
@@ -312,14 +302,9 @@ class ReportListState extends State<ReportList> {
                   ),
                   Expanded(
                     child: new ListTile(
-//                          leading: Icon(
-//                            Icons.edit,
-////                            color: Colors.white,
-//                          ),
                       title: GestureDetector(
                         onTap: () {
                           setState(() {
-                            forceRefresh = false;
                             sortingType = ReportSortType.UpdateTime;
                           });
                           subMenuOverlayEntry.remove();
@@ -338,7 +323,6 @@ class ReportListState extends State<ReportList> {
                       title: GestureDetector(
                         onTap: () {
                           setState(() {
-                            forceRefresh = false;
                             sortingType = ReportSortType.GroupName;
                           });
                           subMenuOverlayEntry.remove();
@@ -363,22 +347,6 @@ class ReportListState extends State<ReportList> {
                       ],
                     ),
                   ),
-//                      Expanded(
-//                        child: new ListTile(
-//                          leading: Icon(
-//                            Icons.cancel,
-////                              color: Colors.white
-//                          ),
-//                          title: GestureDetector(
-//                            onTap: () {
-//                              subMenuOverlayEntry.remove();
-//                              subMenuOverlayEntry = null;
-//                              return Future.value(false);
-//                            },
-//                            child: Text('Cancel'),
-//                          ),
-//                        ),
-//                      ),
                 ],
               ),
             ),
@@ -480,261 +448,69 @@ class ReportListState extends State<ReportList> {
             ),
           ),
         ),
-//        appBar: PreferredSize(
-//          preferredSize: Size(50.0, 50.0),
-//          child: Container(
-//            height: 50.0,
-//            child: Column(
-//              mainAxisAlignment: MainAxisAlignment.center,
-//              children: <Widget>[
-//                Row(
-//                  mainAxisSize: MainAxisSize.max,
-//                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-//                  children: <Widget>[
-//                    Row(
-//                      mainAxisSize: MainAxisSize.max,
-//                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//                      children: <Widget>[
-//                        GestureDetector(
-//                          onTap: () {
-//                            _selectFromDate(context);
-//                          },
-//                          child: Text(
-//                            "${DateFormat().add_yMd().format(_fromDate.toLocal())}",
-//                            style: TextStyle(height: 1, fontSize: 12),
-//                          ),
-//                        ),
-//                        Icon(Icons.repeat),
-//                        GestureDetector(
-//                          onTap: () {
-//                            _selectToDate(context);
-//                          },
-//                          child: Text(
-//                            "${DateFormat().add_yMd().format(_toDate.toLocal())}",
-//                            style: TextStyle(height: 1, fontSize: 12),
-//                          ),
-//                        ),
-////              Expanded(
-////                child: PopupMenuButton<ReportSortType>(
-////                  padding: EdgeInsets.zero,
-////                  initialValue: _simpleValue,
-////                  onSelected: showMenuSelection,
-////                  child: ListTile(
-////                    title: Text(
-////                        'Sort By [${_simpleValue.toString().split('.')[1]}]'),
-//////                                  subtitle: Text(_simpleValue),
-////                  ),
-////                  itemBuilder: (BuildContext context) =>
-////                      <PopupMenuItem<ReportSortType>>[
-////                    PopupMenuItem<ReportSortType>(
-////                      value: _simpleValue1,
-////                      child: Text(_simpleValue1.toString().split('.')[1]),
-////                    ),
-////                    PopupMenuItem<ReportSortType>(
-////                      value: _simpleValue2,
-////                      child: Text(_simpleValue2.toString().split('.')[1]),
-////                    ),
-////                    PopupMenuItem<ReportSortType>(
-////                      value: _simpleValue3,
-////                      child: Text(_simpleValue3.toString().split('.')[1]),
-////                    ),
-////                    PopupMenuItem<ReportSortType>(
-////                      value: _simpleValue4,
-////                      child: Text(_simpleValue4.toString().split('.')[1]),
-////                    ),
-////                    PopupMenuItem<ReportSortType>(
-////                      value: _simpleValue5,
-////                      child: Text(_simpleValue5.toString().split('.')[1]),
-////                    ),
-////                  ],
-////                ), //                              ListTile(
-//////                                title: const Text('Simple dropdown:'),
-//////                                trailing: DropdownButton<String>(
-//////                                  value: dropdown1Value,
-//////                                  onChanged: (String newValue) {
-//////                                    setState(() {
-//////                                      dropdown1Value = newValue;
-//////                                    });
-//////                                  },
-//////                                  items: <String>['One', 'Two', 'Free', 'Four'].map<DropdownMenuItem<String>>((String value) {
-//////                                    return DropdownMenuItem<String>(
-//////                                      value: value,
-//////                                      child: Text(value),
-//////                                    );
-//////                                  }).toList(),
-//////                                ),
-//////                              ),
-////              ),
-//                      ],
-//                    ),
-//                    GestureDetector(
-//                        onTapDown: (details) {
-//                          return _onTapDown(details, context);
-//                        },
-//                        onTap: () {
-//                          if (subMenuOverlayEntry != null) {
-//                            subMenuOverlayEntry.remove();
-//                            subMenuOverlayEntry = null;
-//                            return Future.value(false);
-//                          }
-//                          showSubMenuView(
-//                              dy2 + 120,
-//                              (dx2 < MediaQuery.of(context).size.width - 200)
-//                                  ? (MediaQuery.of(context).size.width -
-//                                  200 -
-//                                  dx2)
-//                                  : (MediaQuery.of(context).size.width - dx2));
-//                        },
-//                        child: Row(
-//                          mainAxisSize: MainAxisSize.max,
-//
-//                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                          children: <Widget>[
-//                            Icon(Icons.sort),
-//                            Text(
-//                              "[${sortingType.toString().split('.')[1]}]",
-//                              style: TextStyle(height: 1, fontSize: 12),
-//                            ),
-//                            Icon(
-//                              ascending
-//                                  ? Icons.arrow_upward
-//                                  : Icons.arrow_downward,
-//                              color: Colors.black,
-//                            ),
-//                            Icon(
-//                              Theme.of(context).platform == TargetPlatform.iOS
-//                                  ? Icons.more_horiz
-//                                  : Icons.more_vert,
-//                              color: Colors.black,
-//                            ),
-////                            IconButton(
-////                              icon: Icon(
-////                                Theme.of(context).platform == TargetPlatform.iOS
-////                                    ? Icons.more_horiz
-////                                    : Icons.more_vert,
-////                                color: Colors.black,
-////                              ),
-////                              tooltip: 'Show menu',
-//////                      onPressed: _bottomSheet == null ? _showConfigurationSheet : null,
-////                            ),
-//                          ],
-//                        )),
-////              Expanded(
-////                child: PopupMenuButton<ReportSortType>(
-////                  padding: EdgeInsets.zero,
-////                  initialValue: _simpleValue,
-////                  onSelected: showMenuSelection,
-////                  child: ListTile(
-////                    title: Text(
-////                        'Sort By [${_simpleValue.toString().split('.')[1]}]'),
-//////                                  subtitle: Text(_simpleValue),
-////                  ),
-////                  itemBuilder: (BuildContext context) =>
-////                      <PopupMenuItem<ReportSortType>>[
-////                    PopupMenuItem<ReportSortType>(
-////                      value: _simpleValue1,
-////                      child: Text(_simpleValue1.toString().split('.')[1]),
-////                    ),
-////                    PopupMenuItem<ReportSortType>(
-////                      value: _simpleValue2,
-////                      child: Text(_simpleValue2.toString().split('.')[1]),
-////                    ),
-////                    PopupMenuItem<ReportSortType>(
-////                      value: _simpleValue3,
-////                      child: Text(_simpleValue3.toString().split('.')[1]),
-////                    ),
-////                    PopupMenuItem<ReportSortType>(
-////                      value: _simpleValue4,
-////                      child: Text(_simpleValue4.toString().split('.')[1]),
-////                    ),
-////                    PopupMenuItem<ReportSortType>(
-////                      value: _simpleValue5,
-////                      child: Text(_simpleValue5.toString().split('.')[1]),
-////                    ),
-////                  ],
-////                ), //                              ListTile(
-//////                                title: const Text('Simple dropdown:'),
-//////                                trailing: DropdownButton<String>(
-//////                                  value: dropdown1Value,
-//////                                  onChanged: (String newValue) {
-//////                                    setState(() {
-//////                                      dropdown1Value = newValue;
-//////                                    });
-//////                                  },
-//////                                  items: <String>['One', 'Two', 'Free', 'Four'].map<DropdownMenuItem<String>>((String value) {
-//////                                    return DropdownMenuItem<String>(
-//////                                      value: value,
-//////                                      child: Text(value),
-//////                                    );
-//////                                  }).toList(),
-//////                                ),
-//////                              ),
-////              ),
-//                  ],
-//                ),
-//              ],
-//            ),
-//          ),
-//        ),
-        body: FutureBuilder<DataResult>(
-            future: _userRepository.reportRepository
-                .getReportsFromServer(forceRefresh: forceRefresh),
-            builder:
-                (BuildContext context, AsyncSnapshot<DataResult> snapshot) {
-              switch (snapshot.connectionState) {
-                case ConnectionState.none:
-                  return new Text('Loading...');
-                case ConnectionState.waiting:
-                  return new Center(child: new CircularProgressIndicator());
-                case ConnectionState.active:
-                  return new Text('');
-                case ConnectionState.done:
-                  if (snapshot.hasError) {
-                    return new Text(
-                      '${snapshot.error}',
-                      style: TextStyle(color: Colors.red),
-                    );
-                  } else {
-                    if (snapshot.data.success) {
-                      List<Report> sortedReportItems =
-                          _userRepository.reportRepository.getSortedReportItems(
-                              _reportStatusType,
-                              sortingType,
-                              ascending,
-                              _fromDate,
-                              _toDate);
-                      List<ActionWithLable> actions = [];
-                      ActionWithLable r = new ActionWithLable();
-                      r.action = reviewAction;
-                      r.lable = 'Review';
-                      ActionWithLable d = new ActionWithLable();
-                      d.action = deleteAction;
-                      d.lable = 'Delete';
-                      actions.add(r);
-                      actions.add(d);
-                      return ListView.builder(
-                          itemCount: sortedReportItems.length,
-                          itemBuilder: (context, index) {
-                            return ReportCard(
-                              reportItem: sortedReportItems[index],
-                              userRepository: _userRepository,
-                              actions: actions,
-                              baseCurrency: widget._baseCurrency,
-                            );
-                          });
-                    } else {
-                      return Column(
-                        children: <Widget>[
-                          Text(
-                              'Failed retrieving data, error code is ${snapshot.data.messageCode}'),
-                          Text('Error message is ${snapshot.data.message}'),
-                        ],
+        body: RefreshIndicator(
+          onRefresh: _forceGetReportsFromServer,
+          child: FutureBuilder<DataResult>(
+              future: _getReportsFuture,
+              builder:
+                  (BuildContext context, AsyncSnapshot<DataResult> snapshot) {
+                switch (snapshot.connectionState) {
+                  case ConnectionState.none:
+                    return new Text('Loading...');
+                  case ConnectionState.waiting:
+                    return new Center(child: new CircularProgressIndicator());
+                  case ConnectionState.active:
+                    return new Text('');
+                  case ConnectionState.done:
+                    if (snapshot.hasError) {
+                      return new Text(
+                        '${snapshot.error}',
+                        style: TextStyle(color: Colors.red),
                       );
+                    } else {
+                      if (snapshot.data.success) {
+                        List<Report> sortedReportItems =
+                        _userRepository.reportRepository.getSortedReportItems(
+                            _reportStatusType,
+                            sortingType,
+                            ascending,
+                            _fromDate,
+                            _toDate);
+                        List<ActionWithLable> actions = [];
+                        ActionWithLable r = new ActionWithLable();
+                        r.action = reviewAction;
+                        r.lable = 'Review';
+                        ActionWithLable d = new ActionWithLable();
+                        d.action = deleteAction;
+                        d.lable = 'Delete';
+                        actions.add(r);
+                        actions.add(d);
+                        return ListView.builder(
+                            itemCount: sortedReportItems.length,
+                            controller: _scrollController,
+                            physics: AlwaysScrollableScrollPhysics(),
+                            itemBuilder: (context, index) {
+                              return ReportCard(
+                                reportItem: sortedReportItems[index],
+                                userRepository: _userRepository,
+                                actions: actions,
+                                baseCurrency: _baseCurrency,
+                              );
+                            });
+                      } else {
+                        return Column(
+                          children: <Widget>[
+                            Text(
+                                'Failed retrieving data, error code is ${snapshot.data.messageCode}'),
+                            Text('Error message is ${snapshot.data.message}'),
+                          ],
+                        );
+                      }
                     }
-                  }
-              }
-            }),
-      ),
+                }
+              }),
+        ),
+      )
     );
   }
 }

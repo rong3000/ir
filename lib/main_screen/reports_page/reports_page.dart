@@ -52,6 +52,7 @@ class ReportsPage_ extends StatelessWidget {
 class ReportsPage extends StatefulWidget {
   final UserRepository _userRepository;
   final ReportStatusType _reportStatusType;
+  ReportList _reportList;
 
 //  ReportsTabs({
   ReportsPage({
@@ -61,7 +62,9 @@ class ReportsPage extends StatefulWidget {
   })  : assert(userRepository != null),
         _userRepository = userRepository,
         _reportStatusType = reportStatusType,
-        super(key: key) {}
+        super(key: key) {
+    _reportList = ReportList(userRepository: _userRepository, reportStatusType: _reportStatusType);
+  }
 
   @override
 //  _ReportsTabsState createState() => _ReportsTabsState();
@@ -74,7 +77,6 @@ class _ReportsPageState extends State<ReportsPage> {
 
   UserRepository get _userRepository => widget._userRepository;
   get _reportStatusType => widget._reportStatusType;
-  Currency baseCurrency;
 
   void _showMessage() {
     showDialog<void>(
@@ -95,19 +97,9 @@ class _ReportsPageState extends State<ReportsPage> {
     );
   }
 
-  Future<void> getBaseCurrency() async {
-    await _userRepository.settingRepository.getSettingsFromServer();
-    baseCurrency = _userRepository.settingRepository.getDefaultCurrency();
-    setState(() {
-
-    });
-  }
-
   @override
   void initState() {
     super.initState();
-    getBaseCurrency();
-//    _homeBloc = BlocProvider.of<HomeBloc>(context);
   }
 
   @override
@@ -141,19 +133,7 @@ class _ReportsPageState extends State<ReportsPage> {
                 Flexible(
                   flex: 2,
                   fit: FlexFit.tight,
-                  child:
-//                        DataTableDemo(
-                  ReportList(
-                      userRepository: _userRepository,
-                      reportStatusType: _reportStatusType,
-                      baseCurrency: baseCurrency,
-                  ),
-//                          Scaffold(
-//                            appBar: AppBar(title: SortingBar(userRepository: _userRepository),),
-//                            body: ReportList(
-//                                userRepository: _userRepository,
-//                                reportStatusType: _reportStatusType),
-//                          )
+                  child: widget._reportList
                 ),
               ],
             )
