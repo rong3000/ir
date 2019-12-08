@@ -52,7 +52,7 @@ class _PlanScreenState extends State<PlanScreen> {
                           child: Card(
                             child: ListTile(
                               title: Text(
-                                  'Your current plan is Free Trial, now you have only 3 snaps and 1 free group left.'),
+                                  'Your current plan is Free Trial, now you have only 3 snaps and 1 free group left.'),//TODO: addtrantaslation here when this is working
                             ),
                           ),
                         ),

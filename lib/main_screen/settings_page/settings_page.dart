@@ -1,10 +1,9 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:intelligent_receipt/data_model/data_result.dart';
-import 'package:intelligent_receipt/data_model/setting_repository.dart';
 import 'package:intelligent_receipt/main_screen/settings_page/category_screen/category_screen.dart';
 import 'package:intelligent_receipt/main_screen/settings_page/contact_screen/contact.dart';
-import 'package:intelligent_receipt/main_screen/settings_page/currency_screen/currency_screen.dart';
+import 'package:intelligent_receipt/main_screen/settings_page/currency_menu_card.dart';
 import 'package:intelligent_receipt/main_screen/settings_page/documents_screen/documents_screen.dart';
 import 'package:intelligent_receipt/main_screen/settings_page/invite_screen/invite_screen.dart';
 import 'package:intelligent_receipt/main_screen/settings_page/plan_screen/plan_screen.dart';
@@ -30,26 +29,14 @@ class _SettingsPageState extends State<SettingsPage> {
   UserRepository get _userRepository => widget._userRepository;
   DataResult dataResult;
   Future<DataResult> _getCategoriesFuture = null;
-  Future<DataResult> _getSettingsFuture = null;
-  Future<DataResult> _getCurrenciesFuture = null;
 
   void getCategoriesFromServer({bool forceRefresh : false}) {
     _getCategoriesFuture = _userRepository.categoryRepository.getCategoriesFromServer(forceRefresh: forceRefresh);
   }
 
-  void getSettingsFromServer() {
-    _getSettingsFuture = _userRepository.settingRepository.getSettingsFromServer();
-  }
-
-  void getCurrenciesFromServer() {
-    _getCurrenciesFuture = _userRepository.settingRepository.getCurrenciesFromServer();
-  }
-
   @override
   void initState() {
     getCategoriesFromServer();
-    getSettingsFromServer();
-    getCurrenciesFromServer();
     super.initState();
   }
 
@@ -58,8 +45,6 @@ class _SettingsPageState extends State<SettingsPage> {
       return Scaffold(
         body: Column(
           children: <Widget>[
-//            Text("${_userRepository.receiptRepository.receipts[1].companyName}"),
-//            Text("${dataResult.success}"),
             Card(
               child: ListTile(
                 leading: Icon(Icons.album),
@@ -70,135 +55,12 @@ class _SettingsPageState extends State<SettingsPage> {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-//                trailing: SizedBox(
-//                  width: 140,
-//                  child: FlatButton(
-//                    onPressed: () {
-//                      Navigator.push(
-//                        context,
-//                        MaterialPageRoute(builder: (context) => ReceiptsPage(userRepository: _userRepository)),
-//                      );
-//                    },
-////                    color: Colors.orange,
-////                    padding: EdgeInsets.all(10.0),
-//                    child: Row(
-//                        // Replace with a Row for horizontal icon + text
-//                        mainAxisAlignment: MainAxisAlignment.end,
-//                        mainAxisSize: MainAxisSize.max,
-//                        children: <Widget>[
-//                          Text("View All"),
-//                          Icon(Icons.more_horiz),
-//                        ]),
-//                  ),
-//                ),
               ),
             ),
             PreferencesMenuCard(),
+            CurrencyMenuCard(),//currency
             Card(
               child: ListTile(
-//                leading: Icon(Icons.album),
-                title: AutoSizeText(
-                  'Default Currency',
-                  style: TextStyle(fontSize: 18),
-                  minFontSize: 8,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                trailing: SizedBox(
-                  width: 140,
-                  child: FlatButton(
-                    onPressed: () => {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) {
-                          return CurrencyScreen(
-                              userRepository: _userRepository,
-                              title: 'Choose Currency',
-                              defaultCurrency: _userRepository.settingRepository.getDefaultCurrency());
-                        }),
-                      )
-                    },
-//                    color: Colors.orange,
-//                    padding: EdgeInsets.all(10.0),
-                    child: Row(
-                        // Replace with a Row for horizontal icon + text
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        mainAxisSize: MainAxisSize.max,
-                        children: <Widget>[
-                          FutureBuilder<DataResult>(
-                              future: _getSettingsFuture,
-                              builder: (BuildContext context,
-                                  AsyncSnapshot<DataResult> snapshot) {
-                                switch (snapshot.connectionState) {
-                                  case ConnectionState.none:
-                                    return new Text('Loading...');
-                                  case ConnectionState.waiting:
-                                    return new Center(
-                                        child: new CircularProgressIndicator());
-                                  case ConnectionState.active:
-                                    return new Text('');
-                                  case ConnectionState.done:
-                                    {
-                                      return FutureBuilder<DataResult>(
-                                          future: _getCurrenciesFuture,
-                                          builder: (BuildContext context,
-                                              AsyncSnapshot<DataResult> snapshot) {
-                                            switch (snapshot.connectionState) {
-                                              case ConnectionState.none:
-                                                return new Text('Loading...');
-                                              case ConnectionState.waiting:
-                                                return new Center(
-                                                    child: new CircularProgressIndicator());
-                                              case ConnectionState.active:
-                                                return new Text('');
-                                              case ConnectionState.done:
-                                                if (snapshot.hasError) {
-                                                  return
-//                                                    new Text(
-//                                                    '${snapshot.error}',
-//                                                    style: TextStyle(color: Colors.red),
-//                                                  );
-                                                  AutoSizeText(
-                                                    '${snapshot.error}',
-                                                    style: TextStyle(fontSize: 14),
-                                                    minFontSize: 1,
-                                                    maxLines: 3,
-                                                    overflow: TextOverflow.ellipsis,
-                                                  );
-                                                } else {
-                                                  Currency defaultCurrency = _userRepository
-                                                      .settingRepository
-                                                      .getDefaultCurrency();
-                                                  return (defaultCurrency != null) ? Expanded(
-                                                    child: AutoSizeText(
-                                                      "${defaultCurrency.name} ${defaultCurrency.symbol}",
-                                                      style: TextStyle(fontSize: 14),
-                                                      minFontSize: 1,
-                                                      maxLines: 3,
-                                                      overflow: TextOverflow.ellipsis,
-                                                    ),
-                                                  ) : AutoSizeText(
-                                                    '',
-                                                    style: TextStyle(fontSize: 10),
-                                                    minFontSize: 4,
-                                                    maxLines: 3,
-                                                    overflow: TextOverflow.ellipsis,
-                                                  );
-                                                }
-
-                                            }
-                                          });
-                                    }
-                                }
-                              }),
-                          Icon(Icons.more_horiz),
-                        ]),
-                  ),
-                ),
-              ),
-            ),
-            Card(
-              child: ListTile(
-//                leading: Icon(Icons.album),
                 title: AutoSizeText(
                   'Categories',
                   style: TextStyle(fontSize: 18),
@@ -219,8 +81,6 @@ class _SettingsPageState extends State<SettingsPage> {
                         }),
                       )
                     },
-//                    color: Colors.orange,
-//                    padding: EdgeInsets.all(10.0),
                     child: Row(
                       // Replace with a Row for horizontal icon + text
                         mainAxisAlignment: MainAxisAlignment.end,
@@ -261,7 +121,6 @@ class _SettingsPageState extends State<SettingsPage> {
               },
               child: Card(
                 child: ListTile(
-//                leading: Icon(Icons.album),
                   title: AutoSizeText(
                     'Plan Information',
                     style: TextStyle(fontSize: 18),
@@ -284,7 +143,6 @@ class _SettingsPageState extends State<SettingsPage> {
               },
               child: Card(
                 child: ListTile(
-//                leading: Icon(Icons.album),
                   title: AutoSizeText(
                     'Documents & Knowledge Centre',
                     style: TextStyle(fontSize: 18),
@@ -306,7 +164,6 @@ class _SettingsPageState extends State<SettingsPage> {
               },
               child: Card(
                 child: ListTile(
-//                leading: Icon(Icons.album),
                   title: AutoSizeText(
                     'Invite a friend',
                     style: TextStyle(fontSize: 18),
@@ -322,16 +179,12 @@ class _SettingsPageState extends State<SettingsPage> {
                 Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) {
                     return TextFormFieldDemo(
-//                              userRepository: _userRepository,
-//                              title: 'Contact Us',
-//                              defaultCurrency: _currency
                     );
                   }),
                 )
               },
               child: Card(
                 child: ListTile(
-//                leading: Icon(Icons.album),
                   title: AutoSizeText(
                     'Contact Us',
                     style: TextStyle(fontSize: 18),
