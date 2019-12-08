@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:intelligent_receipt/data_model/data_result.dart';
 import 'package:intelligent_receipt/data_model/setting_repository.dart';
 import 'package:intelligent_receipt/translations/global_translations.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 
 class CurrencyScreen extends StatefulWidget {
-  final String title;
   final UserRepository _userRepository;
   final Currency defaultCurrency;
-  CurrencyScreen({Key key, @required UserRepository userRepository, this.title, this.defaultCurrency})
+  CurrencyScreen({Key key, @required UserRepository userRepository, this.defaultCurrency})
       : assert(userRepository != null),
         _userRepository = userRepository,
         super(key: key) {}
@@ -18,6 +16,7 @@ class CurrencyScreen extends StatefulWidget {
 }
 
 class _CurrencyScreenState extends State<CurrencyScreen> {
+  String get title => allTranslations.text('app.currency-screen.title');
   UserRepository get _userRepository => widget._userRepository;
   TextEditingController editingController = TextEditingController();
   List<Currency> duplicateItems;
@@ -58,7 +57,7 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
   }
 
   Future<void> _setAsDefaultCurrency(int currencyId) async{
-    DataResult dataResult = await _userRepository.settingRepository.setDefaultCurrency(currencyId);
+    await _userRepository.settingRepository.setDefaultCurrency(currencyId);
     setState(() {
       selectedCurrency = _userRepository
           .settingRepository
@@ -69,10 +68,9 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
 
   @override
   Widget build(BuildContext context) {
-//    duplicateItems = _userRepository.settingRepository.getCurrencies();
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text(widget.title),
+        title: new Text(title),
       ),
       body: Container(
         child: Column(
