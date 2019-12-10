@@ -12,6 +12,7 @@ import 'package:intelligent_receipt/helper_widgets/date_time_picker.dart';
 import 'package:intelligent_receipt/receipt/bloc/receipt_bloc.dart';
 import 'package:intelligent_receipt/receipt/bloc/receipt_event.dart';
 import 'package:intelligent_receipt/receipt/bloc/receipt_state.dart';
+import 'package:intelligent_receipt/translations/global_translations.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 import 'package:intelligent_receipt/data_model/receipt_repository.dart';
 import 'dart:async';
@@ -52,8 +53,8 @@ class AddEditReiptForm extends StatefulWidget {
 
 class _AddEditReiptFormState extends State<AddEditReiptForm> {
   final _formKey = GlobalKey<FormState>();
-  final pageTitleEdit = 'Edit Receipt';
-  final pageTitleNew = 'Create Receipt';
+  String get pageTitleEdit => allTranslations.text('app.add-edit-manual-page.edit-title');
+  String get pageTitleNew => allTranslations.text('app.add-edit-manual-page.new-title');
 
   var isNew;
   File receiptImageFile;
@@ -65,6 +66,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
   UserRepository _userRepository;
   ReceiptBloc _receiptBloc;
   ReceiptState _state;
+  String get warrantyPeriodUnit => receipt.warrantyPeriod < 24 ? allTranslations.text('words.months') : allTranslations.text('words.years');
 
   _AddEditReiptFormState(this.receipt, this.isNew) {
     receiptCurrency = Currency();
@@ -159,7 +161,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
 
   String textFieldValidator(value) {
     if (value.isEmpty) {
-      return 'Value required';
+      return allTranslations.text('app.common.value-required-validation');
     }
     return null;
   }
@@ -194,19 +196,18 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
   Future<ImageSource> _getImageSource() async {
     return showDialog<ImageSource>(
       context: context,
-      //barrierDismissible: true, // Allow to be closed without selecting option
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Select Image Source'),
+          title: Text(allTranslations.text('app.select-image-source-dialog.title')),
           actions: <Widget>[
             FlatButton(
-              child: Text('Camera'),
+              child: Text(allTranslations.text('words.camera')),
               onPressed: () {
                 Navigator.of(context).pop(ImageSource.camera);
               },
             ),
             FlatButton(
-              child: Text('Gallery'),
+              child: Text(allTranslations.text('words.gallery')),
               onPressed: () {
                 Navigator.of(context).pop(ImageSource.gallery);
               },
@@ -242,7 +243,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
           CropAspectRatioPreset.ratio16x9
         ],
         androidUiSettings: AndroidUiSettings(
-            toolbarTitle: 'Cropper',
+            toolbarTitle: allTranslations.text('app.image-cropper-ttitle'),
             toolbarColor: Colors.deepOrange,
             toolbarWidgetColor: Colors.white,
             initAspectRatio: CropAspectRatioPreset.original,
@@ -293,9 +294,9 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
                 Icon(
                   Icons.image,
                   size: 60,
-                  semanticLabel: 'Select New Image',
+                  semanticLabel: allTranslations.text('app.add-edit-manual-page.select-new-image-label'),
                 ),
-                Text('Select New Image')
+                Text(allTranslations.text('app.add-edit-manual-page.select-new-image-label'))
               ],
             )),
       ),
@@ -313,7 +314,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
             content: new Text(message),
             actions: <Widget>[
               FlatButton(
-                child: Text('Close'),
+                child: Text(allTranslations.text('words.close')),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -335,12 +336,12 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
                 child:
                 childImage != null ?
                 ZoomableImage(childImage.image, backgroundColor: Colors.white) :
-                Center(child: Text("No Image!", textAlign: TextAlign.center)),
+                Center(child: Text(allTranslations.text('app.add-edit-manual-page.show-full-image-missing'), textAlign: TextAlign.center)),
               ),
               Container(
                 height: 30,
                 child: FlatButton(
-                  child: Text('Close'),
+                  child: Text(allTranslations.text('words.close')),
                   onPressed: () {
                     Navigator.pop(context);
                   },
@@ -394,7 +395,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
                 SnackBar(
                   content: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [Text('Upload Failed: ' + state.errorMessage), Icon(Icons.error)],
+                    children: [Text(allTranslations.text('app.common.uploading-failed') + state.errorMessage), Icon(Icons.error)],
                   ),
                   backgroundColor: Colors.red,
                 ),
@@ -408,7 +409,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
                   content: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Uploading Receipt...'),
+                      Text(allTranslations.text('app.common.uploading-receipt-in-progess')),
                       CircularProgressIndicator(),
                     ],
                   ),
@@ -417,11 +418,17 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
           }
           if (state.uploadSuccess) {
             Navigator.pop(context);
-            _showMessage("Receipt has been saved", "Receipt is being listed in Receipts/Reviewed tab.");
+            _showMessage(
+              allTranslations.text('app.upload-result-dialog.title'),  
+              allTranslations.text('app.upload-result-dialog.success-message'),
+              );
           }
           if (state.deleteSuccess) {
             Navigator.of(context).pop();
-            _showMessage("Delete Receipt", "Receipt was successfully deleted.");
+            _showMessage(
+              allTranslations.text('app.delete-result-dialog.title'), 
+              allTranslations.text('app.delete-result-dialog.success-message'),
+              );
           }
           if (state.deleteInProgress) {
             Scaffold.of(context)
@@ -431,7 +438,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
                   content: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Deleting Receipt...'),
+                      Text(allTranslations.text('app.common.deleting-in-progress')),
                       CircularProgressIndicator(),
                     ],
                   ),
@@ -445,7 +452,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
                 SnackBar(
                   content: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [Text("Delete receipt failed: " + state.errorMessage), Icon(Icons.error)],
+                    children: [Text(allTranslations.text('app.common.deleting-failed') + state.errorMessage), Icon(Icons.error)],
                   ),
                   backgroundColor: Colors.red,
                 ),
@@ -464,7 +471,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
                     child: Column(
                       children: <Widget>[
                         IRDateTimePicker(
-                          labelText: 'Purchase Date',
+                          labelText: allTranslations.text('app.add-edit-manual-page.purchase-date-label'),
                           selectedDate: receipt.receiptDatetime.isBefore(DateTime(1970)) ? DateTime.now() : receipt.receiptDatetime,
                           selectDate: (newValue) {
                             setState(() {
@@ -480,7 +487,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
                               child: Padding(
                                 padding: EdgeInsets.only(top: 5),
                                 child: TextFormField(
-                                  decoration: InputDecoration(labelText: 'Total Amount'),
+                                  decoration: InputDecoration(labelText: allTranslations.text('app.add-edit-manual-page.total-amount-label')),
                                   initialValue: receipt.totalAmount == 0 ? "0" : receipt.totalAmount.toString(),
                                   validator: textFieldValidator,
                                   onSaved: (String value) {
@@ -493,7 +500,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
                               flex: 3,
                               child: DropdownButtonFormField<String>(
                                 decoration:
-                                    InputDecoration(labelText: 'Currency Code'),
+                                    InputDecoration(labelText: allTranslations.text('app.add-edit-manual-page.currency-code-label')),
                                 items: _getCurrencyCodesList(),
                                 value: (receiptCurrency!= null) ? receiptCurrency.code : "AUD",
                                 onSaved: (String value) {
@@ -512,7 +519,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
                         ),
                         FormField<bool>(
                           builder: (formState) => CheckboxListTile(
-                            title: const Text('GST Inclusive'),
+                            title: Text(allTranslations.text('app.add-edit-manual-page.gst-inclusive-label')),
                             value: receipt.gstInclusive ?? true,
                             onChanged: (newValue) {
                               setState(() {
@@ -525,7 +532,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
                           },
                         ),
                         DropdownButtonFormField<int>(
-                          decoration: InputDecoration(labelText: 'Category'),
+                          decoration: InputDecoration(labelText: allTranslations.text('app.add-edit-manual-page.category-label')),
                           items: _getCategorylist(),
                           value: receipt.categoryId,
                           onSaved: (int value) {
@@ -538,7 +545,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
                           },
                         ),
                         TextFormField(
-                          decoration: InputDecoration(labelText: 'Shop/Vendor'),
+                          decoration: InputDecoration(labelText: allTranslations.text('app.add-edit-manual-page.vendor-label')),
                           initialValue: receipt.companyName,
                           validator: textFieldValidator,
                           onSaved: (String value) {
@@ -547,8 +554,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
                         ),
                         TextFormField(
                           initialValue: receipt.productName,
-                          //validator: textFieldValidator,
-                          decoration: InputDecoration(labelText: 'Product Name'),
+                          decoration: InputDecoration(labelText: allTranslations.text('app.add-edit-manual-page.product-name-label')),
                           onSaved: (String value) {
                             receipt.productName = value;
                           },
@@ -558,7 +564,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
                           children: <Widget>[
                             Padding(
                               padding: EdgeInsets.symmetric(vertical: 8.0),
-                              child: Text('Warranty Period'),
+                              child: Text(allTranslations.text('app.add-edit-manual-page.warranty-period-label')),
                             ),
                             FormField<double>(
                               builder: (formFieldState) => Slider.adaptive(
@@ -567,7 +573,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
                                 min: 0,
                                 max: 60,
                                 label:
-                                    '${receipt.warrantyPeriod < 24 ? receipt.warrantyPeriod : receipt.warrantyPeriod / 12} ${receipt.warrantyPeriod < 24 ? "months" : "years"}',
+                                    '${receipt.warrantyPeriod < 24 ? receipt.warrantyPeriod : receipt.warrantyPeriod / 12} $warrantyPeriodUnit',
                                 onChanged: (newValue) {
                                   setState(() {
                                     receipt.warrantyPeriod = newValue;
@@ -581,7 +587,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
                           ],
                         ),
                         TextFormField(
-                          decoration: InputDecoration(labelText: 'Notes'),
+                          decoration: InputDecoration(labelText: allTranslations.text('app.add-edit-manual-page.notes-label')),
                           initialValue: receipt.notes,
                           onSaved: (String value) {
                             receipt.notes = value;
