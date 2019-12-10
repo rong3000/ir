@@ -1,9 +1,23 @@
 {
   "app": {
     "title": "Intelligent Receipt",
+    "common": {
+      "loading-status": "Loading...",
+      "value-required-validation": "Value Required",
+      "uploading-receipt-in-progess": "Uploading Receipt...",
+      "uploading-failed": "Upload Failed: ",
+      "deleting-in-progress": "Deleting Receipt...",
+      "deleting-failed": "Delete Failed: "
+    },
     "settings-page": {
+      "title": "Settings",
       "preferences-menu-item-title": "Preferences",
-      "currency-menu-item-title": "Default Currency"
+      "currency-menu-item-title": "Default Currency",
+      "category-menu-item-title": "Categories",
+      "plan-info-menu-item-title": "Plan Information",
+      "document-knowledge-menu-item-title": "Documents & Knowledge Centre",
+      "invite-friend-menu-item-title": "Invite a Friend",
+      "contact-us-menu-item-title": "Contact Us"
     },
     "preferences-page": {
       "title": "App Preferences",
@@ -44,9 +58,7 @@
       "add-receipt-manual-tooltip": "Manually Add Receipt",
       "failed-load-receipts-message": "Failed to load receipts: "
     },
-    "common": {
-      "loading-status": "Loading..."
-    },
+
     "snap-receipt-page": {
       "title": "Snap new receipt"
     },
@@ -59,7 +71,8 @@
       "title": "New Receipt Group"
     },
     "category-screen": {
-      "title": "Add New Category",
+      "title": "Edit Categories",
+      "add-dialog-title": "Add New Category",
       "search-label": "Search",
       "modify-alert-title": "Modify/Delete Category"
     },
@@ -84,6 +97,33 @@
       "upgrade-now-label": "Upgrade Now",
       "premium-plan-label": "Premium Plan",
       "premium-plan-label-subtitle": "You will get unlimited snaps and groups."
+    },
+    "add-edit-manual-page": {
+      "edit-title": "Edit Receipt",
+      "new-title": "Create Receipt",
+      "select-new-image-label": "Select New Image",
+      "show-full-image-missing": "No Image!",
+      "purchase-date-label": "Purchase Date",
+      "total-amount-label": "Total Amount",
+      "currency-code-label": "Currency Code",
+      "gst-inclusive-label": "GST Inclusive",
+      "category-label": "Category",
+      "vendor-label": "Shop/Vendor",
+      "product-name-label": "Product Name",
+      "warranty-period-label": "Warranty Period",
+      "notes-label": "Notes"
+
+    },
+    "image-cropper" :{
+      "title": "Cropper"
+    },
+    "upload-result-dialog": {
+      "title": "Receipt has been saved",
+      "success-message": "Receipt is being listed in Receipts/Reviewed tab."
+    },
+    "delete-result-dialog": {
+      "title": "Delete Receipt",
+      "success-message": "Receipt was successfully deleted."
     }
   },
   "words": {
@@ -100,7 +140,9 @@
     "cancel": "Cancel",
     "rename": "Rename",
     "search": "Search",
-    "continue": "Continue"
-
+    "continue": "Continue",
+    "close": "Close",
+    "months": "months",
+    "years": "years"
   }
 }

@@ -3,7 +3,7 @@
 // found in the LICENSE file.
 
 
-// This file feels very unfinished and no trtanslations have been done - RB
+// This file feels very unfinished and no translations have been done - RB
 
 import 'dart:async';
 

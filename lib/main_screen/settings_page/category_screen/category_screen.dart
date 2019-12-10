@@ -15,13 +15,12 @@ enum DialogDemoAction {
 }
 
 class CategoryScreen extends StatefulWidget {
-  final String title;
+  String get title => allTranslations.text('app.category-screen.title');
   final UserRepository _userRepository;
   final Currency defaultCurrency;
   CategoryScreen(
       {Key key,
       @required UserRepository userRepository,
-      this.title,
       this.defaultCurrency})
       : assert(userRepository != null),
         _userRepository = userRepository,
@@ -143,7 +142,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                       context: context,
                       child: AlertDialog(
                         title: Text(
-                          allTranslations.text('app.category-screen.title'),
+                          allTranslations.text('app.category-screen.add-dialog-title'),
                           style: dialogTextStyle,
                         ),
                         content: TextField(
