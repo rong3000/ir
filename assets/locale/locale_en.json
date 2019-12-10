@@ -3,7 +3,9 @@
     "title": "Intelligent Receipt",
     "settings-page": {
       "preferences-menu-item-title": "Preferences",
-      "currency-menu-item-title": "Default Currency"
+      "currency-menu-item-title": "Default Currency",
+      "category-menu-item-title": "Categories"
+
     },
     "preferences-page": {
       "title": "App Preferences",
@@ -59,7 +61,8 @@
       "title": "New Receipt Group"
     },
     "category-screen": {
-      "title": "Add New Category",
+      "title": "Edit Categories",
+      "add-dialog-title": "Add New Category",
       "search-label": "Search",
       "modify-alert-title": "Modify/Delete Category"
     },
@@ -84,7 +87,8 @@
       "upgrade-now-label": "Upgrade Now",
       "premium-plan-label": "Premium Plan",
       "premium-plan-label-subtitle": "You will get unlimited snaps and groups."
-    }
+    },
+
   },
   "words": {
     "email": "Email",
