@@ -51,6 +51,10 @@ class _ReportCardState extends State<ReportCard> {
         theme.textTheme.body1.copyWith(color: Colors.black);
     final TextStyle dateStyle = theme.textTheme.body2;
     final TextStyle amountStyle = theme.textTheme.body1;
+    Currency currency = _userRepository.settingRepository.getCurrencyForCurrencyCode(widget._reportItem.currencyCode);
+    if (currency == null) {
+      currency = widget._baseCurrency;
+    }
 
     Widget _actionButton(BuildContext context, ActionWithLable action) {
       if (action.action != null) {
@@ -118,7 +122,7 @@ class _ReportCardState extends State<ReportCard> {
                           Padding(
                             padding: const EdgeInsets.only(top: 0.0, bottom: 6.0),
                             child: Text(
-                              'Total: ${widget._baseCurrency != null ? widget._baseCurrency.code: ''} ${widget._baseCurrency != null ? widget._baseCurrency.symbol: ''} ${widget._reportItem.getTotalAmount(_userRepository.receiptRepository)}',
+                              'Total: ${currency != null ? currency.code: ''} ${currency != null ? currency.symbol: ''}${widget._reportItem.totalAmount.toStringAsFixed(2)}',
                               style: companyNameStyle.apply(fontSizeFactor: 1.2),
 
                             ),

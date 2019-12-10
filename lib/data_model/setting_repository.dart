@@ -27,6 +27,23 @@ class SettingRepository extends IRRepository {
     return currencies;
   }
 
+  Currency getCurrencyForCurrencyCode(String currencyCode) {
+    if (currencyCode == null) {
+      return null;
+    }
+
+    Currency currency;
+    _lockCurrencies.synchronized(() {
+      for (int i = 0; i < _currencies.length; i++) {
+        if (_currencies[i].code == currencyCode) {
+          currency = _currencies[i];
+          break;
+        }
+      }
+    });
+    return currency;
+  }
+
   Currency getDefaultCurrency() {
     String currencyId = _getSettingValue(Setting_DefaultCurrency);
     var currId = int.tryParse(currencyId);

@@ -40,7 +40,8 @@ Rate _$RateFromJson(Map<String, dynamic> json) {
       GBP: (json['GBP'] as num)?.toDouble(),
       KRW: (json['KRW'] as num)?.toDouble(),
       MYR: (json['MYR'] as num)?.toDouble(),
-      HRK: (json['HRK'] as num)?.toDouble());
+      HRK: (json['HRK'] as num)?.toDouble(),
+      EUR: (json['EUR'] as num)?.toDouble());
 }
 
 Map<String, dynamic> _$RateToJson(Rate instance) => <String, dynamic>{
@@ -76,5 +77,6 @@ Map<String, dynamic> _$RateToJson(Rate instance) => <String, dynamic>{
       'GBP': instance.GBP,
       'KRW': instance.KRW,
       'MYR': instance.MYR,
-      'HRK': instance.HRK
+      'HRK': instance.HRK,
+      'EUR': instance.EUR
     };
