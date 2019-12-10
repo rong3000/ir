@@ -2,10 +2,14 @@
   "app": {
     "title": "Intelligent Receipt",
     "settings-page": {
+      "title": "Settings",
       "preferences-menu-item-title": "Preferences",
       "currency-menu-item-title": "Default Currency",
-      "category-menu-item-title": "Categories"
-
+      "category-menu-item-title": "Categories",
+      "plan-info-menu-item-title": "Plan Information",
+      "document-knowledge-menu-item-title": "Documents & Knowledge Centre",
+      "invite-friend-menu-item-title": "Invite a Friend",
+      "contact-us-menu-item-title": "Contact Us"
     },
     "preferences-page": {
       "title": "App Preferences",
@@ -87,8 +91,7 @@
       "upgrade-now-label": "Upgrade Now",
       "premium-plan-label": "Premium Plan",
       "premium-plan-label-subtitle": "You will get unlimited snaps and groups."
-    },
-
+    }
   },
   "words": {
     "email": "Email",
