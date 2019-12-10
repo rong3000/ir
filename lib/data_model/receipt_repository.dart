@@ -22,38 +22,8 @@ class amountPair {
 class ReceiptRepository extends IRRepository {
   List<ReceiptListItem> receipts = new List<ReceiptListItem>();
   List<ReceiptListItem> selectedReceipts = new List<ReceiptListItem>();
-  List<ReceiptListItem> cachedReceiptItems;
-  List<amountPair> cachedReceiptItemsAmount;
-  List<ReceiptListItem> candidateReceiptItems;
   bool _dataFetched = false;
   Lock _lock = new Lock();
-
-  void resetCachedReceiptItems(ReportRepository reportRepository, {int reportID = 0}) {
-    cachedReceiptItems = [];
-    cachedReceiptItemsAmount = [];
-    candidateReceiptItems = [];
-    candidateReceiptItems = getReceiptItems(ReceiptStatusType.Reviewed);
-    var _receiptsInReportSet = new Set<ReceiptListItem>();
-    var _candidateReceiptsSet = new Set<ReceiptListItem>();
-
-    // Only filter out the receipts in the specified report
-    for (var i = 0; i < reportRepository.reports.length; i++ ) {
-      if (reportRepository.reports[i].id == reportID) {
-        _receiptsInReportSet.addAll(
-            reportRepository.reports[i].getReceiptList(this));
-      }
-    }
-
-    _candidateReceiptsSet.addAll(candidateReceiptItems);
-    candidateReceiptItems = _candidateReceiptsSet.difference(_receiptsInReportSet).toList();
-  }
-
-  List<ReceiptListItem> removeCandidateItems(int id) {
-    candidateReceiptItems.removeWhere((ReceiptListItem item){
-      return item.id == id;
-    });
-    return candidateReceiptItems;
-  }
 
   ReceiptRepository(UserRepository userRepository) : super(userRepository);
 
@@ -106,8 +76,6 @@ class ReceiptRepository extends IRRepository {
   }
 
   Future<DataResult> getReceiptsFromServer({bool forceRefresh = false}) async {
-    //var image = await ImagePicker.pickImage(source: ImageSource.camera);
-    //await this.uploadReceiptFile(image);
     DataResult result = new DataResult(false, "Unknown");
     await _lock.synchronized(() async {
       if (_dataFetched && !forceRefresh) {
@@ -158,7 +126,26 @@ class ReceiptRepository extends IRRepository {
 
     return result;
   }
-  
+
+  Future<DataResult> updateReceiptListItem(ReceiptListItem receipt) async {
+    DataResult result =
+    await webservicePost(Urls.UpdateReceiptListItem, await getToken(), jsonEncode(receipt));
+    if (result.success) {
+      Receipt newReceipt = Receipt.fromJason(result.obj);
+      _lock.synchronized(() {
+        // update local cache
+        for (int j = 0; j < receipts.length; j++) {
+          if (receipts[j].id == newReceipt.id) {
+            receipts[j] = newReceipt;
+            break;
+          }
+        }
+      });
+    }
+
+    return result;
+  }
+
   Future<DataResult> addReceipts(List<Receipt> newReceipts) async {
     DataResult result =
         await webservicePost(Urls.AddReceipts, await getToken(), jsonEncode(newReceipts));

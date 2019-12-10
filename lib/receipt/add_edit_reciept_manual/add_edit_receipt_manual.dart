@@ -59,7 +59,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
   File receiptImageFile;
   Image receiptImage;
   Receipt receipt;
-  Currency defaultCurrency;
+  Currency receiptCurrency;
   var currenciesList = List<Currency>();
   var categoryList = List<Category>();
   UserRepository _userRepository;
@@ -67,8 +67,8 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
   ReceiptState _state;
 
   _AddEditReiptFormState(this.receipt, this.isNew) {
-    defaultCurrency = Currency();
-    defaultCurrency.code = 'AUD';
+    receiptCurrency = Currency();
+    receiptCurrency.code = 'AUD';
     if ((this.receipt.categoryId == null) || (this.receipt.categoryId < 1)) {
       this.receipt.categoryId = 1;
     }
@@ -83,10 +83,11 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
   @override
   void initState() {
     _receiptBloc = BlocProvider.of<ReceiptBloc>(context);
-
     _userRepository = RepositoryProvider.of<UserRepository>(context);
-    defaultCurrency = _userRepository.settingRepository.getDefaultCurrency() ??
-        defaultCurrency;
+    receiptCurrency = _userRepository.settingRepository.getCurrencyForCurrencyCode(receipt.currencyCode);
+    if (receiptCurrency == null) {
+      receiptCurrency = _userRepository.settingRepository.getDefaultCurrency() ?? receiptCurrency;
+    }
     currenciesList = _userRepository.settingRepository.getCurrencies();
     categoryList = _userRepository.categoryRepository.categories;
 
@@ -105,8 +106,9 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
       _userRepository.settingRepository.getCurrenciesFromServer().then((value) {
         this.setState(() {
           currenciesList = _userRepository.settingRepository.getCurrencies();
-          defaultCurrency = _userRepository.settingRepository.getDefaultCurrency() ??
-                  defaultCurrency;
+          if (receiptCurrency == null) {
+            receiptCurrency = _userRepository.settingRepository.getDefaultCurrency() ?? receiptCurrency;
+          }
         });
       });
     }
@@ -493,13 +495,13 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
                                 decoration:
                                     InputDecoration(labelText: 'Currency Code'),
                                 items: _getCurrencyCodesList(),
-                                value: defaultCurrency.code,
+                                value: (receiptCurrency!= null) ? receiptCurrency.code : "AUD",
                                 onSaved: (String value) {
                                   receipt.currencyCode = value;
                                 },
                                 onChanged: (String newValue) {
                                   setState(() {
-                                    defaultCurrency =
+                                    receiptCurrency =
                                         currenciesList.singleWhere(
                                             (curr) => curr.code == newValue);
                                   });

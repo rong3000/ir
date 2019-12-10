@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intelligent_receipt/data_model/currency.dart';
 import 'package:intelligent_receipt/data_model/enums.dart';
 import 'package:intelligent_receipt/data_model/report.dart';
-import 'package:intelligent_receipt/report/edit_report_screen/edit_report_screen.dart';
+import 'package:intelligent_receipt/report/add_edit_report/add_edit_report.dart';
 import 'package:intelligent_receipt/report/report_card/report_card.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 import 'package:intl/intl.dart';
@@ -245,12 +245,9 @@ class ReportListState extends State<ReportList> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   void reviewAction(int id) {
-    _userRepository.receiptRepository.resetCachedReceiptItems(
-        _userRepository.reportRepository,
-        reportID: id);
     Navigator.of(context).push(
       MaterialPageRoute(builder: (context) {
-        return EditReportScreen(
+        return AddEditReport(
           userRepository: _userRepository,
           title: 'Edit Receipt Group',
           reportId: id,

@@ -21,7 +21,7 @@ class ReceiptList extends StatefulWidget {
     @required ReceiptStatusType receiptStatusType,
     @required List<ReceiptListItem> receiptItems,
     @required List<ActionWithLabel> actions,
-    @required Future<void> Function() forceGetReceiptsFromServer,
+    Future<void> Function() forceGetReceiptsFromServer = null,
   })  : assert(userRepository != null),
         _userRepository = userRepository,
         _receiptStatusType = receiptStatusType,
@@ -368,6 +368,12 @@ class ReceiptListState extends State<ReceiptList> {
     return selectedReceipts;
   }
 
+  Future<void> _refresh() {
+    if (widget._forceGetReceiptsFromServer != null) {
+      widget._forceGetReceiptsFromServer();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
@@ -474,7 +480,7 @@ class ReceiptListState extends State<ReceiptList> {
         ),
       ),
       body: RefreshIndicator(
-        onRefresh: widget._forceGetReceiptsFromServer,
+        onRefresh: _refresh,
         child: ListView.builder(
           itemCount: sortedReceiptItems.length,
           itemBuilder: (context, index) {

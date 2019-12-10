@@ -36,6 +36,7 @@ class Rate {
   double KRW;
   double MYR;
   double HRK;
+  double EUR;
 
   Rate(
       {this.CAD,
@@ -70,7 +71,8 @@ class Rate {
       this.GBP,
       this.KRW,
       this.MYR,
-      this.HRK});
+      this.HRK,
+      this.EUR});
 
   double getRate(String currentCode) {
     double rate;
@@ -141,6 +143,8 @@ class Rate {
         return rate = this.MYR;
       case 'HRK':
         return rate = this.HRK;
+      case 'EUR':
+        return rate = this.EUR;
       default:
         break;
     }
