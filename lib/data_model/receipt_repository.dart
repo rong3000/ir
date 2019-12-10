@@ -126,7 +126,26 @@ class ReceiptRepository extends IRRepository {
 
     return result;
   }
-  
+
+  Future<DataResult> updateReceiptListItem(ReceiptListItem receipt) async {
+    DataResult result =
+    await webservicePost(Urls.UpdateReceiptListItem, await getToken(), jsonEncode(receipt));
+    if (result.success) {
+      Receipt newReceipt = Receipt.fromJason(result.obj);
+      _lock.synchronized(() {
+        // update local cache
+        for (int j = 0; j < receipts.length; j++) {
+          if (receipts[j].id == newReceipt.id) {
+            receipts[j] = newReceipt;
+            break;
+          }
+        }
+      });
+    }
+
+    return result;
+  }
+
   Future<DataResult> addReceipts(List<Receipt> newReceipts) async {
     DataResult result =
         await webservicePost(Urls.AddReceipts, await getToken(), jsonEncode(newReceipts));

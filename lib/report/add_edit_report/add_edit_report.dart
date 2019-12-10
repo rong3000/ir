@@ -10,6 +10,7 @@ import 'package:intelligent_receipt/data_model/receipt.dart';
 import 'package:intelligent_receipt/data_model/receipt_repository.dart';
 import 'package:intelligent_receipt/data_model/report.dart';
 import 'package:intelligent_receipt/data_model/setting_repository.dart';
+import 'package:intelligent_receipt/data_model/log_helper.dart';
 import 'package:intelligent_receipt/receipt/receipt_card/receipt_card.dart';
 import 'package:intelligent_receipt/report/add_receipts_screen/add_receipts_screen.dart';
 import 'package:intelligent_receipt/report/add_edit_report/report_button.dart';
@@ -45,8 +46,11 @@ class _AddEditReportState extends State<AddEditReport> {
 
   Report _report = null;
   List<ReceiptListItem> _receiptList;
-  String _totalAmount;
-  Currency baseCurrency;
+  double _totalAmount;
+  Currency _reportCurrency = null;
+  Currency _defaultCurrency = null;
+  Future<double> _calcTotalAmountFuture = null;
+  bool _receiptItemsChanged = false;
 
   @override
   void initState() {
@@ -60,8 +64,11 @@ class _AddEditReportState extends State<AddEditReport> {
 
     _reportNameController.text = (_report != null) ? _report.reportName : "";
     _descriptionController.text = (_report != null) ? _report.description : "";
+    _totalAmount = (_report != null && _report.totalAmount != null) ? _report.totalAmount : 0;
+    _reportCurrency = (_report != null) ? _userRepository.settingRepository.getCurrencyForCurrencyCode(_report.currencyCode) : null;
     _receiptList = (!isNewReport()) ? _report.getReceiptList(_userRepository.receiptRepository) : new List<ReceiptListItem>();
-
+    _defaultCurrency = _userRepository.settingRepository.getDefaultCurrency();
+    _calcTotalAmountFuture = _calculateTotalAmount();
     super.initState();
   }
 
@@ -81,54 +88,66 @@ class _AddEditReportState extends State<AddEditReport> {
       return Exchange.fromJson(json.decode(response.body));
     } else {
       // If that response was not OK, throw an error.
-      throw Exception('Failed to load exchange rate from server');
+      LogHepper.warning("Failed to load exchange rate from serve", saveToFile: true);
     }
   }
 
-  Future<void> calculateExchange() async {
-    // xxx to be done
-//    await _userRepository.settingRepository.getSettingsFromServer();
-//    baseCurrency = _userRepository.settingRepository.getDefaultCurrency();
-//    for (int i = 0; i < _userRepository.receiptRepository.cachedReceiptItems.length; i++ ) {
-//      if (_userRepository.receiptRepository.cachedReceiptItems[i].currencyCode == baseCurrency.code)
-//      {
-//        amountPair cachedReceiptItemsAmount2 = new amountPair();
-//        cachedReceiptItemsAmount2.amount = _userRepository.receiptRepository.cachedReceiptItems[i].totalAmount;
-//        cachedReceiptItemsAmount2.id = _userRepository.receiptRepository.cachedReceiptItems[i].id;
-//        _userRepository.receiptRepository.cachedReceiptItemsAmount.add(cachedReceiptItemsAmount2);
-//        print('id ${_userRepository.receiptRepository.cachedReceiptItems[i].id} add to group and ${cachedReceiptItemsAmount2}');
-//      }
-//      if (_userRepository.receiptRepository.cachedReceiptItems[i].currencyCode != baseCurrency.code) {
-//        amountPair cachedReceiptItemsAmount1 = new amountPair();
-//
-//        Exchange exchange = await getExchangeRateFromServer(
-//            _userRepository.receiptRepository
-//                .cachedReceiptItems[i]
-//                .receiptDatetime, baseCurrency.code);
-//        cachedReceiptItemsAmount1.amount = _userRepository.receiptRepository
-//            .cachedReceiptItems[i]
-//            .totalAmount /
-//            exchange.rates.getRate(_userRepository.receiptRepository
-//                .cachedReceiptItems[i]
-//                .currencyCode);
-//        cachedReceiptItemsAmount1.id = _userRepository.receiptRepository.cachedReceiptItems[i].id;
-//        _userRepository.receiptRepository.cachedReceiptItemsAmount.add(
-//            cachedReceiptItemsAmount1);
-//      }}
-//    setState(() {
-//
-//    });
+  Future<double> _getAmountForGivenCurrency(ReceiptListItem receiptItem, Currency currency) async {
+    if (currency == null) {
+      return receiptItem.totalAmount;
+    } else {
+      if (receiptItem.currencyCode == currency.code) {
+        return receiptItem.totalAmount;
+      } else if (receiptItem.altCurrencyCode == currency.code) {
+        return receiptItem.altTotalAmount;
+      } else {
+        // Get currency exchange rate from server
+        Exchange exchange = await getExchangeRateFromServer(receiptItem.receiptDatetime, currency.code);
+        if (exchange == null) {
+          LogHepper.warning("Cannot get currency exchange for ${receiptItem.receiptDatetime} ${currency.code}", saveToFile: true);
+          return receiptItem.totalAmount;
+        } else {
+          double rate = exchange.rates.getRate(receiptItem.currencyCode);
+          if ((rate != null) && (rate > 0)) {
+            double altTotalAmount = receiptItem.totalAmount / rate;
+            // Save receipt's altTotalAmount
+            receiptItem.altTotalAmount = altTotalAmount;
+            receiptItem.altCurrencyCode = currency.code;
+            _userRepository.receiptRepository.updateReceiptListItem(receiptItem);
+            return altTotalAmount;
+          } else {
+            LogHepper.warning("No exchange rate for ${receiptItem.receiptDatetime} ${currency.code} ${receiptItem.currencyCode}", saveToFile: true);
+            return receiptItem.totalAmount;
+          }
+        }
+      }
+    }
   }
 
-  double _calculateTotal() {
-    return 0; // xxx to be done
+  Future<double> _calculateTotalAmount() async {
+    double totalAmount = 0;
+    for (int i = 0; i < _receiptList.length; i++) {
+      double itemAmount = await _getAmountForGivenCurrency(_receiptList[i], _defaultCurrency);
+      totalAmount += itemAmount;
+    }
+
+    if (_totalAmount != totalAmount) {
+      _totalAmount = totalAmount;
+      _reportCurrency = _defaultCurrency;
+      if (!_receiptItemsChanged && !isNewReport()) {
+        // Save report's total amount and currency code automatically
+        // the totalAmount changes may be caused by receipt items deleted or default currency change
+        _report.totalAmount = _totalAmount;
+        _report.currencyCode = _defaultCurrency.code;
+        _userRepository.reportRepository.updateReport(_report, false);
+      }
+    }
+
+    return totalAmount;
   }
 
-  void removeAction(int inputId) {
-    _receiptList.removeWhere((ReceiptListItem item){
-      return item.id == inputId;
-    });
-    setState(() {});
+  String _getTotalAmountText(double totalAmount) {
+    return "Total: ${_reportCurrency != null ? _reportCurrency.code: ''} ${_reportCurrency != null ? _reportCurrency.symbol: ''}${totalAmount.toStringAsFixed(2)}";
   }
 
   @override
@@ -138,9 +157,6 @@ class _AddEditReportState extends State<AddEditReport> {
     d.action = removeAction;
     d.label = 'Remove';
     actions.add(d);
-
-    double tempAmount = _calculateTotal();
-    _totalAmount = tempAmount.toStringAsFixed(2);
 
     return new Scaffold(
       appBar: new AppBar(
@@ -178,8 +194,19 @@ class _AddEditReportState extends State<AddEditReport> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
-                          Text(
-                              "Total: ${baseCurrency != null ? baseCurrency.code: ''} ${baseCurrency != null ? baseCurrency.symbol: ''} ${_totalAmount}"
+                          FutureBuilder<double> (
+                            future: _calcTotalAmountFuture,
+                            builder:
+                              (BuildContext context, AsyncSnapshot<double> snapshot) {
+                              switch (snapshot.connectionState) {
+                                case ConnectionState.none:
+                                case ConnectionState.waiting:
+                                case ConnectionState.active:
+                                  return Text(_getTotalAmountText(_totalAmount));
+                                case ConnectionState.done:
+                                  return Text(_getTotalAmountText(snapshot.data));
+                                }
+                            }
                           ),
                           ReportButton(
                             onPressed: _onAddReceipts,
@@ -236,24 +263,14 @@ class _AddEditReportState extends State<AddEditReport> {
     super.dispose();
   }
 
-  Future<void> addReport(Report report) async {
-    await _userRepository.reportRepository.addReport(report);
-//    await _userRepository.reportRepository.updateReport(report, true);
-    setState(() {});
-  }
-
-  Future<void> saveReport(Report report) async {
-    await _userRepository.reportRepository.updateReport(report, true);
-//    await _userRepository.reportRepository.updateReport(report, true);
-    setState(() {});
-  }
-
   Future<void> _onReportSaved() async {
     if (isNewReport()) {
       _report.id = 0;
       _report.statusId = 1;
       _report.createDateTime = DateTime.now();
     }
+    _report.totalAmount = _totalAmount;
+    _report.currencyCode = _reportCurrency.code;
     _report.updateDateTime = DateTime.now();
     _report.reportName = _reportNameController.text;
     _report.description = _descriptionController.text;
@@ -277,6 +294,17 @@ class _AddEditReportState extends State<AddEditReport> {
 
   void _addToReceiptList(ReceiptListItem receiptItem) {
     _receiptList.add(receiptItem);
+    _receiptItemsChanged = true;
+    _calcTotalAmountFuture = _calculateTotalAmount();
+  }
+
+  void removeAction(int inputId) {
+    _receiptList.removeWhere((ReceiptListItem item){
+      return item.id == inputId;
+    });
+    _receiptItemsChanged = true;
+    _calcTotalAmountFuture = _calculateTotalAmount();
+    setState(() {});
   }
 
   void _onAddReceipts() {

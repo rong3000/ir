@@ -17,7 +17,8 @@ class Urls {
   static String GetReceipts = ServiceBaseUrl + "Receipt/GetReceipts";
   static String GetReceipt = ServiceBaseUrl + "Receipt/GetReceiptByReceiptId/";
   static String UpdateReceipt = ServiceBaseUrl + "Receipt/UpdateReceipt";
-  static String UploadReceiptImages = ServiceBaseUrl + "Receipt/UploadReceiptImages/"; 
+  static String UpdateReceiptListItem = ServiceBaseUrl + "Receipt/UpdateReceiptListItem";
+  static String UploadReceiptImages = ServiceBaseUrl + "Receipt/UploadReceiptImages/";
   static String DeleteReceipts = ServiceBaseUrl + "Receipt/DeleteReceipts";
   static String GetImage = ServiceBaseUrl + "Receipt/GetImage";
   static String AddReceipts = ServiceBaseUrl + "Receipt/AddReceipts";
