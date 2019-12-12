@@ -76,7 +76,12 @@ Future<FirebaseUser> signInWithFacebook() async {
     postSignIn();
   }
 
+  Future<void> sendPasswordResetEmail(String email) async {
+    await _firebaseAuth.sendPasswordResetEmail(email: email);
+  }
+
   Future<void> signUp({String email, String password}) async {
+
     currentUser =  await _firebaseAuth.createUserWithEmailAndPassword(
       email: email,
       password: password,

@@ -62,11 +62,18 @@ class MainScreenState extends State<MainScreen> {
     });
   }
 
+  Future<void> userReload() async {
+    await _userRepository.currentUser.reload();
+    setState(() {
+
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _userRepository.currentUser.reload();
+    userReload();
 //    _verified = _userRepository.currentUser.isEmailVerified;
   }
 
@@ -96,9 +103,9 @@ class MainScreenState extends State<MainScreen> {
             onPageChanged: (index) {
               setState(() {
                 _currentIndex = index;
-                _userRepository.currentUser.reload();
 //                _verified = _userRepository.currentUser.isEmailVerified;
               });
+              userReload();
             },
             children: <Widget>[
               widget._homePage,
@@ -114,9 +121,9 @@ class MainScreenState extends State<MainScreen> {
               _controller.jumpToPage(index);
               setState(() {
                 _currentIndex = index;
-                _userRepository.currentUser.reload();
 //                _verified = _userRepository.currentUser.isEmailVerified;
               });
+              userReload();
             },
             type: BottomNavigationBarType.fixed,
             items: [
