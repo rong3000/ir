@@ -135,7 +135,6 @@ class ReceiptListState extends State<ReceiptList> {
   void showMenuSelection(ReceiptSortType value) {
 //    if (<String>[_simpleValue1, _simpleValue2, _simpleValue3].contains(value))
     _simpleValue = value;
-//    showInSnackBar('You selected: $value');
     print('You selected: $value');
     setState(() {
       forceRefresh = false;
@@ -144,9 +143,13 @@ class ReceiptListState extends State<ReceiptList> {
     });
   }
 
-  void showInSnackBar(String value) {
+  void _showInSnackBar(String value, {IconData icon: Icons.error, color: Colors.red}) {
     _scaffoldKey.currentState.showSnackBar(SnackBar(
-      content: Text(value),
+      content: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [Text(value), Icon(icon)],
+      ),
+      backgroundColor: color,
     ));
   }
 

@@ -81,7 +81,7 @@ class _ReceiptCardState extends State<ReceiptCard> {
     final TextStyle dateStyle = theme.textTheme.body2;
     final TextStyle amountStyle = theme.textTheme.body1;
     _retrieveImage(widget._receiptItem.imagePath);
-    
+
     Widget _actionButton(BuildContext context, ActionWithLabel action) {
       if (action.action != null) {
         return Container(

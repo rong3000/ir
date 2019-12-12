@@ -90,9 +90,13 @@ class TextFormFieldDemoState extends State<TextFormFieldDemo> {
 
   PersonData person = PersonData();
 
-  void showInSnackBar(String value) {
+  void _showInSnackBar(String value, {IconData icon: Icons.error, color: Colors.red}) {
     _scaffoldKey.currentState.showSnackBar(SnackBar(
-      content: Text(value),
+      content: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [Text(value), Icon(icon)],
+      ),
+      backgroundColor: color,
     ));
   }
 
@@ -106,10 +110,10 @@ class TextFormFieldDemoState extends State<TextFormFieldDemo> {
     final FormState form = _formKey.currentState;
     if (!form.validate()) {
       _autovalidate = true; // Start validating on every change.
-      showInSnackBar('Please fix the errors in red before submitting.');
+      _showInSnackBar('Please fix the errors in red before submitting.');
     } else {
       form.save();
-      showInSnackBar('${person.name}\'s phone number is ${person.phoneNumber}');
+      _showInSnackBar('${person.name}\'s phone number is ${person.phoneNumber}', color: Colors.blue, icon: Icons.info);
     }
   }
 

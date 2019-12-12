@@ -236,9 +236,13 @@ class ReportListState extends State<ReportList> {
     });
   }
 
-  void showInSnackBar(String value) {
+  void _showInSnackBar(String value, {IconData icon: Icons.error, color: Colors.red}) {
     _scaffoldKey.currentState.showSnackBar(SnackBar(
-      content: Text(value),
+      content: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [Text(value), Icon(icon)],
+      ),
+      backgroundColor: color,
     ));
   }
 
