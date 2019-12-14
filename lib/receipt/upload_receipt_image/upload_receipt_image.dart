@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intelligent_receipt/data_model/receipt_repository.dart';
+import 'package:intelligent_receipt/translations/global_translations.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 import 'dart:io';
 import "package:rflutter_alert/rflutter_alert.dart";
@@ -32,7 +33,7 @@ class _UploadReceiptImageState extends State<UploadReceiptImage> {
   UserRepository get _userRepository => widget._userRepository;
   AppState state;
   File imageFileToCrop;
-  Future<DataResult> _uploadReceiptFulture = null;
+  Future<DataResult> _uploadReceiptFulture;
 
   @override
   void initState() {
@@ -55,7 +56,7 @@ class _UploadReceiptImageState extends State<UploadReceiptImage> {
       buttons: [
         DialogButton(
           child: Text(
-            "OK, Got it",
+            allTranslations.text('app.upload-receipt-alert.button-text'),
             style: TextStyle(color: Colors.white, fontSize: 20),
           ),
           onPressed: () => Navigator.pop(context),
@@ -104,7 +105,6 @@ class _UploadReceiptImageState extends State<UploadReceiptImage> {
                       Text(message,
                           style: TextStyle(
                               color: Colors.indigo,
-                              //fontWeight: FontWeight.bold,
                               fontSize: 16)),
                       Container(
                         height: 16,
@@ -127,8 +127,8 @@ class _UploadReceiptImageState extends State<UploadReceiptImage> {
                                 ),
                               ),
                               padding: const EdgeInsets.all(10.0),
-                              child: const Text(
-                                  'Review Now',
+                              child: Text(
+                                 allTranslations.text('app.upload-receipt-screen.review-now-label'),
                                   style: TextStyle(fontSize: 16)
                               ),
                             ),
@@ -159,8 +159,8 @@ class _UploadReceiptImageState extends State<UploadReceiptImage> {
                                 ),
                               ),
                               padding: const EdgeInsets.all(10.0),
-                              child: const Text(
-                                  'Review Later',
+                              child: Text(
+                                  allTranslations.text('app.upload-receipt-screen.review-later-label'),
                                   style: TextStyle(fontSize: 16)
                               ),
                             ),
@@ -193,12 +193,12 @@ class _UploadReceiptImageState extends State<UploadReceiptImage> {
                           AsyncSnapshot<DataResult> snapshot) {
                         switch (snapshot.connectionState) {
                           case ConnectionState.none:
-                            return new Text('Press button to start');
+                            return new Text(allTranslations.text('app.upload-receipt-screen.press-to-start-label'));
                           case ConnectionState.waiting:
-                            return _getResultWidget('Submitting receipt, will be ready soon ...');
+                            return _getResultWidget(allTranslations.text('app.upload-receipt-screen.submitting-label'));
                           default:
                             if (snapshot.hasError)
-                              return _getResultWidget('Error: ${snapshot.error}');
+                              return _getResultWidget('${allTranslations.text('app.upload-receipt-screen.error-prefix')}: ${snapshot.error}');
                             else {
                               DataResult dataResult = snapshot.data;
                               if (dataResult.success) {
@@ -206,42 +206,34 @@ class _UploadReceiptImageState extends State<UploadReceiptImage> {
                                 if (receipt == null ||
                                     receipt.decodeStatus == DecodeStatusType.Unknown.index) {
                                   // Show unknown error
-                                  return _getResultWidget(
-                                      "We encounter an unknown error when submitting the receipt, please resubmit the receipt.");
+                                  return _getResultWidget(allTranslations.text('app.upload-receipt-screen.unknown-error-label')
+                                      );
                                 } else if (receipt.decodeStatus == DecodeStatusType.ExtractTextFailed.index) {
                                   // Show extracted text failure error
                                   return _getResultWidget(
-                                      "The receipt has been submitted, but failed to extract the text from the image. Please double check whether this is a valid receipt.\n\n"
-                                          "Press 'Review Now' button to manually enter receipt information now.\n"
-                                          "Press 'Review Later' button to review the receipt later, which is listed in 'Receipts\\Unreviewed' tab.",
+                                      allTranslations.text('app.upload-receipt-screen.extract-text-failed-message'),
                                       receipt: receipt);
                                 } else if (receipt.decodeStatus == DecodeStatusType.MaybeNotValidReceipt.index) {
                                   // Show image maybe not a valid receipt error
                                   return _getResultWidget(
-                                      "This maybe not a valid receipt. Please double check.\n\n"
-                                          "Press 'Review Now' button to manually enter receipt information now.\n"
-                                          "Press 'Review Later' button to review the receipt later, which is listed in 'Receipts\\Unreviewed' tab.",
+                                      allTranslations.text('app.upload-receipt-screen.maybe-not-valid-message'),
                                       receipt: receipt);
                                 } else if ((receipt.decodeStatus == DecodeStatusType.UnrecognizedFormat.index) ||
                                            (receipt.decodeStatus == DecodeStatusType.PartiallyDecoded.index)) {
                                   // Show unrecognized format error
                                   return _getResultWidget(
-                                      "The receipt image has been submitted, we are now recognizing it, and will notify you after we recognize it.\n\n"
-                                          "Press 'Review Now' button to manually enter receipt information now.\n"
-                                          "Press 'Review Later' button to review the receipt later, which is listed in 'Receipts\\Unreviewed' tab.",
+                                      allTranslations.text('app.upload-receipt-screen.unrecognized-format-message'),
                                       receipt: receipt);
                                 } else {
                                   // Show add or update receipt page
                                   return _getResultWidget(
-                                      "The receipt image has been submitted and recognized.\n\n"
-                                          "Press 'Review Now' button to verify receipt information now.\n"
-                                          "Press 'Review Later' button to review the receipt later, which is listed in 'Receipts\\Unreviewed' tab.",
+                                       allTranslations.text('app.upload-receipt-screen.recognized-success-message'),
                                       receipt: receipt);
                                 }
                               } else {
                                 // Show error message
                                 return _getResultWidget(
-                                    "We encounter an error when submitting the receipt: " +
+                                    allTranslations.text('app.upload-receipt-screen.general-error-message') +
                                         dataResult.message);
                               }
                             }
@@ -315,26 +307,6 @@ class _UploadReceiptImageState extends State<UploadReceiptImage> {
       return Container();
   }
 
-//  Future<Null> _pickImageCamera() async {
-//    imageFile =
-//        await ImagePicker.pickImage(source: ImageSource.camera, maxWidth: 600);
-//    if (imageFile != null) {
-//      setState(() {
-//        state = AppState.picked;
-//      });
-//    }
-//  }
-//
-//  Future<Null> _pickImageGallery() async {
-//    imageFile =
-//        await ImagePicker.pickImage(source: ImageSource.gallery, maxWidth: 600);
-//    if (imageFile != null) {
-//      setState(() {
-//        state = AppState.picked;
-//      });
-//    }
-//  }
-
   Future<Null> _cropImage() async {
     File croppedFile = await ImageCropper.cropImage(
       sourcePath: imageFileToCrop.path,
@@ -357,7 +329,7 @@ class _UploadReceiptImageState extends State<UploadReceiptImage> {
               CropAspectRatioPreset.ratio16x9
             ],
       androidUiSettings: AndroidUiSettings(
-          toolbarTitle: 'Cropper',
+          toolbarTitle: allTranslations.text('app.image-cropper.title'),
           toolbarColor: Colors.deepOrange,
           toolbarWidgetColor: Colors.white,
           initAspectRatio: CropAspectRatioPreset.original,
@@ -370,11 +342,4 @@ class _UploadReceiptImageState extends State<UploadReceiptImage> {
       });
     }
   }
-
-//  void _clearImage() {
-//    imageFile = null;
-//    setState(() {
-//      state = AppState.free;
-//    });
-//  }
 }
