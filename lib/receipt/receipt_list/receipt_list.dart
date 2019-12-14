@@ -4,6 +4,7 @@ import 'package:intelligent_receipt/data_model/action_with_lable.dart';
 import 'package:intelligent_receipt/data_model/enums.dart';
 import 'package:intelligent_receipt/data_model/receipt_repository.dart';
 import 'package:intelligent_receipt/receipt/receipt_card/receipt_card.dart';
+import 'package:intelligent_receipt/translations/global_translations.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 import 'package:intl/intl.dart';
 import 'package:synchronized/synchronized.dart';
@@ -21,7 +22,7 @@ class ReceiptList extends StatefulWidget {
     @required ReceiptStatusType receiptStatusType,
     @required List<ReceiptListItem> receiptItems,
     @required List<ActionWithLabel> actions,
-    Future<void> Function() forceGetReceiptsFromServer = null,
+    Future<void> Function() forceGetReceiptsFromServer,
   })  : assert(userRepository != null),
         _userRepository = userRepository,
         _receiptStatusType = receiptStatusType,
@@ -35,7 +36,6 @@ class ReceiptList extends StatefulWidget {
 }
 
 class ReceiptListState extends State<ReceiptList> {
-  final List<String> items = List<String>.generate(10000, (i) => "Item $i");
   bool sort;
   int start = 0;
   int end;
@@ -58,8 +58,6 @@ class ReceiptListState extends State<ReceiptList> {
   UserRepository get _userRepository => widget._userRepository;
   get _receiptStatusType => widget._receiptStatusType;
   Lock _lock = new Lock();
-
-  String dropdown1Value = 'Free';
 
   Future<Null> _selectFromDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
@@ -106,25 +104,6 @@ class ReceiptListState extends State<ReceiptList> {
     }
   }
 
-  static const menuItems = <String>[
-    'Upload Time',
-    'Receipt Time',
-    'Company Name',
-    'Amount',
-    'Category'
-  ];
-
-  final List<PopupMenuItem<String>> _popUpMenuItems = menuItems
-      .map(
-        (String value) => PopupMenuItem<String>(
-          value: value,
-          child: Text(value),
-        ),
-      )
-      .toList();
-
-  String _btn3SelectedVal = 'Receipt Time';
-
   final ReceiptSortType _simpleValue1 = ReceiptSortType.UploadTime;
   final ReceiptSortType _simpleValue2 = ReceiptSortType.ReceiptTime;
   final ReceiptSortType _simpleValue3 = ReceiptSortType.CompanyName;
@@ -133,14 +112,10 @@ class ReceiptListState extends State<ReceiptList> {
   ReceiptSortType _simpleValue;
 
   void showMenuSelection(ReceiptSortType value) {
-//    if (<String>[_simpleValue1, _simpleValue2, _simpleValue3].contains(value))
     _simpleValue = value;
-//    showInSnackBar('You selected: $value');
-    print('You selected: $value');
     setState(() {
       forceRefresh = false;
       sortingType = value;
-      print("${ascending} ${forceRefresh}");
     });
   }
 
@@ -151,19 +126,6 @@ class ReceiptListState extends State<ReceiptList> {
   }
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
-  void _onTapDown(TapDownDetails details, BuildContext context) {
-    print('_onLongPressDragStart details: ${details.globalPosition}');
-    RenderBox renderBox = context.findRenderObject();
-    var offset = renderBox
-//                            .localToGlobal(Offset(0.0, renderBox.size.height));
-        .globalToLocal(details.globalPosition);
-    print('${offset.dx} ${offset.dy} ');
-    dx = details.globalPosition.dx;
-    dy = details.globalPosition.dy;
-    dx2 = offset.dx;
-    dy2 = offset.dy;
-  }
 
   void showSubMenuView(double t, double r) {
     subMenuOverlayEntry = new OverlayEntry(builder: (context) {
@@ -179,10 +141,6 @@ class ReceiptListState extends State<ReceiptList> {
                 children: <Widget>[
                   Expanded(
                     child: new ListTile(
-//                          leading: Icon(
-//                            Icons.edit,
-////                            color: Colors.white,
-//                          ),
                       title: GestureDetector(
                         onTap: () {
                           setState(() {
@@ -192,16 +150,12 @@ class ReceiptListState extends State<ReceiptList> {
                           subMenuOverlayEntry.remove();
                           subMenuOverlayEntry = null;
                         },
-                        child: Text('Upload Time'),
+                        child: Text(allTranslations.text('app.receipt-list.upload-time-menu-item')),
                       ),
                     ),
                   ),
                   Expanded(
                     child: new ListTile(
-//                          leading: Icon(
-//                            Icons.edit,
-////                            color: Colors.white,
-//                          ),
                       title: GestureDetector(
                         onTap: () {
                           setState(() {
@@ -211,16 +165,12 @@ class ReceiptListState extends State<ReceiptList> {
                           subMenuOverlayEntry.remove();
                           subMenuOverlayEntry = null;
                         },
-                        child: Text('Receipt Time'),
+                        child: Text(allTranslations.text('app.receipt-list.receipt-time-menu-item')),
                       ),
                     ),
                   ),
                   Expanded(
                     child: new ListTile(
-//                          leading: Icon(
-//                            Icons.edit,
-////                            color: Colors.white,
-//                          ),
                       title: GestureDetector(
                         onTap: () {
                           setState(() {
@@ -230,16 +180,12 @@ class ReceiptListState extends State<ReceiptList> {
                           subMenuOverlayEntry.remove();
                           subMenuOverlayEntry = null;
                         },
-                        child: Text('Company Name'),
+                        child: Text(allTranslations.text('app.receipt-list.company-name-menu-item')),
                       ),
                     ),
                   ),
                   Expanded(
                     child: new ListTile(
-//                          leading: Icon(
-//                            Icons.edit,
-////                            color: Colors.white,
-//                          ),
                       title: GestureDetector(
                         onTap: () {
                           setState(() {
@@ -249,16 +195,12 @@ class ReceiptListState extends State<ReceiptList> {
                           subMenuOverlayEntry.remove();
                           subMenuOverlayEntry = null;
                         },
-                        child: Text('Amount'),
+                        child: Text(allTranslations.text('app.receipt-list.amount-menu-item')),
                       ),
                     ),
                   ),
                   Expanded(
                     child: new ListTile(
-//                          leading: Icon(
-//                            Icons.edit,
-////                            color: Colors.white,
-//                          ),
                       title: GestureDetector(
                         onTap: () {
                           setState(() {
@@ -268,7 +210,7 @@ class ReceiptListState extends State<ReceiptList> {
                           subMenuOverlayEntry.remove();
                           subMenuOverlayEntry = null;
                         },
-                        child: Text('Category'),
+                        child: Text(allTranslations.text('app.receipt-list.category-menu-item')),
                       ),
                     ),
                   ),
@@ -283,7 +225,7 @@ class ReceiptListState extends State<ReceiptList> {
                           },
                           value: this.ascending,
                         ),
-                        Text('Ascending'),
+                        Text(allTranslations.text('app.receipt-list.ascending-menu-item')),
                       ],
                     ),
                   ),
@@ -376,10 +318,6 @@ class ReceiptListState extends State<ReceiptList> {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final TextStyle titleStyle =
-        theme.textTheme.headline.copyWith(color: Colors.white);
-    final TextStyle descriptionStyle = theme.textTheme.subhead;
     List<ReceiptListItem> sortedReceiptItems = getSortedReceiptItems(
         widget._receiptItems,
         _receiptStatusType,
@@ -466,7 +404,7 @@ class ReceiptListState extends State<ReceiptList> {
                       ascending ? Icons.arrow_upward : Icons.arrow_downward,
                       color: Colors.black,
                     ),
-                    tooltip: 'Toggle ascending',
+                    tooltip: allTranslations.text('app.receipt-list.toggle-ascending-menu-item'),
                     onPressed: () {
                       setState(() {
                         ascending = !ascending;

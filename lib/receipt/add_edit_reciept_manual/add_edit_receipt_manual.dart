@@ -243,7 +243,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
           CropAspectRatioPreset.ratio16x9
         ],
         androidUiSettings: AndroidUiSettings(
-            toolbarTitle: allTranslations.text('app.image-cropper-ttitle'),
+            toolbarTitle: allTranslations.text('app.image-cropper.title'),
             toolbarColor: Colors.deepOrange,
             toolbarWidgetColor: Colors.white,
             initAspectRatio: CropAspectRatioPreset.original,

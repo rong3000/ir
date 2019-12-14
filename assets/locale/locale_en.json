@@ -7,7 +7,8 @@
       "uploading-receipt-in-progess": "Uploading Receipt...",
       "uploading-failed": "Upload Failed: ",
       "deleting-in-progress": "Deleting Receipt...",
-      "deleting-failed": "Delete Failed: "
+      "deleting-failed": "Delete Failed: ",
+      "no-image-text": "No Image!"
     },
     "settings-page": {
       "title": "Settings",
@@ -113,6 +114,23 @@
       "warranty-period-label": "Warranty Period",
       "notes-label": "Notes"
 
+    },
+    "receipt-card" : {
+      "unknown-category": "Unknown",
+      "receipt-processed-review": "We have processed your receipt, please click Review to verify receipt data.",
+      "receipt-in-process-review": "Your receipt is being processed. Click Review button to manually enter receipt data.",
+      "receipt-date-prefix": "Receipt Date",
+      "total-amount-prefix": "Total",
+      "uploaded-prefix": "Uploaded"
+    },
+    "receipt-list": {
+      "upload-time-menu-item": "Upload Time",
+      "receipt-time-menu-item": "Upload Time",
+      "company-name-menu-item": "Company Name",
+      "amount-menu-item": "Amount",
+      "category-menu-item": "Category",
+      "ascending-menu-item": "Ascending",
+      "toggle-ascending-menu-item": "Toggle Ascending"
     },
     "image-cropper" :{
       "title": "Cropper"
