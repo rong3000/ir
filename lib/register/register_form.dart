@@ -52,6 +52,9 @@ class _RegisterFormState extends State<RegisterForm> {
         if (state.isSuccess) {
           BlocProvider.of<AuthenticationBloc>(context).dispatch(LoggedIn());
           Navigator.of(context).pop();
+
+          _showMessage('Verification Email sent',
+              "We have sent you the email verification, please check if it's in the SPAM mail if it cannot be found in your inbox.");
         }
         if (state.isFailure) {
           Scaffold.of(context)
@@ -115,6 +118,25 @@ class _RegisterFormState extends State<RegisterForm> {
         },
       ),
     );
+  }
+
+  void _showMessage(String title, String message) {
+    showDialog<void>(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(title),
+            content: new Text(message),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Close'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          );
+        });
   }
 
   @override

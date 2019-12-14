@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intelligent_receipt/login/forget_button.dart';
 import 'package:intelligent_receipt/translations/global_translations.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 import 'package:intelligent_receipt/authentication_bloc/bloc.dart';
@@ -27,8 +28,15 @@ class _LoginFormState extends State<LoginForm> {
   bool get isPopulated =>
       _emailController.text.isNotEmpty && _passwordController.text.isNotEmpty;
 
+  bool get isOnlyEmailPopulated =>
+      _emailController.text.isNotEmpty;
+
   bool isLoginButtonEnabled(LoginState state) {
     return state.isFormValid && isPopulated && !state.isSubmitting;
+  }
+
+  bool isForgetButtonEnabled(LoginState state) {
+    return state.isEmailValid && isOnlyEmailPopulated && !state.isSubmitting;
   }
 
   @override
@@ -118,11 +126,23 @@ class _LoginFormState extends State<LoginForm> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: <Widget>[
-                        LoginButton(
-                          onPressed: isLoginButtonEnabled(state)
-                              ? _onFormSubmitted
-                              : null,
+                        ButtonBar(
+                          mainAxisSize: MainAxisSize.max,
+                          alignment: MainAxisAlignment.center,
+                          children: <Widget> [
+                            LoginButton(
+                              onPressed: isLoginButtonEnabled(state)
+                                  ? _onFormSubmitted
+                                  : null,
+                            ),
+                            ForgetButton(
+                              onPressed: isForgetButtonEnabled(state)
+                                  ? _onForgetFormSubmitted
+                                  : null,
+                            ),
+                          ],
                         ),
+
                         GoogleLoginButton(),
 						FacebookLoginButton(),
                         CreateAccountButton(userRepository: _userRepository),
@@ -162,6 +182,14 @@ class _LoginFormState extends State<LoginForm> {
       LoginWithCredentialsPressed(
         email: _emailController.text,
         password: _passwordController.text,
+      ),
+    );
+  }
+
+  void _onForgetFormSubmitted() {
+    _loginBloc.dispatch(
+      ForgetPasswordPressed(
+        email: _emailController.text,
       ),
     );
   }

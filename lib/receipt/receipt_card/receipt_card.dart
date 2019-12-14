@@ -10,6 +10,7 @@ import 'package:intelligent_receipt/user_repository.dart';
 import 'package:intl/intl.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import '../../helper_widgets/zoomable_image.dart';
+import 'package:intelligent_receipt/translations/global_translations.dart';
 
 class ReceiptCard extends StatefulWidget {
   const ReceiptCard({
@@ -30,23 +31,15 @@ class ReceiptCard extends StatefulWidget {
 class _ReceiptCardState extends State<ReceiptCard> {
   CategoryRepository _categoryRepository;
   ReceiptRepository _receiptRepository;
-  Image receiptImage;
+  Future<Image> _getImageFuture;
+  String _imagePath;
 
-  retrieveImage(String imagePath) async {
-    var imageUrl = Urls.GetImage + "/" + Uri.encodeComponent(imagePath);
-    var image  = await _receiptRepository.getNetworkImage(imageUrl);
-    if (image != null){
-      setState(() {
-       receiptImage = image; 
-      });
+  void _retrieveImage(String imagePath) {
+    if (imagePath != _imagePath) {
+      var imageUrl = Urls.GetImage + "/" + Uri.encodeComponent(imagePath);
+      _getImageFuture = _receiptRepository.getNetworkImage(imageUrl);
+      _imagePath = imagePath;
     }
-  }
-
-  getImage(String imagePath){
-    if (receiptImage == null){
-      retrieveImage(imagePath);
-    }
-    return receiptImage;
   }
 
   @override
@@ -55,6 +48,7 @@ class _ReceiptCardState extends State<ReceiptCard> {
         RepositoryProvider.of<UserRepository>(context).categoryRepository;
     _receiptRepository =
         RepositoryProvider.of<UserRepository>(context).receiptRepository;
+    _retrieveImage(widget._receiptItem.imagePath);
     super.initState();
   }
 
@@ -87,6 +81,7 @@ class _ReceiptCardState extends State<ReceiptCard> {
         theme.textTheme.body1.copyWith(color: Colors.black);
     final TextStyle dateStyle = theme.textTheme.body2;
     final TextStyle amountStyle = theme.textTheme.body1;
+    _retrieveImage(widget._receiptItem.imagePath);
 
     Widget _actionButton(BuildContext context, ActionWithLabel action) {
       if (action.action != null) {
@@ -154,7 +149,22 @@ class _ReceiptCardState extends State<ReceiptCard> {
               },
               child: SizedBox(
                 height: MediaQuery.of(context).size.height * 0.16,
-                child: getImage(widget._receiptItem.imagePath),
+                child: FutureBuilder<Image> (
+                  future: _getImageFuture,
+                  builder:(BuildContext context, AsyncSnapshot<Image> snapshot) {
+                    switch (snapshot.connectionState) {
+                      case ConnectionState.none:
+                        return new Text(allTranslations.text('app.common.loading-status'));
+                      case ConnectionState.waiting:
+                        return new Center(
+                            child: new CircularProgressIndicator());
+                      case ConnectionState.active:
+                        return new Text('');
+                      case ConnectionState.done:
+                        return snapshot.data;
+                    }
+                  }
+                ) //getImage(widget._receiptItem.imagePath),
               ),
             )
           ),

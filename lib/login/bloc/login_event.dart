@@ -59,3 +59,15 @@ class LoginWithCredentialsPressed extends LoginEvent {
     return 'LoginWithCredentialsPressed { email: $email, password: $password }';
   }
 }
+
+class ForgetPasswordPressed extends LoginEvent {
+  final String email;
+
+  ForgetPasswordPressed({@required this.email})
+      : super([email]);
+
+  @override
+  String toString() {
+    return 'ForgetPasswordPressed { email: $email}';
+  }
+}

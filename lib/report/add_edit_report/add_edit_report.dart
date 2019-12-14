@@ -41,6 +41,7 @@ class _AddEditReportState extends State<AddEditReport> {
   UserRepository get _userRepository => widget._userRepository;
   final TextEditingController _reportNameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   bool get isPopulated => _reportNameController.text.isNotEmpty;
 
@@ -70,6 +71,16 @@ class _AddEditReportState extends State<AddEditReport> {
     _defaultCurrency = _userRepository.settingRepository.getDefaultCurrency();
     _calcTotalAmountFuture = _calculateTotalAmount();
     super.initState();
+  }
+
+  void _showInSnackBar(String value, {IconData icon: Icons.error, color: Colors.red}) {
+    _scaffoldKey.currentState.showSnackBar(SnackBar(
+      content: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [Text(value), Icon(icon)],
+      ),
+      backgroundColor: color,
+    ));
   }
 
   bool isLoginButtonEnabled() {
@@ -159,6 +170,7 @@ class _AddEditReportState extends State<AddEditReport> {
     actions.add(d);
 
     return new Scaffold(
+      key: _scaffoldKey,
       appBar: new AppBar(
         title: Text(widget.title),
       ),
@@ -270,7 +282,7 @@ class _AddEditReportState extends State<AddEditReport> {
       _report.createDateTime = DateTime.now();
     }
     _report.totalAmount = _totalAmount;
-    _report.currencyCode = _reportCurrency.code;
+    _report.currencyCode = (_reportCurrency != null) ? _reportCurrency.code : "";
     _report.updateDateTime = DateTime.now();
     _report.reportName = _reportNameController.text;
     _report.description = _descriptionController.text;
@@ -284,6 +296,7 @@ class _AddEditReportState extends State<AddEditReport> {
       Navigator.pop(context);
     } else {
       // Show message on snack bar
+      _showInSnackBar("${dataResult.message}");
     }
   }
 

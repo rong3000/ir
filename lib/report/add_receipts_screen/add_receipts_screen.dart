@@ -33,9 +33,13 @@ class _AddReceiptsScreenState extends State<AddReceiptsScreen> {
     super.initState();
   }
 
-  void showInSnackBar(String value) {
+  void _showInSnackBar(String value, {IconData icon: Icons.error, color: Colors.red}) {
     _scaffoldKey.currentState.showSnackBar(SnackBar(
-      content: Text(value),
+      content: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [Text(value), Icon(icon)],
+      ),
+      backgroundColor: color,
     ));
   }
 
@@ -48,9 +52,9 @@ class _AddReceiptsScreenState extends State<AddReceiptsScreen> {
       ReceiptListItem item = iter.first;
       widget._addReceiptToGroupFunc(item);
       _candidateItems.remove(item);
-      showInSnackBar('Receipt (${item.companyName}:${item.totalAmount}) was added to group');
+      _showInSnackBar('Receipt was added to group', color: Colors.blue, icon: Icons.info);
     } else {
-      showInSnackBar('Receipt with id(${id}) doesn\'t exist');
+      _showInSnackBar('Receipt with id(${id}) doesn\'t exist');
     }
 
     setState(() {});

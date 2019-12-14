@@ -62,11 +62,18 @@ class MainScreenState extends State<MainScreen> {
     });
   }
 
+  Future<void> userReload() async {
+    await _userRepository.currentUser.reload();
+    setState(() {
+
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _userRepository.currentUser.reload();
+    userReload();
 //    _verified = _userRepository.currentUser.isEmailVerified;
   }
 
@@ -88,25 +95,21 @@ class MainScreenState extends State<MainScreen> {
         appBar: AppBar(
           title: SearchBar(userRepository: _userRepository, name: name),
         ),
-        body: UpgradeAlert(
-          appcastConfig: cfg,
-          debugLogging: true,
-          child: PageView(
-            controller: _controller,
-            onPageChanged: (index) {
-              setState(() {
-                _currentIndex = index;
-                _userRepository.currentUser.reload();
-//                _verified = _userRepository.currentUser.isEmailVerified;
-              });
-            },
-            children: <Widget>[
-              widget._homePage,
-              widget._receiptsPage,
-              widget._reportsPage,
-              widget._settingsPage,
-            ],
-          ),
+        body: PageView(
+          controller: _controller,
+          onPageChanged: (index) {
+            setState(() {
+              _currentIndex = index;
+//              _verified = _userRepository.currentUser.isEmailVerified;
+            });
+            userReload();
+          },
+          children: <Widget>[
+            widget._homePage,
+            widget._receiptsPage,
+            widget._reportsPage,
+            widget._settingsPage,
+          ],
         ),
         bottomNavigationBar: BottomNavigationBar(
             currentIndex: _currentIndex,
@@ -114,9 +117,9 @@ class MainScreenState extends State<MainScreen> {
               _controller.jumpToPage(index);
               setState(() {
                 _currentIndex = index;
-                _userRepository.currentUser.reload();
 //                _verified = _userRepository.currentUser.isEmailVerified;
               });
+              userReload();
             },
             type: BottomNavigationBarType.fixed,
             items: [
