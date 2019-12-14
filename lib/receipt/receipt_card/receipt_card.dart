@@ -5,6 +5,7 @@ import 'package:intelligent_receipt/data_model/action_with_lable.dart';
 import 'package:intelligent_receipt/data_model/category_repository.dart';
 import 'package:intelligent_receipt/data_model/receipt_repository.dart';
 import 'package:intelligent_receipt/data_model/webservice.dart';
+import 'package:intelligent_receipt/translations/global_translations.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 import 'package:intl/intl.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -52,24 +53,24 @@ class _ReceiptCardState extends State<ReceiptCard> {
   }
 
   String _getTextShownInCategoryField(ReceiptListItem receipt) {
+    String unknownText = allTranslations.text('app.receipt-card.unknown-category');
     String text = _categoryRepository.categories
         .singleWhere(
           (c) =>
               c.id ==
               widget._receiptItem.categoryId,
           orElse: () =>
-              Category()..categoryName = "Unknown",
+              Category()..categoryName = unknownText,
         )
         ?.categoryName;
 
-    if ((text == "Unknown") && (receipt.statusId == ReceiptStatusType.Uploaded.index)) {
+    if ((text == unknownText) && (receipt.statusId == ReceiptStatusType.Uploaded.index)) {
       if (receipt.decodeStatus == DecodeStatusType.Success.index) {
-        text = "We have processed your receipt, please click Review button to verify receipt data.";
+        text = allTranslations.text('app.receipt-card.receipt-processed-review');
       } else {
-        text = "Your receipt is being process. You can click Review button to manually enter receipt data.";
+        text = allTranslations.text('app.receipt-card.receipt-in-process-review');
       }
     }
-
     return text;
   }
 
@@ -92,11 +93,8 @@ class _ReceiptCardState extends State<ReceiptCard> {
                       .copyWith(color: Colors.blue)
                       .apply(fontSizeFactor: 0.75),
                   semanticsLabel: '${action.label} ${widget._receiptItem.id}'),
-//                    textColor: Colors.blue.shade500,
-
               onPressed: () => action.action(widget._receiptItem.id),
               borderSide: BorderSide(color: Colors.blue),
-//                      shape: StadiumBorder(),
               shape: new RoundedRectangleBorder(
                   borderRadius: new BorderRadius.circular(4.0))),
         );
@@ -122,12 +120,12 @@ class _ReceiptCardState extends State<ReceiptCard> {
                   child:
                     !imagePath.isEmpty ?
                     ZoomableImage(new NetworkImage(Urls.GetImage + "/" + Uri.encodeComponent(imagePath)), backgroundColor: Colors.white) :
-                    Center(child: Text("No Image!", textAlign: TextAlign.center)),
+                    Center(child: Text(allTranslations.text('app.common.no-image-text'), textAlign: TextAlign.center)),
                 ),
                 Container(
                   height: 30,
                   child: FlatButton(
-                    child: Text('Close'),
+                    child: Text(allTranslations.text('words.close')),
                     onPressed: () {
                       Navigator.pop(context);
                     },
@@ -142,8 +140,6 @@ class _ReceiptCardState extends State<ReceiptCard> {
       clipBehavior: Clip.antiAlias,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
-//        mainAxisSize: MainAxisSize.max,
-//        mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           Expanded(
             flex: 1,
@@ -192,7 +188,7 @@ class _ReceiptCardState extends State<ReceiptCard> {
                           Padding(
                             padding: const EdgeInsets.only(bottom: 0.0),
                             child: Text(
-                              "Receipt Date ${DateFormat().add_yMd().format(widget._receiptItem.receiptDatetime.toLocal())}",
+                              '${allTranslations.text('app.receipt-card.receipt-date-prefix')} ${DateFormat().add_yMd().format(widget._receiptItem.receiptDatetime.toLocal())}',
                               style: dateStyle
                                   .copyWith(color: Colors.black54)
                                   .apply(fontSizeFactor: 0.75),
@@ -207,7 +203,7 @@ class _ReceiptCardState extends State<ReceiptCard> {
                             ),
                           ),
                           Text(
-                            'Total ${widget._receiptItem.currencyCode} ${widget._receiptItem.totalAmount}',
+                            '${allTranslations.text('app.receipt-card.total-amount-prefix')} ${widget._receiptItem.currencyCode} ${widget._receiptItem.totalAmount}',
                             style: amountStyle,
                           ),
                         ],
@@ -243,7 +239,7 @@ class _ReceiptCardState extends State<ReceiptCard> {
                             Padding(
                               padding: const EdgeInsets.only(bottom: 0.0),
                               child: Text(
-                                "Uploaded ${DateFormat().add_yMd().format(widget._receiptItem.uploadDatetime.toLocal())}",
+                                "${allTranslations.text('app.receipt-card.uploaded-prefix')} ${DateFormat().add_yMd().format(widget._receiptItem.uploadDatetime.toLocal())}",
                                 style: dateStyle
                                     .copyWith(color: Colors.black54)
                                     .apply(fontSizeFactor: 0.75),

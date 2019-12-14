@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intelligent_receipt/translations/global_translations.dart';
 
 class RegisterButton extends StatelessWidget {
   final VoidCallback _onPressed;
@@ -14,7 +15,7 @@ class RegisterButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(30.0),
       ),
       onPressed: _onPressed,
-      child: Text('Register'),
+      child: Text(allTranslations.text('words.register')),
     );
   }
 }

@@ -7,7 +7,10 @@
       "uploading-receipt-in-progess": "Uploading Receipt...",
       "uploading-failed": "Upload Failed: ",
       "deleting-in-progress": "Deleting Receipt...",
-      "deleting-failed": "Delete Failed: "
+      "deleting-failed": "Delete Failed: ",
+      "no-image-text": "No Image!",
+      "invalid-email-message": "Invalid Email",
+      "invalid-password-message": "Invalid Password"
     },
     "settings-page": {
       "title": "Settings",
@@ -114,6 +117,23 @@
       "notes-label": "Notes"
 
     },
+    "receipt-card" : {
+      "unknown-category": "Unknown",
+      "receipt-processed-review": "We have processed your receipt, please click Review to verify receipt data.",
+      "receipt-in-process-review": "Your receipt is being processed. Click Review button to manually enter receipt data.",
+      "receipt-date-prefix": "Receipt Date",
+      "total-amount-prefix": "Total",
+      "uploaded-prefix": "Uploaded"
+    },
+    "receipt-list": {
+      "upload-time-menu-item": "Upload Time",
+      "receipt-time-menu-item": "Upload Time",
+      "company-name-menu-item": "Company Name",
+      "amount-menu-item": "Amount",
+      "category-menu-item": "Category",
+      "ascending-menu-item": "Ascending",
+      "toggle-ascending-menu-item": "Toggle Ascending"
+    },
     "image-cropper" :{
       "title": "Cropper"
     },
@@ -124,7 +144,27 @@
     "delete-result-dialog": {
       "title": "Delete Receipt",
       "success-message": "Receipt was successfully deleted."
-    }
+    },
+    "upload-receipt-alert": {
+      "button-text": "OK, Got it"
+    },
+    "upload-receipt-screen": {
+      "review-now-label": "Review Now",
+      "review-later-label": "Review Later",
+      "press-to-start-label": "Press button to start",
+      "submitting-label": "Submitting receipt, will be ready soon ...",
+      "unknown-error-label": "Unknown error encountered when submitting the receipt, please resubmit the receipt.",
+      "error-prefix": "Error",
+      "extract-text-failed-message": "The receipt has been submitted, but failed to extract the text from the image. Please double check whether this is a valid receipt.\n\nPress 'Review Now' button to manually enter receipt information now.\nPress 'Review Later' button to review the receipt later, which is listed in 'Receipts\\Unreviewed' tab.",
+      "maybe-not-valid-message": "This maybe not a valid receipt. Please double check.\n\nPress 'Review Now' button to manually enter receipt information now.\nPress 'Review Later' button to review the receipt later, which is listed in 'Receipts\\Unreviewed' tab.",
+      "unrecognized-format-message": "The receipt image has been submitted, we are now recognizing it, and will notify you after we recognize it.\n\nPress 'Review Now' button to manually enter receipt information now.\nPress 'Review Later' button to review the receipt later, which is listed in 'Receipts\\Unreviewed' tab.",
+      "recognized-success-message": "The receipt image has been submitted and recognized.\n\nPress 'Review Now' button to verify receipt information now.\nPress 'Review Later' button to review the receipt later, which is listed in 'Receipts\\Unreviewed' tab.",
+      "general-error-message": "Error encountered when submitting the receipt: "
+     },
+     "register-form": {
+       "registration-in-progress-label": "Registering...",
+       "registration-failed-label": "Registration Failed"
+     }
   },
   "words": {
     "email": "Email",
@@ -143,6 +183,7 @@
     "continue": "Continue",
     "close": "Close",
     "months": "months",
-    "years": "years"
+    "years": "years",
+    "register": "Register"
   }
 }
