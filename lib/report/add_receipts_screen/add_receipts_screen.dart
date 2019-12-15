@@ -4,6 +4,7 @@ import 'package:intelligent_receipt/data_model/enums.dart';
 import 'package:intelligent_receipt/data_model/receipt.dart';
 import 'package:intelligent_receipt/data_model/receipt_repository.dart';
 import 'package:intelligent_receipt/receipt/receipt_list/receipt_list.dart';
+import 'package:intelligent_receipt/translations/global_translations.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 
 class AddReceiptsScreen extends StatefulWidget {
@@ -16,7 +17,7 @@ class AddReceiptsScreen extends StatefulWidget {
         _userRepository = userRepository,
         _candidateItems = candidateItems,
         _addReceiptToGroupFunc = addReceiptToGroupFunc,
-        super(key: key) {}
+        super(key: key);
 
   @override
   _AddReceiptsScreenState createState() => new _AddReceiptsScreenState();
@@ -48,13 +49,13 @@ class _AddReceiptsScreenState extends State<AddReceiptsScreen> {
       return (element.id == id);
     });
 
-    if (!iter.isEmpty) {
+    if (iter.isNotEmpty) {
       ReceiptListItem item = iter.first;
       widget._addReceiptToGroupFunc(item);
       _candidateItems.remove(item);
-      _showInSnackBar('Receipt was added to group', color: Colors.blue, icon: Icons.info);
+      _showInSnackBar(allTranslations.text('app.add-receipts-screen.receipt-added-success'), color: Colors.blue, icon: Icons.info);
     } else {
-      _showInSnackBar('Receipt with id(${id}) doesn\'t exist');
+      _showInSnackBar(allTranslations.text('app.add-receipts-screen.receipt-added-fail'));
     }
 
     setState(() {});
@@ -63,19 +64,19 @@ class _AddReceiptsScreenState extends State<AddReceiptsScreen> {
   @override
   Widget build(BuildContext context) {
     List<ActionWithLabel> actions = [];
-    ActionWithLabel a = new ActionWithLabel();
-    a.action = addAction;
-    a.label = 'Add to Group';
-    actions.add(a);
+    actions.add(ActionWithLabel()
+      ..action = addAction
+      ..label = allTranslations.text('app.add-receipts-screen.add-to-group-label')
+      );
+
     return Scaffold(
       key: _scaffoldKey,
       appBar: new AppBar(
-        title: Text("Add Receipts to Group"),
+        title: Text(allTranslations.text('app.add-receipts-screen.title')),
       ),
       body: OrientationBuilder(builder: (context, orientation) {
         if (!_userRepository.receiptRepository.receipts.isNotEmpty) {
-          print('8');
-          return Text('Loading...');
+          return Text(allTranslations.text('app.common.loading-status'));
         } else
           return Column(children: <Widget>[
             Flexible(

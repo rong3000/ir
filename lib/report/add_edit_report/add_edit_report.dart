@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:intelligent_receipt/data_model/action_with_lable.dart';
 import 'package:intelligent_receipt/data_model/data_result.dart';
@@ -14,6 +13,7 @@ import 'package:intelligent_receipt/data_model/log_helper.dart';
 import 'package:intelligent_receipt/receipt/receipt_card/receipt_card.dart';
 import 'package:intelligent_receipt/report/add_receipts_screen/add_receipts_screen.dart';
 import 'package:intelligent_receipt/report/add_edit_report/report_button.dart';
+import 'package:intelligent_receipt/translations/global_translations.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -31,7 +31,7 @@ class AddEditReport extends StatefulWidget {
       : assert(userRepository != null),
         _userRepository = userRepository,
         _reportId = reportId,
-        super(key: key) {}
+        super(key: key);
 
   @override
   _AddEditReportState createState() => new _AddEditReportState();
@@ -45,12 +45,12 @@ class _AddEditReportState extends State<AddEditReport> {
 
   bool get isPopulated => _reportNameController.text.isNotEmpty;
 
-  Report _report = null;
+  Report _report;
   List<ReceiptListItem> _receiptList;
   double _totalAmount;
-  Currency _reportCurrency = null;
-  Currency _defaultCurrency = null;
-  Future<double> _calcTotalAmountFuture = null;
+  Currency _reportCurrency;
+  Currency _defaultCurrency;
+  Future<double> _calcTotalAmountFuture;
   bool _receiptItemsChanged = false;
 
   @override
@@ -99,7 +99,8 @@ class _AddEditReportState extends State<AddEditReport> {
       return Exchange.fromJson(json.decode(response.body));
     } else {
       // If that response was not OK, throw an error.
-      LogHepper.warning("Failed to load exchange rate from serve", saveToFile: true);
+      LogHepper.warning("Failed to load exchange rate from server", saveToFile: true);
+      return null;
     }
   }
 
@@ -158,16 +159,17 @@ class _AddEditReportState extends State<AddEditReport> {
   }
 
   String _getTotalAmountText(double totalAmount) {
-    return "Total: ${_reportCurrency != null ? _reportCurrency.code: ''} ${_reportCurrency != null ? _reportCurrency.symbol: ''}${totalAmount.toStringAsFixed(2)}";
+    final String total = allTranslations.text('app.add-edit-report-page.total-amount-prefix');
+    return "$total: ${_reportCurrency != null ? _reportCurrency.code: ''} ${_reportCurrency != null ? _reportCurrency.symbol: ''}${totalAmount.toStringAsFixed(2)}";
   }
 
   @override
   Widget build(BuildContext context) {
     List<ActionWithLabel> actions = [];
-    ActionWithLabel d = new ActionWithLabel();
-    d.action = removeAction;
-    d.label = 'Remove';
-    actions.add(d);
+    actions.add(ActionWithLabel()
+      ..action = removeAction
+      ..label = allTranslations.text('app.add-edit-report-page.remove-label')
+      );
 
     return new Scaffold(
       key: _scaffoldKey,
@@ -186,7 +188,7 @@ class _AddEditReportState extends State<AddEditReport> {
                       controller: _reportNameController,
                       decoration: InputDecoration(
                         icon: Icon(Icons.title),
-                        labelText: 'Group Name',
+                        labelText: allTranslations.text('app.add-edit-report-page.group-name-label')
                       ),
                       autovalidate: true,
                       autocorrect: false,
@@ -195,7 +197,7 @@ class _AddEditReportState extends State<AddEditReport> {
                       controller: _descriptionController,
                       decoration: InputDecoration(
                         icon: Icon(Icons.description),
-                        labelText: 'Description',
+                        labelText: allTranslations.text('app.add-edit-report-page.description-label'),
                       ),
                       autovalidate: true,
                       autocorrect: false,
@@ -222,7 +224,7 @@ class _AddEditReportState extends State<AddEditReport> {
                           ),
                           ReportButton(
                             onPressed: _onAddReceipts,
-                            buttonName: 'Add Receipts',
+                            buttonName: allTranslations.text('app.add-edit-report-page.add-receipts-button-label'),
                           ),
                         ],
                       ),
@@ -251,12 +253,12 @@ class _AddEditReportState extends State<AddEditReport> {
                   children: <Widget>[
                     ReportButton(
                       onPressed: isLoginButtonEnabled() ? _onReportSaved : null,
-                      buttonName: 'Save group',
+                      buttonName: allTranslations.text('app.add-edit-report-page.save-group-button-label'),
                     ),
                     ReportButton(
                       onPressed:
                       isLoginButtonEnabled() ? _onReportSubmitted : null,
-                      buttonName: 'Archive group',
+                      buttonName: allTranslations.text('app.add-edit-report-page.archive-group-button-label'),
                     ),
                   ],
                 ),
