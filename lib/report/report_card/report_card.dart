@@ -6,6 +6,7 @@ import 'package:intelligent_receipt/data_model/currency.dart';
 import 'package:intelligent_receipt/data_model/report.dart';
 import 'package:intelligent_receipt/data_model/webservice.dart';
 import 'package:intelligent_receipt/report/report_list/report_list.dart';
+import 'package:intelligent_receipt/translations/global_translations.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 import 'package:intl/intl.dart';
 
@@ -50,7 +51,6 @@ class _ReportCardState extends State<ReportCard> {
     final TextStyle companyNameStyle =
         theme.textTheme.body1.copyWith(color: Colors.black);
     final TextStyle dateStyle = theme.textTheme.body2;
-    final TextStyle amountStyle = theme.textTheme.body1;
     Currency currency = _userRepository.settingRepository.getCurrencyForCurrencyCode(widget._reportItem.currencyCode);
     if (currency == null) {
       currency = widget._baseCurrency;
@@ -66,11 +66,8 @@ class _ReportCardState extends State<ReportCard> {
                       .copyWith(color: Colors.blue)
                       .apply(fontSizeFactor: 0.75),
                   semanticsLabel: '${action.lable} ${widget._reportItem.id}'),
-//                    textColor: Colors.blue.shade500,
-
               onPressed: () => action.action(widget._reportItem.id),
               borderSide: BorderSide(color: Colors.blue),
-//                      shape: StadiumBorder(),
               shape: new RoundedRectangleBorder(
                   borderRadius: new BorderRadius.circular(4.0))),
         );
@@ -78,23 +75,14 @@ class _ReportCardState extends State<ReportCard> {
         return null;
     }
 
-    BoxDecoration myBoxDecoration() {
-      return BoxDecoration(
-        border: Border.all(),
-      );
-    }
-
     return Card(
       clipBehavior: Clip.antiAlias,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
-//        mainAxisSize: MainAxisSize.max,
-//        mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           Expanded(
             flex: 2,
             child: Container(
-//              decoration: myBoxDecoration(),
               height: MediaQuery.of(context).size.height * 0.14,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -122,7 +110,7 @@ class _ReportCardState extends State<ReportCard> {
                           Padding(
                             padding: const EdgeInsets.only(top: 0.0, bottom: 6.0),
                             child: Text(
-                              'Total: ${currency != null ? currency.code: ''} ${currency != null ? currency.symbol: ''}${widget._reportItem.totalAmount.toStringAsFixed(2)}',
+                              '${allTranslations.text('app.report-card.total-amount-prefix')}: ${currency != null ? currency.code: ''} ${currency != null ? currency.symbol: ''}${widget._reportItem.totalAmount.toStringAsFixed(2)}',
                               style: companyNameStyle.apply(fontSizeFactor: 1.2),
 
                             ),
@@ -138,10 +126,6 @@ class _ReportCardState extends State<ReportCard> {
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                             ),
-//                            Text(
-//                              '${widget._reportItem.description}',
-//                              style: amountStyle,
-//                            ),
                           ),
 
                         ],
@@ -156,7 +140,6 @@ class _ReportCardState extends State<ReportCard> {
           Expanded(
             flex: 2,
             child: Container(
-//              decoration: myBoxDecoration(),
               height: MediaQuery.of(context).size.height * 0.14,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -179,7 +162,7 @@ class _ReportCardState extends State<ReportCard> {
                             Padding(
                               padding: const EdgeInsets.only(bottom: 0.0),
                               child: Text(
-                                "Created ${DateFormat().add_yMd().format(widget._reportItem.createDateTime.toLocal())}",
+                                "${allTranslations.text('app.report-card.created-date-prefix')} ${DateFormat().add_yMd().format(widget._reportItem.createDateTime.toLocal())}",
                                 style: dateStyle
                                     .copyWith(color: Colors.black54)
                                     .apply(fontSizeFactor: 0.75),
@@ -188,7 +171,7 @@ class _ReportCardState extends State<ReportCard> {
                             Padding(
                               padding: const EdgeInsets.only(top: 0.0, bottom: 0.0),
                               child: Text(
-                                '${widget._reportItem.getValidReceiptCount(_userRepository.receiptRepository)} Expenses',
+                                '${widget._reportItem.getValidReceiptCount(_userRepository.receiptRepository)} ${allTranslations.text('app.report-card.expenses-suffix')}',
                                 style: companyNameStyle.apply(fontSizeFactor: 1.2),
                               ),
                             ),

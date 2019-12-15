@@ -164,6 +164,26 @@
      "register-form": {
        "registration-in-progress-label": "Registering...",
        "registration-failed-label": "Registration Failed"
+     },
+     "add-edit-report-page" : {
+       "total-amount-prefix": "Total",
+       "remove-label": "Remove",
+       "group-name-label": "Group Name",
+       "description-label": "Description",
+       "add-receipts-button-label": "Add Receipts",
+       "save-group-button-label": "Save Group",
+       "archive-group-button-label": "Archive Group"
+      },
+      "add-receipts-screen": {
+        "title": "Add Receipts to Group", 
+        "receipt-added-success": "Receipt was added to group",
+        "receipt-added-fail": "Erro: Receipt data not found, could not be added to group",
+        "add-to-group-label": "Add to Group"
+      },
+      "report-card": {
+        "total-amount-prefix": "Total",
+        "created-date-prefix": "Created",
+        "expenses-suffix": "Expenses"
      }
   },
   "words": {
