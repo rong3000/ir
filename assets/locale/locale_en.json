@@ -177,7 +177,7 @@
       "add-receipts-screen": {
         "title": "Add Receipts to Group", 
         "receipt-added-success": "Receipt was added to group",
-        "receipt-added-fail": "Erro: Receipt data not found, could not be added to group",
+        "receipt-added-fail": "Error: Receipt data not found, could not be added to group",
         "add-to-group-label": "Add to Group"
       },
       "report-card": {
