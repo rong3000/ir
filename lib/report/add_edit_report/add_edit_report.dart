@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:intelligent_receipt/data_model/action_with_lable.dart';
 import 'package:intelligent_receipt/data_model/data_result.dart';
@@ -32,7 +31,7 @@ class AddEditReport extends StatefulWidget {
       : assert(userRepository != null),
         _userRepository = userRepository,
         _reportId = reportId,
-        super(key: key) {}
+        super(key: key);
 
   @override
   _AddEditReportState createState() => new _AddEditReportState();
@@ -46,12 +45,12 @@ class _AddEditReportState extends State<AddEditReport> {
 
   bool get isPopulated => _reportNameController.text.isNotEmpty;
 
-  Report _report = null;
+  Report _report;
   List<ReceiptListItem> _receiptList;
   double _totalAmount;
-  Currency _reportCurrency = null;
-  Currency _defaultCurrency = null;
-  Future<double> _calcTotalAmountFuture = null;
+  Currency _reportCurrency;
+  Currency _defaultCurrency;
+  Future<double> _calcTotalAmountFuture;
   bool _receiptItemsChanged = false;
 
   @override
@@ -101,6 +100,7 @@ class _AddEditReportState extends State<AddEditReport> {
     } else {
       // If that response was not OK, throw an error.
       LogHepper.warning("Failed to load exchange rate from server", saveToFile: true);
+      return null;
     }
   }
 
@@ -166,10 +166,10 @@ class _AddEditReportState extends State<AddEditReport> {
   @override
   Widget build(BuildContext context) {
     List<ActionWithLabel> actions = [];
-    ActionWithLabel d = new ActionWithLabel()
+    actions.add(ActionWithLabel()
       ..action = removeAction
-      ..label = allTranslations.text('app.add-edit-report-page.remove-label');
-    actions.add(d);
+      ..label = allTranslations.text('app.add-edit-report-page.remove-label')
+      );
 
     return new Scaffold(
       key: _scaffoldKey,
