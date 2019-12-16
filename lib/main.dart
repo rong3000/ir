@@ -15,6 +15,7 @@ import 'package:intelligent_receipt/splash_screen.dart';
 import 'package:intelligent_receipt/simple_bloc_delegate.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   BlocSupervisor.delegate = SimpleBlocDelegate();
   final UserRepository userRepository = UserRepository();
   await userRepository.preferencesRepository.initialisePrefsInstance();
