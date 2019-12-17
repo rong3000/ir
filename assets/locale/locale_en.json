@@ -33,7 +33,9 @@
       "home-tab-label": "Home",
       "receipts-tab-label": "Rceipts",
       "groups-tab-label": "Groups",
-      "settings-tab-label": "Settings"
+      "settings-tab-label": "Settings",
+      "no-network" : "No network connection",
+      "network-recovered" : "Network connection recovered"
     },
     "login-screen": {
       "create-account-label": "Create an Account",

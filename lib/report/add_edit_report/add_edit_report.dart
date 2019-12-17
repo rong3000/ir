@@ -160,7 +160,9 @@ class _AddEditReportState extends State<AddEditReport> {
 
   String _getTotalAmountText(double totalAmount) {
     final String total = allTranslations.text('app.add-edit-report-page.total-amount-prefix');
-    return "$total: ${_reportCurrency != null ? _reportCurrency.code: ''} ${_reportCurrency != null ? _reportCurrency.symbol: ''}${totalAmount.toStringAsFixed(2)}";
+    return "$total: ${_reportCurrency != null ? _reportCurrency.code: ''} "
+        "${_reportCurrency != null ? _reportCurrency.symbol: ''}"
+        "${totalAmount?.toStringAsFixed(2)}";
   }
 
   @override
@@ -234,7 +236,7 @@ class _AddEditReportState extends State<AddEditReport> {
               ),
             ),
             Expanded(
-                flex: 4,
+                flex: 6,
                 child: ListView.builder(
                     itemCount: _receiptList.length,
                     itemBuilder: (context, index) {

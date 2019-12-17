@@ -12,6 +12,7 @@ import 'package:intelligent_receipt/translations/global_translations.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 import 'package:upgrader/upgrader.dart';
 import 'receipts_page/receipts_page.dart';
+import 'package:intelligent_receipt/data_model/network_connection/connection_status.dart';
 
 class MainScreen extends StatefulWidget {
   final UserRepository _userRepository;
@@ -43,10 +44,14 @@ class MainScreenState extends State<MainScreen> {
   String get receiptsTabLabel => allTranslations.text('app.main-screen.receipts-tab-label');
   String get groupsTabLabel => allTranslations.text('app.main-screen.groups-tab-label');
   String get settingsTabLabel => allTranslations.text('app.main-screen.settings-tab-label');
+  String get noNetworkText => allTranslations.text('app.main-screen.no-network');
+  String get networkRecoveredText => allTranslations.text('app.main-screen.network-recovered');
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final _defaultColor = Colors.grey;
   final _activeColor = Colors.blue;
   int _currentIndex = 0;
+  bool _hasNetwork = true;
 //  bool _verified;
   final PageController _controller = PageController(
     initialPage: 0,
@@ -69,11 +74,37 @@ class MainScreenState extends State<MainScreen> {
     });
   }
 
+  void _showInSnackBar(String value, {IconData icon: Icons.error, color: Colors.red, duration: 2}) {
+    _scaffoldKey.currentState.showSnackBar(SnackBar(
+      content: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [Text(value), Icon(icon)],
+      ),
+      backgroundColor: color,
+      duration: Duration(seconds: duration),
+    ));
+  }
+
+  void _updateConnectivity(dynamic hasConnection) {
+    if (_hasNetwork != hasConnection) {
+      _hasNetwork = hasConnection;
+      if (!_hasNetwork) {
+        _showInSnackBar(noNetworkText, duration: 24 * 3600);
+      } else {
+        _scaffoldKey.currentState.hideCurrentSnackBar();
+        _showInSnackBar(networkRecoveredText, icon: Icons.info, color: Colors.blue, duration: 2);
+      }
+    }
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     userReload();
+    ConnectionStatusSingleton connectionStatus = ConnectionStatusSingleton.getInstance();
+    connectionStatus.initialize();
+    connectionStatus.connectionChange.listen(_updateConnectivity);
 //    _verified = _userRepository.currentUser.isEmailVerified;
   }
 
@@ -92,6 +123,7 @@ class MainScreenState extends State<MainScreen> {
     return BlocProvider<HomeBloc>(
       builder: (context) => HomeBloc(userRepository: _userRepository),
       child: Scaffold(
+        key: _scaffoldKey,
         appBar: AppBar(
           title: SearchBar(userRepository: _userRepository, name: name),
         ),
