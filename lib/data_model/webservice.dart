@@ -50,6 +50,10 @@ class Urls {
 
 const int default_timeout = 2000; // millisecons
 
+String getAPIVersion() {
+  return "0.1";
+}
+
 /// Url: webservice URL
 /// token: token string
 /// body: the body Json string, which will be sent to the host
@@ -59,6 +63,7 @@ Future<DataResult> webservicePost(String url, String token, String body, {int ti
     "Authorization": "Bearer " + token,
     "accept": "application/json",
     "Content-type": "application/json",
+    "api-version": getAPIVersion()
   };
 
   try {
@@ -86,6 +91,7 @@ Future<DataResult> webservicePut(String url, String token, String body, {int tim
     "Authorization": "Bearer " + token,
     "accept": "application/json",
     "Content-type": "application/json",
+    "api-version": getAPIVersion()
   };
 
   try {
@@ -113,6 +119,7 @@ Future<DataResult> webserviceGet(String url, String token, {int timeout: default
     "Authorization": "Bearer " + token,
     "accept": "application/json",
     "Content-type": "application/json",
+    "api-version": getAPIVersion()
   };
 
   try {
@@ -142,8 +149,11 @@ Future<DataResult> uploadFile(String url, String token, File imageFile, {int tim
     var request = new http.MultipartRequest("POST", uri);
     var multipartFile = new http.MultipartFile('file', stream, length,
         filename: basename(imageFile.path));
-    
-    request.headers.addEntries([ new MapEntry("Authorization", "Bearer " + token)]);
+
+    Map<String, String> headerEntries = new Map<String, String>();
+    headerEntries["Authorization"] = "Bearer " + token;
+    headerEntries["api-version"] = getAPIVersion();
+    request.headers.addAll(headerEntries);
 
     request.files.add(multipartFile);
     var response = await request.send().timeout(Duration(milliseconds: timeout));
@@ -167,7 +177,8 @@ Future<DataResult> uploadFile(String url, String token, File imageFile, {int tim
 /// token: token string
 Future<Image> getImageFromNetwork(String url, String token)  async {
   final headers = {
-    "Authorization": "Bearer " + token
+    "Authorization": "Bearer " + token,
+    "api-version": getAPIVersion()
   };
 
   return Image.network(url, headers: headers);
