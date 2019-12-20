@@ -15,6 +15,7 @@ import 'package:intelligent_receipt/data_model/webservice.dart';
 import 'dart:math';
 import 'package:vector_math/vector_math.dart' show radians;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intelligent_receipt/data_model/exception_handlers/unsupported_version.dart';
 
 class ReceiptsPage extends StatelessWidget {
   final UserRepository _userRepository;
