@@ -16,7 +16,6 @@ class ManualReceiptUpload extends ReceiptEvent {
   String toString() => 'ReceiptUpload { receiptID :${receipt.id}'; 
 }
 
-
 class ManualReceiptUpdate extends ReceiptEvent {
   final Receipt receipt;
 

@@ -3,6 +3,7 @@ import 'package:intelligent_receipt/data_model/receipt_repository.dart';
 import 'package:intelligent_receipt/receipt/bloc/receipt_event.dart';
 import 'package:intelligent_receipt/receipt/bloc/receipt_state.dart';
 import 'package:meta/meta.dart';
+import 'package:intelligent_receipt/data_model/http_statuscode.dart';
 
 class ReceiptBloc extends Bloc<ReceiptEvent, ReceiptState> {
   ReceiptRepository _receiptRepository;
@@ -35,6 +36,8 @@ class ReceiptBloc extends Bloc<ReceiptEvent, ReceiptState> {
     var receiptResult = await _receiptRepository.addReceipts([event.receipt]);
     if (receiptResult.success) {
       yield ReceiptState.uploadSucess();
+    } else if (receiptResult.messageCode == HTTPStatusCode.UNSUPPORTED_VERSION) {
+      yield ReceiptState.versionNotSupported();
     } else {
       yield ReceiptState.uploadFail(receiptResult.message);
     }
@@ -45,6 +48,8 @@ class ReceiptBloc extends Bloc<ReceiptEvent, ReceiptState> {
     var receiptResult = await _receiptRepository.updateReceipt(event.receipt);
     if (receiptResult.success) {
       yield ReceiptState.uploadSucess();
+    } else if (receiptResult.messageCode == HTTPStatusCode.UNSUPPORTED_VERSION) {
+      yield ReceiptState.versionNotSupported();
     } else {
       yield ReceiptState.uploadFail(receiptResult.message);
     }
@@ -55,6 +60,8 @@ class ReceiptBloc extends Bloc<ReceiptEvent, ReceiptState> {
     var receiptResult = await _receiptRepository.deleteReceipts([event.receipt.id]);
     if (receiptResult.success) {
       yield ReceiptState.deleteSucess();
+    } else if (receiptResult.messageCode == HTTPStatusCode.UNSUPPORTED_VERSION) {
+      yield ReceiptState.versionNotSupported();
     } else {
       yield ReceiptState.deleteFail(receiptResult.message);
     }
