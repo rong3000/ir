@@ -7,6 +7,8 @@ import 'package:intelligent_receipt/report/add_edit_report/add_edit_report.dart'
 import 'package:intelligent_receipt/report/report_card/report_card.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 import 'package:intl/intl.dart';
+import 'package:intelligent_receipt/data_model/http_statuscode.dart';
+import 'package:intelligent_receipt/data_model/exception_handlers/unsupported_version.dart';
 
 import '../../data_model/webservice.dart';
 
@@ -499,6 +501,10 @@ class ReportListState extends State<ReportList> {
                               );
                             });
                       } else {
+                        if (snapshot.data.messageCode == HTTPStatusCode.UNSUPPORTED_VERSION) {
+                          return UnsupportedVersion();
+                        }
+
                         return Column(
                           children: <Widget>[
                             Text(
@@ -508,7 +514,7 @@ class ReportListState extends State<ReportList> {
                         );
                       }
                     }
-                }
+                 }
               }),
         ),
       )

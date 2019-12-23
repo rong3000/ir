@@ -18,6 +18,7 @@ import 'package:intelligent_receipt/data_model/receipt_repository.dart';
 import 'dart:async';
 import 'package:image_cropper/image_cropper.dart';
 import '../../helper_widgets/zoomable_image.dart';
+import 'package:intelligent_receipt/data_model/exception_handlers/unsupported_version.dart';
 
 class AddEditReiptForm extends StatefulWidget {
   final Receipt _receiptItem;
@@ -457,6 +458,9 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
                   backgroundColor: Colors.red,
                 ),
               );
+          }
+          if (state.versionNotSupported) {
+            showUnsupportedVersionAlert(context);
           }
         },
         child: BlocBuilder(

@@ -7,6 +7,7 @@ class ReceiptState {
   bool deleteInProgress;
   bool deleteSuccess;
   bool deleteFail;
+  bool versionNotSupported;
   String errorMessage;
 
   ReceiptState({
@@ -16,7 +17,8 @@ class ReceiptState {
     @required this.deleteInProgress,
     @required this.deleteSuccess,
     @required this.deleteFail,
-    this.errorMessage
+    this.errorMessage,
+    this.versionNotSupported
   });
 
   factory ReceiptState.uploading() {
@@ -27,6 +29,7 @@ class ReceiptState {
       deleteInProgress: false,
       deleteSuccess: false,
       deleteFail: false,
+      versionNotSupported: false
     );
   }
   
@@ -38,6 +41,7 @@ class ReceiptState {
       deleteInProgress: false,
       deleteSuccess: false,
       deleteFail: false,
+      versionNotSupported: false
     );
   }
   
@@ -49,7 +53,8 @@ class ReceiptState {
       deleteInProgress: false,
       deleteSuccess: false,
       deleteFail: false,
-      errorMessage: errorMsg
+      errorMessage: errorMsg,
+      versionNotSupported: false
     );
   }
 
@@ -61,6 +66,7 @@ class ReceiptState {
       deleteInProgress: true,
       deleteSuccess: false,
       deleteFail: false,
+      versionNotSupported: false
     );
   }
 
@@ -72,6 +78,7 @@ class ReceiptState {
       deleteInProgress: false,
       deleteSuccess: true,
       deleteFail: false,
+      versionNotSupported: false
     );
   }
 
@@ -83,7 +90,20 @@ class ReceiptState {
       deleteInProgress: false,
       deleteSuccess: false,
       deleteFail: true,
-      errorMessage: errorMsg
+      errorMessage: errorMsg,
+      versionNotSupported: false
+    );
+  }
+
+  factory ReceiptState.versionNotSupported() {
+    return ReceiptState(
+      uploadinProgress: false,
+      uploadSuccess: false,
+      uploadFail: false,
+      deleteInProgress: false,
+      deleteSuccess: false,
+      deleteFail: false,
+      versionNotSupported: true
     );
   }
 }
