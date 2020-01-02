@@ -16,7 +16,7 @@ class ForgetButton extends StatelessWidget {
       ),
       onPressed: _onPressed,
 //      child: Text(allTranslations.text('app.login-screen.forget-button-label')),
-      child: Text('Forget Password'),
+      child: Text(allTranslations.text('app.login-screen.forget-password-button-label')),
     );
   }
 }

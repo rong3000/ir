@@ -5,13 +5,24 @@
       "preferences-menu-item-title": "选项"
     },
     "preferences-page": {
-      "title": "应用程式偏好设定"
+      "title": "应用偏好设定"
     },
     "main-screen": {
-      "home-tab-label": "家",
+      "home-tab-label": "主页",
       "receipts-tab-label": "收据",
-      "groups-tab-label": "团体",
-      "settings-tab-label": "设定值"
+      "groups-tab-label": "收据组",
+      "settings-tab-label": "设定"
+    },
+    "login-screen": {
+      "create-account-label": "创建账户",
+      "login-button-label": "登录",
+      "forget-password-button-label": "忘记密码",
+      "fb-signin-label": "用Facebook账户登录",
+      "google-signin-label": "Sign in with Google",
+      "login-fail-message": "Login Failed",
+      "logging-in-status-message": "Logging In...",
+      "invalid-email-message": "Invalid Email",
+      "invalid-password-message": "Invalid Password"
     }
   }
 }

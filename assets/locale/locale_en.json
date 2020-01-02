@@ -40,6 +40,7 @@
     "login-screen": {
       "create-account-label": "Create an Account",
       "login-button-label": "Login",
+      "forget-password-button-label": "Forget Password",
       "fb-signin-label": "Sign in with Facebook",
       "google-signin-label": "Sign in with Google",
       "login-fail-message": "Login Failed",
