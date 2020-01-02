@@ -189,11 +189,37 @@ class _LoginFormState extends State<LoginForm> {
     );
   }
 
-  void _onForgetFormSubmitted() {
-    _loginBloc.dispatch(
-      ForgetPasswordPressed(
-        email: _emailController.text,
-      ),
+  Future<void> sendPasswordResetEmail(String email) async {
+    await _userRepository.sendPasswordResetEmail(email);
+  }
+
+  Future<void> _ackAlert(BuildContext context) {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Password reset email sent'),
+          content: const Text('Please check your email for instructions about how to reset your password.'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Ok'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
+  }
+
+  void _onForgetFormSubmitted() {
+    sendPasswordResetEmail(_emailController.text);
+    _ackAlert(context);
+//    _loginBloc.dispatch(
+//      ForgetPasswordPressed(
+//        email: _emailController.text,
+//      ),
+//    );
   }
 }
