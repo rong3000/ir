@@ -2,7 +2,8 @@
   "app": {
     "title": "智能收据",
     "settings-page": {
-      "preferences-menu-item-title": "选项"
+      "preferences-menu-item-title": "选项",
+      "check-update-menu-item-title": "检查更新"
     },
     "preferences-page": {
       "title": "应用偏好设定"
