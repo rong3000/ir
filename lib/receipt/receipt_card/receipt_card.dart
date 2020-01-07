@@ -262,9 +262,11 @@ class _ReceiptCardState extends State<ReceiptCard> {
                       ),
                     ),
                   ),
-                  ButtonTheme.bar(
-                    minWidth: 56,
-                    padding : const EdgeInsets.symmetric(horizontal: 4.0),
+                  ButtonBarTheme(
+                    data: ButtonBarThemeData(
+                      buttonMinWidth: 56,
+                      buttonPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+                    ),
                     child: ButtonBar(
                       mainAxisSize: MainAxisSize.min,
                       alignment: MainAxisAlignment.start,

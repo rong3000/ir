@@ -491,7 +491,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
                             Flexible(
-                              flex: 7,
+                              flex: 6,
                               child: Padding(
                                 padding: EdgeInsets.only(top: 5),
                                 child: TextFormField(
@@ -505,8 +505,9 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
                               ),
                             ),
                             Flexible(
-                              flex: 3,
+                              flex: 4,
                               child: DropdownButtonFormField<String>(
+                                isDense: true,
                                 decoration:
                                     InputDecoration(labelText: allTranslations.text('app.add-edit-manual-page.currency-code-label')),
                                 items: _getCurrencyCodesList(),
@@ -540,6 +541,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
                           },
                         ),
                         DropdownButtonFormField<int>(
+                          isDense: true,
                           decoration: InputDecoration(labelText: allTranslations.text('app.add-edit-manual-page.category-label')),
                           items: _getCategorylist(),
                           value: receipt.categoryId,
