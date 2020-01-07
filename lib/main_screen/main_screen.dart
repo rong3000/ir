@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:intelligent_receipt/authentication_bloc/bloc.dart';
 import 'package:intelligent_receipt/data_model/enums.dart';
@@ -252,14 +254,15 @@ class MainScreenState extends State<MainScreen> {
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(builder: (context) {
-                      return CheckUpdateScreen(
+                      return Platform.isIOS ? CheckUpdateScreenIos(
+                      ): CheckUpdateScreen(
                       );
                     }),
                   );
                 },
               ),
               ListTile(
-                title: Text('Check Update Ios'),
+                title: Text('Temperary menu to check ios'),
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(builder: (context) {
