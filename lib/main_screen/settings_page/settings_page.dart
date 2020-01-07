@@ -10,6 +10,8 @@ import 'package:intelligent_receipt/main_screen/settings_page/preferences_menu_c
 import 'package:intelligent_receipt/translations/global_translations.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 
+import 'check_update_card.dart';
+
 
 class SettingsPage extends StatefulWidget {
   final UserRepository _userRepository;
@@ -52,6 +54,7 @@ class _SettingsPageState extends State<SettingsPage> {
             PreferencesMenuCard(),
             CurrencyMenuCard(),
             CatergoryMenuCard(),
+            CheckUpdateCard(),
             PlanMenuCard(),
             DocumentKnowledgeMenuCard(),
             InviteFriendMenuCard(),

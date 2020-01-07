@@ -5,6 +5,7 @@ import 'package:intelligent_receipt/main_screen/bloc/bloc.dart';
 import 'package:intelligent_receipt/login/login.dart';
 import 'package:intelligent_receipt/main_screen/home_page/home_page.dart';
 import 'package:intelligent_receipt/main_screen/search_bar/search_bar.dart';
+import 'package:intelligent_receipt/main_screen/settings_page/check_update_screen/check_update_screen.dart';
 import 'package:intelligent_receipt/main_screen/settings_page/settings_page.dart';
 import 'package:intelligent_receipt/main_screen/reports_page/reports_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -241,6 +242,17 @@ class MainScreenState extends State<MainScreen> {
                       return ReportsPage(
                           userRepository: _userRepository,
                           reportStatusType: ReportStatusType.Submitted);
+                    }),
+                  );
+                },
+              ),
+              ListTile(
+                title: Text('Check Update'),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) {
+                      return CheckUpdateScreen(
+                      );
                     }),
                   );
                 },
