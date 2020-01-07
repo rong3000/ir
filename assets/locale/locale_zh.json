@@ -1,29 +1,218 @@
 {
   "app": {
-    "title": "智能收据",
+    "title": "智能票据",
+    "common": {
+      "loading-status": "加载中...",
+      "value-required-validation": "需要填写",
+      "uploading-receipt-in-progess": "正在上传票据...",
+      "uploading-failed": "上传失败: ",
+      "deleting-in-progress": "正在删除票据...",
+      "deleting-failed": "删除失败: ",
+      "no-image-text": "没有票据图片!",
+      "invalid-email-message": "错误的邮箱",
+      "invalid-password-message": "密码不合规范"
+    },
     "settings-page": {
-      "preferences-menu-item-title": "选项",
-      "check-update-menu-item-title": "检查更新"
+      "title": "设置",
+      "preferences-menu-item-title": "Language (语言)",
+      "currency-menu-item-title": "缺省货币",
+      "category-menu-item-title": "票据类别",
+      "plan-info-menu-item-title": "Plan Information",
+      "check-update-menu-item-title": "检查更新",
+      "document-knowledge-menu-item-title": "文档和知识库",
+      "invite-friend-menu-item-title": "邀请朋友",
+      "contact-us-menu-item-title": "联系我们"
     },
     "preferences-page": {
-      "title": "应用偏好设定"
+      "title": "软件语言",
+      "language-dropdown-label": "选择语言（Select App Language）"
+    },
+    "currency-screen":{
+      "title": "选择货币"
     },
     "main-screen": {
-      "home-tab-label": "主页",
-      "receipts-tab-label": "收据",
-      "groups-tab-label": "收据组",
-      "settings-tab-label": "设定"
+      "home-tab-label": "首页",
+      "receipts-tab-label": "票据",
+      "groups-tab-label": "票据组",
+      "settings-tab-label": "设置",
+      "no-network" : "没有网络",
+      "network-recovered" : "网络连接恢复"
     },
     "login-screen": {
       "create-account-label": "创建账户",
       "login-button-label": "登录",
       "forget-password-button-label": "忘记密码",
-      "fb-signin-label": "用Facebook账户登录",
-      "google-signin-label": "Sign in with Google",
-      "login-fail-message": "Login Failed",
-      "logging-in-status-message": "Logging In...",
-      "invalid-email-message": "Invalid Email",
-      "invalid-password-message": "Invalid Password"
+      "fb-signin-label": "使用Facebook账号登录",
+      "google-signin-label": "使用Google账号登录",
+      "login-fail-message": "登录失败",
+      "logging-in-status-message": "登录中...",
+      "invalid-email-message": "无效邮箱",
+      "invalid-password-message": "无效密码"
+    },
+    "select-image-source-dialog": {
+      "title": "选择图片源"
+    },
+    "home-page": {
+      "snap-receipt-card-title": "拍摄上传您的票据",
+      "manual-add-card-title": "手动添加票据",
+      "view-imported-receipts-card-title": "查看添加的票据",
+      "view-receipts-group-card-title": "查看添加的票据组"
+    },
+    "receipts-page": {
+      "unreviewed-tab-title": "没有审核的票据",
+      "reviewed-tab-title": "审核的票据",
+      "add-receipt-tooltip": "拍摄或从图片库选择",
+      "add-receipt-manual-tooltip": "手动添加票据",
+      "failed-load-receipts-message": "加载票据失败: "
+    },
+
+    "snap-receipt-page": {
+      "title": "拍摄票据"
+    },
+    "reports-page": {
+      "active-groups-tab-label": "把票据组存档",
+      "submitted-groups-tab-label": "已提交的票据",
+      "archived-groups-page-label": "已存档的票据"
+    },
+    "add-reports-page": {
+      "title": "新建票据组"
+    },
+    "category-screen": {
+      "title": "编辑票据类别",
+      "add-dialog-title": "添加票据类别",
+      "search-label": "搜索",
+      "modify-alert-title": "修改/删除 类别"
+    },
+    "document-screen": {
+      "title": "文档和知识库",
+      "snap-receipt-process-label": "上传票据流程",
+      "archived-group-features-label": "对于存档的票据组可以做什么",
+      "receipt-group-information":"关于票据组"
+    },
+    "credit-card-page": {
+      "title": "信用卡",
+      "initial-name": "姓名",
+      "expiry-label": "过期年月",
+      "cvv-label": "CVV",
+      "card-number-label": "信用卡号",
+      "card-name-label": "信用卡上姓名"
+    },
+    "plan-screen": {
+      "title": "Plan Information",
+      "basic-plan-label": "Basic Plan",
+      "basic-plan-label-subtitle": "With our basic plan, you can snap maximum 10 receipts per month and generate 2 groups.",
+      "upgrade-now-label": "Upgrade Now",
+      "premium-plan-label": "Premium Plan",
+      "premium-plan-label-subtitle": "You will get unlimited snaps and groups."
+    },
+    "add-edit-manual-page": {
+      "edit-title": "Edit Receipt",
+      "new-title": "Create Receipt",
+      "select-new-image-label": "Select New Image",
+      "show-full-image-missing": "No Image!",
+      "purchase-date-label": "Purchase Date",
+      "total-amount-label": "Total Amount",
+      "currency-code-label": "Currency Code",
+      "gst-inclusive-label": "GST Inclusive",
+      "category-label": "Category",
+      "vendor-label": "Shop/Vendor",
+      "product-name-label": "Product Name",
+      "warranty-period-label": "Warranty Period",
+      "notes-label": "Notes"
+
+    },
+    "receipt-card" : {
+      "unknown-category": "Unknown",
+      "receipt-processed-review": "We have processed your receipt, please click Review to verify receipt data.",
+      "receipt-in-process-review": "Your receipt is being processed. Click Review button to manually enter receipt data.",
+      "receipt-date-prefix": "Receipt Date",
+      "total-amount-prefix": "Total",
+      "uploaded-prefix": "Uploaded"
+    },
+    "receipt-list": {
+      "upload-time-menu-item": "Upload Time",
+      "receipt-time-menu-item": "Upload Time",
+      "company-name-menu-item": "Company Name",
+      "amount-menu-item": "Amount",
+      "category-menu-item": "Category",
+      "ascending-menu-item": "Ascending",
+      "toggle-ascending-menu-item": "Toggle Ascending"
+    },
+    "image-cropper" :{
+      "title": "Cropper"
+    },
+    "upload-result-dialog": {
+      "title": "Receipt has been saved",
+      "success-message": "Receipt is being listed in Receipts/Reviewed tab."
+    },
+    "delete-result-dialog": {
+      "title": "Delete Receipt",
+      "success-message": "Receipt was successfully deleted."
+    },
+    "upload-receipt-alert": {
+      "button-text": "OK, Got it"
+    },
+    "upload-receipt-screen": {
+      "review-now-label": "Review Now",
+      "review-later-label": "Review Later",
+      "press-to-start-label": "Press button to start",
+      "submitting-label": "Submitting receipt, will be ready soon ...",
+      "unknown-error-label": "Unknown error encountered when submitting the receipt, please resubmit the receipt.",
+      "error-prefix": "Error",
+      "extract-text-failed-message": "The receipt has been submitted, but failed to extract the text from the image. Please double check whether this is a valid receipt.\n\nPress 'Review Now' button to manually enter receipt information now.\nPress 'Review Later' button to review the receipt later, which is listed in 'Receipts\\Unreviewed' tab.",
+      "maybe-not-valid-message": "This maybe not a valid receipt. Please double check.\n\nPress 'Review Now' button to manually enter receipt information now.\nPress 'Review Later' button to review the receipt later, which is listed in 'Receipts\\Unreviewed' tab.",
+      "unrecognized-format-message": "The receipt image has been submitted, we are now recognizing it, and will notify you after we recognize it.\n\nPress 'Review Now' button to manually enter receipt information now.\nPress 'Review Later' button to review the receipt later, which is listed in 'Receipts\\Unreviewed' tab.",
+      "recognized-success-message": "The receipt image has been submitted and recognized.\n\nPress 'Review Now' button to verify receipt information now.\nPress 'Review Later' button to review the receipt later, which is listed in 'Receipts\\Unreviewed' tab.",
+      "general-error-message": "Error encountered when submitting the receipt: "
+    },
+    "register-form": {
+      "registration-in-progress-label": "Registering...",
+      "registration-failed-label": "Registration Failed"
+    },
+    "add-edit-report-page" : {
+      "total-amount-prefix": "Total",
+      "remove-label": "Remove",
+      "group-name-label": "Group Name",
+      "description-label": "Description",
+      "add-receipts-button-label": "Add Receipts",
+      "save-group-button-label": "Save Group",
+      "archive-group-button-label": "Archive Group"
+    },
+    "add-receipts-screen": {
+      "title": "Add Receipts to Group",
+      "receipt-added-success": "Receipt was added to group",
+      "receipt-added-fail": "Error: Receipt data not found, could not be added to group",
+      "add-to-group-label": "Add to Group"
+    },
+    "report-card": {
+      "total-amount-prefix": "Total",
+      "created-date-prefix": "Created",
+      "expenses-suffix": "Expenses"
+    },
+    "unsupported-version":{
+      "title" : "Version not supported",
+      "text" : "Your version of IR is not being supported, please upgrade now.",
+      "button" : "Upgrade Now ..."
     }
+  },
+  "words": {
+    "email": "Email",
+    "password": "Password",
+    "login": "Login",
+    "camera": "Camera",
+    "gallery": "Gallery",
+    "review": "Review",
+    "delete": "Delete",
+    "add": "Add",
+    "toggle": "Toggle",
+    "ok": "OK",
+    "cancel": "Cancel",
+    "rename": "Rename",
+    "search": "Search",
+    "continue": "Continue",
+    "close": "Close",
+    "months": "months",
+    "years": "years",
+    "register": "Register"
   }
 }
