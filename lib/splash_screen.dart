@@ -15,15 +15,21 @@ class SplashScreen extends StatelessWidget {
     final cfg = AppcastConfiguration(url: appcastURL, supportedOS: ["android"]);
 
     return Scaffold(
-      body: UpgradeAlert(
-        appcastConfig: cfg,
-        debugLogging: true,
-        child: Center(child:
-        Padding(
-          padding: EdgeInsets.symmetric(vertical: 20),
-          child: Image.asset('assets/ir_logo.png', height: 200),
-        ),),
-      )
-    );
+        body: Center(
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 20),
+        child: Image.asset('assets/ir_logo.png', height: 200),
+      ),
+    )
+//      UpgradeAlert(
+//        appcastConfig: cfg,
+//        debugLogging: true,
+//        child: Center(child:
+//        Padding(
+//          padding: EdgeInsets.symmetric(vertical: 20),
+//          child: Image.asset('assets/ir_logo.png', height: 200),
+//        ),),
+//      )
+        );
   }
 }

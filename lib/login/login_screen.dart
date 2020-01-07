@@ -27,14 +27,18 @@ class LoginScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(title: Text(allTranslations.text('words.login'))),
-      body: UpgradeAlert(
-        appcastConfig: cfg,
-        debugLogging: true,
-        child: BlocProvider<LoginBloc>(
-          builder: (context) => LoginBloc(userRepository: _userRepository),
-          child: LoginForm(userRepository: _userRepository),
-        ),
+      body: BlocProvider<LoginBloc>(
+        builder: (context) => LoginBloc(userRepository: _userRepository),
+        child: LoginForm(userRepository: _userRepository),
       ),
+//      UpgradeAlert(
+//        appcastConfig: cfg,
+//        debugLogging: true,
+//        child: BlocProvider<LoginBloc>(
+//          builder: (context) => LoginBloc(userRepository: _userRepository),
+//          child: LoginForm(userRepository: _userRepository),
+//        ),
+//      ),
     );
   }
 }
