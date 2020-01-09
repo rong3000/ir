@@ -14,7 +14,7 @@
     },
     "settings-page": {
       "title": "Settings",
-      "preferences-menu-item-title": "Preferences",
+      "preferences-menu-item-title": "App Language (选择语言)",
       "currency-menu-item-title": "Default Currency",
       "category-menu-item-title": "Categories",
       "plan-info-menu-item-title": "Plan Information",
@@ -25,7 +25,7 @@
     },
     "preferences-page": {
       "title": "App Preferences",
-      "language-dropdown-label": "Select App Language"
+      "language-dropdown-label": "Select App Language(选择软件语言)"
     },
     "currency-screen":{
       "title": "Choose Currency"
@@ -161,8 +161,8 @@
       "error-prefix": "Error",
       "extract-text-failed-message": "The receipt has been submitted, but failed to extract the text from the image. Please double check whether this is a valid receipt.\n\nPress 'Review Now' button to manually enter receipt information now.\nPress 'Review Later' button to review the receipt later, which is listed in 'Receipts\\Unreviewed' tab.",
       "maybe-not-valid-message": "This maybe not a valid receipt. Please double check.\n\nPress 'Review Now' button to manually enter receipt information now.\nPress 'Review Later' button to review the receipt later, which is listed in 'Receipts\\Unreviewed' tab.",
-      "unrecognized-format-message": "The receipt image has been submitted, we are now recognizing it, and will notify you after we recognize it.\n\nPress 'Review Now' button to manually enter receipt information now.\nPress 'Review Later' button to review the receipt later, which is listed in 'Receipts\\Unreviewed' tab.",
-      "recognized-success-message": "The receipt image has been submitted and recognized.\n\nPress 'Review Now' button to verify receipt information now.\nPress 'Review Later' button to review the receipt later, which is listed in 'Receipts\\Unreviewed' tab.",
+      "unrecognized-format-message": "The receipt image has been submitted.\n\nPress 'Review Now' button to manually enter receipt information now.\nPress 'Review Later' button to review the receipt later, which is listed in 'Receipts\\Unreviewed' tab.",
+      "recognized-success-message": "The receipt image has been submitted.\n\nPress 'Review Now' button to verify receipt information now.\nPress 'Review Later' button to review the receipt later, which is listed in 'Receipts\\Unreviewed' tab.",
       "general-error-message": "Error encountered when submitting the receipt: "
     },
     "register-form": {
@@ -192,7 +192,11 @@
     "unsupported-version":{
       "title" : "Version not supported",
       "text" : "Your version of IR is not being supported, please upgrade now.",
-      "button" : "Upgrade Now ..."
+      "button" : "Upgrade Now",
+      "upgrade-result": "Upgrade Result",
+      "upgrade-succeeded": "Upgrade was succeeded",
+      "upgrade-failed-prefix": "Upgrade failed: ",
+      "unsupported-platform": "Unsupported platform"
     }
   },
   "words": {

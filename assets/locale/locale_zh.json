@@ -14,7 +14,7 @@
     },
     "settings-page": {
       "title": "设置",
-      "preferences-menu-item-title": "Language (语言)",
+      "preferences-menu-item-title": "App Language (软件语言)",
       "currency-menu-item-title": "缺省货币",
       "category-menu-item-title": "票据类别",
       "plan-info-menu-item-title": "Plan Information",
@@ -106,113 +106,117 @@
       "premium-plan-label-subtitle": "You will get unlimited snaps and groups."
     },
     "add-edit-manual-page": {
-      "edit-title": "Edit Receipt",
-      "new-title": "Create Receipt",
-      "select-new-image-label": "Select New Image",
-      "show-full-image-missing": "No Image!",
-      "purchase-date-label": "Purchase Date",
-      "total-amount-label": "Total Amount",
-      "currency-code-label": "Currency Code",
-      "gst-inclusive-label": "GST Inclusive",
-      "category-label": "Category",
-      "vendor-label": "Shop/Vendor",
-      "product-name-label": "Product Name",
-      "warranty-period-label": "Warranty Period",
-      "notes-label": "Notes"
+      "edit-title": "编辑票据",
+      "new-title": "创建票据",
+      "select-new-image-label": "选择新图片",
+      "show-full-image-missing": "没有图片!",
+      "purchase-date-label": "购买日期",
+      "total-amount-label": "票据总额",
+      "currency-code-label": "货币代码",
+      "gst-inclusive-label": "是否包括GST",
+      "category-label": "类别",
+      "vendor-label": "票据公司",
+      "product-name-label": "产品名",
+      "warranty-period-label": "保修期",
+      "notes-label": "说明"
 
     },
     "receipt-card" : {
-      "unknown-category": "Unknown",
-      "receipt-processed-review": "We have processed your receipt, please click Review to verify receipt data.",
-      "receipt-in-process-review": "Your receipt is being processed. Click Review button to manually enter receipt data.",
-      "receipt-date-prefix": "Receipt Date",
-      "total-amount-prefix": "Total",
-      "uploaded-prefix": "Uploaded"
+      "unknown-category": "未知",
+      "receipt-processed-review": "我们已经解析您的票据，点击'查看'按键查看审核或修正票据信息.",
+      "receipt-in-process-review": "系统正在处理您的票据；点击'查看'按键手动完善票据信息.",
+      "receipt-date-prefix": "票据日期",
+      "total-amount-prefix": "总额",
+      "uploaded-prefix": "已上传"
     },
     "receipt-list": {
-      "upload-time-menu-item": "Upload Time",
-      "receipt-time-menu-item": "Upload Time",
-      "company-name-menu-item": "Company Name",
-      "amount-menu-item": "Amount",
-      "category-menu-item": "Category",
-      "ascending-menu-item": "Ascending",
-      "toggle-ascending-menu-item": "Toggle Ascending"
+      "upload-time-menu-item": "上传时间",
+      "receipt-time-menu-item": "上传时间",
+      "company-name-menu-item": "公司名",
+      "amount-menu-item": "金额",
+      "category-menu-item": "类别",
+      "ascending-menu-item": "升序",
+      "toggle-ascending-menu-item": "切换升降序"
     },
     "image-cropper" :{
-      "title": "Cropper"
+      "title": "裁剪"
     },
     "upload-result-dialog": {
-      "title": "Receipt has been saved",
-      "success-message": "Receipt is being listed in Receipts/Reviewed tab."
+      "title": "票据已保存",
+      "success-message": "票据已经在'票据/已审核票据'列表中."
     },
     "delete-result-dialog": {
-      "title": "Delete Receipt",
-      "success-message": "Receipt was successfully deleted."
+      "title": "删除票据",
+      "success-message": "票据被成功删除."
     },
     "upload-receipt-alert": {
-      "button-text": "OK, Got it"
+      "button-text": "好的"
     },
     "upload-receipt-screen": {
-      "review-now-label": "Review Now",
-      "review-later-label": "Review Later",
-      "press-to-start-label": "Press button to start",
-      "submitting-label": "Submitting receipt, will be ready soon ...",
-      "unknown-error-label": "Unknown error encountered when submitting the receipt, please resubmit the receipt.",
-      "error-prefix": "Error",
-      "extract-text-failed-message": "The receipt has been submitted, but failed to extract the text from the image. Please double check whether this is a valid receipt.\n\nPress 'Review Now' button to manually enter receipt information now.\nPress 'Review Later' button to review the receipt later, which is listed in 'Receipts\\Unreviewed' tab.",
-      "maybe-not-valid-message": "This maybe not a valid receipt. Please double check.\n\nPress 'Review Now' button to manually enter receipt information now.\nPress 'Review Later' button to review the receipt later, which is listed in 'Receipts\\Unreviewed' tab.",
-      "unrecognized-format-message": "The receipt image has been submitted, we are now recognizing it, and will notify you after we recognize it.\n\nPress 'Review Now' button to manually enter receipt information now.\nPress 'Review Later' button to review the receipt later, which is listed in 'Receipts\\Unreviewed' tab.",
-      "recognized-success-message": "The receipt image has been submitted and recognized.\n\nPress 'Review Now' button to verify receipt information now.\nPress 'Review Later' button to review the receipt later, which is listed in 'Receipts\\Unreviewed' tab.",
-      "general-error-message": "Error encountered when submitting the receipt: "
+      "review-now-label": "现在查看",
+      "review-later-label": "以后查看",
+      "press-to-start-label": "点击按键开始",
+      "submitting-label": "正在提交票据 ...",
+      "unknown-error-label": "提交票据室遇到未知错误，请重新提交.",
+      "error-prefix": "错误",
+      "extract-text-failed-message": "票据已经提交，但无法从票据提取文字；请检查您的票据是否为有效的票据.\n\n选择'现在查看'按键去查看审核、完善票据信息.\n选择'以后查看'按键退出当前页面, 票据已经在'票据/未审核'页面中， 您可以稍后查看票据信息.",
+      "maybe-not-valid-message": "票据已经提交，但可能无效票据，请检查您的票据.\n\n选择'现在查看'按键去查看审核、完善票据信息.\n选择'以后查看'按键退出当前页面, 票据已经在'票据/未审核'页面中， 您可以稍后查看票据信息.",
+      "unrecognized-format-message": "您的票据已经提交.\n\n选择'现在查看'按键去查看审核、完善票据信息.\n选择'以后查看'按键退出当前页面, 票据已经在'票据/未审核'页面中， 您可以稍后查看票据信息.",
+      "recognized-success-message": "您的票据已经提交.\n\n选择'现在查看'按键去查看审核、完善票据信息.\n选择'以后查看'按键退出当前页面, 票据已经在'票据/未审核'页面中， 您可以稍后查看票据信息.",
+      "general-error-message": "提交票据时错误: "
     },
     "register-form": {
-      "registration-in-progress-label": "Registering...",
-      "registration-failed-label": "Registration Failed"
+      "registration-in-progress-label": "正在注册...",
+      "registration-failed-label": "注册用户失败"
     },
     "add-edit-report-page" : {
-      "total-amount-prefix": "Total",
-      "remove-label": "Remove",
-      "group-name-label": "Group Name",
-      "description-label": "Description",
-      "add-receipts-button-label": "Add Receipts",
-      "save-group-button-label": "Save Group",
-      "archive-group-button-label": "Archive Group"
+      "total-amount-prefix": "总额",
+      "remove-label": "移除",
+      "group-name-label": "票据组名",
+      "description-label": "描述",
+      "add-receipts-button-label": "添加票据到票据组",
+      "save-group-button-label": "保存票据组",
+      "archive-group-button-label": "票据组存档"
     },
     "add-receipts-screen": {
-      "title": "Add Receipts to Group",
-      "receipt-added-success": "Receipt was added to group",
-      "receipt-added-fail": "Error: Receipt data not found, could not be added to group",
-      "add-to-group-label": "Add to Group"
+      "title": "添加票据到票据组",
+      "receipt-added-success": "选中票据添加到票据组",
+      "receipt-added-fail": "错误: 没找到票据数据，不能添加到票据组",
+      "add-to-group-label": "添加到票据组"
     },
     "report-card": {
-      "total-amount-prefix": "Total",
-      "created-date-prefix": "Created",
-      "expenses-suffix": "Expenses"
+      "total-amount-prefix": "总额",
+      "created-date-prefix": "已创建",
+      "expenses-suffix": "票据"
     },
     "unsupported-version":{
-      "title" : "Version not supported",
-      "text" : "Your version of IR is not being supported, please upgrade now.",
-      "button" : "Upgrade Now ..."
+      "title" : "不支持的软件版本",
+      "text" : "您的智能票据程序版本和服务器不兼容, 请立刻更新版本.",
+      "button" : "更新版本",
+      "upgrade-result": "版本更新结果",
+      "upgrade-succeeded": "更新版本成功",
+      "upgrade-failed-prefix": "更新失败: ",
+      "unsupported-platform": "不支持的系统平台"
     }
   },
   "words": {
-    "email": "Email",
-    "password": "Password",
-    "login": "Login",
-    "camera": "Camera",
-    "gallery": "Gallery",
-    "review": "Review",
-    "delete": "Delete",
-    "add": "Add",
-    "toggle": "Toggle",
-    "ok": "OK",
-    "cancel": "Cancel",
-    "rename": "Rename",
-    "search": "Search",
-    "continue": "Continue",
-    "close": "Close",
-    "months": "months",
-    "years": "years",
-    "register": "Register"
+    "email": "邮箱",
+    "password": "密码",
+    "login": "登录",
+    "camera": "摄像头",
+    "gallery": "图片库",
+    "review": "查看",
+    "delete": "删除",
+    "add": "添加",
+    "toggle": "切换",
+    "ok": "好的",
+    "cancel": "取消",
+    "rename": "重命名",
+    "search": "搜索",
+    "continue": "继续",
+    "close": "变比",
+    "months": "月",
+    "years": "年",
+    "register": "注册"
   }
 }
