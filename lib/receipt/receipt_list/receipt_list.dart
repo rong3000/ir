@@ -98,25 +98,41 @@ class ReceiptListState extends State<ReceiptList> {
       subMenuOverlayEntry = null;
     }
     if (_receiptStatusType == ReceiptStatusType.Uploaded) {
-      _simpleValue = _simpleValue1;
+      _sortByValue = _sortByUploadTime;
     } else {
-      _simpleValue = _simpleValue2;
+      _sortByValue = _sortByReceiptTime;
     }
   }
 
-  final ReceiptSortType _simpleValue1 = ReceiptSortType.UploadTime;
-  final ReceiptSortType _simpleValue2 = ReceiptSortType.ReceiptTime;
-  final ReceiptSortType _simpleValue3 = ReceiptSortType.CompanyName;
-  final ReceiptSortType _simpleValue4 = ReceiptSortType.Amount;
-  final ReceiptSortType _simpleValue5 = ReceiptSortType.Category;
-  ReceiptSortType _simpleValue;
+  final ReceiptSortType _sortByUploadTime = ReceiptSortType.UploadTime;
+  final ReceiptSortType _sortByReceiptTime = ReceiptSortType.ReceiptTime;
+  final ReceiptSortType _sortByCompanyName = ReceiptSortType.CompanyName;
+  final ReceiptSortType _sortByAmount = ReceiptSortType.Amount;
+  final ReceiptSortType _sortByCategory = ReceiptSortType.Category;
+  ReceiptSortType _sortByValue;
 
   void showMenuSelection(ReceiptSortType value) {
-    _simpleValue = value;
+    _sortByValue = value;
     setState(() {
       forceRefresh = false;
       sortingType = value;
     });
+  }
+
+  String _getSortByValueStr(ReceiptSortType sortType) {
+    if (sortType == _sortByUploadTime){
+      return allTranslations.text('app.receipt-list.upload-time-menu-item');
+    } else if (sortType == _sortByReceiptTime) {
+      return allTranslations.text('app.receipt-list.receipt-time-menu-item');
+    } else if (sortType == _sortByCompanyName) {
+      return allTranslations.text('app.receipt-list.company-name-menu-item');
+    } else if (sortType == _sortByAmount) {
+      return allTranslations.text('app.receipt-list.amount-menu-item');
+    } else if (sortType == _sortByCategory) {
+      return allTranslations.text('app.receipt-list.category-menu-item');
+    } else {
+      return allTranslations.text('app.receipt-list.unknown-menu-item');
+    }
   }
 
   void _showInSnackBar(String value, {IconData icon: Icons.error, color: Colors.red}) {
@@ -369,37 +385,37 @@ class ReceiptListState extends State<ReceiptList> {
                   ),
                   PopupMenuButton<ReceiptSortType>(
                     padding: EdgeInsets.zero,
-                    initialValue: _simpleValue,
+                    initialValue: _sortByValue,
                     onSelected: showMenuSelection,
                     child:
                         Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
                       Icon(Icons.sort),
                       Text(
-                        "[${_simpleValue.toString().split('.')[1]}]",
+                        "[${_getSortByValueStr(_sortByValue)}]",
                         style: TextStyle(height: 1, fontSize: 12),
                       ),
                     ]),
                     itemBuilder: (BuildContext context) =>
                         <PopupMenuItem<ReceiptSortType>>[
                       PopupMenuItem<ReceiptSortType>(
-                        value: _simpleValue1,
-                        child: Text(_simpleValue1.toString().split('.')[1]),
+                        value: _sortByUploadTime,
+                        child: Text(allTranslations.text('app.receipt-list.upload-time-menu-item')),
                       ),
                       PopupMenuItem<ReceiptSortType>(
-                        value: _simpleValue2,
-                        child: Text(_simpleValue2.toString().split('.')[1]),
+                        value: _sortByReceiptTime,
+                        child: Text(allTranslations.text('app.receipt-list.receipt-time-menu-item')),
                       ),
                       PopupMenuItem<ReceiptSortType>(
-                        value: _simpleValue3,
-                        child: Text(_simpleValue3.toString().split('.')[1]),
+                        value: _sortByCompanyName,
+                        child: Text(allTranslations.text('app.receipt-list.company-name-menu-item')),
                       ),
                       PopupMenuItem<ReceiptSortType>(
-                        value: _simpleValue4,
-                        child: Text(_simpleValue4.toString().split('.')[1]),
+                        value: _sortByAmount,
+                        child: Text(allTranslations.text('app.receipt-list.amount-menu-item')),
                       ),
                       PopupMenuItem<ReceiptSortType>(
-                        value: _simpleValue5,
-                        child: Text(_simpleValue5.toString().split('.')[1]),
+                        value: _sortByCategory,
+                        child: Text(allTranslations.text('app.receipt-list.category-menu-item')),
                       ),
                     ],
                   ),

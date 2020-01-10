@@ -36,7 +36,9 @@
       "groups-tab-label": "票据组",
       "settings-tab-label": "设置",
       "no-network" : "没有网络",
-      "network-recovered" : "网络连接恢复"
+      "network-recovered" : "网络连接恢复",
+      "log-out" : "退出",
+      "check-update" : "检查版本更新"
     },
     "login-screen": {
       "create-account-label": "创建账户",
@@ -68,6 +70,17 @@
 
     "snap-receipt-page": {
       "title": "拍摄票据"
+    },
+    "reports-list": {
+      "create-time": "创建时间",
+      "update-time": "更新时间",
+      "group-name": "票据组名",
+      "ascending": "升序",
+      "loading": "加载中 ...",
+      "review": "查看",
+      "delete": "删除",
+      "unknown": "未知",
+      "failed-load-groups-message": "获取票据组失败: "
     },
     "reports-page": {
       "active-groups-tab-label": "把票据组存档",
@@ -123,18 +136,19 @@
     },
     "receipt-card" : {
       "unknown-category": "未知",
-      "receipt-processed-review": "我们已经解析您的票据，点击'查看'按键查看审核或修正票据信息.",
-      "receipt-in-process-review": "系统正在处理您的票据；点击'查看'按键手动完善票据信息.",
+      "receipt-processed-review": "点击'查看'按键查看审核、完善票据信息.",
+      "receipt-in-process-review": "点击'查看'按键查看审核、完善票据信息.",
       "receipt-date-prefix": "票据日期",
       "total-amount-prefix": "总额",
-      "uploaded-prefix": "已上传"
+      "uploaded-prefix": "上传日期"
     },
     "receipt-list": {
       "upload-time-menu-item": "上传时间",
-      "receipt-time-menu-item": "上传时间",
+      "receipt-time-menu-item": "票据时间",
       "company-name-menu-item": "公司名",
       "amount-menu-item": "金额",
       "category-menu-item": "类别",
+      "unknown-menu-item": "未知",
       "ascending-menu-item": "升序",
       "toggle-ascending-menu-item": "切换升降序"
     },
@@ -186,8 +200,8 @@
     },
     "report-card": {
       "total-amount-prefix": "总额",
-      "created-date-prefix": "已创建",
-      "expenses-suffix": "票据"
+      "created-date-prefix": "创建日期",
+      "expenses-suffix": "张票据"
     },
     "unsupported-version":{
       "title" : "不支持的软件版本",

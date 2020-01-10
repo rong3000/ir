@@ -17,6 +17,7 @@ import 'package:intelligent_receipt/user_repository.dart';
 import 'package:upgrader/upgrader.dart';
 import 'receipts_page/receipts_page.dart';
 import 'package:intelligent_receipt/data_model/network_connection/connection_status.dart';
+import 'package:intelligent_receipt/translations/global_translations.dart';
 
 class MainScreen extends StatefulWidget {
   final UserRepository _userRepository;
@@ -209,27 +210,7 @@ class MainScreenState extends State<MainScreen> {
                 ),
               ),
               ListTile(
-                title: Text('Log In'),
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) {
-                      return LoginScreen(userRepository: _userRepository);
-                    }),
-                  );
-                },
-              ),
-//              ListTile(
-//                title: Text('FB'),
-//                onTap: () {
-//                  Navigator.of(context).push(
-//                    MaterialPageRoute(builder: (context) {
-//                      return FB();
-//                    }),
-//                  );
-//                },
-//              ),
-              ListTile(
-                title: Text('Log Out'),
+                title: Text(allTranslations.text('app.main-screen.log-out')),
                 onTap: () {
                   BlocProvider.of<AuthenticationBloc>(context).dispatch(
                     LoggedOut(),
@@ -237,20 +218,20 @@ class MainScreenState extends State<MainScreen> {
                   Navigator.pop(context);
                 },
               ),
+//              ListTile(
+//                title: Text('View Archived Groups'),
+//                onTap: () {
+//                  Navigator.of(context).push(
+//                    MaterialPageRoute(builder: (context) {
+//                      return ReportsPage(
+//                          userRepository: _userRepository,
+//                          reportStatusType: ReportStatusType.Submitted);
+//                    }),
+//                  );
+//                },
+//              ),
               ListTile(
-                title: Text('View Archived Groups'),
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) {
-                      return ReportsPage(
-                          userRepository: _userRepository,
-                          reportStatusType: ReportStatusType.Submitted);
-                    }),
-                  );
-                },
-              ),
-              ListTile(
-                title: Text('Check Update'),
+                title: Text(allTranslations.text('app.main-screen.check-update')),
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(builder: (context) {
