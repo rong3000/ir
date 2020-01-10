@@ -17,7 +17,7 @@
       "preferences-menu-item-title": "App Language (选择语言)",
       "currency-menu-item-title": "Default Currency",
       "category-menu-item-title": "Categories",
-      "plan-info-menu-item-title": "Plan Information",
+      "plan-info-menu-item-title": "License Information",
       "check-update-menu-item-title": "Check update",
       "document-knowledge-menu-item-title": "Documents & Knowledge Centre",
       "invite-friend-menu-item-title": "Invite a Friend",
@@ -119,7 +119,8 @@
       "card-name-label": "Name on card"
     },
     "plan-screen": {
-      "title": "Plan Information",
+      "title": "License Information",
+      "free-license": "You are using a one year free license, which will end on 31/12/2020. Other licenses information will be available soon.",
       "basic-plan-label": "Basic Plan",
       "basic-plan-label-subtitle": "With our basic plan, you can snap maximum 10 receipts per month and generate 2 groups.",
       "upgrade-now-label": "Upgrade Now",
