@@ -62,29 +62,29 @@ class _SearchBarState extends State<SearchBar> {
       child: Wrap(children: <Widget>[
 //        Text('${name}(${widget.verified ? '' : 'Email not verified'})'),
         AutoSizeText(
-          '${name} ${_userRepository.currentUser.isEmailVerified ? '' : '(Not Verified)'}',
+          '${name} ${_userRepository.currentUser.isEmailVerified ? '' : ''}',
           style: TextStyle(fontSize: 16),
           minFontSize: 6,
           maxLines: 3,
           overflow: TextOverflow.ellipsis,
         ),
-        _userRepository.currentUser.isEmailVerified ? Container(height:0):
-        Container(
-          height: 25,
-          child: RaisedButton(
-            onPressed: (){
-              sendVerification();
-              _showMessage('Verification Email sent', "We have sent you the email verification again, please check if it's in the SPAM mail if it cannot be found in your inbox.");
-            },
-            child: AutoSizeText(
-              'Resend Verification',
-              style: TextStyle(fontSize: 12),
-              minFontSize: 6,
-              maxLines: 3,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        )
+        _userRepository.currentUser.isEmailVerified ? Container(height:0): Container(height:0)
+//        Container(
+//          height: 25,
+//          child: RaisedButton(
+//            onPressed: (){
+//              sendVerification();
+//              _showMessage('Verification Email sent', "We have sent you the email verification again, please check if it's in the SPAM mail if it cannot be found in your inbox.");
+//            },
+//            child: AutoSizeText(
+//              'Resend Verification',
+//              style: TextStyle(fontSize: 12),
+//              minFontSize: 6,
+//              maxLines: 3,
+//              overflow: TextOverflow.ellipsis,
+//            ),
+//          ),
+//        )
 //        Expanded(
 //          flex: 1,
 //          child: TextField(
