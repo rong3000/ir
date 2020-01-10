@@ -44,7 +44,9 @@
       "groups-tab-label": "Groups",
       "settings-tab-label": "Settings",
       "no-network" : "No network connection",
-      "network-recovered" : "Network connection recovered"
+      "network-recovered" : "Network connection recovered",
+      "log-out" : "Log Out",
+      "check-update" : "Check Update"
     },
     "login-screen": {
       "create-account-label": "Create an Account",
@@ -76,6 +78,17 @@
 
     "snap-receipt-page": {
       "title": "Snap new receipt"
+    },
+    "reports-list": {
+      "create-time": "Create Time",
+      "update-time": "Update Time",
+      "group-name": "Group Name",
+      "ascending": "Ascending",
+      "loading": "Loading ...",
+      "review": "Review",
+      "delete": "Delete",
+      "unknown": "Unknown",
+      "failed-load-groups-message": "Failed to load receipt groups: "
     },
     "reports-page": {
       "active-groups-tab-label": "Active Groups",
@@ -131,18 +144,19 @@
     },
     "receipt-card" : {
       "unknown-category": "Unknown",
-      "receipt-processed-review": "We have processed your receipt, please click Review to verify receipt data.",
-      "receipt-in-process-review": "Your receipt is being processed. Click Review button to manually enter receipt data.",
+      "receipt-processed-review": "Click 'Review' button to verify and fulfill receipt data.",
+      "receipt-in-process-review": "Click 'Review' button to verify and fulfill receipt data.",
       "receipt-date-prefix": "Receipt Date",
       "total-amount-prefix": "Total",
-      "uploaded-prefix": "Uploaded"
+      "uploaded-prefix": "Uploaded Date"
     },
     "receipt-list": {
       "upload-time-menu-item": "Upload Time",
-      "receipt-time-menu-item": "Upload Time",
+      "receipt-time-menu-item": "Receipt Time",
       "company-name-menu-item": "Company Name",
       "amount-menu-item": "Amount",
       "category-menu-item": "Category",
+      "unknown-menu-item": "Unknown",
       "ascending-menu-item": "Ascending",
       "toggle-ascending-menu-item": "Toggle Ascending"
     },
