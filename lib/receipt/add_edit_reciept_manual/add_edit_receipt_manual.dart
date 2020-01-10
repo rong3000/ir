@@ -18,6 +18,8 @@ import 'package:intelligent_receipt/data_model/receipt_repository.dart';
 import 'dart:async';
 import 'package:image_cropper/image_cropper.dart';
 import '../../helper_widgets/zoomable_image.dart';
+import 'package:intelligent_receipt/data_model/exception_handlers/unsupported_version.dart';
+import 'package:intelligent_receipt/data_model/webservice.dart';
 
 class AddEditReiptForm extends StatefulWidget {
   final Receipt _receiptItem;
@@ -74,12 +76,6 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
     if ((this.receipt.categoryId == null) || (this.receipt.categoryId < 1)) {
       this.receipt.categoryId = 1;
     }
-
-    if (!isNew && receipt.image != null && receipt.image.isNotEmpty) {
-      var imageData = UriData.parse(receipt.image);
-      var bytes = imageData.contentAsBytes();
-      receiptImage = Image.memory(bytes);
-    }
   }
 
   @override
@@ -92,6 +88,15 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
     }
     currenciesList = _userRepository.settingRepository.getCurrencies();
     categoryList = _userRepository.categoryRepository.categories;
+
+    if (!isNew && receipt.imagePath != null && receipt.imagePath.isNotEmpty) {
+      receiptImage = null;
+      _userRepository.receiptRepository.getNetworkImage(Urls.GetImage + "/" + Uri.encodeComponent(receipt.imagePath)).then((image) {
+        setState(() {
+          receiptImage = image;
+        });
+      });
+    }
 
     if (categoryList.length == 0) {
       _userRepository.categoryRepository
@@ -458,6 +463,9 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
                 ),
               );
           }
+          if (state.versionNotSupported) {
+            showUnsupportedVersionAlert(context);
+          }
         },
         child: BlocBuilder(
           bloc: _receiptBloc,
@@ -483,7 +491,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
                             Flexible(
-                              flex: 7,
+                              flex: 6,
                               child: Padding(
                                 padding: EdgeInsets.only(top: 5),
                                 child: TextFormField(
@@ -497,8 +505,9 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
                               ),
                             ),
                             Flexible(
-                              flex: 3,
+                              flex: 4,
                               child: DropdownButtonFormField<String>(
+                                isDense: true,
                                 decoration:
                                     InputDecoration(labelText: allTranslations.text('app.add-edit-manual-page.currency-code-label')),
                                 items: _getCurrencyCodesList(),
@@ -532,6 +541,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
                           },
                         ),
                         DropdownButtonFormField<int>(
+                          isDense: true,
                           decoration: InputDecoration(labelText: allTranslations.text('app.add-edit-manual-page.category-label')),
                           items: _getCategorylist(),
                           value: receipt.categoryId,

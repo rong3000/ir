@@ -44,65 +44,9 @@ class _PlanScreenState extends State<PlanScreen> {
                         height: MediaQuery.of(context).size.height *
                             (orientation == Orientation.portrait ? 0.2 : 0.4),
                         child: GestureDetector(
-                          onTap: () {
-                            print('1');
-                          },
                           child: Card(
                             child: ListTile(
-                              title: Text(
-                                  'Your current plan is Free Trial, now you have only 3 snaps and 1 free group left.'),//TODO: addtrantaslation here when this is working
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    FractionallySizedBox(
-                      widthFactor:
-                          orientation == Orientation.portrait ? 0.8 : 0.3,
-                      child: Container(
-                        height: MediaQuery.of(context).size.height *
-                            (orientation == Orientation.portrait ? 0.3 : 0.4),
-                        child: Card(
-                          child: ListTile(
-                            title: Text(allTranslations.text('app.plan-screen.basic-plan-label')),
-                            subtitle: Text(allTranslations.text('app.plan-screen.basic-plan-label-subtitle')),
-                            trailing: RaisedButton(
-                              onPressed: () => {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(builder: (context) {
-                                    return CreditCardPage(
-//                                      userRepository: _userRepository,
-                                    );
-                                  }),
-                                )
-                              },
-                              child: Text(allTranslations.text('app.plan-screen.upgrade-now-label')),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    FractionallySizedBox(
-                      widthFactor:
-                          orientation == Orientation.portrait ? 0.8 : 0.3,
-                      child: Container(
-                        height: MediaQuery.of(context).size.height *
-                            (orientation == Orientation.portrait ? 0.3 : 0.4),
-                        child: Card(
-                          child: ListTile(
-                            title: Text(allTranslations.text('app.plan-screen.premium-plan-label')),
-                            subtitle: Text(allTranslations.text('app.plan-screen.premium-plan-label-subtitle')),
-                            trailing: RaisedButton(
-                              onPressed: () => {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(builder: (context) {
-                                    return CreditCardPage(
-//                                      userRepository: _userRepository,
-                                    );
-                                  }),
-                                )
-                              },
-                              child: Text(allTranslations.text('app.plan-screen.upgrade-now-label')),
+                              title: Text(allTranslations.text('app.plan-screen.free-license')),
                             ),
                           ),
                         ),

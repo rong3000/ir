@@ -15,6 +15,8 @@ import 'package:intelligent_receipt/data_model/webservice.dart';
 import 'dart:math';
 import 'package:vector_math/vector_math.dart' show radians;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intelligent_receipt/data_model/exception_handlers/unsupported_version.dart';
+import 'package:intelligent_receipt/data_model/http_statuscode.dart';
 
 class ReceiptsPage extends StatelessWidget {
   final UserRepository _userRepository;
@@ -185,11 +187,12 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
                               ],
                             );
                           } else {
+                            if (snapshot.data.messageCode == HTTPStatusCode.UNSUPPORTED_VERSION) {
+                              return UnsupportedVersion();
+                            }
                             return Column(
                               children: <Widget>[
-                                Text(
-                                    'Failed retrieving data, error code is ${snapshot.data.messageCode}'), //no translation - looks like debug code
-                                Text( '${allTranslations.text("app.receipts-page.failed-load-receipts-message")} ${snapshot.data.message}'),
+                                Text( '${allTranslations.text("app.receipts-page.failed-load-receipts-message")} ${snapshot.data.messageCode} ${snapshot.data.message}'),
                               ],
                             );
                           }

@@ -14,17 +14,26 @@
     },
     "settings-page": {
       "title": "Settings",
-      "preferences-menu-item-title": "Preferences",
+      "preferences-menu-item-title": "App Language (选择语言)",
       "currency-menu-item-title": "Default Currency",
       "category-menu-item-title": "Categories",
-      "plan-info-menu-item-title": "Plan Information",
+      "plan-info-menu-item-title": "License Information",
+      "check-update-menu-item-title": "Check update",
       "document-knowledge-menu-item-title": "Documents & Knowledge Centre",
       "invite-friend-menu-item-title": "Invite a Friend",
-      "contact-us-menu-item-title": "Contact Us"
+      "in-app-update-title": "In App Update",
+      "current-version-label": "Current installed version is ",
+      "new-version-available": "A new version is available for update",
+      "already-updated-label": "The app is already up to date",
+      "immediate-update-label": "Perform immediate update",
+      "flexible-update-label": "Start flexible update",
+      "complete-flexible-update-label": "Complete flexible update",
+      "appStore-version-unavailable": "Current AppStore Version unavailable",
+      "current-appstore-version-label": "Current AppStore version is "
     },
     "preferences-page": {
       "title": "App Preferences",
-      "language-dropdown-label": "Select App Language"
+      "language-dropdown-label": "Select App Language(选择软件语言)"
     },
     "currency-screen":{
       "title": "Choose Currency"
@@ -33,17 +42,32 @@
       "home-tab-label": "Home",
       "receipts-tab-label": "Rceipts",
       "groups-tab-label": "Groups",
-      "settings-tab-label": "Settings"
+      "settings-tab-label": "Settings",
+      "no-network" : "No network connection",
+      "network-recovered" : "Network connection recovered",
+      "log-out" : "Log Out",
+      "check-update" : "Check Update",
+      "email-verification" : "Email Verification"
     },
     "login-screen": {
       "create-account-label": "Create an Account",
       "login-button-label": "Login",
+      "forget-password-button-label": "Forget Password",
       "fb-signin-label": "Sign in with Facebook",
       "google-signin-label": "Sign in with Google",
       "login-fail-message": "Login Failed",
       "logging-in-status-message": "Logging In...",
       "invalid-email-message": "Invalid Email",
       "invalid-password-message": "Invalid Password"
+    },
+    "email-veri-screen": {
+      "verified": " is verified",
+      "unverified": " is not verified",
+      "veri-email-sent": "Verification Email sent",
+      "veri-email-sent-error": "An error occured while trying to send email verification",
+      "veri-email-sent-text": "We have sent you the email verification again, please check if it's in the SPAM mail if it cannot be found in your inbox.",
+      "resend-veri-email": "Resend Verification email",
+      "close": "Close"
     },
     "select-image-source-dialog": {
       "title": "Select Image Source"
@@ -64,6 +88,17 @@
 
     "snap-receipt-page": {
       "title": "Snap new receipt"
+    },
+    "reports-list": {
+      "create-time": "Create Time",
+      "update-time": "Update Time",
+      "group-name": "Group Name",
+      "ascending": "Ascending",
+      "loading": "Loading ...",
+      "review": "Review",
+      "delete": "Delete",
+      "unknown": "Unknown",
+      "failed-load-groups-message": "Failed to load receipt groups: "
     },
     "reports-page": {
       "active-groups-tab-label": "Active Groups",
@@ -94,7 +129,8 @@
       "card-name-label": "Name on card"
     },
     "plan-screen": {
-      "title": "Plan Information",
+      "title": "License Information",
+      "free-license": "You are using a one year free license, which will end on 31/12/2020. Other licenses information will be available soon.",
       "basic-plan-label": "Basic Plan",
       "basic-plan-label-subtitle": "With our basic plan, you can snap maximum 10 receipts per month and generate 2 groups.",
       "upgrade-now-label": "Upgrade Now",
@@ -119,18 +155,19 @@
     },
     "receipt-card" : {
       "unknown-category": "Unknown",
-      "receipt-processed-review": "We have processed your receipt, please click Review to verify receipt data.",
-      "receipt-in-process-review": "Your receipt is being processed. Click Review button to manually enter receipt data.",
+      "receipt-processed-review": "Click 'Review' button to verify and fulfill receipt data.",
+      "receipt-in-process-review": "Click 'Review' button to verify and fulfill receipt data.",
       "receipt-date-prefix": "Receipt Date",
       "total-amount-prefix": "Total",
-      "uploaded-prefix": "Uploaded"
+      "uploaded-prefix": "Uploaded Date"
     },
     "receipt-list": {
       "upload-time-menu-item": "Upload Time",
-      "receipt-time-menu-item": "Upload Time",
+      "receipt-time-menu-item": "Receipt Time",
       "company-name-menu-item": "Company Name",
       "amount-menu-item": "Amount",
       "category-menu-item": "Category",
+      "unknown-menu-item": "Unknown",
       "ascending-menu-item": "Ascending",
       "toggle-ascending-menu-item": "Toggle Ascending"
     },
@@ -157,34 +194,43 @@
       "error-prefix": "Error",
       "extract-text-failed-message": "The receipt has been submitted, but failed to extract the text from the image. Please double check whether this is a valid receipt.\n\nPress 'Review Now' button to manually enter receipt information now.\nPress 'Review Later' button to review the receipt later, which is listed in 'Receipts\\Unreviewed' tab.",
       "maybe-not-valid-message": "This maybe not a valid receipt. Please double check.\n\nPress 'Review Now' button to manually enter receipt information now.\nPress 'Review Later' button to review the receipt later, which is listed in 'Receipts\\Unreviewed' tab.",
-      "unrecognized-format-message": "The receipt image has been submitted, we are now recognizing it, and will notify you after we recognize it.\n\nPress 'Review Now' button to manually enter receipt information now.\nPress 'Review Later' button to review the receipt later, which is listed in 'Receipts\\Unreviewed' tab.",
-      "recognized-success-message": "The receipt image has been submitted and recognized.\n\nPress 'Review Now' button to verify receipt information now.\nPress 'Review Later' button to review the receipt later, which is listed in 'Receipts\\Unreviewed' tab.",
+      "unrecognized-format-message": "The receipt image has been submitted.\n\nPress 'Review Now' button to manually enter receipt information now.\nPress 'Review Later' button to review the receipt later, which is listed in 'Receipts\\Unreviewed' tab.",
+      "recognized-success-message": "The receipt image has been submitted.\n\nPress 'Review Now' button to verify receipt information now.\nPress 'Review Later' button to review the receipt later, which is listed in 'Receipts\\Unreviewed' tab.",
       "general-error-message": "Error encountered when submitting the receipt: "
+    },
+    "register-form": {
+      "registration-in-progress-label": "Registering...",
+      "registration-failed-label": "Registration Failed"
+    },
+    "add-edit-report-page" : {
+      "total-amount-prefix": "Total",
+      "remove-label": "Remove",
+      "group-name-label": "Group Name",
+      "description-label": "Description",
+      "add-receipts-button-label": "Add Receipts",
+      "save-group-button-label": "Save Group",
+      "archive-group-button-label": "Archive Group"
      },
-     "register-form": {
-       "registration-in-progress-label": "Registering...",
-       "registration-failed-label": "Registration Failed"
-     },
-     "add-edit-report-page" : {
-       "total-amount-prefix": "Total",
-       "remove-label": "Remove",
-       "group-name-label": "Group Name",
-       "description-label": "Description",
-       "add-receipts-button-label": "Add Receipts",
-       "save-group-button-label": "Save Group",
-       "archive-group-button-label": "Archive Group"
-      },
-      "add-receipts-screen": {
-        "title": "Add Receipts to Group", 
-        "receipt-added-success": "Receipt was added to group",
-        "receipt-added-fail": "Error: Receipt data not found, could not be added to group",
-        "add-to-group-label": "Add to Group"
-      },
-      "report-card": {
-        "total-amount-prefix": "Total",
-        "created-date-prefix": "Created",
-        "expenses-suffix": "Expenses"
-     }
+    "add-receipts-screen": {
+      "title": "Add Receipts to Group",
+      "receipt-added-success": "Receipt was added to group",
+      "receipt-added-fail": "Error: Receipt data not found, could not be added to group",
+      "add-to-group-label": "Add to Group"
+    },
+    "report-card": {
+      "total-amount-prefix": "Total",
+      "created-date-prefix": "Created",
+      "expenses-suffix": "Expenses"
+    },
+    "unsupported-version":{
+      "title" : "Version not supported",
+      "text" : "Your version of IR is not being supported, please upgrade now.",
+      "button" : "Upgrade Now",
+      "upgrade-result": "Upgrade Result",
+      "upgrade-succeeded": "Upgrade was succeeded",
+      "upgrade-failed-prefix": "Upgrade failed: ",
+      "unsupported-platform": "Unsupported platform"
+    }
   },
   "words": {
     "email": "Email",

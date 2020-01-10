@@ -1,5 +1,4 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intelligent_receipt/data_model/currency.dart';
@@ -35,14 +34,6 @@ class ReportCard extends StatefulWidget {
 }
 
 class _ReportCardState extends State<ReportCard> {
-  CachedNetworkImage getImage(String imagePath) {
-    return new CachedNetworkImage(
-      imageUrl: Urls.GetImage + "/" + Uri.encodeComponent(imagePath),
-      placeholder: (context, url) => new CircularProgressIndicator(),
-      errorWidget: (context, url, error) => new Icon(Icons.error),
-    );
-  }
-
   UserRepository get _userRepository => widget._userRepository;
 
   @override

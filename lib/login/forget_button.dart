@@ -10,13 +10,11 @@ class ForgetButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RaisedButton(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(30.0),
-      ),
+    return FlatButton(
+      padding: EdgeInsets.all(0),
       onPressed: _onPressed,
 //      child: Text(allTranslations.text('app.login-screen.forget-button-label')),
-      child: Text('Forget Password'),
+      child: Text(allTranslations.text('app.login-screen.forget-password-button-label'), style: TextStyle(height: 2, fontSize: 12)),
     );
   }
 }

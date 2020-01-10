@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:intelligent_receipt/authentication_bloc/bloc.dart';
 import 'package:intelligent_receipt/data_model/enums.dart';
@@ -5,13 +7,18 @@ import 'package:intelligent_receipt/main_screen/bloc/bloc.dart';
 import 'package:intelligent_receipt/login/login.dart';
 import 'package:intelligent_receipt/main_screen/home_page/home_page.dart';
 import 'package:intelligent_receipt/main_screen/search_bar/search_bar.dart';
+import 'package:intelligent_receipt/main_screen/settings_page/check_update_screen/check_update_screen.dart';
+import 'package:intelligent_receipt/main_screen/settings_page/check_update_screen/check_update_screen_ios.dart';
 import 'package:intelligent_receipt/main_screen/settings_page/settings_page.dart';
 import 'package:intelligent_receipt/main_screen/reports_page/reports_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intelligent_receipt/translations/global_translations.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 import 'package:upgrader/upgrader.dart';
+import 'email_verification.dart';
 import 'receipts_page/receipts_page.dart';
+import 'package:intelligent_receipt/data_model/network_connection/connection_status.dart';
+import 'package:intelligent_receipt/translations/global_translations.dart';
 
 class MainScreen extends StatefulWidget {
   final UserRepository _userRepository;
@@ -43,10 +50,14 @@ class MainScreenState extends State<MainScreen> {
   String get receiptsTabLabel => allTranslations.text('app.main-screen.receipts-tab-label');
   String get groupsTabLabel => allTranslations.text('app.main-screen.groups-tab-label');
   String get settingsTabLabel => allTranslations.text('app.main-screen.settings-tab-label');
+  String get noNetworkText => allTranslations.text('app.main-screen.no-network');
+  String get networkRecoveredText => allTranslations.text('app.main-screen.network-recovered');
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final _defaultColor = Colors.grey;
   final _activeColor = Colors.blue;
   int _currentIndex = 0;
+  bool _hasNetwork = true;
 //  bool _verified;
   final PageController _controller = PageController(
     initialPage: 0,
@@ -69,11 +80,37 @@ class MainScreenState extends State<MainScreen> {
     });
   }
 
+  void _showInSnackBar(String value, {IconData icon: Icons.error, color: Colors.red, duration: 2}) {
+    _scaffoldKey.currentState.showSnackBar(SnackBar(
+      content: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [Text(value), Icon(icon)],
+      ),
+      backgroundColor: color,
+      duration: Duration(seconds: duration),
+    ));
+  }
+
+  void _updateConnectivity(dynamic hasConnection) {
+    if (_hasNetwork != hasConnection) {
+      _hasNetwork = hasConnection;
+      if (!_hasNetwork) {
+        _showInSnackBar(noNetworkText, duration: 24 * 3600);
+      } else {
+        _scaffoldKey.currentState.hideCurrentSnackBar();
+        _showInSnackBar(networkRecoveredText, icon: Icons.info, color: Colors.blue, duration: 2);
+      }
+    }
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     userReload();
+    ConnectionStatusSingleton connectionStatus = ConnectionStatusSingleton.getInstance();
+    connectionStatus.initialize();
+    connectionStatus.connectionChange.listen(_updateConnectivity);
 //    _verified = _userRepository.currentUser.isEmailVerified;
   }
 
@@ -92,6 +129,7 @@ class MainScreenState extends State<MainScreen> {
     return BlocProvider<HomeBloc>(
       builder: (context) => HomeBloc(userRepository: _userRepository),
       child: Scaffold(
+        key: _scaffoldKey,
         appBar: AppBar(
           title: SearchBar(userRepository: _userRepository, name: name),
         ),
@@ -173,27 +211,7 @@ class MainScreenState extends State<MainScreen> {
                 ),
               ),
               ListTile(
-                title: Text('Log In'),
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) {
-                      return LoginScreen(userRepository: _userRepository);
-                    }),
-                  );
-                },
-              ),
-//              ListTile(
-//                title: Text('FB'),
-//                onTap: () {
-//                  Navigator.of(context).push(
-//                    MaterialPageRoute(builder: (context) {
-//                      return FB();
-//                    }),
-//                  );
-//                },
-//              ),
-              ListTile(
-                title: Text('Log Out'),
+                title: Text(allTranslations.text('app.main-screen.log-out')),
                 onTap: () {
                   BlocProvider.of<AuthenticationBloc>(context).dispatch(
                     LoggedOut(),
@@ -201,14 +219,47 @@ class MainScreenState extends State<MainScreen> {
                   Navigator.pop(context);
                 },
               ),
+//              ListTile(
+//                title: Text('View Archived Groups'),
+//                onTap: () {
+//                  Navigator.of(context).push(
+//                    MaterialPageRoute(builder: (context) {
+//                      return ReportsPage(
+//                          userRepository: _userRepository,
+//                          reportStatusType: ReportStatusType.Submitted);
+//                    }),
+//                  );
+//                },
+//              ),
               ListTile(
-                title: Text('View Archived Groups'),
+                title: Text(allTranslations.text('app.main-screen.email-verification')),
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(builder: (context) {
-                      return ReportsPage(
-                          userRepository: _userRepository,
-                          reportStatusType: ReportStatusType.Submitted);
+                      return EmailVerification(userRepository: _userRepository, name: name);
+                    }),
+                  );
+                },
+              ),
+              ListTile(
+                title: Text(allTranslations.text('app.main-screen.check-update')),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) {
+                      return Platform.isIOS ? CheckUpdateScreenIos(
+                      ): CheckUpdateScreen(
+                      );
+                    }),
+                  );
+                },
+              ),
+              ListTile(
+                title: Text('Temperary menu to check ios'),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) {
+                      return CheckUpdateScreenIos(
+                      );
                     }),
                   );
                 },

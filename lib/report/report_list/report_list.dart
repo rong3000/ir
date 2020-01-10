@@ -7,6 +7,9 @@ import 'package:intelligent_receipt/report/add_edit_report/add_edit_report.dart'
 import 'package:intelligent_receipt/report/report_card/report_card.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 import 'package:intl/intl.dart';
+import 'package:intelligent_receipt/data_model/http_statuscode.dart';
+import 'package:intelligent_receipt/data_model/exception_handlers/unsupported_version.dart';
+import 'package:intelligent_receipt/translations/global_translations.dart';
 
 import '../../data_model/webservice.dart';
 
@@ -196,9 +199,9 @@ class ReportListState extends State<ReportList> {
       subMenuOverlayEntry = null;
     }
     if (_reportStatusType == ReportStatusType.Active) {
-      _simpleValue = _simpleValue1;
+      _sortByValue = _sortByCreateTime;
     } else {
-      _simpleValue = _simpleValue2;
+      _sortByValue = _sortByUpdateTime;
     }
   }
 
@@ -221,19 +224,31 @@ class ReportListState extends State<ReportList> {
 
   String _btn3SelectedVal = 'Group Time';
 
-  final ReportSortType _simpleValue1 = ReportSortType.CreateTime;
-  final ReportSortType _simpleValue2 = ReportSortType.UpdateTime;
-  final ReportSortType _simpleValue3 = ReportSortType.GroupName;
-  ReportSortType _simpleValue;
+  final ReportSortType _sortByCreateTime = ReportSortType.CreateTime;
+  final ReportSortType _sortByUpdateTime = ReportSortType.UpdateTime;
+  final ReportSortType _sortByGroupName = ReportSortType.GroupName;
+  ReportSortType _sortByValue;
 
   void showMenuSelection(ReportSortType value) {
-//    if (<String>[_simpleValue1, _simpleValue2, _simpleValue3].contains(value))
-    _simpleValue = value;
+//    if (<String>[_sortByCreateTime, _sortByUpdateTime, _sortByGroupName].contains(value))
+    _sortByValue = value;
 //    showInSnackBar('You selected: $value');
     print('You selected: $value');
     setState(() {
       sortingType = value;
     });
+  }
+
+  String _getSortByValueStr(ReportSortType sortType) {
+    if (sortType == _sortByCreateTime){
+      return allTranslations.text('app.reports-list.create-time');
+    } else if (sortType == _sortByUpdateTime) {
+      return allTranslations.text('app.reports-list.update-time');
+    } else if (sortType == _sortByGroupName) {
+      return allTranslations.text('app.reports-list.group-name');
+    } else {
+      return allTranslations.text('app.reports-list.unknown');
+    }
   }
 
   void _showInSnackBar(String value, {IconData icon: Icons.error, color: Colors.red}) {
@@ -297,7 +312,7 @@ class ReportListState extends State<ReportList> {
                           subMenuOverlayEntry.remove();
                           subMenuOverlayEntry = null;
                         },
-                        child: Text('Create Time'),
+                        child: Text(allTranslations.text('app.reports-list.create-time')),
                       ),
                     ),
                   ),
@@ -311,7 +326,7 @@ class ReportListState extends State<ReportList> {
                           subMenuOverlayEntry.remove();
                           subMenuOverlayEntry = null;
                         },
-                        child: Text('Update Time'),
+                        child: Text(allTranslations.text('app.reports-list.update-time')),
                       ),
                     ),
                   ),
@@ -329,7 +344,7 @@ class ReportListState extends State<ReportList> {
                           subMenuOverlayEntry.remove();
                           subMenuOverlayEntry = null;
                         },
-                        child: Text('Group Name'),
+                        child: Text(allTranslations.text('app.reports-list.group-name')),
                       ),
                     ),
                   ),
@@ -344,7 +359,7 @@ class ReportListState extends State<ReportList> {
                           },
                           value: this.ascending,
                         ),
-                        Text('Ascending'),
+                        Text(allTranslations.text('app.reports-list.ascending')),
                       ],
                     ),
                   ),
@@ -403,31 +418,30 @@ class ReportListState extends State<ReportList> {
                     ),
                     PopupMenuButton<ReportSortType>(
                       padding: EdgeInsets.zero,
-                      initialValue: _simpleValue,
+                      initialValue: _sortByValue,
                       onSelected: showMenuSelection,
                       child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
                             Icon(Icons.sort),
                             Text(
-//                          'x',
-                              "[${_simpleValue.toString().split('.')[1]}]",
+                              "[${_getSortByValueStr(_sortByValue)}]",
                               style: TextStyle(height: 1, fontSize: 12),
                             ),
                           ]),
                       itemBuilder: (BuildContext context) =>
                           <PopupMenuItem<ReportSortType>>[
                         PopupMenuItem<ReportSortType>(
-                          value: _simpleValue1,
-                          child: Text(_simpleValue1.toString().split('.')[1]),
+                          value: _sortByCreateTime,
+                          child: Text(allTranslations.text('app.reports-list.create-time')),
                         ),
                         PopupMenuItem<ReportSortType>(
-                          value: _simpleValue2,
-                          child: Text(_simpleValue2.toString().split('.')[1]),
+                          value: _sortByUpdateTime,
+                          child: Text(allTranslations.text('app.reports-list.update-time')),
                         ),
                         PopupMenuItem<ReportSortType>(
-                          value: _simpleValue3,
-                          child: Text(_simpleValue3.toString().split('.')[1]),
+                          value: _sortByGroupName,
+                          child: Text(allTranslations.text('app.reports-list.group-name')),
                         ),
                       ],
                     ),
@@ -457,7 +471,7 @@ class ReportListState extends State<ReportList> {
                   (BuildContext context, AsyncSnapshot<DataResult> snapshot) {
                 switch (snapshot.connectionState) {
                   case ConnectionState.none:
-                    return new Text('Loading...');
+                    return new Text(allTranslations.text('app.reports-list.loading'));
                   case ConnectionState.waiting:
                     return new Center(child: new CircularProgressIndicator());
                   case ConnectionState.active:
@@ -480,10 +494,10 @@ class ReportListState extends State<ReportList> {
                         List<ActionWithLable> actions = [];
                         ActionWithLable r = new ActionWithLable();
                         r.action = reviewAction;
-                        r.lable = 'Review';
+                        r.lable = allTranslations.text('app.reports-list.review');
                         ActionWithLable d = new ActionWithLable();
                         d.action = deleteAction;
-                        d.lable = 'Delete';
+                        d.lable = allTranslations.text('app.reports-list.delete');
                         actions.add(r);
                         actions.add(d);
                         return ListView.builder(
@@ -499,16 +513,18 @@ class ReportListState extends State<ReportList> {
                               );
                             });
                       } else {
+                        if (snapshot.data.messageCode == HTTPStatusCode.UNSUPPORTED_VERSION) {
+                          return UnsupportedVersion();
+                        }
+
                         return Column(
                           children: <Widget>[
-                            Text(
-                                'Failed retrieving data, error code is ${snapshot.data.messageCode}'),
-                            Text('Error message is ${snapshot.data.message}'),
+                            Text('${allTranslations.text("app.reports-list.failed-load-groups-message")} ${snapshot.data.messageCode} ${snapshot.data.message}'),
                           ],
                         );
                       }
                     }
-                }
+                 }
               }),
         ),
       )

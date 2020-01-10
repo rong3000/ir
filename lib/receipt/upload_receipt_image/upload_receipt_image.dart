@@ -7,6 +7,8 @@ import "package:rflutter_alert/rflutter_alert.dart";
 import 'dart:async';
 import 'package:image_cropper/image_cropper.dart';
 import '../add_edit_reciept_manual/add_edit_receipt_manual.dart';
+import 'package:intelligent_receipt/data_model/exception_handlers/unsupported_version.dart';
+import 'package:intelligent_receipt/data_model/http_statuscode.dart';
 
 class UploadReceiptImage extends StatefulWidget {
   final UserRepository _userRepository;
@@ -231,6 +233,9 @@ class _UploadReceiptImageState extends State<UploadReceiptImage> {
                                       receipt: receipt);
                                 }
                               } else {
+                                if (snapshot.data.messageCode == HTTPStatusCode.UNSUPPORTED_VERSION) {
+                                  return UnsupportedVersion();
+                                }
                                 // Show error message
                                 return _getResultWidget(
                                     allTranslations.text('app.upload-receipt-screen.general-error-message') +

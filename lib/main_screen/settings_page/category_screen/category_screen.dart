@@ -34,7 +34,6 @@ class _CategoryScreenState extends State<CategoryScreen> {
   UserRepository get _userRepository => widget._userRepository;
   TextEditingController editingController = TextEditingController();
   List<Category> duplicateItems;
-  Currency selectedCurrency;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   TextEditingController _textFieldController = TextEditingController();
 
@@ -44,7 +43,6 @@ class _CategoryScreenState extends State<CategoryScreen> {
   void initState() {
     duplicateItems = _userRepository.categoryRepository.categories;
     items.addAll(duplicateItems);
-    selectedCurrency = widget.defaultCurrency;
     super.initState();
   }
 
@@ -69,14 +67,6 @@ class _CategoryScreenState extends State<CategoryScreen> {
         items.addAll(duplicateItems);
       });
     }
-  }
-
-  Future<void> _setAsDefaultCurrency(int currencyId) async {
-    DataResult dataResult =
-        await _userRepository.settingRepository.setDefaultCurrency(currencyId);
-    setState(() {
-      selectedCurrency = _userRepository.settingRepository.getDefaultCurrency();
-    });
   }
 
   Future<void> _updateCategory(Category category) async {
@@ -122,6 +112,28 @@ class _CategoryScreenState extends State<CategoryScreen> {
     });
   }
 
+  void _showInSnackBar(String value, {IconData icon: Icons.error, color: Colors.red}) {
+    _scaffoldKey.currentState.showSnackBar(SnackBar(
+      content: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [Text(value), Icon(icon)],
+      ),
+      backgroundColor: color,
+    ));
+  }
+
+  Future<void> _refreshCategories() async {
+    DataResult result = await _userRepository.categoryRepository.getCategoriesFromServer(forceRefresh: true);
+    if (result.success) {
+      setState(() {
+        duplicateItems = _userRepository.categoryRepository.categories;
+        items.addAll(duplicateItems);
+      });
+    } else {
+      _showInSnackBar("${result.messageCode}:${result.message}");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
@@ -134,7 +146,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
           children: <Widget>[
             new Text(widget.title),
             SizedBox(
-                width: 80,
+                width: 60,
                 child: FlatButton(
                   onPressed: () {
                     _textFieldController.text = '';
@@ -167,6 +179,15 @@ class _CategoryScreenState extends State<CategoryScreen> {
                     );
                   },
                   child: Icon(Icons.add),
+                )),
+            SizedBox(
+                width: 60,
+                child: FlatButton(
+                  onPressed: () {
+                    _textFieldController.text = '';
+                    _refreshCategories();
+                  },
+                  child: Icon(Icons.refresh),
                 )),
           ],
         ),

@@ -18,6 +18,8 @@ import 'package:intelligent_receipt/user_repository.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:intelligent_receipt/data_model/webservice.dart';
+import 'package:intelligent_receipt/data_model/exception_handlers/unsupported_version.dart';
+import 'package:intelligent_receipt/data_model/http_statuscode.dart';
 
 class AddEditReport extends StatefulWidget {
   final String title;
@@ -160,7 +162,9 @@ class _AddEditReportState extends State<AddEditReport> {
 
   String _getTotalAmountText(double totalAmount) {
     final String total = allTranslations.text('app.add-edit-report-page.total-amount-prefix');
-    return "$total: ${_reportCurrency != null ? _reportCurrency.code: ''} ${_reportCurrency != null ? _reportCurrency.symbol: ''}${totalAmount.toStringAsFixed(2)}";
+    return "$total: ${_reportCurrency != null ? _reportCurrency.code: ''} "
+        "${_reportCurrency != null ? _reportCurrency.symbol: ''}"
+        "${totalAmount?.toStringAsFixed(2)}";
   }
 
   @override
@@ -234,7 +238,7 @@ class _AddEditReportState extends State<AddEditReport> {
               ),
             ),
             Expanded(
-                flex: 4,
+                flex: 5,
                 child: ListView.builder(
                     itemCount: _receiptList.length,
                     itemBuilder: (context, index) {
@@ -245,7 +249,7 @@ class _AddEditReportState extends State<AddEditReport> {
                     })
             ),
             Expanded(
-              flex: 1,
+              flex: 2,
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 20),
                 child: Row(
@@ -296,6 +300,8 @@ class _AddEditReportState extends State<AddEditReport> {
     DataResult dataResult = isNewReport() ? await _userRepository.reportRepository.addReport(_report) :  await _userRepository.reportRepository.updateReport(_report, true);
     if (dataResult.success) {
       Navigator.pop(context);
+    } else if (dataResult.messageCode == HTTPStatusCode.UNSUPPORTED_VERSION) {
+      showUnsupportedVersionAlert(context);
     } else {
       // Show message on snack bar
       _showInSnackBar("${dataResult.message}");

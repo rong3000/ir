@@ -16,6 +16,7 @@ class LoginButton extends StatelessWidget {
       ),
       onPressed: _onPressed,
       child: Text(allTranslations.text('app.login-screen.login-button-label')),
+      color: Colors.lightBlue,
     );
   }
 }

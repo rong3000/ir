@@ -96,55 +96,58 @@ class _LoginFormState extends State<LoginForm> {
                     padding: EdgeInsets.symmetric(vertical: 20),
                     child: Image.asset('assets/ir_logo.png', height: 100),
                   ),
-                  TextFormField(
-                    controller: _emailController,
-                    decoration: InputDecoration(
-                      icon: Icon(Icons.email),
-                      labelText: allTranslations.text('words.email'),
+                  Card(
+                    child:
+                    ListTile(
+                      title: TextFormField(
+                        controller: _emailController,
+                        decoration: InputDecoration(
+                          icon: Icon(Icons.email),
+                          labelText: allTranslations.text('words.email'),
+                        ),
+                        autovalidate: true,
+                        autocorrect: false,
+                        validator: (_) {
+                          return !state.isEmailValid ?  allTranslations.text('app.login-screen.invalid-email-message') : null;
+                        },
+                      ),
                     ),
-                    autovalidate: true,
-                    autocorrect: false,
-                    validator: (_) {
-                      return !state.isEmailValid ?  allTranslations.text('app.login-screen.invalid-email-message') : null;
-                    },
                   ),
-                  TextFormField(
-                    controller: _passwordController,
-                    decoration: InputDecoration(
-                      icon: Icon(Icons.lock),
-                      labelText:  allTranslations.text('words.password'),
+                  Card(
+                    child: ListTile(
+                      title: TextFormField(
+                        controller: _passwordController,
+                        decoration: InputDecoration(
+                          icon: Icon(Icons.lock),
+                          labelText:  allTranslations.text('words.password'),
+                        ),
+                        obscureText: true,
+                        autovalidate: true,
+                        autocorrect: false,
+                        validator: (_) {
+                          return !state.isPasswordValid ? allTranslations.text('app.login-screen.invalid-password-message') : null;
+                        },
+                      ),
+                      trailing: ForgetButton(
+                        onPressed: isForgetButtonEnabled(state)
+                            ? _onForgetFormSubmitted
+                            : null,
+                      ),
                     ),
-                    obscureText: true,
-                    autovalidate: true,
-                    autocorrect: false,
-                    validator: (_) {
-                      return !state.isPasswordValid ? allTranslations.text('app.login-screen.invalid-password-message') : null;
-                    },
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: 20),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: <Widget>[
-                        ButtonBar(
-                          mainAxisSize: MainAxisSize.max,
-                          alignment: MainAxisAlignment.center,
-                          children: <Widget> [
-                            LoginButton(
-                              onPressed: isLoginButtonEnabled(state)
-                                  ? _onFormSubmitted
-                                  : null,
-                            ),
-                            ForgetButton(
-                              onPressed: isForgetButtonEnabled(state)
-                                  ? _onForgetFormSubmitted
-                                  : null,
-                            ),
-                          ],
+                        LoginButton(
+                          onPressed: isLoginButtonEnabled(state)
+                              ? _onFormSubmitted
+                              : null,
                         ),
 
                         GoogleLoginButton(),
-						FacebookLoginButton(),
+                        FacebookLoginButton(),
                         CreateAccountButton(userRepository: _userRepository),
                       ],
                     ),
@@ -186,11 +189,37 @@ class _LoginFormState extends State<LoginForm> {
     );
   }
 
-  void _onForgetFormSubmitted() {
-    _loginBloc.dispatch(
-      ForgetPasswordPressed(
-        email: _emailController.text,
-      ),
+  Future<void> sendPasswordResetEmail(String email) async {
+    await _userRepository.sendPasswordResetEmail(email);
+  }
+
+  Future<void> _ackAlert(BuildContext context) {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Password reset email sent'),
+          content: const Text('Please check your email for instructions about how to reset your password.'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Ok'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
+  }
+
+  void _onForgetFormSubmitted() {
+    sendPasswordResetEmail(_emailController.text);
+    _ackAlert(context);
+//    _loginBloc.dispatch(
+//      ForgetPasswordPressed(
+//        email: _emailController.text,
+//      ),
+//    );
   }
 }
