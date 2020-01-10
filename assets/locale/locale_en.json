@@ -46,7 +46,8 @@
       "no-network" : "No network connection",
       "network-recovered" : "Network connection recovered",
       "log-out" : "Log Out",
-      "check-update" : "Check Update"
+      "check-update" : "Check Update",
+      "email-verification" : "Email Verification"
     },
     "login-screen": {
       "create-account-label": "Create an Account",
@@ -58,6 +59,15 @@
       "logging-in-status-message": "Logging In...",
       "invalid-email-message": "Invalid Email",
       "invalid-password-message": "Invalid Password"
+    },
+    "email-veri-screen": {
+      "verified": " is verified",
+      "unverified": " is not verified",
+      "veri-email-sent": "Verification Email sent",
+      "veri-email-sent-error": "An error occured while trying to send email verification",
+      "veri-email-sent-text": "We have sent you the email verification again, please check if it's in the SPAM mail if it cannot be found in your inbox.",
+      "resend-veri-email": "Resend Verification email",
+      "close": "Close"
     },
     "select-image-source-dialog": {
       "title": "Select Image Source"

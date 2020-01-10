@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:intelligent_receipt/translations/global_translations.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 
 class EmailVerification extends StatefulWidget {
@@ -32,7 +33,7 @@ class _EmailVerificationState extends State<EmailVerification> {
     try {
       await _userRepository.currentUser.sendEmailVerification();
     } catch (e) {
-      print("An error occured while trying to send email verification");
+      print(allTranslations.text('app.email-veri-screen.veri-email-sent-error'));
       print(e.message);
     }
   }
@@ -46,7 +47,7 @@ class _EmailVerificationState extends State<EmailVerification> {
             content: new Text(message),
             actions: <Widget>[
               FlatButton(
-                child: Text('Close'),
+                child: Text(allTranslations.text('app.email-veri-screen.close')),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -60,7 +61,7 @@ class _EmailVerificationState extends State<EmailVerification> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('email verification'),
+        title: Text(allTranslations.text('app.main-screen.email-verification')),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -68,8 +69,16 @@ class _EmailVerificationState extends State<EmailVerification> {
           children: <Widget>[
             Center(
               child: Column(children: <Widget>[
+                _userRepository.currentUser?.isEmailVerified?
                 AutoSizeText(
-                  '${name} ${_userRepository.currentUser.isEmailVerified ? 'is verified' : 'is not verified'}',
+                  '${name}' + allTranslations.text('app.email-veri-screen.verified'),
+                  style: TextStyle(fontSize: 16),
+                  minFontSize: 6,
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                ):
+                AutoSizeText(
+                  '${name}' + allTranslations.text('app.email-veri-screen.unverified'),
                   style: TextStyle(fontSize: 16),
                   minFontSize: 6,
                   maxLines: 3,
@@ -82,10 +91,10 @@ class _EmailVerificationState extends State<EmailVerification> {
                   child: RaisedButton(
                     onPressed: (){
                       sendVerification();
-                      _showMessage('Verification Email sent', "We have sent you the email verification again, please check if it's in the SPAM mail if it cannot be found in your inbox.");
+                      _showMessage(allTranslations.text('app.email-veri-screen.veri-email-sent'), allTranslations.text('app.email-veri-screen.veri-email-sent-text'));
                     },
                     child: AutoSizeText(
-                      'Resend Verification',
+                      allTranslations.text('app.email-veri-screen.resend-veri-email'),
                       style: TextStyle(fontSize: 12),
                       minFontSize: 6,
                       maxLines: 3,

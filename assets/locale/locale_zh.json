@@ -47,7 +47,8 @@
       "no-network" : "没有网络",
       "network-recovered" : "网络连接恢复",
       "log-out" : "退出",
-      "check-update" : "检查版本更新"
+      "check-update" : "检查版本更新",
+      "email-verification" : "电子邮件验证"
     },
     "login-screen": {
       "create-account-label": "创建账户",
@@ -59,6 +60,15 @@
       "logging-in-status-message": "登录中...",
       "invalid-email-message": "无效邮箱",
       "invalid-password-message": "无效密码"
+    },
+    "email-veri-screen": {
+      "verified": " 已验证",
+      "unverified": " 未验证",
+      "veri-email-sent": "验证邮件已发送",
+      "veri-email-sent-error": "发送验证邮件的时候发生错误",
+      "veri-email-sent-text": "我们已经成功再次发送验证邮件,请查看收件箱,如果没有收到请查看是否在垃圾邮件里.",
+      "resend-veri-email": "再次发送验证邮件",
+      "close": "关闭"
     },
     "select-image-source-dialog": {
       "title": "选择图片源"

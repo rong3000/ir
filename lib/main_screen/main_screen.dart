@@ -232,7 +232,7 @@ class MainScreenState extends State<MainScreen> {
 //                },
 //              ),
               ListTile(
-                title: Text('Email Verification'),
+                title: Text(allTranslations.text('app.main-screen.email-verification')),
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(builder: (context) {
