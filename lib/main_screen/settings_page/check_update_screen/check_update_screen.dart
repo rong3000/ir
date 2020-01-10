@@ -90,6 +90,36 @@ class _CheckUpdateScreenState extends State<CheckUpdateScreen> {
                         Center(
                           child: _updateInfo?.updateAvailable == true ? Text(allTranslations.text("app.settings-page.new-version-available")): Text(allTranslations.text("app.settings-page.already-updated-label")),
                         ),
+                        RaisedButton(
+                          child: Text(allTranslations.text("app.settings-page.immediate-update-label")),
+                          onPressed: _updateInfo?.updateAvailable == true
+                              ? () {
+                            InAppUpdate.performImmediateUpdate().catchError((e) => _showError(e));
+                          }
+                              : null,
+                        ),
+                        RaisedButton(
+                          child: Text(allTranslations.text("app.settings-page.flexible-update-label")),
+                          onPressed: _updateInfo?.updateAvailable == true
+                              ? () {
+                            InAppUpdate.startFlexibleUpdate().then((_) {
+                              setState(() {
+                                _flexibleUpdateAvailable = true;
+                              });
+                            }).catchError((e) => _showError(e));
+                          }
+                              : null,
+                        ),
+                        RaisedButton(
+                          child: Text(allTranslations.text("app.settings-page.complete-flexible-update-label")),
+                          onPressed: !_flexibleUpdateAvailable
+                              ? null
+                              : () {
+                            InAppUpdate.completeFlexibleUpdate().then((_) {
+                              _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('Success!')));
+                            }).catchError((e) => _showError(e));
+                          },
+                        )
                       ],
                     );
                   }
@@ -100,36 +130,7 @@ class _CheckUpdateScreenState extends State<CheckUpdateScreen> {
 //              child: Text('Check for Update'),
 //              onPressed: () => checkForUpdate(),
 //            ),
-            RaisedButton(
-              child: Text(allTranslations.text("app.settings-page.immediate-update-label")),
-              onPressed: _updateInfo?.updateAvailable == true
-                  ? () {
-                InAppUpdate.performImmediateUpdate().catchError((e) => _showError(e));
-              }
-                  : null,
-            ),
-            RaisedButton(
-              child: Text(allTranslations.text("app.settings-page.flexible-update-label")),
-              onPressed: _updateInfo?.updateAvailable == true
-                  ? () {
-                InAppUpdate.startFlexibleUpdate().then((_) {
-                  setState(() {
-                    _flexibleUpdateAvailable = true;
-                  });
-                }).catchError((e) => _showError(e));
-              }
-                  : null,
-            ),
-            RaisedButton(
-              child: Text(allTranslations.text("app.settings-page.complete-flexible-update-label")),
-              onPressed: !_flexibleUpdateAvailable
-                  ? null
-                  : () {
-                InAppUpdate.completeFlexibleUpdate().then((_) {
-                  _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('Success!')));
-                }).catchError((e) => _showError(e));
-              },
-            )
+
           ],
         ),
       ),

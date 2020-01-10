@@ -52,7 +52,8 @@ class _CheckUpdateScreenIosState extends State<CheckUpdateScreenIos> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Text(allTranslations.text('app.settings-page.in-app-update-title')),
+        title:
+            Text(allTranslations.text('app.settings-page.in-app-update-title')),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -63,21 +64,24 @@ class _CheckUpdateScreenIosState extends State<CheckUpdateScreenIos> {
                 return Column(
                   children: <Widget>[
                     Center(
-                      child: Text(
-                    allTranslations.text('app.settings-page.current-version-label') + '${Upgrader().currentInstalledVersion()}'),
+                      child: Text(allTranslations
+                              .text('app.settings-page.current-version-label') +
+                          '${Upgrader().currentInstalledVersion()}'),
                     ),
                     Center(
-                      child: Upgrader().currentAppStoreVersion() == null?
-              Text(
-                          allTranslations.text('app.settings-page.appStore-version-unavailable')):
-              Text(
-              allTranslations.text('app.settings-page.current-appstore-version-label') + '${Upgrader().currentAppStoreVersion()}')),
+                        child: Upgrader().currentAppStoreVersion() == null
+                            ? Text(allTranslations.text(
+                                'app.settings-page.appStore-version-unavailable'))
+                            : Text(allTranslations.text(
+                                    'app.settings-page.current-appstore-version-label') +
+                                '${Upgrader().currentAppStoreVersion()}')),
 //                    Center(
 //                      child: Text(
 //                          'currentAppStoreListingURL ${Upgrader().currentAppStoreListingURL()}'),
 //                    ),
                     RaisedButton(
-                      child: Text(allTranslations.text('app.settings-page.immediate-update-label')),
+                      child: Text(allTranslations
+                          .text('app.settings-page.immediate-update-label')),
                       onPressed: Upgrader().currentAppStoreListingURL() != null
                           ? () {
                               Upgrader().onUserUpdated(context, true);
