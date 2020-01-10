@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:in_app_update/in_app_update.dart';
+import 'package:upgrader/upgrader.dart';
+import 'package:intelligent_receipt/translations/global_translations.dart';
 
 class CheckUpdateScreen extends StatefulWidget {
   @override
@@ -29,30 +31,77 @@ class _CheckUpdateScreenState extends State<CheckUpdateScreen> {
     }).catchError((e) => _showError(e));
   }
 
+  Future<AppUpdateInfo> initialize() async {
+    return _updateInfo = await InAppUpdate.checkForUpdate();
+  }
+
   void _showError(dynamic exception) {
     _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(exception.toString())));
   }
 
   @override
   Widget build(BuildContext context) {
+    Upgrader().clearSavedSettings();
+    final String appcastURL =
+        'https://raw.githubusercontent.com/larryaasen/upgrader/master/test/testappcast.xml';
+    final cfg =
+    AppcastConfiguration(url: appcastURL, supportedOS: ["android", "ios"]);
+//    Upgrader().appcastConfig = cfg;
+    Upgrader().debugLogging = true;
+
+    if (Upgrader().debugLogging) {
+      print('UpgradeCard: build UpgradeCard');
+    }
+
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: const Text('In App Update'),
+        title: Text(allTranslations.text("app.settings-page.in-app-update-title")),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: <Widget>[
-            Center(
-              child: Text('Update info: $_updateInfo'),
-            ),
+            FutureBuilder(
+                future: Upgrader().initialize(),
+                builder: (BuildContext context, AsyncSnapshot<bool> processed) {
+                  if (processed.connectionState == ConnectionState.done) {
+                    return Column(
+                      children: <Widget>[
+                        Center(
+                          child: Text(
+    allTranslations.text("app.settings-page.current-version-label") + '${Upgrader().currentInstalledVersion()}'),
+                        ),
+//                        Center(
+//                          child: Text(
+//                              'current AppStore version ${Upgrader().currentAppStoreVersion()}'),
+//                        ),
+                      ],
+                    );
+                  }
+                  return Container(width: 0.0, height: 0.0);
+                }),
+            FutureBuilder(
+                future: initialize(),
+                builder: (BuildContext context, AsyncSnapshot<AppUpdateInfo> processed) {
+                  if (processed.connectionState == ConnectionState.done) {
+                    return Column(
+                      children: <Widget>[
+                        Center(
+                          child: _updateInfo?.updateAvailable == true ? Text(allTranslations.text("app.settings-page.new-version-available")): Text(allTranslations.text("app.settings-page.already-updated-label")),
+                        ),
+                      ],
+                    );
+                  }
+                  return Container(width: 0.0, height: 0.0);
+                }),
+
+//            RaisedButton(
+//              child: Text('Check for Update'),
+//              onPressed: () => checkForUpdate(),
+//            ),
             RaisedButton(
-              child: Text('Check for Update'),
-              onPressed: () => checkForUpdate(),
-            ),
-            RaisedButton(
-              child: Text('Perform immediate update'),
+              child: Text(allTranslations.text("app.settings-page.immediate-update-label")),
               onPressed: _updateInfo?.updateAvailable == true
                   ? () {
                 InAppUpdate.performImmediateUpdate().catchError((e) => _showError(e));
@@ -60,7 +109,7 @@ class _CheckUpdateScreenState extends State<CheckUpdateScreen> {
                   : null,
             ),
             RaisedButton(
-              child: Text('Start flexible update'),
+              child: Text(allTranslations.text("app.settings-page.flexible-update-label")),
               onPressed: _updateInfo?.updateAvailable == true
                   ? () {
                 InAppUpdate.startFlexibleUpdate().then((_) {
@@ -72,7 +121,7 @@ class _CheckUpdateScreenState extends State<CheckUpdateScreen> {
                   : null,
             ),
             RaisedButton(
-              child: Text('Complete flexible update'),
+              child: Text(allTranslations.text("app.settings-page.complete-flexible-update-label")),
               onPressed: !_flexibleUpdateAvailable
                   ? null
                   : () {

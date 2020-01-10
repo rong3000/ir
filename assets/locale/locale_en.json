@@ -21,7 +21,15 @@
       "check-update-menu-item-title": "Check update",
       "document-knowledge-menu-item-title": "Documents & Knowledge Centre",
       "invite-friend-menu-item-title": "Invite a Friend",
-      "contact-us-menu-item-title": "Contact Us"
+      "in-app-update-title": "In App Update",
+      "current-version-label": "Current installed version is ",
+      "new-version-available": "A new version is available for update",
+      "already-updated-label": "The app is already up to date",
+      "immediate-update-label": "Perform immediate update",
+      "flexible-update-label": "Start flexible update",
+      "complete-flexible-update-label": "Complete flexible update",
+      "appStore-version-unavailable": "Current AppStore Version unavailable",
+      "current-appstore-version-label": "Current AppStore version is "
     },
     "preferences-page": {
       "title": "App Preferences",

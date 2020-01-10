@@ -21,7 +21,16 @@
       "check-update-menu-item-title": "检查更新",
       "document-knowledge-menu-item-title": "文档和知识库",
       "invite-friend-menu-item-title": "邀请朋友",
-      "contact-us-menu-item-title": "联系我们"
+      "contact-us-menu-item-title": "联系我们",
+      "in-app-update-title": "应用内更新",
+      "current-version-label": "当前版本是 ",
+      "new-version-available": "有更新的版本可升级",
+      "already-updated-label": "已经升级到最新版本",
+      "immediate-update-label": "执行立即更新",
+      "flexible-update-label": "执行灵活更新",
+      "complete-flexible-update-label": "完成灵活更新",
+      "appStore-version-unavailable": "当前AppStore版本未知",
+      "current-appstore-version-label": "当前AppStore版本是 "
     },
     "preferences-page": {
       "title": "软件语言",

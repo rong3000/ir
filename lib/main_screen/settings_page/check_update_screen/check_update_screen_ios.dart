@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:upgrader/upgrader.dart';
+import 'package:intelligent_receipt/translations/global_translations.dart';
 
 class CheckUpdateScreenIos extends StatefulWidget {
   @override
@@ -51,7 +52,7 @@ class _CheckUpdateScreenIosState extends State<CheckUpdateScreenIos> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: const Text('In App Update'),
+        title: Text(allTranslations.text('app.settings-page.in-app-update-title')),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -63,26 +64,26 @@ class _CheckUpdateScreenIosState extends State<CheckUpdateScreenIos> {
                   children: <Widget>[
                     Center(
                       child: Text(
-                          'current installed version ${Upgrader().currentInstalledVersion()}'),
+                    allTranslations.text('app.settings-page.current-version-label') + '${Upgrader().currentInstalledVersion()}'),
                     ),
                     Center(
-                      child: Text(
-                          'current AppStore version ${Upgrader().currentAppStoreVersion()}'),
-                    ),
-                    Center(
-                      child: Text(
-                          'currentAppStoreListingURL ${Upgrader().currentAppStoreListingURL()}'),
-                    ),
+                      child: Upgrader().currentAppStoreVersion() == null?
+              Text(
+                          allTranslations.text('app.settings-page.appStore-version-unavailable')):
+              Text(
+              allTranslations.text('app.settings-page.current-appstore-version-label') + '${Upgrader().currentAppStoreVersion()}')),
+//                    Center(
+//                      child: Text(
+//                          'currentAppStoreListingURL ${Upgrader().currentAppStoreListingURL()}'),
+//                    ),
                     RaisedButton(
-                        child: Text('Perform immediate update'),
-//                  onPressed: Upgrader().currentAppStoreListingURL() != null
-//                      ? () {
-//                    Upgrader().onUserUpdated(context, true);
-//                  }
-//                      : null,
-                        onPressed: () {
-                          Upgrader().onUserUpdated(context, true);
-                        }),
+                      child: Text(allTranslations.text('app.settings-page.immediate-update-label')),
+                      onPressed: Upgrader().currentAppStoreListingURL() != null
+                          ? () {
+                              Upgrader().onUserUpdated(context, true);
+                            }
+                          : null,
+                    ),
                   ],
                 );
               }
