@@ -10,7 +10,8 @@
       "deleting-failed": "删除失败: ",
       "no-image-text": "没有票据图片!",
       "invalid-email-message": "错误的邮箱",
-      "invalid-password-message": "密码不合规范"
+      "invalid-password-message": "应包括至少一个字母、一个数字、不少于8个字符",
+      "password-mismatch-message": "输入密码不一致"
     },
     "settings-page": {
       "title": "设置",
@@ -251,6 +252,7 @@
     "close": "关闭",
     "months": "月",
     "years": "年",
-    "register": "注册"
+    "register": "注册",
+    "re-enter-password": "重新输入密码"
   }
 }

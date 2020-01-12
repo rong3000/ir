@@ -3,12 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intelligent_receipt/authentication_bloc/bloc.dart';
 import 'package:intelligent_receipt/register/register.dart';
 import 'package:intelligent_receipt/translations/global_translations.dart';
+import 'package:intelligent_receipt/validators.dart';
 
 class RegisterForm extends StatefulWidget {
   State<RegisterForm> createState() => _RegisterFormState();
 }
 
 class _RegisterFormState extends State<RegisterForm> {
+  final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -25,8 +27,8 @@ class _RegisterFormState extends State<RegisterForm> {
   void initState() {
     super.initState();
     _registerBloc = BlocProvider.of<RegisterBloc>(context);
-    _emailController.addListener(_onEmailChanged);
-    _passwordController.addListener(_onPasswordChanged);
+//    _emailController.addListener(_onEmailChanged);
+//    _passwordController.addListener(_onPasswordChanged);
   }
 
   @override
@@ -79,6 +81,7 @@ class _RegisterFormState extends State<RegisterForm> {
           return Padding(
             padding: EdgeInsets.all(20),
             child: Form(
+              key: _formKey,
               child: ListView(
                 children: <Widget>[
                   TextFormField(
@@ -88,9 +91,8 @@ class _RegisterFormState extends State<RegisterForm> {
                       labelText: allTranslations.text('words.email'),
                     ),
                     autocorrect: false,
-                    autovalidate: true,
-                    validator: (_) {
-                      return !state.isEmailValid ? allTranslations.text('app.common.invalid-email-message') : null;
+                    validator: (value) {
+                      return !Validators.isValidEmail(value) ? allTranslations.text('app.common.invalid-email-message') : null;
                     },
                   ),
                   TextFormField(
@@ -101,15 +103,23 @@ class _RegisterFormState extends State<RegisterForm> {
                     ),
                     obscureText: true,
                     autocorrect: false,
-                    autovalidate: true,
-                    validator: (_) {
-                      return !state.isPasswordValid ? allTranslations.text('app.common.invalid-password-message') : null;
+                    validator: (value) {
+                      return !Validators.isValidPassword(value) ? allTranslations.text('app.common.invalid-password-message') : null;
+                    },
+                  ),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      icon: Icon(Icons.lock),
+                      labelText: allTranslations.text('words.re-enter-password'),
+                    ),
+                    obscureText: true,
+                    autocorrect: false,
+                    validator: (value) {
+                      return (value != _passwordController.text) ? allTranslations.text('app.common.password-mismatch-message') : null;
                     },
                   ),
                   RegisterButton(
-                    onPressed: isRegisterButtonEnabled(state)
-                        ? _onFormSubmitted
-                        : null,
+                    onPressed: _onFormSubmitted
                   ),
                 ],
               ),
@@ -159,6 +169,13 @@ class _RegisterFormState extends State<RegisterForm> {
   }
 
   void _onFormSubmitted() {
+    // Do a field validation
+    if (this._formKey.currentState.validate()) {
+      this._formKey.currentState.save();
+    } else {
+      return;
+    }
+
     _registerBloc.dispatch(
       Submitted(
         email: _emailController.text,

@@ -10,7 +10,8 @@
       "deleting-failed": "Delete Failed: ",
       "no-image-text": "No Image!",
       "invalid-email-message": "Invalid Email",
-      "invalid-password-message": "Invalid Password"
+      "invalid-password-message": "At least one letter, one number and minimum 8 characters",
+      "password-mismatch-message": "Password is not the same as above"
     },
     "settings-page": {
       "title": "Settings",
@@ -251,6 +252,7 @@
     "close": "Close",
     "months": "months",
     "years": "years",
-    "register": "Register"
+    "register": "Register",
+    "re-enter-password": "Confirm Password"
   }
 }
