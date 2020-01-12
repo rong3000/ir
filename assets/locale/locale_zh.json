@@ -155,7 +155,7 @@
 
     },
     "receipt-card" : {
-      "unknown-category": "未知",
+      "unknown-category": "点击'查看'按键选择票据类别.",
       "receipt-processed-review": "点击'查看'按键查看审核、完善票据信息.",
       "receipt-in-process-review": "点击'查看'按键查看审核、完善票据信息.",
       "receipt-date-prefix": "票据日期",
@@ -248,7 +248,7 @@
     "rename": "重命名",
     "search": "搜索",
     "continue": "继续",
-    "close": "变比",
+    "close": "关闭",
     "months": "月",
     "years": "年",
     "register": "注册"

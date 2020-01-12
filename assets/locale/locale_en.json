@@ -21,6 +21,7 @@
       "check-update-menu-item-title": "Check update",
       "document-knowledge-menu-item-title": "Documents & Knowledge Centre",
       "invite-friend-menu-item-title": "Invite a Friend",
+      "contact-us-menu-item-title": "Contact Us",
       "in-app-update-title": "In App Update",
       "current-version-label": "Current installed version is ",
       "new-version-available": "A new version is available for update",
@@ -154,7 +155,7 @@
 
     },
     "receipt-card" : {
-      "unknown-category": "Unknown",
+      "unknown-category": "Click 'Review' button to select receipt category.",
       "receipt-processed-review": "Click 'Review' button to verify and fulfill receipt data.",
       "receipt-in-process-review": "Click 'Review' button to verify and fulfill receipt data.",
       "receipt-date-prefix": "Receipt Date",
@@ -220,7 +221,7 @@
     "report-card": {
       "total-amount-prefix": "Total",
       "created-date-prefix": "Created",
-      "expenses-suffix": "Expenses"
+      "expenses-suffix": "Receipts"
     },
     "unsupported-version":{
       "title" : "Version not supported",
