@@ -4,14 +4,23 @@ import 'package:flutter/material.dart';
 import 'package:intelligent_receipt/main_screen/settings_page/contact_screen/contact.dart';
 import 'package:intelligent_receipt/translations/global_translations.dart';
 
+import '../../user_repository.dart';
+
 class ContactMenuCard extends StatelessWidget {
+  final UserRepository _userRepository;
+
+  ContactMenuCard({Key key, @required UserRepository userRepository,})
+      : assert(userRepository != null),
+        _userRepository = userRepository,
+        super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => {
         Navigator.of(context).push(
           MaterialPageRoute(builder: (context) {
-            return TextFormFieldDemo();
+            return ContactUs(userRepository: _userRepository);
           }),
         )
       },

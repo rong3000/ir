@@ -10,14 +10,22 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/gestures.dart' show DragStartBehavior;
+import 'package:mailer/mailer.dart';
+import 'package:mailer/smtp_server/hotmail.dart';
 
-class TextFormFieldDemo extends StatefulWidget {
-  const TextFormFieldDemo({ Key key }) : super(key: key);
+import '../../../user_repository.dart';
+
+class ContactUs extends StatefulWidget {
+  final UserRepository _userRepository;
+  ContactUs({Key key, @required UserRepository userRepository})
+      : assert(userRepository != null),
+        _userRepository = userRepository,
+        super(key: key);
 
   static const String routeName = '/material/text-form-field';
 
   @override
-  TextFormFieldDemoState createState() => TextFormFieldDemoState();
+  ContactUsState createState() => ContactUsState();
 }
 
 class PersonData {
@@ -25,6 +33,7 @@ class PersonData {
   String phoneNumber = '';
   String email = '';
   String password = '';
+  String message = '';
 }
 
 class PasswordField extends StatefulWidget {
@@ -85,7 +94,8 @@ class _PasswordFieldState extends State<PasswordField> {
   }
 }
 
-class TextFormFieldDemoState extends State<TextFormFieldDemo> {
+class ContactUsState extends State<ContactUs> {
+  UserRepository get _userRepository => widget._userRepository;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   PersonData person = PersonData();
@@ -105,16 +115,35 @@ class TextFormFieldDemoState extends State<TextFormFieldDemo> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<FormFieldState<String>> _passwordFieldKey = GlobalKey<FormFieldState<String>>();
-  void _handleSubmitted() {
-    final FormState form = _formKey.currentState;
-    if (!form.validate()) {
-      _autovalidate = true; // Start validating on every change.
-      _showInSnackBar('Please fix the errors in red before submitting.');
-    } else {
-      form.save();
-      _showInSnackBar('${person.name}\'s phone number is ${person.phoneNumber}', color: Colors.blue, icon: Icons.info);
+
+  Future<void> mailerSend(var message, var smtpServer) async {
+    try {
+      final sendReport = await send(message, smtpServer);
+      _showInSnackBar('Message is sent for ${person.email}', color: Colors.blue, icon: Icons.info);
+
+      print('Message sent: ' + sendReport.toString());
+    } on MailerException catch (e) {
+      print('Message not sent.${e.message} and ${e.problems.length}');
+      for (var p in e.problems) {
+        print('Problem: ${p.code}: ${p.msg}');
+//          _scaffoldKey.currentState.showSnackBar(SnackBar(
+//            content: Text('Problem: ${p.code}: ${p.msg}'),
+//          ));
+      }
     }
   }
+
+//  void _handleSubmitted() {
+//    final FormState form = _formKey.currentState;
+//    if (!form.validate()) {
+//      _autovalidate = true; // Start validating on every change.
+//      _showInSnackBar('Please fix the errors in red before submitting.');
+//    } else {
+//      form.save();
+//      mailerSend(message, smtpServer);
+//      _showInSnackBar('Message is sent for ${person.email}', color: Colors.blue, icon: Icons.info);
+//    }
+//  }
 
   String _validateName(String value) {
     _formWasEdited = true;
@@ -123,6 +152,18 @@ class TextFormFieldDemoState extends State<TextFormFieldDemo> {
     final RegExp nameExp = RegExp(r'^[A-Za-z ]+$');
     if (!nameExp.hasMatch(value))
       return 'Please enter only alphabetical characters.';
+    return null;
+  }
+
+  String _validateEmail(String value) {
+    _formWasEdited = true;
+    if (value.isEmpty)
+      return 'Email is required.';
+    final RegExp emailRegExp = RegExp(
+      r'^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$',
+    );
+    if (!emailRegExp.hasMatch(value))
+      return 'Please enter valid email address.';
     return null;
   }
 
@@ -170,8 +211,36 @@ class TextFormFieldDemoState extends State<TextFormFieldDemo> {
     ) ?? false;
   }
 
+  String username = 'superior.tech.au@hotmail.com';
+  String password = 'Intelligentreceipt1';
+
   @override
   Widget build(BuildContext context) {
+
+    final smtpServer = hotmail(username, password);
+
+    void _handleSubmitted() {
+      final FormState form = _formKey.currentState;
+      if (!form.validate()) {
+        _autovalidate = true; // Start validating on every change.
+        _showInSnackBar('Please fix the errors in red before submitting.');
+      } else {
+        form.save();
+
+        final message = Message()
+          ..from = Address(username, 'Your name')
+          ..recipients.add('support@superiortech.com.au')
+          ..ccRecipients.addAll(['bruce.song.au@gmail.com ', 'rong.lin3000@gmail.com'])
+//      ..ccRecipients.addAll(['destCc1@example.com', 'destCc2@example.com'])
+//      ..bccRecipients.add(Address('bccAddress@example.com'))
+          ..subject = '${person.name} Feedback'
+          ..text = '${person.message} from ${person.email}';
+//      ..html = "<h1>Test</h1>\n<p>Hey! Here's some HTML content</p>";
+        
+        mailerSend(message, smtpServer);
+      }
+    }
+
     return Scaffold(
       drawerDragStartBehavior: DragStartBehavior.down,
       key: _scaffoldKey,
@@ -200,10 +269,10 @@ class TextFormFieldDemoState extends State<TextFormFieldDemo> {
                       filled: true,
                       icon: Icon(Icons.person),
                       hintText: 'What do people call you?',
-                      labelText: 'Name *',
+                      labelText: 'Name',
                     ),
                     onSaved: (String value) { person.name = value; },
-                    validator: _validateName,
+//                    validator: _validateName,
                   ),
                   const SizedBox(height: 24.0),
 //                  TextFormField(
@@ -232,10 +301,12 @@ class TextFormFieldDemoState extends State<TextFormFieldDemo> {
                       filled: true,
                       icon: Icon(Icons.email),
                       hintText: 'Your email address',
-                      labelText: 'E-mail',
+                      labelText: 'Email *',
                     ),
+                    initialValue: _userRepository.currentUser.email,
                     keyboardType: TextInputType.emailAddress,
                     onSaved: (String value) { person.email = value; },
+                    validator: _validateEmail,
                   ),
                   const SizedBox(height: 24.0),
                   TextFormField(
@@ -245,7 +316,8 @@ class TextFormFieldDemoState extends State<TextFormFieldDemo> {
                       helperText: 'Tell us about what help that you need.',
                       labelText: 'Message',
                     ),
-                    maxLines: 3,
+                    maxLines: 5,
+                    onSaved: (String value) { person.message = value; },
                   ),
 //                  const SizedBox(height: 24.0),
 //                  TextFormField(
