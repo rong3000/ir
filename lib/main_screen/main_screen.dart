@@ -231,7 +231,7 @@ class MainScreenState extends State<MainScreen> {
 //                  );
 //                },
 //              ),
-              ListTile(
+              _userRepository.currentUser?.isEmailVerified? Container(): ListTile(
                 title: Text(allTranslations.text('app.main-screen.email-verification')),
                 onTap: () {
                   Navigator.of(context).push(
