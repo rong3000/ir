@@ -105,7 +105,6 @@ class _LoginFormState extends State<LoginForm> {
                           icon: Icon(Icons.email),
                           labelText: allTranslations.text('words.email'),
                         ),
-                        autovalidate: true,
                         autocorrect: false,
                         validator: (_) {
                           return !state.isEmailValid ?  allTranslations.text('app.login-screen.invalid-email-message') : null;
@@ -122,7 +121,6 @@ class _LoginFormState extends State<LoginForm> {
                           labelText:  allTranslations.text('words.password'),
                         ),
                         obscureText: true,
-                        autovalidate: true,
                         autocorrect: false,
                         validator: (_) {
                           return !state.isPasswordValid ? allTranslations.text('app.login-screen.invalid-password-message') : null;
