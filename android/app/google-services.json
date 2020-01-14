@@ -1,35 +1,66 @@
 {
   "project_info": {
-    "project_number": "713767636880",
-    "firebase_url": "https://ir-service-3be74.firebaseio.com",
-    "project_id": "ir-service-3be74",
-    "storage_bucket": "ir-service-3be74.appspot.com"
+    "project_number": "1012566380108",
+    "firebase_url": "https://intelligent-receipt.firebaseio.com",
+    "project_id": "intelligent-receipt",
+    "storage_bucket": "intelligent-receipt.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:713767636880:android:98cae015d3a1109daf2d15",
+        "mobilesdk_app_id": "1:1012566380108:android:98afa25f2fb6c034d4aee9",
         "android_client_info": {
           "package_name": "com.superiortech.intelligent_receipt"
         }
       },
       "oauth_client": [
         {
-          "client_id": "713767636880-7piherjjcjrjnl0oc3vl1hnek75c5qqm.apps.googleusercontent.com",
+          "client_id": "1012566380108-2fj2dd9drmk9l25e2pjfl4iqjchf7c7g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.superiortech.intelligent_receipt",
+            "certificate_hash": "a1b3972bf752e7680ad2dddfa632165ba4b76b93"
+          }
+        },
+        {
+          "client_id": "1012566380108-9onagbqgisclb29r8ojgg7i4sebf8164.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.superiortech.intelligent_receipt",
+            "certificate_hash": "65cdd0c5c412cfaf9233dd0f1fdc7fddef88b547"
+          }
+        },
+        {
+          "client_id": "1012566380108-fqdud9jpsh7qducpgn6pb8ujm805sfk4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.superiortech.intelligent_receipt",
+            "certificate_hash": "3376c69980dcc274061944343eccece69fa45a76"
+          }
+        },
+        {
+          "client_id": "1012566380108-4m9gvfab7g94ok9mpgnnu4durp0gfc7k.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCyjqxEuMlMFgxKK9tYZiTbvfs94OIupTs"
+          "current_key": "AIzaSyD2ObFoMiI38FyHEeHbvhC6vBYafFKH9bI"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "713767636880-7piherjjcjrjnl0oc3vl1hnek75c5qqm.apps.googleusercontent.com",
+              "client_id": "1012566380108-4m9gvfab7g94ok9mpgnnu4durp0gfc7k.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "1012566380108-pp7fgt7t16qv222m55j4e01ko8lej6nl.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.superiortech.intelligentReceipt"
+              }
             }
           ]
         }
