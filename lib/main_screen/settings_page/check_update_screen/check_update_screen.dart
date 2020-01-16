@@ -40,7 +40,6 @@ class _CheckUpdateScreenState extends State<CheckUpdateScreen> {
   }
 
   bool _isUpdateAvailable() {
-    return true;
     return (_updateInfo != null) ? _updateInfo.updateAvailable : false;
   }
 
