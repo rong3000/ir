@@ -39,6 +39,11 @@ class _CheckUpdateScreenState extends State<CheckUpdateScreen> {
     _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(exception.toString())));
   }
 
+  bool _isUpdateAvailable() {
+    return true;
+    return (_updateInfo != null) ? _updateInfo.updateAvailable : false;
+  }
+
   @override
   Widget build(BuildContext context) {
     Upgrader().clearSavedSettings();
@@ -61,6 +66,8 @@ class _CheckUpdateScreenState extends State<CheckUpdateScreen> {
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             FutureBuilder(
                 future: Upgrader().initialize(),
@@ -85,43 +92,52 @@ class _CheckUpdateScreenState extends State<CheckUpdateScreen> {
                 future: initialize(),
                 builder: (BuildContext context, AsyncSnapshot<AppUpdateInfo> processed) {
                   if (processed.connectionState == ConnectionState.done) {
-                    return Column(
+                    return  Center (child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         Center(
-                          child: _updateInfo?.updateAvailable == true ? Text(allTranslations.text("app.settings-page.new-version-available")): Text(allTranslations.text("app.settings-page.already-updated-label")),
+                          child: _isUpdateAvailable() ? Text(allTranslations.text("app.settings-page.new-version-available")): Text(allTranslations.text("app.settings-page.already-updated-label")),
                         ),
-                        RaisedButton(
-                          child: Text(allTranslations.text("app.settings-page.immediate-update-label")),
-                          onPressed: _updateInfo?.updateAvailable == true
-                              ? () {
-                            InAppUpdate.performImmediateUpdate().catchError((e) => _showError(e));
-                          }
-                              : null,
-                        ),
-                        RaisedButton(
-                          child: Text(allTranslations.text("app.settings-page.flexible-update-label")),
-                          onPressed: _updateInfo?.updateAvailable == true
-                              ? () {
-                            InAppUpdate.startFlexibleUpdate().then((_) {
-                              setState(() {
-                                _flexibleUpdateAvailable = true;
-                              });
-                            }).catchError((e) => _showError(e));
-                          }
-                              : null,
-                        ),
-                        RaisedButton(
-                          child: Text(allTranslations.text("app.settings-page.complete-flexible-update-label")),
-                          onPressed: !_flexibleUpdateAvailable
-                              ? null
-                              : () {
-                            InAppUpdate.completeFlexibleUpdate().then((_) {
-                              _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('Success!')));
-                            }).catchError((e) => _showError(e));
-                          },
-                        )
+                        Container ( height: 30,),
+                        _isUpdateAvailable() ? ButtonTheme (
+                          minWidth: 200.0,
+                          height: 40.0,
+                          child: RaisedButton(
+                            child: Text(allTranslations.text("app.settings-page.immediate-update-label")),
+                            onPressed: _isUpdateAvailable() ? () {
+                              InAppUpdate.performImmediateUpdate().catchError((e) => _showError(e));
+                            } : null,
+                          ),
+                        ) : Container(),
+                        _isUpdateAvailable() ? ButtonTheme (
+                          minWidth: 200.0,
+                          height: 40.0,
+                          child: RaisedButton(
+                            child: Text(allTranslations.text("app.settings-page.flexible-update-label")),
+                            onPressed: _isUpdateAvailable() ? () {
+                              InAppUpdate.startFlexibleUpdate().then((_) {
+                                setState(() {
+                                  _flexibleUpdateAvailable = true;
+                                });
+                              }).catchError((e) => _showError(e));
+                            } : null,
+                          ),
+                        ) : Container(),
+                        _isUpdateAvailable() && _flexibleUpdateAvailable ? ButtonTheme (
+                          minWidth: 200.0,
+                          height: 40.0,
+                          child: RaisedButton(
+                            child: Text(allTranslations.text("app.settings-page.complete-flexible-update-label")),
+                            onPressed: !_flexibleUpdateAvailable ? null : () {
+                              InAppUpdate.completeFlexibleUpdate().then((_) {
+                                _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text('Success!')));
+                              }).catchError((e) => _showError(e));
+                            },
+                          ),
+                        ) : Container(),
                       ],
-                    );
+                    ));
                   }
                   return Container(width: 0.0, height: 0.0);
                 }),
