@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:upgrader/upgrader.dart';
@@ -39,10 +40,10 @@ class _CheckUpdateScreenIosState extends State<CheckUpdateScreenIos> {
   Widget build(BuildContext context) {
     Upgrader().clearSavedSettings();
     final String appcastURL =
-        'https://raw.githubusercontent.com/larryaasen/upgrader/master/test/testappcast.xml';
+        'https://firebasestorage.googleapis.com/v0/b/intelligent-receipt.appspot.com/o/irappcast.xml?alt=media&token=f2fe03a1-d1a2-4871-8acb-d64ddc68a5fc';
     final cfg =
         AppcastConfiguration(url: appcastURL, supportedOS: ["android", "ios"]);
-//    Upgrader().appcastConfig = cfg;
+    Upgrader().appcastConfig = cfg;
     Upgrader().debugLogging = true;
 
     if (Upgrader().debugLogging) {
@@ -70,11 +71,14 @@ class _CheckUpdateScreenIosState extends State<CheckUpdateScreenIos> {
                     ),
                     Center(
                         child: Upgrader().currentAppStoreVersion() == null
-                            ? Text(allTranslations.text(
-                                'app.settings-page.appStore-version-unavailable'))
-                            : Text(allTranslations.text(
+                            ? (Platform.isIOS ? Text(allTranslations.text(
+                                'app.settings-page.appStore-version-unavailable')): Text(allTranslations.text(
+                            'app.settings-page.playStore-version-unavailable')))
+                            : (Platform.isIOS ? Text(allTranslations.text(
                                     'app.settings-page.current-appstore-version-label') +
-                                '${Upgrader().currentAppStoreVersion()}')),
+                                '${Upgrader().currentAppStoreVersion()}'): Text(allTranslations.text(
+                            'app.settings-page.current-playstore-version-label') +
+                            '${Upgrader().currentAppStoreVersion()}')) ),
 //                    Center(
 //                      child: Text(
 //                          'currentAppStoreListingURL ${Upgrader().currentAppStoreListingURL()}'),

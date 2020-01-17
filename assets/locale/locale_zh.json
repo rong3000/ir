@@ -30,8 +30,10 @@
       "immediate-update-label": "执行立即更新",
       "flexible-update-label": "执行灵活更新",
       "complete-flexible-update-label": "完成灵活更新",
-      "appStore-version-unavailable": "当前AppStore版本未知",
-      "current-appstore-version-label": "当前AppStore版本是 "
+      "appStore-version-unavailable": "当前App Store版本未知",
+      "playStore-version-unavailable": "当前Play Store版本未知",
+      "current-appstore-version-label": "当前App Store版本是 ",
+      "current-playstore-version-label": "当前Play Store版本是 "
     },
     "preferences-page": {
       "title": "软件语言",

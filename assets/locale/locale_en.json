@@ -30,8 +30,10 @@
       "immediate-update-label": "Perform immediate update",
       "flexible-update-label": "Start flexible update",
       "complete-flexible-update-label": "Complete flexible update",
-      "appStore-version-unavailable": "Current AppStore Version unavailable",
-      "current-appstore-version-label": "Current AppStore version is "
+      "appStore-version-unavailable": "Current App Store Version unavailable",
+      "playStore-version-unavailable": "Current Play Store Version unavailable",
+      "current-appstore-version-label": "Current App Store version is ",
+      "current-playstore-version-label": "Current Play Store version is "
     },
     "preferences-page": {
       "title": "App Preferences",
