@@ -17,7 +17,7 @@ class CheckUpdateCard extends StatelessWidget {
         Navigator.of(context).push(
           MaterialPageRoute(builder: (context) {
             return Platform.isIOS ? CheckUpdateScreenIos(
-            ): CheckUpdateScreen(
+            ): CheckUpdateScreenIos(
             );
           }),
         )
