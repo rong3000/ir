@@ -40,7 +40,7 @@ class _CheckUpdateScreenIosState extends State<CheckUpdateScreenIos> {
   Widget build(BuildContext context) {
     Upgrader().clearSavedSettings();
     final String appcastURL =
-        'https://firebasestorage.googleapis.com/v0/b/intelligent-receipt.appspot.com/o/irappcast.xml?alt=media&token=f2fe03a1-d1a2-4871-8acb-d64ddc68a5fc';
+        'https://firebasestorage.googleapis.com/v0/b/intelligent-receipt.appspot.com/o/irappcast.xml?alt=media';
     final cfg =
         AppcastConfiguration(url: appcastURL, supportedOS: ["android", "ios"]);
     Upgrader().appcastConfig = cfg;
