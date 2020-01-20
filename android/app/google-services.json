@@ -15,6 +15,30 @@
       },
       "oauth_client": [
         {
+          "client_id": "1012566380108-gu6jh200nsnro20t5gdlc2rmbp24eepd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.superiortech.intelligent_receipt",
+            "certificate_hash": "d08b13521ca9d68c7520680ad1961dd5ff115142"
+          }
+        },
+        {
+          "client_id": "1012566380108-0m0pev4ak92dtmoc86er6klsartog5l9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.superiortech.intelligent_receipt",
+            "certificate_hash": "7ea3b5d2df69d3c6ee32fe5f2409fbaf4a7f8fae"
+          }
+        },
+        {
+          "client_id": "1012566380108-u8vts5ne0b2llk32sv8b6ek6gjn7kc1i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.superiortech.intelligent_receipt",
+            "certificate_hash": "5f3c872c3e2eec5d8d9c3f20c94ea4047c594e0b"
+          }
+        },
+        {
           "client_id": "1012566380108-2fj2dd9drmk9l25e2pjfl4iqjchf7c7g.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -52,7 +76,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "1012566380108-4m9gvfab7g94ok9mpgnnu4durp0gfc7k.apps.googleusercontent.com",
+              "client_id": "1012566380108-7qf05q4m4gn9103oklljo1kae0qn38jo.apps.googleusercontent.com",
               "client_type": 3
             },
             {
