@@ -86,7 +86,7 @@ class _CheckUpdateScreenIosState extends State<CheckUpdateScreenIos> {
                     RaisedButton(
                       child: Text(allTranslations
                           .text('app.settings-page.immediate-update-label')),
-                      onPressed: Upgrader().currentAppStoreListingURL() != null
+                      onPressed: Upgrader().isUpdateAvailable()
                           ? () {
                               Upgrader().onUserUpdated(context, true);
                             }
