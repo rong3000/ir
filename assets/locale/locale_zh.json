@@ -42,6 +42,10 @@
     "currency-screen":{
       "title": "选择货币"
     },
+    "contact-screen":{
+      "name": "姓名",
+      "form-indication": "* 代表必填项目"
+    },
     "main-screen": {
       "home-tab-label": "首页",
       "receipts-tab-label": "票据",
@@ -255,6 +259,8 @@
     "months": "月",
     "years": "年",
     "register": "注册",
-    "re-enter-password": "重新输入密码"
+    "re-enter-password": "重新输入密码",
+    "message": "内容",
+    "submit": "提交"
   }
 }

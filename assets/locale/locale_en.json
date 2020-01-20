@@ -42,6 +42,10 @@
     "currency-screen":{
       "title": "Choose Currency"
     },
+    "contact-screen":{
+      "name": "name",
+      "form-indication": "* indicates required field"
+    },
     "main-screen": {
       "home-tab-label": "Home",
       "receipts-tab-label": "Rceipts",
@@ -255,6 +259,8 @@
     "months": "months",
     "years": "years",
     "register": "Register",
-    "re-enter-password": "Confirm Password"
+    "re-enter-password": "Confirm Password",
+    "message": "Message",
+    "submit": "Submit"
   }
 }
