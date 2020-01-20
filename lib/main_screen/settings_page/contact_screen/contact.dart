@@ -57,39 +57,25 @@ class ContactUsState extends State<ContactUs> {
   Future<void> mailerSend(var message, var smtpServer) async {
     try {
       final sendReport = await send(message, smtpServer);
-      _showInSnackBar('Message is sent for ${person.email}', color: Colors.blue, icon: Icons.info);
-
-      print('Message sent: ' + sendReport.toString());
+      _showInSnackBar('${person.email}' + allTranslations.text('app.contact-screen.success'), color: Colors.blue, icon: Icons.info);
     } on MailerException catch (e) {
-      print('Message not sent.${e.message} and ${e.problems.length}');
       for (var p in e.problems) {
-        print('Problem: ${p.code}: ${p.msg}');
-//          _scaffoldKey.currentState.showSnackBar(SnackBar(
-//            content: Text('Problem: ${p.code}: ${p.msg}'),
-//          ));
+          _scaffoldKey.currentState.showSnackBar(SnackBar(
+            content: Text(allTranslations.text('app.contact-screen.success') + '${p.code}: ${p.msg}'),
+          ));
       }
     }
-  }
-
-  String _validateName(String value) {
-    _formWasEdited = true;
-    if (value.isEmpty)
-      return 'Name is required.';
-    final RegExp nameExp = RegExp(r'^[A-Za-z ]+$');
-    if (!nameExp.hasMatch(value))
-      return 'Please enter only alphabetical characters.';
-    return null;
   }
 
   String _validateEmail(String value) {
     _formWasEdited = true;
     if (value.isEmpty)
-      return 'Email is required.';
+      return allTranslations.text('app.contact-screen.email-required');
     final RegExp emailRegExp = RegExp(
       r'^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$',
     );
     if (!emailRegExp.hasMatch(value))
-      return 'Please enter valid email address.';
+      return allTranslations.text('app.contact-screen.valid-email-required');
     return null;
   }
 
@@ -102,15 +88,15 @@ class ContactUsState extends State<ContactUs> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('This form has errors'),
-          content: const Text('Really leave this form?'),
+          title: Text(allTranslations.text('app.contact-screen.form-error')),
+          content: Text(allTranslations.text('app.contact-screen.form-leaving')),
           actions: <Widget> [
             FlatButton(
-              child: const Text('YES'),
+              child: Text(allTranslations.text('words.ok')),
               onPressed: () { Navigator.of(context).pop(true); },
             ),
             FlatButton(
-              child: const Text('NO'),
+              child: Text(allTranslations.text('words.cancel')),
               onPressed: () { Navigator.of(context).pop(false); },
             ),
           ],
@@ -131,7 +117,7 @@ class ContactUsState extends State<ContactUs> {
       final FormState form = _formKey.currentState;
       if (!form.validate()) {
         _autovalidate = true; // Start validating on every change.
-        _showInSnackBar('Please fix the errors in red before submitting.');
+        _showInSnackBar(allTranslations.text('app.contact-screen.fix'));
       } else {
         form.save();
 

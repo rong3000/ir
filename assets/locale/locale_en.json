@@ -44,7 +44,14 @@
     },
     "contact-screen":{
       "name": "name",
-      "form-indication": "* indicates required field"
+      "form-indication": "* indicates required field",
+      "success": "/'s message is successfully sent",
+      "fail": "Message sending failed, Error message: ",
+      "email-required": "Email is required.",
+      "valid-email-required": "Please enter valid email address.",
+      "form-error": "This form has errors",
+      "form-leaving": "Really leave this form?",
+      "fix": "Please fix the errors in red before submitting."
     },
     "main-screen": {
       "home-tab-label": "Home",
