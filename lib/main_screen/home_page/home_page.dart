@@ -38,7 +38,7 @@ class _HomePageState extends State<HomePage> {
   _selectImage() async {
     var source = await _getImageSource();
     if (source != null) {
-      var ri = await ImagePicker.pickImage(source: source, maxWidth: 600);
+      var ri = await ImagePicker.pickImage(source: source, imageQuality: 30);
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => UploadReceiptImage(userRepository: _userRepository, title: allTranslations.text('app.snap-receipt-page.title'), imageFile: ri,)),

@@ -226,7 +226,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
   _selectImage() async {
     var source = await _getImageSource();
     if (source != null) {
-      var ri = await ImagePicker.pickImage(source: source, maxWidth: 600);
+      var ri = await ImagePicker.pickImage(source: source, imageQuality: 30);
       File croppedFile = await ImageCropper.cropImage(
         sourcePath: ri.path,
         aspectRatioPresets: Platform.isAndroid
