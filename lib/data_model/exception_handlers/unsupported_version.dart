@@ -25,14 +25,16 @@ void showUpgradeResult(BuildContext context, String message) {
   );
 }
 
-void onUpgradeButtonPressed(BuildContext context) {
-  if (Platform.isAndroid) {
-    InAppUpdate.startFlexibleUpdate().then((_) {
-      showUpgradeResult(context, allTranslations.text('app.unsupported-version.upgrade-succeeded'));
-    }).catchError((e) => showUpgradeResult(context, allTranslations.text('app.unsupported-version.upgrade-failed-prefix') + e.toString()));
-  } else if (Platform.isIOS) {
-    Upgrader().onUserUpdated(context, true);
-    // how to get upgrade result for IOS
+Future<void> onUpgradeButtonPressed(BuildContext context) async {
+  if (Platform.isAndroid || Platform.isIOS) {
+    Upgrader().clearSavedSettings();
+    final String appcastURL =
+        'https://firebasestorage.googleapis.com/v0/b/intelligent-receipt.appspot.com/o/irappcast.xml?alt=media';
+    final cfg = AppcastConfiguration(url: appcastURL, supportedOS: ["android", "ios"]);
+    Upgrader().appcastConfig = cfg;
+    Upgrader().initialize().then((_) {
+      Upgrader().onUserUpdated(context, true);
+    });
   } else {
     showUpgradeResult(context, allTranslations.text('app.unsupported-version.unsupported-platform'));
   }
@@ -67,34 +69,66 @@ void showUnsupportedVersionAlert(BuildContext context) {
   );
 }
 
+class InformationScreen extends StatelessWidget {
+  InformationScreen({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return  Center(
+        child: Container (
+          color: Colors.white,
+          child: Column (
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Container (
+                height: 32,
+              ),
+              Text(allTranslations.text('app.unsupported-version.opening-app-store'), style: new TextStyle(
+                  fontSize: 18, color: Colors.black, decoration: null)),
+              Container (
+                height: 32,
+              ),
+            ],
+          ),
+        )
+    );
+  }
+}
+
 class UnsupportedVersion extends StatelessWidget {
   UnsupportedVersion({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return  Center(
-      child: Container (
-        width: MediaQuery.of(context).size.width * 0.9,
-        child: Column (
-          children: <Widget>[
-            Container (
-              height: 32,
-            ),
-            Text(allTranslations.text('app.unsupported-version.text')),
-            Container (
-              height: 32,
-            ),
-            RaisedButton(
-              color: Colors.blue,
-              textColor: Colors.white,
-              child: Text(allTranslations.text('app.unsupported-version.button')),
-              onPressed:  () {
-                onUpgradeButtonPressed(context);
-              },
-            )
-          ],
-        ),
-      )
+        child: Container (
+          width: MediaQuery.of(context).size.width * 0.9,
+          child: Column (
+            children: <Widget>[
+              Container (
+                height: 32,
+              ),
+              Text(allTranslations.text('app.unsupported-version.text')),
+              Container (
+                height: 32,
+              ),
+              RaisedButton(
+                color: Colors.blue,
+                textColor: Colors.white,
+                child: Text(allTranslations.text('app.unsupported-version.button')),
+                onPressed:  () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) {
+                      return InformationScreen();
+                    }),
+                  );
+                  onUpgradeButtonPressed(context);
+                },
+              )
+            ],
+          ),
+        )
     );
   }
 }

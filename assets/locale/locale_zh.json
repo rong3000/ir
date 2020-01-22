@@ -244,7 +244,8 @@
       "upgrade-result": "版本更新结果",
       "upgrade-succeeded": "更新版本成功",
       "upgrade-failed-prefix": "更新失败: ",
-      "unsupported-platform": "不支持的系统平台"
+      "unsupported-platform": "不支持的系统平台",
+      "opening-app-store": "正在打开程序商店 ..."
     }
   },
   "words": {

@@ -244,7 +244,8 @@
       "upgrade-result": "Upgrade Result",
       "upgrade-succeeded": "Upgrade was succeeded",
       "upgrade-failed-prefix": "Upgrade failed: ",
-      "unsupported-platform": "Unsupported platform"
+      "unsupported-platform": "Unsupported platform",
+      "opening-app-store": "Opening App Store to download the latest version ..."
     }
   },
   "words": {
