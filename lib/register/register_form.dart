@@ -66,7 +66,7 @@ class _RegisterFormState extends State<RegisterForm> {
                 content: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(allTranslations.text('app.register-form.registration-failed-label')),
+                    Text(allTranslations.text('app.register-form.registration-failed-label') + "\n" + state.message),
                     Icon(Icons.error),
                   ],
                 ),
