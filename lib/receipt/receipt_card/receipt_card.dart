@@ -11,6 +11,7 @@ import 'package:intl/intl.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import '../../helper_widgets/zoomable_image.dart';
 import 'package:intelligent_receipt/translations/global_translations.dart';
+import 'package:intelligent_receipt/data_model/setting_repository.dart';
 
 class ReceiptCard extends StatefulWidget {
   const ReceiptCard({
@@ -31,6 +32,7 @@ class ReceiptCard extends StatefulWidget {
 class _ReceiptCardState extends State<ReceiptCard> {
   CategoryRepository _categoryRepository;
   ReceiptRepository _receiptRepository;
+  Currency _defaultCurrency;
   Future<Image> _getImageFuture;
   String _imagePath;
 
@@ -48,6 +50,7 @@ class _ReceiptCardState extends State<ReceiptCard> {
         RepositoryProvider.of<UserRepository>(context).categoryRepository;
     _receiptRepository =
         RepositoryProvider.of<UserRepository>(context).receiptRepository;
+    _defaultCurrency = RepositoryProvider.of<UserRepository>(context).settingRepository?.getDefaultCurrency();
     _retrieveImage(widget._receiptItem.imagePath);
     super.initState();
   }
@@ -106,6 +109,15 @@ class _ReceiptCardState extends State<ReceiptCard> {
       return BoxDecoration(
         border: Border.all(),
       );
+    }
+
+    String _getCurrencyText(ReceiptListItem receiptItem) {
+      String currencyText = receiptItem?.currencyCode;
+      if (currencyText == null) {
+        currencyText = _defaultCurrency?.code;
+      }
+
+      return (currencyText == null) ? "" : currencyText;
     }
 
     Future<void> _showFullImage(String imagePath) async {
@@ -203,7 +215,7 @@ class _ReceiptCardState extends State<ReceiptCard> {
                             ),
                           ),
                           Text(
-                            '${allTranslations.text('app.receipt-card.total-amount-prefix')} ${widget._receiptItem.currencyCode} ${widget._receiptItem.totalAmount}',
+                            '${allTranslations.text('app.receipt-card.total-amount-prefix')} ${_getCurrencyText(widget._receiptItem)} ${widget._receiptItem.totalAmount}',
                             style: amountStyle,
                           ),
                         ],
