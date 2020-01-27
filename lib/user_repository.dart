@@ -68,10 +68,11 @@ Future<FirebaseUser> signInWithFacebook() async {
 }
 
   Future<void> signInWithCredentials(String email, String password) async {
-    currentUser = await _firebaseAuth.signInWithEmailAndPassword(
+    AuthResult authResult = await _firebaseAuth.signInWithEmailAndPassword(
       email: email,
       password: password,
     );
+    currentUser = authResult?.user;
     userGuid = currentUser?.uid;
     postSignIn();
   }
@@ -81,11 +82,11 @@ Future<FirebaseUser> signInWithFacebook() async {
   }
 
   Future<void> signUp({String email, String password}) async {
-
-    currentUser =  await _firebaseAuth.createUserWithEmailAndPassword(
+    AuthResult authResult =  await _firebaseAuth.createUserWithEmailAndPassword(
       email: email,
       password: password,
     );
+    currentUser = authResult?.user;
     userGuid = currentUser?.uid;
     try {
       await currentUser.sendEmailVerification();
@@ -145,7 +146,7 @@ Future<FirebaseUser> signInWithFacebook() async {
     newUser.firstname = currentUser.displayName;
     newUser.email = currentUser.email;
     newUser.mobile = currentUser.phoneNumber;
-    var result = await webservicePost(Urls.CreateNewUser, await currentUser.getIdToken(), jsonEncode(newUser));
+    var result = await webservicePost(Urls.CreateNewUser, (await currentUser.getIdToken())?.token, jsonEncode(newUser));
     if (result.success){
       return result.obj as User;
     }

@@ -12,6 +12,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import '../../helper_widgets/zoomable_image.dart';
 import 'package:intelligent_receipt/translations/global_translations.dart';
 import 'package:intelligent_receipt/data_model/setting_repository.dart';
+import 'package:intelligent_receipt/data_model/GeneralUtility.dart';
 
 class ReceiptCard extends StatefulWidget {
   const ReceiptCard({
@@ -200,7 +201,7 @@ class _ReceiptCardState extends State<ReceiptCard> {
                           Padding(
                             padding: const EdgeInsets.only(bottom: 0.0),
                             child: Text(
-                              '${allTranslations.text('app.receipt-card.receipt-date-prefix')} ${DateFormat().add_yMd().format(widget._receiptItem.receiptDatetime.toLocal())}',
+                              '${allTranslations.text('app.receipt-card.receipt-date-prefix')} ${getDateFormatForYMD().format(widget._receiptItem.receiptDatetime.toLocal())}',
                               style: dateStyle
                                   .copyWith(color: Colors.black54)
                                   .apply(fontSizeFactor: 0.75),
@@ -251,7 +252,7 @@ class _ReceiptCardState extends State<ReceiptCard> {
                             Padding(
                               padding: const EdgeInsets.only(bottom: 0.0),
                               child: Text(
-                                "${allTranslations.text('app.receipt-card.uploaded-prefix')} ${DateFormat().add_yMd().format(widget._receiptItem.uploadDatetime.toLocal())}",
+                                "${allTranslations.text('app.receipt-card.uploaded-prefix')} ${getDateFormatForYMD().format(widget._receiptItem.uploadDatetime.toLocal())}",
                                 style: dateStyle
                                     .copyWith(color: Colors.black54)
                                     .apply(fontSizeFactor: 0.75),

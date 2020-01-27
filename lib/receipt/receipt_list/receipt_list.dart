@@ -8,6 +8,7 @@ import 'package:intelligent_receipt/translations/global_translations.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 import 'package:intl/intl.dart';
 import 'package:synchronized/synchronized.dart';
+import 'package:intelligent_receipt/data_model/GeneralUtility.dart';
 
 class ReceiptList extends StatefulWidget {
   final UserRepository _userRepository;
@@ -367,7 +368,7 @@ class ReceiptListState extends State<ReceiptList> {
                           _selectFromDate(context);
                         },
                         child: Text(
-                          "${DateFormat().add_yMd().format(_fromDate.toLocal())}",
+                          "${getDateFormatForYMD().format(_fromDate.toLocal())}",
                           style: TextStyle(height: 1, fontSize: 12),
                         ),
                       ),
@@ -377,7 +378,7 @@ class ReceiptListState extends State<ReceiptList> {
                           _selectToDate(context);
                         },
                         child: Text(
-                          "${DateFormat().add_yMd().format(_toDate.toLocal())}",
+                          "${getDateFormatForYMD().format(_toDate.toLocal())}",
                           style: TextStyle(height: 1, fontSize: 12),
                         ),
                       ),
