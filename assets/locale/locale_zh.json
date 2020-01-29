@@ -45,13 +45,16 @@
     "contact-screen":{
       "name": "姓名",
       "form-indication": "* 代表必填项目",
-      "success": "的消息内容已经成功发送 ",
-      "fail": "消息内容发送失败,错误信息: ",
+      "success-line1": "谢谢",
+      "success-line2": "您的消息内容已经成功发送",
+      "fail-line1": "消息发送失败",
+      "fail-line2": "错误: ",
       "email-required": "电子邮箱必填.",
       "valid-email-required": "请输入有效的电子邮箱地址",
       "form-error": "表单有错误",
       "form-leaving": "确定放弃这个表单吗?",
-      "fix": "提交前请先更正红色部分的错误."
+      "fix": "提交前请先更正红色部分的错误.",
+      "sumbmitting": "正在发送您的消息 ..."
     },
     "main-screen": {
       "home-tab-label": "首页",

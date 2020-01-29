@@ -50,21 +50,30 @@ class ContactUsState extends State<ContactUs> {
 
   bool _autovalidate = false;
   bool _formWasEdited = false;
+  bool _formSubmitting = false;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<FormFieldState<String>> _passwordFieldKey = GlobalKey<FormFieldState<String>>();
 
   Future<void> mailerSend(var message, var smtpServer) async {
+    setState(() {
+      _formSubmitting = true;
+    });
     try {
+      _showInSnackBar(allTranslations.text('app.contact-screen.sumbmitting'), color: Colors.blue, icon: Icons.info);
       final sendReport = await send(message, smtpServer);
-      _showInSnackBar('${person.email}' + allTranslations.text('app.contact-screen.success'), color: Colors.blue, icon: Icons.info);
+      _showInSnackBar(allTranslations.text('app.contact-screen.success-line1') + '${person.name}\n' + allTranslations.text('app.contact-screen.success-line2'),
+          color: Colors.blue, icon: Icons.info);
     } on MailerException catch (e) {
       for (var p in e.problems) {
           _scaffoldKey.currentState.showSnackBar(SnackBar(
-            content: Text(allTranslations.text('app.contact-screen.success') + '${p.code}: ${p.msg}'),
+            content: Text(allTranslations.text('app.contact-screen.fail-line1') + '\n' + allTranslations.text('app.contact-screen.fail-line2') + '${p.code}: ${p.msg}'),
           ));
       }
     }
+    setState(() {
+      _formSubmitting = false;
+    });
   }
 
   String _validateEmail(String value) {
@@ -122,14 +131,14 @@ class ContactUsState extends State<ContactUs> {
         form.save();
 
         final message = Message()
-          ..from = Address(username, 'Your name')
+          ..from = Address(username, 'Superior Support')
           ..recipients.add('support@superiortech.com.au')
-          ..ccRecipients.addAll(['bruce.song.au@gmail.com ', 'rong.lin3000@gmail.com'])
+          ..bccRecipients.addAll(['bruce.song.au@gmail.com ', 'rong.lin3000@gmail.com'])
 //      ..bccRecipients.add(Address('bccAddress@example.com'))
-          ..subject = '${person.name} Feedback'
+          ..subject = '${person.name}\'s Message'
           ..text = '${person.message} from ${person.email}';
 //      ..html = "<h1>Test</h1>\n<p>Hey! Here's some HTML content</p>";
-        
+
         mailerSend(message, smtpServer);
       }
     }
@@ -191,7 +200,7 @@ class ContactUsState extends State<ContactUs> {
                   Center(
                     child: RaisedButton(
                       child: Text(allTranslations.text('words.submit')),
-                      onPressed: _handleSubmitted,
+                      onPressed: _formSubmitting ? null : _handleSubmitted,
                     ),
                   ),
                   const SizedBox(height: 24.0),
