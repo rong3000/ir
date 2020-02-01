@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "1012566380108-b6d13fehslupu1f2mspfe58a8gofpnpj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.superiortech.intelligent_receipt",
+            "certificate_hash": "6dbac26708b8b7c4f51435f3197066f4a3bfc516"
+          }
+        },
+        {
           "client_id": "1012566380108-gu6jh200nsnro20t5gdlc2rmbp24eepd.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
