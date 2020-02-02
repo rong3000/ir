@@ -28,6 +28,7 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+  UserRepository get _userRepository => widget._userRepository;
 
   @override
   void initState() {
@@ -58,7 +59,7 @@ class _SettingsPageState extends State<SettingsPage> {
             PlanMenuCard(),
             //DocumentKnowledgeMenuCard(),
             //InviteFriendMenuCard(),
-            ContactMenuCard(),
+            ContactMenuCard(userRepository: _userRepository),
           ],
         ),
       );

@@ -70,8 +70,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     try {
       await _userRepository.signInWithGoogle();
       yield LoginState.success();
-    } catch (_) {
-      yield LoginState.failure();
+    } catch (e) {
+      yield LoginState.failure(_getErrorMsg(e.toString()));
     }
   }
   
@@ -79,8 +79,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     try {
       await _userRepository.signInWithFacebook();
       yield LoginState.success();
-    } catch (_) {
-      yield LoginState.failure();
+    } catch (e) {
+      yield LoginState.failure(_getErrorMsg(e.toString()));
     }
   }
 
@@ -92,8 +92,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     try {
       await _userRepository.signInWithCredentials(email, password);
       yield LoginState.success();
-    } catch (_) {
-      yield LoginState.failure();
+    } catch (e) {
+      yield LoginState.failure(_getErrorMsg(e.toString()));
     }
   }
 
@@ -104,8 +104,14 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     try {
       await _userRepository.sendPasswordResetEmail(email);
       yield LoginState.success();
-    } catch (_) {
-      yield LoginState.failure();
+    } catch (e) {
+      yield LoginState.failure(_getErrorMsg(e.toString()));
     }
+  }
+
+  String _getErrorMsg(String message) {
+    // Truncate leading "PlatformException"
+    message = message.replaceFirst("PlatformException", "");
+    return message;
   }
 }

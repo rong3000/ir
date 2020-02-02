@@ -10,7 +10,8 @@
       "deleting-failed": "Delete Failed: ",
       "no-image-text": "No Image!",
       "invalid-email-message": "Invalid Email",
-      "invalid-password-message": "Invalid Password"
+      "invalid-password-message": "At least one letter, one number and minimum 8 characters",
+      "password-mismatch-message": "Password is not the same as above"
     },
     "settings-page": {
       "title": "Settings",
@@ -21,6 +22,7 @@
       "check-update-menu-item-title": "Check update",
       "document-knowledge-menu-item-title": "Documents & Knowledge Centre",
       "invite-friend-menu-item-title": "Invite a Friend",
+      "contact-us-menu-item-title": "Contact Us",
       "in-app-update-title": "In App Update",
       "current-version-label": "Current installed version is ",
       "new-version-available": "A new version is available for update",
@@ -28,8 +30,10 @@
       "immediate-update-label": "Perform immediate update",
       "flexible-update-label": "Start flexible update",
       "complete-flexible-update-label": "Complete flexible update",
-      "appStore-version-unavailable": "Current AppStore Version unavailable",
-      "current-appstore-version-label": "Current AppStore version is "
+      "appStore-version-unavailable": "Current App Store Version unavailable",
+      "playStore-version-unavailable": "Current Play Store Version unavailable",
+      "current-appstore-version-label": "Current App Store version is ",
+      "current-playstore-version-label": "Current Play Store version is "
     },
     "preferences-page": {
       "title": "App Preferences",
@@ -37,6 +41,20 @@
     },
     "currency-screen":{
       "title": "Choose Currency"
+    },
+    "contact-screen":{
+      "name": "name",
+      "form-indication": "* indicates required field",
+      "success-line1": "Thanks ",
+      "success-line2": "Your message was sent successfully",
+      "fail-line1": "Failed to send message",
+      "fail-line2": "Error: ",
+      "email-required": "Email is required.",
+      "valid-email-required": "Please enter valid email address.",
+      "form-error": "This form has errors",
+      "form-leaving": "Really leave this form?",
+      "fix": "Please fix the errors in red before submitting.",
+      "sumbmitting": "Your message is being sent ..."
     },
     "main-screen": {
       "home-tab-label": "Home",
@@ -154,7 +172,7 @@
 
     },
     "receipt-card" : {
-      "unknown-category": "Unknown",
+      "unknown-category": "Click 'Review' button to select receipt category.",
       "receipt-processed-review": "Click 'Review' button to verify and fulfill receipt data.",
       "receipt-in-process-review": "Click 'Review' button to verify and fulfill receipt data.",
       "receipt-date-prefix": "Receipt Date",
@@ -220,7 +238,7 @@
     "report-card": {
       "total-amount-prefix": "Total",
       "created-date-prefix": "Created",
-      "expenses-suffix": "Expenses"
+      "expenses-suffix": "Receipts"
     },
     "unsupported-version":{
       "title" : "Version not supported",
@@ -229,7 +247,8 @@
       "upgrade-result": "Upgrade Result",
       "upgrade-succeeded": "Upgrade was succeeded",
       "upgrade-failed-prefix": "Upgrade failed: ",
-      "unsupported-platform": "Unsupported platform"
+      "unsupported-platform": "Unsupported platform",
+      "opening-app-store": "Opening App Store to download the latest version ..."
     }
   },
   "words": {
@@ -250,6 +269,9 @@
     "close": "Close",
     "months": "months",
     "years": "years",
-    "register": "Register"
+    "register": "Register",
+    "re-enter-password": "Confirm Password",
+    "message": "Message",
+    "submit": "Submit"
   }
 }

@@ -49,14 +49,14 @@
         		<string>Editor</string>
         		<key>CFBundleURLSchemes</key>
         		<array>
-                    <string>com.googleusercontent.apps.738710784930-berok5br43skonb5749ukifcdc8tnnlh</string>
+                    <string>com.googleusercontent.apps.1012566380108-pp7fgt7t16qv222m55j4e01ko8lej6nl</string>
         		</array>
         </dict>
 
         <dict>
             <key>CFBundleURLSchemes</key>
             <array>
-                <string>fb772430026511405</string>
+                <string>fb1198160377044039</string>
             </array>
         </dict>
     </array>
@@ -64,11 +64,11 @@
     <key>FacebookAppID</key>
 
     <!-- Replace "000000000000" with your Facebook App ID here. -->
-    <string>772430026511405</string>
+    <string>1198160377044039</string>
     <key>FacebookDisplayName</key>
 
     <!-- Replace "YOUR_APP_NAME" with your Facebook App name. -->
-    <string>IR</string>
+    <string>Intelligent Receipt</string>
 
     <key>LSApplicationQueriesSchemes</key>
     <array>

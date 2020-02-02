@@ -2,22 +2,26 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-
-// This file feels very unfinished and no trtanslations have been done - RB
-
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/gestures.dart' show DragStartBehavior;
+import 'package:mailer/mailer.dart';
+import 'package:mailer/smtp_server/hotmail.dart';
+import 'package:intelligent_receipt/translations/global_translations.dart';
+import '../../../user_repository.dart';
 
-class TextFormFieldDemo extends StatefulWidget {
-  const TextFormFieldDemo({ Key key }) : super(key: key);
+class ContactUs extends StatefulWidget {
+  final UserRepository _userRepository;
+  ContactUs({Key key, @required UserRepository userRepository})
+      : assert(userRepository != null),
+        _userRepository = userRepository,
+        super(key: key);
 
   static const String routeName = '/material/text-form-field';
 
   @override
-  TextFormFieldDemoState createState() => TextFormFieldDemoState();
+  ContactUsState createState() => ContactUsState();
 }
 
 class PersonData {
@@ -25,67 +29,11 @@ class PersonData {
   String phoneNumber = '';
   String email = '';
   String password = '';
+  String message = '';
 }
 
-class PasswordField extends StatefulWidget {
-  const PasswordField({
-    this.fieldKey,
-    this.hintText,
-    this.labelText,
-    this.helperText,
-    this.onSaved,
-    this.validator,
-    this.onFieldSubmitted,
-  });
-
-  final Key fieldKey;
-  final String hintText;
-  final String labelText;
-  final String helperText;
-  final FormFieldSetter<String> onSaved;
-  final FormFieldValidator<String> validator;
-  final ValueChanged<String> onFieldSubmitted;
-
-  @override
-  _PasswordFieldState createState() => _PasswordFieldState();
-}
-
-class _PasswordFieldState extends State<PasswordField> {
-  bool _obscureText = true;
-
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      key: widget.fieldKey,
-      obscureText: _obscureText,
-      maxLength: 8,
-      onSaved: widget.onSaved,
-      validator: widget.validator,
-      onFieldSubmitted: widget.onFieldSubmitted,
-      decoration: InputDecoration(
-        border: const UnderlineInputBorder(),
-        filled: true,
-        hintText: widget.hintText,
-        labelText: widget.labelText,
-        helperText: widget.helperText,
-        suffixIcon: GestureDetector(
-          dragStartBehavior: DragStartBehavior.down,
-          onTap: () {
-            setState(() {
-              _obscureText = !_obscureText;
-            });
-          },
-          child: Icon(
-            _obscureText ? Icons.visibility : Icons.visibility_off,
-            semanticLabel: _obscureText ? 'show password' : 'hide password',
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class TextFormFieldDemoState extends State<TextFormFieldDemo> {
+class ContactUsState extends State<ContactUs> {
+  UserRepository get _userRepository => widget._userRepository;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   PersonData person = PersonData();
@@ -102,45 +50,41 @@ class TextFormFieldDemoState extends State<TextFormFieldDemo> {
 
   bool _autovalidate = false;
   bool _formWasEdited = false;
+  bool _formSubmitting = false;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<FormFieldState<String>> _passwordFieldKey = GlobalKey<FormFieldState<String>>();
-  void _handleSubmitted() {
-    final FormState form = _formKey.currentState;
-    if (!form.validate()) {
-      _autovalidate = true; // Start validating on every change.
-      _showInSnackBar('Please fix the errors in red before submitting.');
-    } else {
-      form.save();
-      _showInSnackBar('${person.name}\'s phone number is ${person.phoneNumber}', color: Colors.blue, icon: Icons.info);
+
+  Future<void> mailerSend(var message, var smtpServer) async {
+    setState(() {
+      _formSubmitting = true;
+    });
+    try {
+      _showInSnackBar(allTranslations.text('app.contact-screen.sumbmitting'), color: Colors.blue, icon: Icons.info);
+      final sendReport = await send(message, smtpServer);
+      _showInSnackBar(allTranslations.text('app.contact-screen.success-line1') + '${person.name}\n' + allTranslations.text('app.contact-screen.success-line2'),
+          color: Colors.blue, icon: Icons.info);
+    } on MailerException catch (e) {
+      for (var p in e.problems) {
+          _scaffoldKey.currentState.showSnackBar(SnackBar(
+            content: Text(allTranslations.text('app.contact-screen.fail-line1') + '\n' + allTranslations.text('app.contact-screen.fail-line2') + '${p.code}: ${p.msg}'),
+          ));
+      }
     }
+    setState(() {
+      _formSubmitting = false;
+    });
   }
 
-  String _validateName(String value) {
+  String _validateEmail(String value) {
     _formWasEdited = true;
     if (value.isEmpty)
-      return 'Name is required.';
-    final RegExp nameExp = RegExp(r'^[A-Za-z ]+$');
-    if (!nameExp.hasMatch(value))
-      return 'Please enter only alphabetical characters.';
-    return null;
-  }
-
-  String _validatePhoneNumber(String value) {
-    _formWasEdited = true;
-    final RegExp phoneExp = RegExp(r'^\(\d\d\d\) \d\d\d\-\d\d\d\d$');
-    if (!phoneExp.hasMatch(value))
-      return '(###) ###-#### - Enter a US phone number.';
-    return null;
-  }
-
-  String _validatePassword(String value) {
-    _formWasEdited = true;
-    final FormFieldState<String> passwordField = _passwordFieldKey.currentState;
-    if (passwordField.value == null || passwordField.value.isEmpty)
-      return 'Please enter a password.';
-    if (passwordField.value != value)
-      return 'The passwords don\'t match';
+      return allTranslations.text('app.contact-screen.email-required');
+    final RegExp emailRegExp = RegExp(
+      r'^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$',
+    );
+    if (!emailRegExp.hasMatch(value))
+      return allTranslations.text('app.contact-screen.valid-email-required');
     return null;
   }
 
@@ -153,15 +97,15 @@ class TextFormFieldDemoState extends State<TextFormFieldDemo> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('This form has errors'),
-          content: const Text('Really leave this form?'),
+          title: Text(allTranslations.text('app.contact-screen.form-error')),
+          content: Text(allTranslations.text('app.contact-screen.form-leaving')),
           actions: <Widget> [
             FlatButton(
-              child: const Text('YES'),
+              child: Text(allTranslations.text('words.ok')),
               onPressed: () { Navigator.of(context).pop(true); },
             ),
             FlatButton(
-              child: const Text('NO'),
+              child: Text(allTranslations.text('words.cancel')),
               onPressed: () { Navigator.of(context).pop(false); },
             ),
           ],
@@ -170,13 +114,40 @@ class TextFormFieldDemoState extends State<TextFormFieldDemo> {
     ) ?? false;
   }
 
+  String username = 'superior.tech.au@hotmail.com';
+  String password = 'Intelligentreceipt1';
+
   @override
   Widget build(BuildContext context) {
+
+    final smtpServer = hotmail(username, password);
+
+    void _handleSubmitted() {
+      final FormState form = _formKey.currentState;
+      if (!form.validate()) {
+        _autovalidate = true; // Start validating on every change.
+        _showInSnackBar(allTranslations.text('app.contact-screen.fix'));
+      } else {
+        form.save();
+
+        final message = Message()
+          ..from = Address(username, 'Superior Support')
+          ..recipients.add('support@superiortech.com.au')
+          ..bccRecipients.addAll(['bruce.song.au@gmail.com ', 'rong.lin3000@gmail.com'])
+//      ..bccRecipients.add(Address('bccAddress@example.com'))
+          ..subject = '${person.name}\'s Message'
+          ..text = '${person.message} from ${person.email}';
+//      ..html = "<h1>Test</h1>\n<p>Hey! Here's some HTML content</p>";
+
+        mailerSend(message, smtpServer);
+      }
+    }
+
     return Scaffold(
       drawerDragStartBehavior: DragStartBehavior.down,
       key: _scaffoldKey,
       appBar: AppBar(
-        title: const Text('Contact Us'),
+        title: Text(allTranslations.text('app.settings-page.contact-us-menu-item-title')),
       ),
       body: SafeArea(
         top: false,
@@ -195,103 +166,45 @@ class TextFormFieldDemoState extends State<TextFormFieldDemo> {
                   const SizedBox(height: 24.0),
                   TextFormField(
                     textCapitalization: TextCapitalization.words,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       border: UnderlineInputBorder(),
                       filled: true,
                       icon: Icon(Icons.person),
-                      hintText: 'What do people call you?',
-                      labelText: 'Name *',
+                      labelText: allTranslations.text('app.contact-screen.name'),
                     ),
                     onSaved: (String value) { person.name = value; },
-                    validator: _validateName,
                   ),
                   const SizedBox(height: 24.0),
-//                  TextFormField(
-//                    decoration: const InputDecoration(
-//                      border: UnderlineInputBorder(),
-//                      filled: true,
-//                      icon: Icon(Icons.phone),
-//                      hintText: 'Where can we reach you?',
-//                      labelText: 'Phone Number *',
-//                      prefixText: '+1',
-//                    ),
-//                    keyboardType: TextInputType.phone,
-//                    onSaved: (String value) { person.phoneNumber = value; },
-//                    validator: _validatePhoneNumber,
-//                    // TextInputFormatters are applied in sequence.
-//                    inputFormatters: <TextInputFormatter> [
-//                      WhitelistingTextInputFormatter.digitsOnly,
-//                      // Fit the validating format.
-//                      _phoneNumberFormatter,
-//                    ],
-//                  ),
-//                  const SizedBox(height: 24.0),
                   TextFormField(
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       border: UnderlineInputBorder(),
                       filled: true,
                       icon: Icon(Icons.email),
-                      hintText: 'Your email address',
-                      labelText: 'E-mail',
+                      labelText: allTranslations.text('words.email') + '*',
                     ),
+                    initialValue: _userRepository.currentUser.email,
                     keyboardType: TextInputType.emailAddress,
                     onSaved: (String value) { person.email = value; },
+                    validator: _validateEmail,
                   ),
                   const SizedBox(height: 24.0),
                   TextFormField(
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       border: OutlineInputBorder(),
-                      hintText: 'Tell us about your thoughts on our product.',
-                      helperText: 'Tell us about what help that you need.',
-                      labelText: 'Message',
+                      labelText: allTranslations.text('words.message'),
                     ),
-                    maxLines: 3,
+                    maxLines: 5,
+                    onSaved: (String value) { person.message = value; },
                   ),
-//                  const SizedBox(height: 24.0),
-//                  TextFormField(
-//                    keyboardType: TextInputType.number,
-//                    decoration: const InputDecoration(
-//                      border: OutlineInputBorder(),
-//                      labelText: 'Salary',
-//                      prefixText: '\$',
-//                      suffixText: 'USD',
-//                      suffixStyle: TextStyle(color: Colors.green),
-//                    ),
-//                    maxLines: 1,
-//                  ),
-//                  const SizedBox(height: 24.0),
-//                  PasswordField(
-//                    fieldKey: _passwordFieldKey,
-//                    helperText: 'No more than 8 characters.',
-//                    labelText: 'Password *',
-//                    onFieldSubmitted: (String value) {
-//                      setState(() {
-//                        person.password = value;
-//                      });
-//                    },
-//                  ),
-//                  const SizedBox(height: 24.0),
-//                  TextFormField(
-//                    enabled: person.password != null && person.password.isNotEmpty,
-//                    decoration: const InputDecoration(
-//                      border: UnderlineInputBorder(),
-//                      filled: true,
-//                      labelText: 'Re-type password',
-//                    ),
-//                    maxLength: 8,
-//                    obscureText: true,
-//                    validator: _validatePassword,
-//                  ),
                   const SizedBox(height: 24.0),
                   Center(
                     child: RaisedButton(
-                      child: const Text('SUBMIT'),
-                      onPressed: _handleSubmitted,
+                      child: Text(allTranslations.text('words.submit')),
+                      onPressed: _formSubmitting ? null : _handleSubmitted,
                     ),
                   ),
                   const SizedBox(height: 24.0),
-                  Text(
-                    '* indicates required field',
+                  Text(allTranslations.text('app.contact-screen.form-indication'),
                     style: Theme.of(context).textTheme.caption,
                   ),
                   const SizedBox(height: 24.0),

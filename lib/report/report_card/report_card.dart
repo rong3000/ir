@@ -8,6 +8,7 @@ import 'package:intelligent_receipt/report/report_list/report_list.dart';
 import 'package:intelligent_receipt/translations/global_translations.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 import 'package:intl/intl.dart';
+import 'package:intelligent_receipt/data_model/GeneralUtility.dart';
 
 
 class ReportCard extends StatefulWidget {
@@ -153,7 +154,7 @@ class _ReportCardState extends State<ReportCard> {
                             Padding(
                               padding: const EdgeInsets.only(bottom: 0.0),
                               child: Text(
-                                "${allTranslations.text('app.report-card.created-date-prefix')} ${DateFormat().add_yMd().format(widget._reportItem.createDateTime.toLocal())}",
+                                "${allTranslations.text('app.report-card.created-date-prefix')} ${getDateFormatForYMD().format(widget._reportItem.createDateTime.toLocal())}",
                                 style: dateStyle
                                     .copyWith(color: Colors.black54)
                                     .apply(fontSizeFactor: 0.75),

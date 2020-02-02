@@ -67,8 +67,14 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
         password: password,
       );
       yield RegisterState.success();
-    } catch (_) {
-      yield RegisterState.failure();
+    } catch (e) {
+      yield RegisterState.failure(_getErrorMsg(e.toString()));
     }
+  }
+
+  String _getErrorMsg(String message) {
+    // Truncate leading "PlatformException"
+    message = message.replaceFirst("PlatformException", "");
+    return message;
   }
 }

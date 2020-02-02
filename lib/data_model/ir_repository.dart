@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 
 abstract class IRRepository {
@@ -6,6 +7,7 @@ abstract class IRRepository {
   IRRepository(this.userRepository);
 
   Future<String> getToken() async {
-    return await userRepository.currentUser.getIdToken();
+    IdTokenResult tokenResult = await userRepository.currentUser.getIdToken();
+    return tokenResult.token;
   }
 }

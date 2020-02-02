@@ -231,7 +231,7 @@ class MainScreenState extends State<MainScreen> {
 //                  );
 //                },
 //              ),
-              ListTile(
+              _userRepository.currentUser?.isEmailVerified? Container(): ListTile(
                 title: Text(allTranslations.text('app.main-screen.email-verification')),
                 onTap: () {
                   Navigator.of(context).push(
@@ -247,23 +247,23 @@ class MainScreenState extends State<MainScreen> {
                   Navigator.of(context).push(
                     MaterialPageRoute(builder: (context) {
                       return Platform.isIOS ? CheckUpdateScreenIos(
-                      ): CheckUpdateScreen(
+                      ): CheckUpdateScreenIos(
                       );
                     }),
                   );
                 },
               ),
-              ListTile(
-                title: Text('Temperary menu to check ios'),
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) {
-                      return CheckUpdateScreenIos(
-                      );
-                    }),
-                  );
-                },
-              ),
+//              ListTile(
+//                title: Text('Temperary menu to check ios'),
+//                onTap: () {
+//                  Navigator.of(context).push(
+//                    MaterialPageRoute(builder: (context) {
+//                      return CheckUpdateScreenIos(
+//                      );
+//                    }),
+//                  );
+//                },
+//              ),
             ],
           ),
         ),

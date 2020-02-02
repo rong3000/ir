@@ -10,7 +10,8 @@
       "deleting-failed": "删除失败: ",
       "no-image-text": "没有票据图片!",
       "invalid-email-message": "错误的邮箱",
-      "invalid-password-message": "密码不合规范"
+      "invalid-password-message": "应包括至少一个字母、一个数字、不少于8个字符",
+      "password-mismatch-message": "输入密码不一致"
     },
     "settings-page": {
       "title": "设置",
@@ -29,8 +30,10 @@
       "immediate-update-label": "执行立即更新",
       "flexible-update-label": "执行灵活更新",
       "complete-flexible-update-label": "完成灵活更新",
-      "appStore-version-unavailable": "当前AppStore版本未知",
-      "current-appstore-version-label": "当前AppStore版本是 "
+      "appStore-version-unavailable": "当前App Store版本未知",
+      "playStore-version-unavailable": "当前Play Store版本未知",
+      "current-appstore-version-label": "当前App Store版本是 ",
+      "current-playstore-version-label": "当前Play Store版本是 "
     },
     "preferences-page": {
       "title": "软件语言",
@@ -38,6 +41,20 @@
     },
     "currency-screen":{
       "title": "选择货币"
+    },
+    "contact-screen":{
+      "name": "姓名",
+      "form-indication": "* 代表必填项目",
+      "success-line1": "谢谢",
+      "success-line2": "您的消息内容已经成功发送",
+      "fail-line1": "消息发送失败",
+      "fail-line2": "错误: ",
+      "email-required": "电子邮箱必填.",
+      "valid-email-required": "请输入有效的电子邮箱地址",
+      "form-error": "表单有错误",
+      "form-leaving": "确定放弃这个表单吗?",
+      "fix": "提交前请先更正红色部分的错误.",
+      "sumbmitting": "正在发送您的消息 ..."
     },
     "main-screen": {
       "home-tab-label": "首页",
@@ -155,7 +172,7 @@
 
     },
     "receipt-card" : {
-      "unknown-category": "未知",
+      "unknown-category": "点击'查看'按键选择票据类别.",
       "receipt-processed-review": "点击'查看'按键查看审核、完善票据信息.",
       "receipt-in-process-review": "点击'查看'按键查看审核、完善票据信息.",
       "receipt-date-prefix": "票据日期",
@@ -230,7 +247,8 @@
       "upgrade-result": "版本更新结果",
       "upgrade-succeeded": "更新版本成功",
       "upgrade-failed-prefix": "更新失败: ",
-      "unsupported-platform": "不支持的系统平台"
+      "unsupported-platform": "不支持的系统平台",
+      "opening-app-store": "正在打开程序商店 ..."
     }
   },
   "words": {
@@ -248,9 +266,12 @@
     "rename": "重命名",
     "search": "搜索",
     "continue": "继续",
-    "close": "变比",
+    "close": "关闭",
     "months": "月",
     "years": "年",
-    "register": "注册"
+    "register": "注册",
+    "re-enter-password": "重新输入密码",
+    "message": "内容",
+    "submit": "提交"
   }
 }
