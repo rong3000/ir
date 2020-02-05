@@ -67,6 +67,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   }
 
   Stream<LoginState> _mapLoginWithGooglePressedToState() async* {
+    yield LoginState.submitting();
     try {
       await _userRepository.signInWithGoogle();
       yield LoginState.success();
@@ -76,6 +77,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   }
   
   Stream<LoginState> _mapLoginWithFacebookPressedToState() async* {
+    yield LoginState.submitting();
     try {
       await _userRepository.signInWithFacebook();
       yield LoginState.success();

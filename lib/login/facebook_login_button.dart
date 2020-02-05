@@ -5,6 +5,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intelligent_receipt/translations/global_translations.dart';
 
 class FacebookLoginButton extends StatelessWidget {
+  final bool _disableButton;
+  FacebookLoginButton({Key key, @required bool disableButton})
+      : _disableButton = disableButton,
+        super(key: key);
   @override
   Widget build(BuildContext context) {
     return RaisedButton.icon(
@@ -12,7 +16,7 @@ class FacebookLoginButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(30.0),
       ),
       icon: Icon(FontAwesomeIcons.facebook, color: Colors.white),
-      onPressed: () {
+      onPressed: _disableButton ? null : () {
         BlocProvider.of<LoginBloc>(context).dispatch(
           LoginWithFacebookPressed(),
         );
