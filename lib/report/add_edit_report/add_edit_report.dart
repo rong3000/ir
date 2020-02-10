@@ -259,11 +259,11 @@ class _AddEditReportState extends State<AddEditReport> {
                       onPressed: isLoginButtonEnabled() ? _onReportSaved : null,
                       buttonName: allTranslations.text('app.add-edit-report-page.save-group-button-label'),
                     ),
-                    ReportButton(
-                      onPressed:
-                      isLoginButtonEnabled() ? _onReportSubmitted : null,
-                      buttonName: allTranslations.text('app.add-edit-report-page.archive-group-button-label'),
-                    ),
+//                    ReportButton(
+//                      onPressed:
+//                      isLoginButtonEnabled() ? _onReportSubmitted : null,
+//                      buttonName: allTranslations.text('app.add-edit-report-page.archive-group-button-label'),
+//                    ),
                   ],
                 ),
               ),
