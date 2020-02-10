@@ -4,10 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:intelligent_receipt/authentication_bloc/bloc.dart';
 import 'package:intelligent_receipt/data_model/enums.dart';
 import 'package:intelligent_receipt/main_screen/bloc/bloc.dart';
-import 'package:intelligent_receipt/login/login.dart';
 import 'package:intelligent_receipt/main_screen/home_page/home_page.dart';
 import 'package:intelligent_receipt/main_screen/search_bar/search_bar.dart';
-import 'package:intelligent_receipt/main_screen/settings_page/check_update_screen/check_update_screen.dart';
 import 'package:intelligent_receipt/main_screen/settings_page/check_update_screen/check_update_screen_ios.dart';
 import 'package:intelligent_receipt/main_screen/settings_page/settings_page.dart';
 import 'package:intelligent_receipt/main_screen/reports_page/reports_page.dart';
@@ -18,7 +16,6 @@ import 'package:upgrader/upgrader.dart';
 import 'email_verification.dart';
 import 'receipts_page/receipts_page.dart';
 import 'package:intelligent_receipt/data_model/network_connection/connection_status.dart';
-import 'package:intelligent_receipt/translations/global_translations.dart';
 
 class MainScreen extends StatefulWidget {
   final UserRepository _userRepository;

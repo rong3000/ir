@@ -14,6 +14,8 @@ import 'package:intelligent_receipt/data_model/GeneralUtility.dart';
 
 import '../../data_model/webservice.dart';
 
+//TODO: this file needs a tidy up before translattions added
+
 class _InputDropdown extends StatelessWidget {
   const _InputDropdown({
     Key key,
