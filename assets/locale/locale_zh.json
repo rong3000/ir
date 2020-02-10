@@ -168,8 +168,8 @@
       "vendor-label": "票据公司",
       "product-name-label": "产品名",
       "warranty-period-label": "保修期",
-      "notes-label": "说明"
-
+      "notes-label": "说明",
+      "enter-total-amount-label": "输入票据金额"
     },
     "receipt-card" : {
       "unknown-category": "点击'查看'按键选择票据类别.",

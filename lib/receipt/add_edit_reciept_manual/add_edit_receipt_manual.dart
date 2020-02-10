@@ -140,6 +140,9 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
     this.receipt.decodeStatus = DecodeStatusType.Success.index;
     this.receipt.receiptTypeId = 0;
 
+    // Update receipt date time if it is invalid
+    _getReceiptDateTime(this.receipt);
+
     // if this is not null we have a new receipt OR have changed the existing image
     // either way send the base64 image to be saved/updated
     if (receiptImageFile != null) {
@@ -382,6 +385,14 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
     return buttons;
   }
 
+  DateTime _getReceiptDateTime(Receipt receipt) {
+    if (receipt.receiptDatetime.isBefore(DateTime(1900))) {
+      receipt.receiptDatetime = (receipt.uploadDatetime != null ? receipt.uploadDatetime : DateTime.now());
+    }
+
+    return receipt.receiptDatetime;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -480,7 +491,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
                       children: <Widget>[
                         IRDateTimePicker(
                           labelText: allTranslations.text('app.add-edit-manual-page.purchase-date-label'),
-                          selectedDate: receipt.receiptDatetime.isBefore(DateTime(1970)) ? DateTime.now() : receipt.receiptDatetime,
+                          selectedDate: _getReceiptDateTime(receipt),
                           selectDate: (newValue) {
                             setState(() {
                               receipt.receiptDatetime = newValue;
@@ -495,8 +506,9 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
                               child: Padding(
                                 padding: EdgeInsets.only(top: 5),
                                 child: TextFormField(
-                                  decoration: InputDecoration(labelText: allTranslations.text('app.add-edit-manual-page.total-amount-label')),
-                                  initialValue: receipt.totalAmount == 0 ? "0" : receipt.totalAmount.toString(),
+                                  decoration: InputDecoration(labelText:
+                                    receipt.totalAmount == 0 ? allTranslations.text('app.add-edit-manual-page.enter-total-amount-label') : allTranslations.text('app.add-edit-manual-page.total-amount-label')),
+                                  initialValue: receipt.totalAmount == 0 ? "" : receipt.totalAmount.toString(),
                                   validator: textFieldValidator,
                                   onSaved: (String value) {
                                     receipt.totalAmount = double.tryParse(value);

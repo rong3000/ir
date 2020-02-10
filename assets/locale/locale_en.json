@@ -168,8 +168,8 @@
       "vendor-label": "Shop/Vendor",
       "product-name-label": "Product Name",
       "warranty-period-label": "Warranty Period",
-      "notes-label": "Notes"
-
+      "notes-label": "Notes",
+      "enter-total-amount-label": "Enter Total Amount"
     },
     "receipt-card" : {
       "unknown-category": "Click 'Review' button to select receipt category.",
