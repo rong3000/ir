@@ -46,6 +46,10 @@ class Urls {
   static String GetExchangeRate = ExchangeRateBaseUrl;
   // User Urls
   static String CreateNewUser = ServiceBaseUrl + "User/create";
+
+  // News Urls
+  static String GetNewsItems = ServiceBaseUrl + "news/items";
+  static String MarkNewsItemsRead = ServiceBaseUrl + "news/mark-read/";
 }
 
 const int default_timeout = 2000; // millisecons
