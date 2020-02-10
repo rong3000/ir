@@ -40,6 +40,16 @@ class LoginState {
     );
   }
 
+  factory LoginState.submitting() {
+    return LoginState(
+      isEmailValid: false,
+      isPasswordValid: false,
+      isSubmitting: true,
+      isSuccess: false,
+      isFailure: false,
+    );
+  }
+
   factory LoginState.failure(String errorMessage) {
     return LoginState(
       isEmailValid: true,

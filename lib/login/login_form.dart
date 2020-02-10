@@ -146,9 +146,9 @@ class _LoginFormState extends State<LoginForm> {
                               : null,
                         ),
 
-                        GoogleLoginButton(),
-                        FacebookLoginButton(),
-                        CreateAccountButton(userRepository: _userRepository),
+                        GoogleLoginButton(disableButton: state.isSubmitting),
+                        FacebookLoginButton(disableButton: state.isSubmitting),
+                        CreateAccountButton(userRepository: _userRepository, disableButton: state.isSubmitting),
                       ],
                     ),
                   ),
