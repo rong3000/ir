@@ -121,6 +121,16 @@ class _ReceiptCardState extends State<ReceiptCard> {
       return (currencyText == null) ? "" : currencyText;
     }
 
+    String _getReceiptDateText(ReceiptListItem receiptItem) {
+      if (receiptItem.receiptDatetime.isBefore(DateTime.utc(1900))) {
+        if (receiptItem.uploadDatetime != null) {
+          return getDateFormatForYMD().format(widget._receiptItem.uploadDatetime.toLocal());
+        }
+        return allTranslations.text('app.receipt-card.unknown');
+      }
+      return getDateFormatForYMD().format(widget._receiptItem.receiptDatetime.toLocal());
+    }
+
     Future<void> _showFullImage(String imagePath) async {
       await showDialog<void>(
           context: context,
@@ -201,7 +211,7 @@ class _ReceiptCardState extends State<ReceiptCard> {
                           Padding(
                             padding: const EdgeInsets.only(bottom: 0.0),
                             child: Text(
-                              '${allTranslations.text('app.receipt-card.receipt-date-prefix')} ${getDateFormatForYMD().format(widget._receiptItem.receiptDatetime.toLocal())}',
+                              '${allTranslations.text('app.receipt-card.receipt-date-prefix')} ${_getReceiptDateText(widget._receiptItem)}',
                               style: dateStyle
                                   .copyWith(color: Colors.black54)
                                   .apply(fontSizeFactor: 0.75),
@@ -211,7 +221,7 @@ class _ReceiptCardState extends State<ReceiptCard> {
                             padding:
                             const EdgeInsets.only(top: 0.0, bottom: 0.0),
                             child: Text(
-                              '${widget._receiptItem.companyName}',
+                              '${widget._receiptItem.companyName == null ? allTranslations.text('app.receipt-card.unknown-vendor') : widget._receiptItem.companyName}',
                               style: companyNameStyle,
                             ),
                           ),

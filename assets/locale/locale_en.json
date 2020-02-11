@@ -168,8 +168,8 @@
       "vendor-label": "Shop/Vendor",
       "product-name-label": "Product Name",
       "warranty-period-label": "Warranty Period",
-      "notes-label": "Notes"
-
+      "notes-label": "Notes",
+      "enter-total-amount-label": "Enter Total Amount"
     },
     "receipt-card" : {
       "unknown-category": "Click 'Review' button to select receipt category.",
@@ -177,7 +177,9 @@
       "receipt-in-process-review": "Click 'Review' button to verify and fulfill receipt data.",
       "receipt-date-prefix": "Receipt Date",
       "total-amount-prefix": "Total",
-      "uploaded-prefix": "Uploaded Date"
+      "uploaded-prefix": "Uploaded Date",
+      "unknown": "Unknown",
+      "unknown-vendor": "Unknown Vendor"
     },
     "receipt-list": {
       "upload-time-menu-item": "Upload Time",
