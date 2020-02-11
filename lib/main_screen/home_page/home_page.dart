@@ -26,13 +26,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  HomeBloc _homeBloc;
+  MainScreenBloc _mainScreenBloc;
   UserRepository get _userRepository => widget._userRepository;
 
   @override
   void initState() {
     super.initState();
-    _homeBloc = BlocProvider.of<HomeBloc>(context);
+    _mainScreenBloc = BlocProvider.of<MainScreenBloc>(context);
   }
 
   _selectImage() async {
@@ -76,30 +76,12 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final Orientation orientation = MediaQuery.of(context).orientation;
     return BlocListener(
-        bloc: _homeBloc,
-        listener: (BuildContext context, HomeState state) {
-          if (state is State1) {
-            Scaffold.of(context)
-              ..hideCurrentSnackBar()
-              ..showSnackBar(
-                SnackBar(
-                  content: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('State1...'),
-                      CircularProgressIndicator(),
-                    ],
-                  ),
-                ),
-              );
-          }
-          if (state is State2) {
-            _ackAlert(context);
-          }
+        bloc: _mainScreenBloc,
+        listener: (BuildContext context, MainScreenState state) {
         },
         child: BlocBuilder(
-            bloc: _homeBloc,
-            builder: (BuildContext context, HomeState state) {
+            bloc: _mainScreenBloc,
+            builder: (BuildContext context, MainScreenState state) {
               return Scaffold(
                 body: OrientationBuilder(builder: (context, orientation){
                   return

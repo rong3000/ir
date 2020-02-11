@@ -23,17 +23,20 @@ class ReceiptsPage extends StatefulWidget {
   static const reviewedPageIndex = 1;
   static const totalTabPages = 2;
 
-
   final UserRepository _userRepository;
-  TabController _tabController;
+  int _tabPageIndex = unreviewedPageIndex;
 
   ReceiptsPage({Key key, @required UserRepository userRepository})
       : assert(userRepository != null),
         _userRepository = userRepository,
         super(key: key);
 
+  void setTabPageIndex(int pageIndex) {
+    _tabPageIndex = pageIndex;
+  }
+
   @override
-  _ReceiptPageState createState() => new _ReceiptPageState(unreviewedPageIndex);
+  _ReceiptPageState createState() => new _ReceiptPageState(_tabPageIndex);
 }
 
 class _ReceiptPageState extends State<ReceiptsPage> with SingleTickerProviderStateMixin {
@@ -47,7 +50,7 @@ class _ReceiptPageState extends State<ReceiptsPage> with SingleTickerProviderSta
   @override
   void initState() {
     super.initState();
-    _tabController = new TabController(vsync: this, length: ReceiptsPage.totalTabPages);
+    _tabController = new TabController(vsync: this, length: ReceiptsPage.totalTabPages, initialIndex: _tabPageIndex);
   }
 
   @override
@@ -77,10 +80,12 @@ class _ReceiptPageState extends State<ReceiptsPage> with SingleTickerProviderSta
           backgroundColor: Colors.cyan,
           title: TabBar(
             tabs: _kTabs,
+            controller: _tabController,
           ),
         ),
         body: TabBarView(
           children: _kTabPages,
+          controller: _tabController,
         ),
       ),
     );
@@ -105,7 +110,7 @@ class ReceiptsTabs extends StatefulWidget {
 }
 
 class _ReceiptsTabsState extends State<ReceiptsTabs> {
-  HomeBloc _homeBloc;
+  MainScreenBloc _homeBloc;
   Future<DataResult> _getReceiptsFromServerFuture = null;
 
   UserRepository get _userRepository => widget._userRepository;
@@ -160,7 +165,7 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
   void initState() {
     super.initState();
     _getReceiptsFromServer();
-    _homeBloc = BlocProvider.of<HomeBloc>(context);
+    _homeBloc = BlocProvider.of<MainScreenBloc>(context);
   }
 
   @override
@@ -173,7 +178,7 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
       body: Center(
         child: BlocBuilder(
             bloc: _homeBloc,
-            builder: (BuildContext context, HomeState state) {
+            builder: (BuildContext context, MainScreenState state) {
               return FutureBuilder<DataResult>(
                   future: _getReceiptsFromServerFuture,
                   builder: (BuildContext context,

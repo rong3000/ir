@@ -9,6 +9,7 @@ import 'package:intelligent_receipt/data_model/currency.dart';
 import 'package:intelligent_receipt/data_model/receipt.dart';
 import 'package:intelligent_receipt/data_model/report_repository.dart';
 import 'package:intelligent_receipt/helper_widgets/date_time_picker.dart';
+import 'package:intelligent_receipt/main_screen/main_screen.dart';
 import 'package:intelligent_receipt/receipt/bloc/receipt_bloc.dart';
 import 'package:intelligent_receipt/receipt/bloc/receipt_event.dart';
 import 'package:intelligent_receipt/receipt/bloc/receipt_state.dart';
@@ -20,6 +21,7 @@ import 'package:image_cropper/image_cropper.dart';
 import '../../helper_widgets/zoomable_image.dart';
 import 'package:intelligent_receipt/data_model/exception_handlers/unsupported_version.dart';
 import 'package:intelligent_receipt/data_model/webservice.dart';
+import 'package:intelligent_receipt/main_screen/bloc/bloc.dart';
 
 class AddEditReiptForm extends StatefulWidget {
   final Receipt _receiptItem;
@@ -434,10 +436,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
           }
           if (state.uploadSuccess) {
             Navigator.pop(context);
-            _showMessage(
-              allTranslations.text('app.upload-result-dialog.title'),  
-              allTranslations.text('app.upload-result-dialog.success-message'),
-              );
+            BlocProvider.of<MainScreenBloc>(context).dispatch(ShowReviewedReceiptEvent());
           }
           if (state.deleteSuccess) {
             Navigator.of(context).pop();
