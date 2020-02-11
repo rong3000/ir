@@ -15,12 +15,11 @@ class NewsBloc extends Bloc<NewsEvent, NewsState>{
 
   @override
   Stream<NewsState> mapEventToState(NewsEvent event) async* {
-    // TODO: implement mapEventToState
 
     if (event is LoadNewsItems){
       yield* _handleLoadNewsItems(event);
     } else if (event is LoadNewsItemsSucess){
-
+      yield* _handleLoadNewsItemsSuccess(event);
     }
 
   }
@@ -29,8 +28,13 @@ class NewsBloc extends Bloc<NewsEvent, NewsState>{
 
     var result = await _newsRepository.getNewsItems();
     if (result.success){
-      yield NewsState.loadSuccess();
+      yield NewsState.loadSuccess(result.obj);
     }
+    yield NewsState.loadFail();
+  }
+
+  Stream<NewsState> _handleLoadNewsItemsSuccess(LoadNewsItemsSucess event) async* {
+    var x = event;
   }
 
 }

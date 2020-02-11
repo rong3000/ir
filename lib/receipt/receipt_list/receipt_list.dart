@@ -6,7 +6,6 @@ import 'package:intelligent_receipt/data_model/receipt_repository.dart';
 import 'package:intelligent_receipt/receipt/receipt_card/receipt_card.dart';
 import 'package:intelligent_receipt/translations/global_translations.dart';
 import 'package:intelligent_receipt/user_repository.dart';
-import 'package:intl/intl.dart';
 import 'package:synchronized/synchronized.dart';
 import 'package:intelligent_receipt/data_model/GeneralUtility.dart';
 

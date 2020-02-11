@@ -7,7 +7,12 @@ class NewsRepository extends IRRepository {
   NewsRepository(UserRepository userRepository) : super(userRepository);
 
   Future<DataResult> getNewsItems() async {
-    var url = Urls.GetNewsItems;
+    
+    var language = userRepository.preferencesRepository.getPreferredLanguage();
+
+    var query = '?localeCode=$language';
+    
+    var url = Urls.GetNewsItems + query;
     var token = await getToken();
 
     var result = await  webserviceGet(url, token);
