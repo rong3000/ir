@@ -18,8 +18,14 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intelligent_receipt/data_model/exception_handlers/unsupported_version.dart';
 import 'package:intelligent_receipt/data_model/http_statuscode.dart';
 
-class ReceiptsPage extends StatelessWidget {
+class ReceiptsPage extends StatefulWidget {
+  static const unreviewedPageIndex = 0;
+  static const reviewedPageIndex = 1;
+  static const totalTabPages = 2;
+
+
   final UserRepository _userRepository;
+  TabController _tabController;
 
   ReceiptsPage({Key key, @required UserRepository userRepository})
       : assert(userRepository != null),
@@ -27,13 +33,37 @@ class ReceiptsPage extends StatelessWidget {
         super(key: key);
 
   @override
+  _ReceiptPageState createState() => new _ReceiptPageState(unreviewedPageIndex);
+}
+
+class _ReceiptPageState extends State<ReceiptsPage> with SingleTickerProviderStateMixin {
+  TabController _tabController;
+  int _tabPageIndex;
+
+  _ReceiptPageState(int tabPageIndex) {
+    _tabPageIndex = tabPageIndex;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = new TabController(vsync: this, length: ReceiptsPage.totalTabPages);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final _kTabPages = <Widget>[
       ReceiptsTabs(
-          userRepository: _userRepository,
+          userRepository: widget._userRepository,
           receiptStatusType: ReceiptStatusType.Uploaded),
       ReceiptsTabs(
-          userRepository: _userRepository,
+          userRepository: widget._userRepository,
           receiptStatusType: ReceiptStatusType.Reviewed),
     ];
     final _kTabs = <Tab>[

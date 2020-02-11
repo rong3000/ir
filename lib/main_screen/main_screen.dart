@@ -20,7 +20,17 @@ import 'receipts_page/receipts_page.dart';
 import 'package:intelligent_receipt/data_model/network_connection/connection_status.dart';
 import 'package:intelligent_receipt/translations/global_translations.dart';
 
+class MainScreenArguments {
+  final int pageIndex;
+  int receiptTabIndex;
+  MainScreenArguments(this.pageIndex, {int receiptTab})
+  : receiptTabIndex = receiptTab {
+  }
+}
+
 class MainScreen extends StatefulWidget {
+  static const routeName = '/mainScreen';
+
   final UserRepository _userRepository;
   HomePage _homePage;
   ReceiptsPage _receiptsPage;
