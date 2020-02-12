@@ -1,4 +1,5 @@
 import 'package:intelligent_receipt/data_model/ir_repository.dart';
+import 'package:intelligent_receipt/data_model/news/newsitem.dart';
 import 'package:intelligent_receipt/data_model/webservice.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 
@@ -6,7 +7,7 @@ class NewsRepository extends IRRepository {
   
   NewsRepository(UserRepository userRepository) : super(userRepository);
 
-  Future<DataResult> getNewsItems() async {
+  Future<List<NewsItem>> getNewsItems() async {
     
     var language = userRepository.preferencesRepository.getPreferredLanguage();
 
@@ -15,11 +16,12 @@ class NewsRepository extends IRRepository {
     var url = Urls.GetNewsItems + query;
     var token = await getToken();
 
-    var result = await  webserviceGet(url, token);
+    var dataResult = await webserviceGet(url, token);
 
-
-    if (result.success){
-      
+    var result;
+    if (dataResult.success){
+      Iterable l = dataResult.obj;
+      result = l.map((model) => NewsItem.fromJson(model)).toList();
     }
 
     return result; 

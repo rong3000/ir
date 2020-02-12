@@ -19,7 +19,7 @@ class NewsBloc extends Bloc<NewsEvent, NewsState>{
     if (event is LoadNewsItems){
       yield* _handleLoadNewsItems(event);
     } else if (event is LoadNewsItemsSucess){
-      yield* _handleLoadNewsItemsSuccess(event);
+      //yield* _handleLoadNewsItemsSuccess(event);
     }
 
   }
@@ -27,10 +27,11 @@ class NewsBloc extends Bloc<NewsEvent, NewsState>{
   Stream<NewsState> _handleLoadNewsItems (LoadNewsItems event) async* {
 
     var result = await _newsRepository.getNewsItems();
-    if (result.success){
-      yield NewsState.loadSuccess(result.obj);
+    if (result != null){
+      yield NewsState.loadSuccess(result);
+    } else {
+      yield NewsState.loadFail();
     }
-    yield NewsState.loadFail();
   }
 
   Stream<NewsState> _handleLoadNewsItemsSuccess(LoadNewsItemsSucess event) async* {
