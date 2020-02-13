@@ -8,11 +8,8 @@ class NewsRepository extends IRRepository {
   NewsRepository(UserRepository userRepository) : super(userRepository);
 
   Future<List<NewsItem>> getNewsItems() async {
-    
     var language = userRepository.preferencesRepository.getPreferredLanguage();
-
     var query = '?localeCode=$language';
-    
     var url = Urls.GetNewsItems + query;
     var token = await getToken();
 
@@ -23,7 +20,18 @@ class NewsRepository extends IRRepository {
       Iterable l = dataResult.obj;
       result = l.map((model) => NewsItem.fromJson(model)).toList();
     }
-
     return result; 
-  }   
+  }
+
+
+  Future<bool> dismissNewsItem(int itemId) async {
+    var url = Urls.MarkNewsItemsRead + itemId.toString();
+    
+    var dataResult = await webservicePost(url, await getToken(), null);
+
+    if (dataResult.success){
+      return true;
+    }
+    return false;
+  }
 }

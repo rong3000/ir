@@ -22,6 +22,9 @@ class LoadNewsItemsFail extends NewsEvent {
 }
 
 class DismissNewsItems extends NewsEvent {
+  final int itemId;
+  DismissNewsItems({this.itemId});
+  
   @override
   String toString() => 'Dismiss news items';
 }
