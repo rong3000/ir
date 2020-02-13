@@ -24,6 +24,8 @@ class MainScreenBloc
       yield* _mapShowUnreviewedReceiptEventToState();
     } else if (event is ShowReviewedReceiptEvent) {
       yield* _mapShowReviewedReceiptEventToState();
+    } else if (event is ResetToNormalEvent) {
+      yield* _mapResetToNormalEventToState();
     }
   }
 
@@ -33,5 +35,9 @@ class MainScreenBloc
 
   Stream<MainScreenState> _mapShowReviewedReceiptEventToState() async* {
     yield ShowReviewedReceiptState();
+  }
+
+  Stream<MainScreenState> _mapResetToNormalEventToState() async* {
+    yield NormalState();
   }
 }

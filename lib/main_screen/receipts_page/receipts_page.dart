@@ -73,21 +73,35 @@ class _ReceiptPageState extends State<ReceiptsPage> with SingleTickerProviderSta
       Tab(text: allTranslations.text('app.receipts-page.unreviewed-tab-title')),
       Tab(text: allTranslations.text('app.receipts-page.reviewed-tab-title')),
     ];
-    return DefaultTabController(
-      length: _kTabs.length,
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.cyan,
-          title: TabBar(
-            tabs: _kTabs,
+    return BlocListener(
+      bloc: BlocProvider.of<MainScreenBloc>(context),
+      listener: (BuildContext context, MainScreenState state) {
+        if (state is ShowUnreviewedReceiptState) {
+          _tabController.animateTo(ReceiptsPage.unreviewedPageIndex);
+          _tabPageIndex = ReceiptsPage.unreviewedPageIndex;
+          BlocProvider.of<MainScreenBloc>(context).dispatch(ResetToNormalEvent());
+        } else if (state is ShowReviewedReceiptState) {
+          _tabController.animateTo(ReceiptsPage.reviewedPageIndex);
+          _tabPageIndex = ReceiptsPage.reviewedPageIndex;
+          BlocProvider.of<MainScreenBloc>(context).dispatch(ResetToNormalEvent());
+        }
+      },
+      child: DefaultTabController(
+        length: _kTabs.length,
+        child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.cyan,
+            title: TabBar(
+              tabs: _kTabs,
+              controller: _tabController,
+            ),
+          ),
+          body: TabBarView(
+            children: _kTabPages,
             controller: _tabController,
           ),
         ),
-        body: TabBarView(
-          children: _kTabPages,
-          controller: _tabController,
-        ),
-      ),
+      )
     );
   }
 }

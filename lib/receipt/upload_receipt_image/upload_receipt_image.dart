@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intelligent_receipt/data_model/receipt_repository.dart';
 import 'package:intelligent_receipt/translations/global_translations.dart';
 import 'package:intelligent_receipt/user_repository.dart';
@@ -9,6 +10,7 @@ import 'package:image_cropper/image_cropper.dart';
 import '../add_edit_reciept_manual/add_edit_receipt_manual.dart';
 import 'package:intelligent_receipt/data_model/exception_handlers/unsupported_version.dart';
 import 'package:intelligent_receipt/data_model/http_statuscode.dart';
+import 'package:intelligent_receipt/main_screen/bloc/bloc.dart';
 
 class UploadReceiptImage extends StatefulWidget {
   final UserRepository _userRepository;
@@ -204,6 +206,7 @@ class _UploadReceiptImageState extends State<UploadReceiptImage> {
                             else {
                               DataResult dataResult = snapshot.data;
                               if (dataResult.success) {
+                                BlocProvider.of<MainScreenBloc>(context).dispatch(ShowUnreviewedReceiptEvent());
                                 Receipt receipt = dataResult.obj as Receipt;
                                 if (receipt == null ||
                                     receipt.decodeStatus == DecodeStatusType.Unknown.index) {

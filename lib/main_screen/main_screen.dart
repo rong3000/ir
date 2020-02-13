@@ -17,6 +17,7 @@ import 'email_verification.dart';
 import 'receipts_page/receipts_page.dart';
 import 'package:intelligent_receipt/data_model/network_connection/connection_status.dart';
 import 'package:intelligent_receipt/translations/global_translations.dart';
+import 'package:intelligent_receipt/main_screen/receipts_page/receipts_page.dart';
 
 class MainScreenArguments {
   final int pageIndex;
@@ -146,18 +147,15 @@ class _MainScreenState extends State<MainScreen> {
     return BlocListener(
       bloc: BlocProvider.of<MainScreenBloc>(context),
       listener: (BuildContext context, MainScreenState state) {
-      if (state is ShowUnreviewedReceiptState) {
-        widget._receiptsPage.setTabPageIndex(0);
-        _currentIndex = MainScreen.receiptsPageIndex;
-        jumpTo(_currentIndex);
-      }
-      if (state is ShowReviewedReceiptState) {
-        widget._receiptsPage.setTabPageIndex(1);
-        _currentIndex = MainScreen.receiptsPageIndex;
-        jumpTo(_currentIndex);
-      }
-    },
-    child: Scaffold(
+        if ((state is ShowReviewedReceiptState) || (state is ShowUnreviewedReceiptState)) {
+          if (_currentIndex != MainScreen.receiptsPageIndex) {
+            widget._receiptsPage.setTabPageIndex((state is ShowReviewedReceiptState) ? ReceiptsPage.reviewedPageIndex : ReceiptsPage.unreviewedPageIndex);
+            jumpTo(MainScreen.receiptsPageIndex);
+            BlocProvider.of<MainScreenBloc>(context).dispatch(ResetToNormalEvent());
+          }
+        }
+      },
+      child: Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(
           title: SearchBar(userRepository: _userRepository, name: name),
@@ -282,17 +280,6 @@ class _MainScreenState extends State<MainScreen> {
                   );
                 },
               ),
-//              ListTile(
-//                title: Text('Temperary menu to check ios'),
-//                onTap: () {
-//                  Navigator.of(context).push(
-//                    MaterialPageRoute(builder: (context) {
-//                      return CheckUpdateScreenIos(
-//                      );
-//                    }),
-//                  );
-//                },
-//              ),
             ],
           ),
         ),

@@ -15,3 +15,9 @@ class ShowReviewedReceiptEvent extends MainScreenEvent {
   @override
   String toString() => 'ShowReviewedReceiptEvent';
 }
+
+// Reset to normal state
+class ResetToNormalEvent extends MainScreenEvent {
+  @override
+  String toString() => 'ResetEvent';
+}
