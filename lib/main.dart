@@ -13,6 +13,7 @@ import 'package:intelligent_receipt/translations/global_translations.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 import 'package:intelligent_receipt/splash_screen.dart';
 import 'package:intelligent_receipt/simple_bloc_delegate.dart';
+import 'package:intelligent_receipt/main_screen/bloc/bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -40,6 +41,9 @@ void main() async {
             builder: (context) =>
                 PreferencesBloc(prefsRepository: userRepository.preferencesRepository)
                 ..dispatch(SetPreferredLanguage())
+          ),
+          BlocProvider<MainScreenBloc>(
+              builder: (context) => MainScreenBloc(userRepository: userRepository),
           )
         ],
         child: App(userRepository: userRepository),
@@ -50,6 +54,7 @@ void main() async {
 
 class App extends StatelessWidget {
   final UserRepository _userRepository;
+  MainScreen _mainScreen;
 
   App({Key key, @required UserRepository userRepository})
       : assert(userRepository != null),
@@ -64,6 +69,10 @@ class App extends StatelessWidget {
         bloc: BlocProvider.of<PreferencesBloc>(context),
         builder: (BuildContext context, PreferencesState prefsState) {
           return MaterialApp(
+            routes: {
+              MainScreen.routeName: (context) => _mainScreen,
+            },
+
             home: BlocBuilder(
               bloc: BlocProvider.of<AuthenticationBloc>(context),
               builder: (BuildContext context, AuthenticationState state) {
@@ -74,8 +83,11 @@ class App extends StatelessWidget {
                   return LoginScreen(userRepository: _userRepository);
                 }
                 if (state is Authenticated) {
-                  return MainScreen(
-                      userRepository: _userRepository, name: state.displayName);
+                  if (_mainScreen == null) {
+                    _mainScreen = MainScreen(userRepository: _userRepository,
+                        name: state.displayName);
+                  }
+                  return _mainScreen;
                 }
               },
             ),

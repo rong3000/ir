@@ -18,41 +18,90 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intelligent_receipt/data_model/exception_handlers/unsupported_version.dart';
 import 'package:intelligent_receipt/data_model/http_statuscode.dart';
 
-class ReceiptsPage extends StatelessWidget {
+class ReceiptsPage extends StatefulWidget {
+  static const unreviewedPageIndex = 0;
+  static const reviewedPageIndex = 1;
+  static const totalTabPages = 2;
+
   final UserRepository _userRepository;
+  int _tabPageIndex = unreviewedPageIndex;
 
   ReceiptsPage({Key key, @required UserRepository userRepository})
       : assert(userRepository != null),
         _userRepository = userRepository,
         super(key: key);
 
+  void setTabPageIndex(int pageIndex) {
+    _tabPageIndex = pageIndex;
+  }
+
+  @override
+  _ReceiptPageState createState() => new _ReceiptPageState(_tabPageIndex);
+}
+
+class _ReceiptPageState extends State<ReceiptsPage> with SingleTickerProviderStateMixin {
+  TabController _tabController;
+  int _tabPageIndex;
+
+  _ReceiptPageState(int tabPageIndex) {
+    _tabPageIndex = tabPageIndex;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = new TabController(vsync: this, length: ReceiptsPage.totalTabPages, initialIndex: _tabPageIndex);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final _kTabPages = <Widget>[
       ReceiptsTabs(
-          userRepository: _userRepository,
+          userRepository: widget._userRepository,
           receiptStatusType: ReceiptStatusType.Uploaded),
       ReceiptsTabs(
-          userRepository: _userRepository,
+          userRepository: widget._userRepository,
           receiptStatusType: ReceiptStatusType.Reviewed),
     ];
     final _kTabs = <Tab>[
       Tab(text: allTranslations.text('app.receipts-page.unreviewed-tab-title')),
       Tab(text: allTranslations.text('app.receipts-page.reviewed-tab-title')),
     ];
-    return DefaultTabController(
-      length: _kTabs.length,
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.cyan,
-          title: TabBar(
-            tabs: _kTabs,
+    return BlocListener(
+      bloc: BlocProvider.of<MainScreenBloc>(context),
+      listener: (BuildContext context, MainScreenState state) {
+        if (state is ShowUnreviewedReceiptState) {
+          _tabController.animateTo(ReceiptsPage.unreviewedPageIndex);
+          _tabPageIndex = ReceiptsPage.unreviewedPageIndex;
+          BlocProvider.of<MainScreenBloc>(context).dispatch(ResetToNormalEvent());
+        } else if (state is ShowReviewedReceiptState) {
+          _tabController.animateTo(ReceiptsPage.reviewedPageIndex);
+          _tabPageIndex = ReceiptsPage.reviewedPageIndex;
+          BlocProvider.of<MainScreenBloc>(context).dispatch(ResetToNormalEvent());
+        }
+      },
+      child: DefaultTabController(
+        length: _kTabs.length,
+        child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.cyan,
+            title: TabBar(
+              tabs: _kTabs,
+              controller: _tabController,
+            ),
+          ),
+          body: TabBarView(
+            children: _kTabPages,
+            controller: _tabController,
           ),
         ),
-        body: TabBarView(
-          children: _kTabPages,
-        ),
-      ),
+      )
     );
   }
 }
@@ -75,7 +124,7 @@ class ReceiptsTabs extends StatefulWidget {
 }
 
 class _ReceiptsTabsState extends State<ReceiptsTabs> {
-  HomeBloc _homeBloc;
+  MainScreenBloc _homeBloc;
   Future<DataResult> _getReceiptsFromServerFuture = null;
 
   UserRepository get _userRepository => widget._userRepository;
@@ -130,7 +179,7 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
   void initState() {
     super.initState();
     _getReceiptsFromServer();
-    _homeBloc = BlocProvider.of<HomeBloc>(context);
+    _homeBloc = BlocProvider.of<MainScreenBloc>(context);
   }
 
   @override
@@ -143,7 +192,7 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
       body: Center(
         child: BlocBuilder(
             bloc: _homeBloc,
-            builder: (BuildContext context, HomeState state) {
+            builder: (BuildContext context, MainScreenState state) {
               return FutureBuilder<DataResult>(
                   future: _getReceiptsFromServerFuture,
                   builder: (BuildContext context,
