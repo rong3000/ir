@@ -101,7 +101,9 @@
       "reviewed-tab-title": "Reviewed",
       "add-receipt-tooltip": "From Camera or Gallery",
       "add-receipt-manual-tooltip": "Manually Add Receipt",
-      "failed-load-receipts-message": "Failed to load receipts: "
+      "failed-load-receipts-message": "Failed to load receipts: ",
+      "failed-review-receipt-message": "Failed to review receipt: ",
+      "failed-delete-receipt-message": "Failed to delete receipt: "
     },
 
     "snap-receipt-page": {
@@ -116,7 +118,8 @@
       "review": "Review",
       "delete": "Delete",
       "unknown": "Unknown",
-      "failed-load-groups-message": "Failed to load receipt groups: "
+      "failed-load-groups-message": "Failed to load receipt groups: ",
+      "failed-delete-group-message": "Failed to delete receipt group: "
     },
     "reports-page": {
       "active-groups-tab-label": "Active Groups",

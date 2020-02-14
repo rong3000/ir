@@ -89,7 +89,7 @@ class _UploadReceiptImageState extends State<UploadReceiptImage> {
     );
   }
 
-  Widget _getResultWidget(String message, {AlertType alertType: AlertType.info, Receipt receipt}) {
+  Widget _getResultWidget(String message, {AlertType alertType: AlertType.info, Receipt receipt, bool showReviewButtons : true}) {
     return Center(
             child: Container(
                 width: MediaQuery.of(context).size.width * 0.9,
@@ -113,7 +113,7 @@ class _UploadReceiptImageState extends State<UploadReceiptImage> {
                       Container(
                         height: 16,
                       ),
-                      (true) ? Row(
+                      (showReviewButtons) ? Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
@@ -199,10 +199,10 @@ class _UploadReceiptImageState extends State<UploadReceiptImage> {
                           case ConnectionState.none:
                             return new Text(allTranslations.text('app.upload-receipt-screen.press-to-start-label'));
                           case ConnectionState.waiting:
-                            return _getResultWidget(allTranslations.text('app.upload-receipt-screen.submitting-label'));
+                            return _getResultWidget(allTranslations.text('app.upload-receipt-screen.submitting-label'), showReviewButtons: false);
                           default:
                             if (snapshot.hasError)
-                              return _getResultWidget('${allTranslations.text('app.upload-receipt-screen.error-prefix')}: ${snapshot.error}');
+                              return _getResultWidget('${allTranslations.text('app.upload-receipt-screen.error-prefix')}: ${snapshot.error}', showReviewButtons: false);
                             else {
                               DataResult dataResult = snapshot.data;
                               if (dataResult.success) {
@@ -242,7 +242,7 @@ class _UploadReceiptImageState extends State<UploadReceiptImage> {
                                 // Show error message
                                 return _getResultWidget(
                                     allTranslations.text('app.upload-receipt-screen.general-error-message') +
-                                        dataResult.message);
+                                        dataResult.message, showReviewButtons: false);
                               }
                             }
                         }

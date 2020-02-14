@@ -126,9 +126,20 @@ class ReceiptsTabs extends StatefulWidget {
 class _ReceiptsTabsState extends State<ReceiptsTabs> {
   MainScreenBloc _homeBloc;
   Future<DataResult> _getReceiptsFromServerFuture = null;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   UserRepository get _userRepository => widget._userRepository;
   get _receiptStatusType => widget._receiptStatusType;
+
+  void _showInSnackBar(String value, {IconData icon: Icons.error, color: Colors.red}) {
+    _scaffoldKey.currentState.showSnackBar(SnackBar(
+      content: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [Text(value), Icon(icon)],
+      ),
+      backgroundColor: color,
+    ));
+  }
 
   Future<void> reviewAction(int receiptId) async {
     // Try to get the receipt detailed information from server
@@ -141,7 +152,7 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
         }),
       );
     } else {
-      // Log an error
+      _showInSnackBar("${allTranslations.text("app.receipts-page.failed-review-receipt-message")} \n${dataResult.message}");
     }
   }
 
@@ -156,9 +167,13 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
   }
 
   Future<void> deleteAndSetState(List<int> receiptIds) async {
-    await _userRepository.receiptRepository.deleteReceipts(receiptIds);
-    _getReceiptsFromServer();
-    setState(() {});
+    DataResult dataResult = await _userRepository.receiptRepository.deleteReceipts(receiptIds);
+    if (dataResult.success) {
+      _getReceiptsFromServer();
+      setState(() {});
+    } else {
+      _showInSnackBar("${allTranslations.text("app.receipts-page.failed-delete-receipt-message")} \n${dataResult.message}");
+    }
   }
 
   void deleteAction(int id) {
@@ -185,6 +200,7 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       floatingActionButton:  FancyFab(
         userRepository: _userRepository,
       ),
