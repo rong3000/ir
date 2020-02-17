@@ -21,25 +21,22 @@ class NewsBloc extends Bloc<NewsEvent, NewsState>{
     } else if (event is DismissNewsItems){
       yield* _handleDismissNewsItems(event);
     }
-
   }
 
   Stream<NewsState> _handleLoadNewsItems (LoadNewsItems event) async* {
 
     var result = await _newsRepository.getNewsItems();
     if (result != null){
-      yield NewsState.loadSuccess(result);
+      yield NewsState.loadSuccess(_newsRepository.newsItems);
     } else {
-      yield NewsState.loadFail();
+      yield NewsState.loadFail(_newsRepository.newsItems);
     }
   }
 
   Stream<NewsState> _handleDismissNewsItems(DismissNewsItems event) async* {
-
-    var isSuccess = await _newsRepository.dismissNewsItem(event.itemId);
-    if (isSuccess){
-      yield NewsState.dismissSuccess();
-    }
+    // Dont await this - let it work in background, item will be removed from view regardless
+    _newsRepository.dismissNewsItem(event.itemId);
+    yield NewsState.dismissSuccess(_newsRepository.newsItems);
   }
 
 }
