@@ -29,15 +29,10 @@ class _NewsItemDisplayState extends State<NewsItemDisplay> {
     super.initState();
   }
 
-  void dismissNewsItem(int itemId){
-    print('dismissed $itemId');
-    this._newsBloc.dispatch(DismissNewsItems(itemId: itemId));
-  }
-
   List<Widget> getNewsItemDisplayWidgets(List<NewsItem> newsItems) {
     var widgets = List<Widget>();
     for (var item in newsItems) {
-      widgets.add(NewsItemDescription(newsItem: item, dismissCallback: dismissNewsItem ));
+      widgets.add(NewsItemDescription(newsItem: item));
     }
     return widgets;
   }
