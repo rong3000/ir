@@ -26,14 +26,14 @@
       "in-app-update-title": "In App Update",
       "current-version-label": "Current installed version is ",
       "new-version-available": "A new version is available for update",
-      "already-updated-label": "The app is already up to date",
+      "already-updated-label": "The app is already up to date.",
       "immediate-update-label": "Perform immediate update",
       "flexible-update-label": "Start flexible update",
       "complete-flexible-update-label": "Complete flexible update",
-      "appStore-version-unavailable": "Current App Store Version unavailable",
-      "playStore-version-unavailable": "Current Play Store Version unavailable",
-      "current-appstore-version-label": "Current App Store version is ",
-      "current-playstore-version-label": "Current Play Store version is "
+      "appStore-version-unavailable": "IR version in App Store is unavailable",
+      "playStore-version-unavailable": "IR version in Play Store is unavailable",
+      "current-appstore-version-label": "IR version in App Store is ",
+      "current-playstore-version-label": "IR version in Play Store is "
     },
     "preferences-page": {
       "title": "App Preferences",
@@ -101,7 +101,9 @@
       "reviewed-tab-title": "Reviewed",
       "add-receipt-tooltip": "From Camera or Gallery",
       "add-receipt-manual-tooltip": "Manually Add Receipt",
-      "failed-load-receipts-message": "Failed to load receipts: "
+      "failed-load-receipts-message": "Failed to load receipts: ",
+      "failed-review-receipt-message": "Failed to review receipt: ",
+      "failed-delete-receipt-message": "Failed to delete receipt: "
     },
 
     "snap-receipt-page": {
@@ -116,7 +118,8 @@
       "review": "Review",
       "delete": "Delete",
       "unknown": "Unknown",
-      "failed-load-groups-message": "Failed to load receipt groups: "
+      "failed-load-groups-message": "Failed to load receipt groups: ",
+      "failed-delete-group-message": "Failed to delete receipt group: "
     },
     "reports-page": {
       "active-groups-tab-label": "Active Groups",

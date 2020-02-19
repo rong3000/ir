@@ -280,9 +280,12 @@ class ReportListState extends State<ReportList> {
   }
 
   Future<void> deleteAndSetState(int reportId) async {
-    DataResult result =
-        await _userRepository.reportRepository.deleteReport(reportId);
-    setState(() => {});
+    DataResult result = await _userRepository.reportRepository.deleteReport(reportId);
+    if (result.success) {
+      setState(() => {});
+    } else {
+      _showInSnackBar("${allTranslations.text("app.reports-list.failed-delete-group-message")} \n${result.message}");
+    }
   }
 
   void deleteAction(int id) {

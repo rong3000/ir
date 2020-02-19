@@ -22,15 +22,6 @@ class _CheckUpdateScreenIosState extends State<CheckUpdateScreenIos> {
     super.initState();
   }
 
-  // Platform messages are asynchronous, so we initialize in an async method.
-//  Future<void> checkForUpdate() async {
-//    InAppUpdate.checkForUpdate().then((info) {
-//      setState(() {
-//        _updateInfo = info;
-//      });
-//    }).catchError((e) => _showError(e));
-//  }
-
   void _showError(dynamic exception) {
     _scaffoldKey.currentState
         .showSnackBar(SnackBar(content: Text(exception.toString())));
@@ -63,6 +54,8 @@ class _CheckUpdateScreenIosState extends State<CheckUpdateScreenIos> {
             builder: (BuildContext context, AsyncSnapshot<bool> processed) {
               if (processed.connectionState == ConnectionState.done) {
                 return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     Center(
                       child: Text(allTranslations
@@ -71,27 +64,22 @@ class _CheckUpdateScreenIosState extends State<CheckUpdateScreenIos> {
                     ),
                     Center(
                         child: Upgrader().currentAppStoreVersion() == null
-                            ? (Platform.isIOS ? Text(allTranslations.text(
-                                'app.settings-page.appStore-version-unavailable')): Text(allTranslations.text(
-                            'app.settings-page.playStore-version-unavailable')))
-                            : (Platform.isIOS ? Text(allTranslations.text(
-                                    'app.settings-page.current-appstore-version-label') +
-                                '${Upgrader().currentAppStoreVersion()}'): Text(allTranslations.text(
-                            'app.settings-page.current-playstore-version-label') +
-                            '${Upgrader().currentAppStoreVersion()}')) ),
-//                    Center(
-//                      child: Text(
-//                          'currentAppStoreListingURL ${Upgrader().currentAppStoreListingURL()}'),
-//                    ),
-                    RaisedButton(
-                      child: Text(allTranslations
-                          .text('app.settings-page.immediate-update-label')),
-                      onPressed: Upgrader().isUpdateAvailable()
-                          ? () {
-                              Upgrader().onUserUpdated(context, true);
-                            }
-                          : null,
+                            ? (Platform.isIOS ? Text(allTranslations.text('app.settings-page.appStore-version-unavailable')): Text(allTranslations.text('app.settings-page.playStore-version-unavailable')))
+                            : (Platform.isIOS ? Text(allTranslations.text('app.settings-page.current-appstore-version-label') + '${Upgrader().currentAppStoreVersion()}')
+                               : Text(allTranslations.text('app.settings-page.current-playstore-version-label') + '${Upgrader().currentAppStoreVersion()}'))
                     ),
+                    Container(height: 20,),
+                    Upgrader().isUpdateAvailable() ? ButtonTheme (
+                      minWidth: 200.0,
+                      height: 40.0,
+                      child: RaisedButton(
+                        child: Text(allTranslations.text("app.settings-page.immediate-update-label")),
+                        onPressed: Upgrader().isUpdateAvailable() ? () {
+                          Upgrader().onUserUpdated(context, true);
+                        } : null,
+                      ),
+                    ) : Text(allTranslations.text("app.settings-page.already-updated-label")),
+                    Container(height: 40,)
                   ],
                 );
               }

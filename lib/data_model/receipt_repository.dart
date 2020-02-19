@@ -172,7 +172,7 @@ class ReceiptRepository extends IRRepository {
     DataResult result = await uploadFile(
         url,
         await getToken(),
-        imageFile, timeout: 50000);
+        imageFile, timeout: 5000);
     if (result.success) {
       Iterable l = result.obj;
       List<Receipt> newReceipts =

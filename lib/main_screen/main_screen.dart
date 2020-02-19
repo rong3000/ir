@@ -16,8 +16,24 @@ import 'package:upgrader/upgrader.dart';
 import 'email_verification.dart';
 import 'receipts_page/receipts_page.dart';
 import 'package:intelligent_receipt/data_model/network_connection/connection_status.dart';
+import 'package:intelligent_receipt/translations/global_translations.dart';
+import 'package:intelligent_receipt/main_screen/receipts_page/receipts_page.dart';
+
+class MainScreenArguments {
+  final int pageIndex;
+  int receiptTabIndex = 0;
+  MainScreenArguments(this.pageIndex, {int receiptTab})
+  : receiptTabIndex = receiptTab {
+  }
+}
 
 class MainScreen extends StatefulWidget {
+  static const routeName = '/mainScreen';
+  static const homePageIndex = 0;
+  static const receiptsPageIndex = 1;
+  static const reportsPageIndex = 2;
+  static const settingsPageIndex = 3;
+
   final UserRepository _userRepository;
   HomePage _homePage;
   ReceiptsPage _receiptsPage;
@@ -37,10 +53,10 @@ class MainScreen extends StatefulWidget {
   }
 
   @override
-  MainScreenState createState() => MainScreenState();
+  _MainScreenState createState() => _MainScreenState();
 }
 
-class MainScreenState extends State<MainScreen> {
+class _MainScreenState extends State<MainScreen> {
   
   String get appTitle => allTranslations.text('app.title');
   String get homeTabLabel => allTranslations.text('app.main-screen.home-tab-label');
@@ -115,6 +131,11 @@ class MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     Upgrader().clearSavedSettings();
     widget._homePage.setAction(jumpTo);
+    final MainScreenArguments mainScreenArguments = ModalRoute.of(context).settings.arguments;
+    if (mainScreenArguments != null) {
+      _currentIndex = mainScreenArguments.pageIndex;
+      widget._receiptsPage.setTabPageIndex(mainScreenArguments.receiptTabIndex);
+    }
     // On Android, setup the Appcast.
     // On iOS, the default behavior will be to use the App Store version of
     // the app, so update the Bundle Identifier in example/ios/Runner with a
@@ -123,8 +144,17 @@ class MainScreenState extends State<MainScreen> {
         'https://raw.githubusercontent.com/larryaasen/upgrader/master/test/testappcast.xml';
     final cfg = AppcastConfiguration(url: appcastURL, supportedOS: ["android"]);
 
-    return BlocProvider<HomeBloc>(
-      builder: (context) => HomeBloc(userRepository: _userRepository),
+    return BlocListener(
+      bloc: BlocProvider.of<MainScreenBloc>(context),
+      listener: (BuildContext context, MainScreenState state) {
+        if ((state is ShowReviewedReceiptState) || (state is ShowUnreviewedReceiptState)) {
+          if (_currentIndex != MainScreen.receiptsPageIndex) {
+            widget._receiptsPage.setTabPageIndex((state is ShowReviewedReceiptState) ? ReceiptsPage.reviewedPageIndex : ReceiptsPage.unreviewedPageIndex);
+            jumpTo(MainScreen.receiptsPageIndex);
+            BlocProvider.of<MainScreenBloc>(context).dispatch(ResetToNormalEvent());
+          }
+        }
+      },
       child: Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(
@@ -165,7 +195,7 @@ class MainScreenState extends State<MainScreen> {
                     homeTabLabel,
                     style: TextStyle(
                         color:
-                            _currentIndex != 0 ? _defaultColor : _activeColor),
+                            _currentIndex != MainScreen.homePageIndex ? _defaultColor : _activeColor),
                   )),
               BottomNavigationBarItem(
                   icon: Icon(Icons.receipt, color: _defaultColor),
@@ -174,7 +204,7 @@ class MainScreenState extends State<MainScreen> {
                     receiptsTabLabel,
                     style: TextStyle(
                         color:
-                            _currentIndex != 1 ? _defaultColor : _activeColor),
+                            _currentIndex != MainScreen.receiptsPageIndex ? _defaultColor : _activeColor),
                   )),
               BottomNavigationBarItem(
                   icon: Icon(Icons.insert_chart, color: _defaultColor),
@@ -183,7 +213,7 @@ class MainScreenState extends State<MainScreen> {
                     groupsTabLabel,
                     style: TextStyle(
                         color:
-                            _currentIndex != 2 ? _defaultColor : _activeColor),
+                            _currentIndex != MainScreen.reportsPageIndex ? _defaultColor : _activeColor),
                   )),
               BottomNavigationBarItem(
                   icon: Icon(Icons.settings, color: _defaultColor),
@@ -192,7 +222,7 @@ class MainScreenState extends State<MainScreen> {
                     settingsTabLabel,
                     style: TextStyle(
                         color:
-                            _currentIndex != 3 ? _defaultColor : _activeColor),
+                            _currentIndex != MainScreen.settingsPageIndex ? _defaultColor : _activeColor),
                   )),
             ]),
         drawer: Drawer(
@@ -250,17 +280,6 @@ class MainScreenState extends State<MainScreen> {
                   );
                 },
               ),
-//              ListTile(
-//                title: Text('Temperary menu to check ios'),
-//                onTap: () {
-//                  Navigator.of(context).push(
-//                    MaterialPageRoute(builder: (context) {
-//                      return CheckUpdateScreenIos(
-//                      );
-//                    }),
-//                  );
-//                },
-//              ),
             ],
           ),
         ),

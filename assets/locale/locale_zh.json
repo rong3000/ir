@@ -101,7 +101,9 @@
       "reviewed-tab-title": "审核的票据",
       "add-receipt-tooltip": "拍摄或从图片库选择",
       "add-receipt-manual-tooltip": "手动添加票据",
-      "failed-load-receipts-message": "加载票据失败: "
+      "failed-load-receipts-message": "加载票据失败: ",
+      "failed-review-receipt-message": "查看票据失败: ",
+      "failed-delete-receipt-message": "删除票据失败: "
     },
 
     "snap-receipt-page": {
@@ -116,7 +118,8 @@
       "review": "查看",
       "delete": "删除",
       "unknown": "未知",
-      "failed-load-groups-message": "获取票据组失败: "
+      "failed-load-groups-message": "获取票据组失败: ",
+      "failed-delete-group-message": "删除票据组失败: "
     },
     "reports-page": {
       "active-groups-tab-label": "把票据组存档",

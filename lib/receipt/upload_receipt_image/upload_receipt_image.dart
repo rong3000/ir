@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intelligent_receipt/data_model/receipt_repository.dart';
 import 'package:intelligent_receipt/translations/global_translations.dart';
 import 'package:intelligent_receipt/user_repository.dart';
@@ -9,6 +10,7 @@ import 'package:image_cropper/image_cropper.dart';
 import '../add_edit_reciept_manual/add_edit_receipt_manual.dart';
 import 'package:intelligent_receipt/data_model/exception_handlers/unsupported_version.dart';
 import 'package:intelligent_receipt/data_model/http_statuscode.dart';
+import 'package:intelligent_receipt/main_screen/bloc/bloc.dart';
 
 class UploadReceiptImage extends StatefulWidget {
   final UserRepository _userRepository;
@@ -87,7 +89,7 @@ class _UploadReceiptImageState extends State<UploadReceiptImage> {
     );
   }
 
-  Widget _getResultWidget(String message, {AlertType alertType: AlertType.info, Receipt receipt}) {
+  Widget _getResultWidget(String message, {AlertType alertType: AlertType.info, Receipt receipt, bool showReviewButtons : true}) {
     return Center(
             child: Container(
                 width: MediaQuery.of(context).size.width * 0.9,
@@ -111,7 +113,7 @@ class _UploadReceiptImageState extends State<UploadReceiptImage> {
                       Container(
                         height: 16,
                       ),
-                      (true) ? Row(
+                      (showReviewButtons) ? Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
@@ -197,13 +199,14 @@ class _UploadReceiptImageState extends State<UploadReceiptImage> {
                           case ConnectionState.none:
                             return new Text(allTranslations.text('app.upload-receipt-screen.press-to-start-label'));
                           case ConnectionState.waiting:
-                            return _getResultWidget(allTranslations.text('app.upload-receipt-screen.submitting-label'));
+                            return _getResultWidget(allTranslations.text('app.upload-receipt-screen.submitting-label'), showReviewButtons: false);
                           default:
                             if (snapshot.hasError)
-                              return _getResultWidget('${allTranslations.text('app.upload-receipt-screen.error-prefix')}: ${snapshot.error}');
+                              return _getResultWidget('${allTranslations.text('app.upload-receipt-screen.error-prefix')}: ${snapshot.error}', showReviewButtons: false);
                             else {
                               DataResult dataResult = snapshot.data;
                               if (dataResult.success) {
+                                BlocProvider.of<MainScreenBloc>(context).dispatch(ShowUnreviewedReceiptEvent());
                                 Receipt receipt = dataResult.obj as Receipt;
                                 if (receipt == null ||
                                     receipt.decodeStatus == DecodeStatusType.Unknown.index) {
@@ -239,7 +242,7 @@ class _UploadReceiptImageState extends State<UploadReceiptImage> {
                                 // Show error message
                                 return _getResultWidget(
                                     allTranslations.text('app.upload-receipt-screen.general-error-message') +
-                                        dataResult.message);
+                                        dataResult.message, showReviewButtons: false);
                               }
                             }
                         }
