@@ -6,6 +6,7 @@ import 'package:intelligent_receipt/receipt/add_edit_reciept_manual/add_edit_rec
 import 'package:intelligent_receipt/receipt/upload_receipt_image/upload_receipt_image.dart';
 import 'package:intelligent_receipt/translations/global_translations.dart';
 import 'package:intelligent_receipt/user_repository.dart';
+import 'package:intelligent_receipt/main_screen/news/news_item_display.dart';
 
 
 class HomePage extends StatefulWidget {
@@ -169,70 +170,7 @@ class _HomePageState extends State<HomePage> {
                             ],
                           ),
                         ),
-//                        Flexible(
-//                            fit: FlexFit.tight,
-//                            child: Wrap(
-//                              children: <Widget>[
-//                                FractionallySizedBox(
-//                                  widthFactor: orientation == Orientation.portrait ? 1: 0.33,
-//                                  child: Container(
-//                                    height: MediaQuery.of(context).size.height * (orientation == Orientation.portrait ? 0.125: 0.32),
-//                                    child:
-//                                    Card(
-//                                      child: ListTile(
-//                                        leading: Icon(Icons.album),
-//                                        title: AutoSizeText(
-//                                          'Intelligent Receipt',
-//                                          style: TextStyle(fontSize: 18),
-//                                          minFontSize: 8,
-//                                          maxLines: 1,
-//                                          overflow: TextOverflow.ellipsis,
-//                                        ),
-//                                        subtitle: AutoSizeText(
-//                                          'Invite your friends to join IR then receive more free automatically scans',
-//                                          style: TextStyle(fontSize: 18),
-//                                          minFontSize: 8,
-//                                          maxLines: 2,
-//                                          overflow: TextOverflow.ellipsis,
-//                                        ),
-//
-//                                      ),
-//                                    ),
-//                                  ),
-//                                ),
-//                                FractionallySizedBox(
-//                                  widthFactor: orientation == Orientation.portrait ? 1: 0.33,
-//                                  child: Container(
-//                                    height: MediaQuery.of(context).size.height * (orientation == Orientation.portrait ? 0.125: 0.32),
-//                                    child:
-//                                    Card(
-//                                      child: ListTile(
-//                                        leading: Icon(Icons.album),
-//                                        title: Text('Intelligent Receipt'),
-//                                        subtitle:
-//                                        Text('Get unlimited automatically scans'),
-//                                      ),
-//                                    ),
-//                                  ),
-//                                ),
-//                                FractionallySizedBox(
-//                                  widthFactor: orientation == Orientation.portrait ? 1: 0.33,
-//                                  child: Container(
-//                                    height: MediaQuery.of(context).size.height * (orientation == Orientation.portrait ? 0.125: 0.32),
-//                                    child:
-//                                    Card(
-//                                      child: ListTile(
-//                                        leading: Icon(Icons.album),
-//                                        title: Text('Intelligent Receipt'),
-//                                        subtitle: Text(
-//                                            'We have sent you an email, please click confirm'),
-//                                      ),
-//                                    ),
-//                                  ),
-//                                ),
-//                              ],
-//                            )
-//                        ),
+                       NewsItemDisplay(orientation)
                       ],
                     );
                 }),

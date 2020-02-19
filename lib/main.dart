@@ -5,6 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intelligent_receipt/authentication_bloc/bloc.dart';
 import 'package:intelligent_receipt/login/login.dart';
 import 'package:intelligent_receipt/main_screen/main_screen.dart';
+import 'package:intelligent_receipt/main_screen/news/bloc/news_bloc.dart';
+import 'package:intelligent_receipt/main_screen/news/bloc/news_event.dart';
 import 'package:intelligent_receipt/main_screen/settings_page/preferences/bloc/preferences_bloc.dart';
 import 'package:intelligent_receipt/main_screen/settings_page/preferences/bloc/preferences_event.dart';
 import 'package:intelligent_receipt/main_screen/settings_page/preferences/bloc/preferences_state.dart';
@@ -42,6 +44,10 @@ void main() async {
                 PreferencesBloc(prefsRepository: userRepository.preferencesRepository)
                 ..dispatch(SetPreferredLanguage())
           ),
+          BlocProvider<NewsBloc>(
+            builder: (context) =>
+                NewsBloc(newsRepository: userRepository.newsRepository)
+          ),
           BlocProvider<MainScreenBloc>(
               builder: (context) => MainScreenBloc(userRepository: userRepository),
           )
@@ -72,7 +78,6 @@ class App extends StatelessWidget {
             routes: {
               MainScreen.routeName: (context) => _mainScreen,
             },
-
             home: BlocBuilder(
               bloc: BlocProvider.of<AuthenticationBloc>(context),
               builder: (BuildContext context, AuthenticationState state) {
