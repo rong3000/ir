@@ -47,7 +47,6 @@ void main() async {
           BlocProvider<NewsBloc>(
             builder: (context) =>
                 NewsBloc(newsRepository: userRepository.newsRepository)
-                //..dispatch(LoadNewsItems())
           ),
           BlocProvider<MainScreenBloc>(
               builder: (context) => MainScreenBloc(userRepository: userRepository),
@@ -79,7 +78,6 @@ class App extends StatelessWidget {
             routes: {
               MainScreen.routeName: (context) => _mainScreen,
             },
-
             home: BlocBuilder(
               bloc: BlocProvider.of<AuthenticationBloc>(context),
               builder: (BuildContext context, AuthenticationState state) {

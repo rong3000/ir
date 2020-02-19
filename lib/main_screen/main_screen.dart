@@ -16,7 +16,6 @@ import 'package:upgrader/upgrader.dart';
 import 'email_verification.dart';
 import 'receipts_page/receipts_page.dart';
 import 'package:intelligent_receipt/data_model/network_connection/connection_status.dart';
-import 'package:intelligent_receipt/translations/global_translations.dart';
 import 'package:intelligent_receipt/main_screen/receipts_page/receipts_page.dart';
 
 class MainScreenArguments {
