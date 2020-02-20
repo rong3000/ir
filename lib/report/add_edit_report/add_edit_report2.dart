@@ -319,7 +319,7 @@ class AddEditReport2State extends State<AddEditReport2> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
-                  const SizedBox(height: 24.0),
+                  const SizedBox(height: 12.0),
                   TextFormField(
                     textCapitalization: TextCapitalization.words,
                     decoration: InputDecoration(
@@ -331,7 +331,7 @@ class AddEditReport2State extends State<AddEditReport2> {
                     onSaved: (String value) { person.name = value; },
                     validator: _validateGroupName,
                   ),
-                  const SizedBox(height: 24.0),
+                  const SizedBox(height: 12.0),
                   TextFormField(
                     decoration: InputDecoration(
                       border: UnderlineInputBorder(),
@@ -343,7 +343,7 @@ class AddEditReport2State extends State<AddEditReport2> {
 //                    keyboardType: TextInputType.emailAddress,
                     onSaved: (String value) { person.email = value; },
                   ),
-                  const SizedBox(height: 24.0),
+                  const SizedBox(height: 12.0),
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: 1),
                     child: Row(
@@ -371,18 +371,46 @@ class AddEditReport2State extends State<AddEditReport2> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 24.0),
+                  const SizedBox(height: 12.0),
                   Center(
                     child: RaisedButton(
                       child: Text(allTranslations.text('words.save')),
                       onPressed: _formSubmitting ? null : _handleSubmitted,
                     ),
                   ),
-                  const SizedBox(height: 24.0),
+                  const SizedBox(height: 12.0),
                   Text(allTranslations.text('app.contact-screen.form-indication'),
                     style: Theme.of(context).textTheme.caption,
                   ),
-                  const SizedBox(height: 24.0),
+                  const SizedBox(height: 12.0),
+                  Container(
+                    height: MediaQuery.of(context).size.height / 2,
+                      child: Scrollbar(
+                        child: ListView.builder(
+                            itemCount: _receiptList.length,
+                            itemBuilder: (context, index) {
+                              return ReceiptCard(
+                                receiptItem: _receiptList[index],
+                                actions: actions,
+                              );
+                            }),
+                      )
+                  )
+
+//               Container(
+//                 height: 400,
+//                 child: Scrollbar(
+//                   child: SingleChildScrollView(
+//                       child: ListView.builder(
+//                           itemCount: _receiptList.length,
+//                           itemBuilder: (context, index) {
+//                             return ReceiptCard(
+//                               receiptItem: _receiptList[index],
+//                               actions: actions,
+//                             );
+//                           })
+//                   ),),
+//               ),
                 ],
               ),
             ),
