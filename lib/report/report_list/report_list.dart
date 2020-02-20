@@ -4,6 +4,7 @@ import 'package:intelligent_receipt/data_model/currency.dart';
 import 'package:intelligent_receipt/data_model/enums.dart';
 import 'package:intelligent_receipt/data_model/report.dart';
 import 'package:intelligent_receipt/report/add_edit_report/add_edit_report.dart';
+import 'package:intelligent_receipt/report/add_edit_report/add_edit_report2.dart';
 import 'package:intelligent_receipt/report/report_card/report_card.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 import 'package:intl/intl.dart';
@@ -269,7 +270,7 @@ class ReportListState extends State<ReportList> {
   void reviewAction(int id) {
     Navigator.of(context).push(
       MaterialPageRoute(builder: (context) {
-        return AddEditReport(
+        return AddEditReport2(
           userRepository: _userRepository,
           title: 'Edit Receipt Group',
           reportId: id,
