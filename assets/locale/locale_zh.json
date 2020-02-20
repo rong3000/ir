@@ -232,7 +232,8 @@
       "description-label": "描述",
       "add-receipts-button-label": "添加票据到票据组",
       "save-group-button-label": "保存票据组",
-      "archive-group-button-label": "票据组存档"
+      "archive-group-button-label": "票据组存档",
+      "group-name-required": "Group Name required"
     },
     "add-receipts-screen": {
       "title": "添加票据到票据组",
@@ -277,6 +278,7 @@
     "register": "注册",
     "re-enter-password": "重新输入密码",
     "message": "内容",
-    "submit": "提交"
+    "submit": "提交",
+    "save": "Save"
   }
 }

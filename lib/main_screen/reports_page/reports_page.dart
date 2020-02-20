@@ -3,6 +3,7 @@ import 'package:flutter/rendering.dart';
 import 'package:intelligent_receipt/data_model/currency.dart';
 import 'package:intelligent_receipt/data_model/enums.dart';
 import 'package:intelligent_receipt/report/add_edit_report/add_edit_report.dart';
+import 'package:intelligent_receipt/report/add_edit_report/add_edit_report2.dart';
 import 'package:intelligent_receipt/report/report_list/report_list.dart';
 import 'package:intelligent_receipt/translations/global_translations.dart';
 import 'package:intelligent_receipt/user_repository.dart';
@@ -112,7 +113,7 @@ class _ReportsPageState extends State<ReportsPage> {
         onPressed: () {
           Navigator.of(context).push(
             MaterialPageRoute(builder: (context) {
-              return AddEditReport(
+              return AddEditReport2(
                   userRepository: _userRepository,
                   title: allTranslations.text('app.add-reports-page.title'),
               );

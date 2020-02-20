@@ -232,7 +232,8 @@
       "description-label": "Description",
       "add-receipts-button-label": "Add Receipts",
       "save-group-button-label": "Save Group",
-      "archive-group-button-label": "Archive Group"
+      "archive-group-button-label": "Archive Group",
+      "group-name-required": "Group Name required"
      },
     "add-receipts-screen": {
       "title": "Add Receipts to Group",
@@ -277,6 +278,7 @@
     "register": "Register",
     "re-enter-password": "Confirm Password",
     "message": "Message",
-    "submit": "Submit"
+    "submit": "Submit",
+    "save": "Save"
   }
 }
