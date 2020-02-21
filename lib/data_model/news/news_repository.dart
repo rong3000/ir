@@ -23,7 +23,7 @@ class NewsRepository extends IRRepository {
     var url = Urls.GetNewsItems + query;
     var token = await getToken();
 
-    var dataResult = await webserviceGet(url, token);
+    var dataResult = await webserviceGet(url, token, timeout: 5000);
 
     var result;
     if (dataResult.success){
