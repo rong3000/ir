@@ -113,7 +113,7 @@ class AddEditReport2State extends State<AddEditReport2> {
   String _validateGroupName(String value) {
     _formWasEdited = true;
     if (value.isEmpty)
-      return allTranslations.text('app.contact-screen.email-required');
+      return allTranslations.text('app.add-edit-report-page.group-name-required');
 //    final RegExp emailRegExp = RegExp(
 //      r'^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$',
 //    );
@@ -328,6 +328,8 @@ class AddEditReport2State extends State<AddEditReport2> {
                       icon: Icon(Icons.title),
                       labelText: allTranslations.text('app.add-edit-report-page.group-name-label') + '*',
                     ),
+                    initialValue: (_report != null) ? _report.reportName : "",
+//                    initialValue: 'x',
                     onSaved: (String value) { person.name = value; },
                     validator: _validateGroupName,
                   ),
@@ -339,6 +341,8 @@ class AddEditReport2State extends State<AddEditReport2> {
                       icon: Icon(Icons.description),
                       labelText: allTranslations.text('app.add-edit-report-page.description-label'),
                     ),
+
+                    initialValue: (_report != null) ? _report.description : "",
 //                    initialValue: _userRepository.currentUser.email,
 //                    keyboardType: TextInputType.emailAddress,
                     onSaved: (String value) { person.email = value; },
@@ -436,8 +440,10 @@ class AddEditReport2State extends State<AddEditReport2> {
     _report.totalAmount = _totalAmount;
     _report.currencyCode = (_reportCurrency != null) ? _reportCurrency.code : "";
     _report.updateDateTime = DateTime.now();
-    _report.reportName = _reportNameController.text;
-    _report.description = _descriptionController.text;
+//    _report.reportName = _reportNameController.text;
+//    _report.description = _descriptionController.text;
+    _report.reportName = person.name;
+    _report.description = person.email;
     _report.receiptIds = [];
     for (int i = 0; i < _receiptList.length; i++) {
       _report.receiptIds.add(_receiptList[i].id);
