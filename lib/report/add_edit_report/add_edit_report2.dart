@@ -294,11 +294,21 @@ class AddEditReport2State extends State<AddEditReport2> {
       }
     }
 
+    List<Widget> _getAppBarButtons() {
+      List<Widget> buttons = new List<Widget>();
+      buttons.add(IconButton(
+        icon: const Icon(Icons.done),
+        onPressed: _formSubmitting ? null : _handleSubmitted,
+      ));
+      return buttons;
+    }
+
     return Scaffold(
       drawerDragStartBehavior: DragStartBehavior.down,
       key: _scaffoldKey,
       appBar: AppBar(
         title: Text(widget.title),
+        actions: _getAppBarButtons(),
       ),
       body: SafeArea(
         top: false,
@@ -371,20 +381,13 @@ class AddEditReport2State extends State<AddEditReport2> {
                     ),
                   ),
 //                  const SizedBox(height: 12.0),
-                  Center(
-                    child: RaisedButton(
-                      child: Text(allTranslations.text('words.save')),
-                      onPressed: _formSubmitting ? null : _handleSubmitted,
-                    ),
-                  ),
-//                  const SizedBox(height: 12.0),
                   Text(allTranslations.text('app.contact-screen.form-indication'),
                     style: Theme.of(context).textTheme.caption,
                   ),
 //                  const SizedBox(height: 12.0),
                   Container(
                     height:
-                    MediaQuery.of(context).size.height - 340,
+                    MediaQuery.of(context).size.height - 300,
 //                    MediaQuery.of(context).size.height > 848? MediaQuery.of(context).size.height / 2: MediaQuery.of(context).size.height * 3 / 8,
                       child: Scrollbar(
                         child: ListView.builder(
