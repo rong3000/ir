@@ -40,21 +40,20 @@ class NewsItemDescription extends StatelessWidget {
   final NewsItem newsItem;
 
   Widget getImage() {
-    if (newsItem.imageUrl != null) {
-      Image.network(newsItem.imageUrl, frameBuilder:
-          (BuildContext context, Widget child, int frame, bool syncLoaded) {
-        if (syncLoaded || frame == 0) {
-          return child;
-        }
-      });
-    }
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-      child: Icon(
-        Icons.new_releases,
-        size: 40,
-      ),
-    );
+    return Image.network(newsItem.imageUrl == null ? "" : newsItem.imageUrl, frameBuilder:
+        (BuildContext context, Widget child, int frame, bool syncLoaded) {
+      if (syncLoaded || frame == 0) {
+        return child;
+      }
+
+      return Padding(
+        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        child: Icon(
+          Icons.new_releases,
+          size: 40,
+        ),
+      );
+    });
   }
 
   @override
