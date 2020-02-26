@@ -22,6 +22,7 @@ import '../../helper_widgets/zoomable_image.dart';
 import 'package:intelligent_receipt/data_model/exception_handlers/unsupported_version.dart';
 import 'package:intelligent_receipt/data_model/webservice.dart';
 import 'package:intelligent_receipt/main_screen/bloc/bloc.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 
 class AddEditReiptForm extends StatefulWidget {
   final Receipt _receiptItem;
@@ -228,10 +229,32 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
     );
   }
 
+  Future<List<int>> testCompressFile(File file, int quality) async {
+    var result = await FlutterImageCompress.compressWithFile(
+      file.absolute.path,
+      quality: quality,
+    );
+    print(quality);
+    print(file.lengthSync());
+    print(result.length);
+    return result;
+  }
+
   _selectImage() async {
     var source = await _getImageSource();
     if (source != null) {
-      var ri = await ImagePicker.pickImage(source: source, imageQuality: 30);
+      File ri = await ImagePicker.pickImage(source: source);
+
+      print(ri.lengthSync());
+
+      await testCompressFile(ri, 80);
+
+      await testCompressFile(ri, 60);
+
+      await testCompressFile(ri, 40);
+
+      await testCompressFile(ri, 20);
+
       File croppedFile = await ImageCropper.cropImage(
         sourcePath: ri.path,
         aspectRatioPresets: Platform.isAndroid
