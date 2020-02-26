@@ -23,6 +23,7 @@ import 'package:intelligent_receipt/data_model/exception_handlers/unsupported_ve
 import 'package:intelligent_receipt/data_model/webservice.dart';
 import 'package:intelligent_receipt/main_screen/bloc/bloc.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:path_provider/path_provider.dart';
 
 class AddEditReiptForm extends StatefulWidget {
   final Receipt _receiptItem;
@@ -235,7 +236,16 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
       quality: quality,
     );
     print(quality);
-    print(file.lengthSync());
+    print(result.length);
+    return result;
+  }
+
+  Future<List<int>> compressFile(File file, int quality) async {
+    var result = await FlutterImageCompress.compressWithFile(
+      file.absolute.path,
+      quality: quality,
+    );
+    print(quality);
     print(result.length);
     return result;
   }
@@ -244,8 +254,23 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
     var source = await _getImageSource();
     if (source != null) {
       File ri = await ImagePicker.pickImage(source: source);
+      int riLength = ri.lengthSync();
+      File compressedFile = null;
+      // Compress image to a temporary file
+      String dir = (await getTemporaryDirectory()).path;
+      String tmpFilePath =  '$dir/temp.file';
 
-      print(ri.lengthSync());
+      print("Original file size: " + riLength.toString());
+      if (riLength <= 500000) {
+        // Don't compress a file, if it is less than 500KB
+        compressedFile = ri;
+      } else if (riLength <= 1000000) {
+        compressedFile = await FlutterImageCompress.compressAndGetFile(ri.path, tmpFilePath, quality: 90);
+      }
+
+
+
+      await testCompressFile(ri, 90);
 
       await testCompressFile(ri, 80);
 
