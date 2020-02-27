@@ -125,6 +125,14 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
     super.initState();
   }
 
+  @override
+  void dispose() {
+    if (receiptImageFile != null) {
+      receiptImageFile.delete();
+    }
+    super.dispose();
+  }
+
   Future<void> _deleteReceipt() async {
     _receiptBloc.dispatch(ManualReceiptDelete(receipt: this.receipt));
   }

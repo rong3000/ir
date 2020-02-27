@@ -39,6 +39,7 @@ enum AppState {
 class _UploadReceiptImageState extends State<UploadReceiptImage> {
   UserRepository get _userRepository => widget._userRepository;
   AppState state;
+  bool _imageFileChanged = false;
   File imageFileToCrop;
   Future<DataResult> _uploadReceiptFulture;
 
@@ -47,6 +48,14 @@ class _UploadReceiptImageState extends State<UploadReceiptImage> {
     super.initState();
     imageFileToCrop = widget.imageFile;
     state = AppState.picked;
+  }
+
+  @override
+  void dispose() {
+    if (_imageFileChanged && ( imageFileToCrop != null)) {
+      imageFileToCrop.delete();
+    }
+    super.dispose();
   }
 
   void _uploadReceipt(File imageFile) async {
@@ -108,10 +117,11 @@ class _UploadReceiptImageState extends State<UploadReceiptImage> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       getIcon(alertType),
-                      Text(message,
+                      Center( child: Text(message,
                           style: TextStyle(
                               color: Colors.indigo,
-                              fontSize: 16)),
+                              fontSize: 16))
+                      ),
                       Container(
                         height: 16,
                       ),
@@ -273,11 +283,7 @@ class _UploadReceiptImageState extends State<UploadReceiptImage> {
                   state == AppState.picked
                       ? FloatingActionButton(
                           heroTag: "continue",
-                          onPressed: () {
-                            setState(() {
-                              state = AppState.cropped;
-                            });
-                          },
+                          onPressed: () { _continueWithoutCrop(); },
                           child: Icon(Icons.check),
                         )
                       : FloatingActionButton(
@@ -317,6 +323,18 @@ class _UploadReceiptImageState extends State<UploadReceiptImage> {
       return Container();
   }
 
+  Future<Null> _continueWithoutCrop() async {
+    File compressedFile = await compressImage(imageFileToCrop);
+    if (compressedFile != null) {
+      imageFileToCrop = compressedFile;
+      _imageFileChanged = true;
+      setState(() {
+        _uploadReceipt(imageFileToCrop);
+        state = AppState.cropped;
+      });
+    }
+  }
+
   Future<Null> _cropImage() async {
     File compressedFile = await compressImage(imageFileToCrop);
     File croppedFile = await ImageCropper.cropImage(
@@ -348,6 +366,7 @@ class _UploadReceiptImageState extends State<UploadReceiptImage> {
     );
     if (croppedFile != null) {
       imageFileToCrop = croppedFile;
+      _imageFileChanged = true;
       setState(() {
         _uploadReceipt(imageFileToCrop);
         state = AppState.cropped;

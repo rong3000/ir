@@ -32,7 +32,7 @@ Future<File> compressImage(File originalImage) async {
   } else if (origFileSize <= 3000000) {
   compressedFile = await FlutterImageCompress.compressAndGetFile(originalImage.path, tmpFilePath, quality: 80);
   } else if (origFileSize <= 5000000) {
-  compressedFile = await FlutterImageCompress.compressAndGetFile(originalImage.path, tmpFilePath, quality: 60);
+  compressedFile = await FlutterImageCompress.compressAndGetFile(originalImage.path, tmpFilePath, quality: 50);
   } else {
   compressedFile = await FlutterImageCompress.compressAndGetFile(originalImage.path, tmpFilePath, quality: 40);
   }
