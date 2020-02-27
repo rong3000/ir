@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intelligent_receipt/data_model/GeneralUtility.dart';
 import 'package:intelligent_receipt/data_model/receipt_repository.dart';
 import 'package:intelligent_receipt/translations/global_translations.dart';
 import 'package:intelligent_receipt/user_repository.dart';
@@ -11,6 +12,8 @@ import '../add_edit_reciept_manual/add_edit_receipt_manual.dart';
 import 'package:intelligent_receipt/data_model/exception_handlers/unsupported_version.dart';
 import 'package:intelligent_receipt/data_model/http_statuscode.dart';
 import 'package:intelligent_receipt/main_screen/bloc/bloc.dart';
+import 'package:intelligent_receipt/data_model/GeneralUtility.dart';
+
 
 class UploadReceiptImage extends StatefulWidget {
   final UserRepository _userRepository;
@@ -44,7 +47,6 @@ class _UploadReceiptImageState extends State<UploadReceiptImage> {
     super.initState();
     imageFileToCrop = widget.imageFile;
     state = AppState.picked;
-    _uploadReceipt(imageFileToCrop);
   }
 
   void _uploadReceipt(File imageFile) async {
@@ -316,8 +318,9 @@ class _UploadReceiptImageState extends State<UploadReceiptImage> {
   }
 
   Future<Null> _cropImage() async {
+    File compressedFile = await compressImage(imageFileToCrop);
     File croppedFile = await ImageCropper.cropImage(
-      sourcePath: imageFileToCrop.path,
+      sourcePath: compressedFile.path,
       aspectRatioPresets: Platform.isAndroid
           ? [
               CropAspectRatioPreset.square,
@@ -346,8 +349,10 @@ class _UploadReceiptImageState extends State<UploadReceiptImage> {
     if (croppedFile != null) {
       imageFileToCrop = croppedFile;
       setState(() {
+        _uploadReceipt(imageFileToCrop);
         state = AppState.cropped;
       });
     }
+    compressedFile.delete();
   }
 }

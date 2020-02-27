@@ -22,8 +22,7 @@ import '../../helper_widgets/zoomable_image.dart';
 import 'package:intelligent_receipt/data_model/exception_handlers/unsupported_version.dart';
 import 'package:intelligent_receipt/data_model/webservice.dart';
 import 'package:intelligent_receipt/main_screen/bloc/bloc.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:intelligent_receipt/data_model/GeneralUtility.dart';
 
 class AddEditReiptForm extends StatefulWidget {
   final Receipt _receiptItem;
@@ -230,58 +229,14 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
     );
   }
 
-  Future<List<int>> testCompressFile(File file, int quality) async {
-    var result = await FlutterImageCompress.compressWithFile(
-      file.absolute.path,
-      quality: quality,
-    );
-    print(quality);
-    print(result.length);
-    return result;
-  }
-
-  Future<List<int>> compressFile(File file, int quality) async {
-    var result = await FlutterImageCompress.compressWithFile(
-      file.absolute.path,
-      quality: quality,
-    );
-    print(quality);
-    print(result.length);
-    return result;
-  }
-
   _selectImage() async {
     var source = await _getImageSource();
     if (source != null) {
       File ri = await ImagePicker.pickImage(source: source);
-      int riLength = ri.lengthSync();
-      File compressedFile = null;
-      // Compress image to a temporary file
-      String dir = (await getTemporaryDirectory()).path;
-      String tmpFilePath =  '$dir/temp.file';
-
-      print("Original file size: " + riLength.toString());
-      if (riLength <= 500000) {
-        // Don't compress a file, if it is less than 500KB
-        compressedFile = ri;
-      } else if (riLength <= 1000000) {
-        compressedFile = await FlutterImageCompress.compressAndGetFile(ri.path, tmpFilePath, quality: 90);
-      }
-
-
-
-      await testCompressFile(ri, 90);
-
-      await testCompressFile(ri, 80);
-
-      await testCompressFile(ri, 60);
-
-      await testCompressFile(ri, 40);
-
-      await testCompressFile(ri, 20);
+      File compressedFile = await compressImage(ri);
 
       File croppedFile = await ImageCropper.cropImage(
-        sourcePath: ri.path,
+        sourcePath: compressedFile.path,
         aspectRatioPresets: Platform.isAndroid
             ? [
           CropAspectRatioPreset.square,
@@ -307,13 +262,14 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
             initAspectRatio: CropAspectRatioPreset.original,
             lockAspectRatio: false),
       );
+      print("Cropped file size: " + croppedFile.lengthSync().toString());
       if (croppedFile != null) {
         setState(() {
           receiptImageFile = croppedFile;
           receiptImage = Image.file(croppedFile);
         });
       }
-
+      compressedFile.delete();
     }
   }
 
