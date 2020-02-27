@@ -22,6 +22,7 @@ import '../../helper_widgets/zoomable_image.dart';
 import 'package:intelligent_receipt/data_model/exception_handlers/unsupported_version.dart';
 import 'package:intelligent_receipt/data_model/webservice.dart';
 import 'package:intelligent_receipt/main_screen/bloc/bloc.dart';
+import 'package:intelligent_receipt/data_model/GeneralUtility.dart';
 
 class AddEditReiptForm extends StatefulWidget {
   final Receipt _receiptItem;
@@ -122,6 +123,14 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
       });
     }
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    if (receiptImageFile != null) {
+      receiptImageFile.delete();
+    }
+    super.dispose();
   }
 
   Future<void> _deleteReceipt() async {
@@ -231,9 +240,11 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
   _selectImage() async {
     var source = await _getImageSource();
     if (source != null) {
-      var ri = await ImagePicker.pickImage(source: source, imageQuality: 30);
+      File ri = await ImagePicker.pickImage(source: source);
+      File compressedFile = await compressImage(ri);
+
       File croppedFile = await ImageCropper.cropImage(
-        sourcePath: ri.path,
+        sourcePath: compressedFile.path,
         aspectRatioPresets: Platform.isAndroid
             ? [
           CropAspectRatioPreset.square,
@@ -259,13 +270,14 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
             initAspectRatio: CropAspectRatioPreset.original,
             lockAspectRatio: false),
       );
+      print("Cropped file size: " + croppedFile.lengthSync().toString());
       if (croppedFile != null) {
         setState(() {
           receiptImageFile = croppedFile;
           receiptImage = Image.file(croppedFile);
         });
       }
-
+      compressedFile.delete();
     }
   }
 

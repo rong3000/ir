@@ -1,0 +1,313 @@
+394K
+I/flutter (27827): 394266
+I/flutter (27827): 90
+I/flutter (27827): 403240
+I/flutter (27827): 80
+I/flutter (27827): 290894
+I/flutter (27827): 60
+I/flutter (27827): 161680
+I/flutter (27827): 40
+I/flutter (27827): 108664
+I/flutter (27827): 20
+I/flutter (27827): 57824
+
+399K
+I/flutter (27827): 399137
+I/flutter (27827): 90
+I/flutter (27827): 393607
+I/flutter (27827): 80
+I/flutter (27827): 281868
+I/flutter (27827): 60
+I/flutter (27827): 165217
+I/flutter (27827): 40
+I/flutter (27827): 110215
+I/flutter (27827): 20
+I/flutter (27827): 53324
+
+413K
+I/flutter (25060): 413809
+I/flutter (25060): 90
+I/flutter (25060): 421623
+I/flutter (25060): 80
+I/flutter (25060): 299372
+I/flutter (25060): 60
+I/flutter (25060): 161988
+I/flutter (25060): 40
+I/flutter (25060): 101978
+I/flutter (25060): 20
+I/flutter (25060): 48727
+
+432K
+I/flutter (27827): 432340
+I/flutter (27827): 90
+I/flutter (27827): 437779
+I/flutter (27827): 80
+I/flutter (27827): 312338
+I/flutter (27827): 60
+I/flutter (27827): 185781
+I/flutter (27827): 40
+I/flutter (27827): 129308
+I/flutter (27827): 20
+I/flutter (27827): 71143
+
+535K
+I/flutter (27827): 534771
+I/flutter (27827): 90
+I/flutter (27827): 539988
+I/flutter (27827): 80
+I/flutter (27827): 401982
+I/flutter (27827): 60
+I/flutter (27827): 228868
+I/flutter (27827): 40
+I/flutter (27827): 161122
+I/flutter (27827): 20
+I/flutter (27827): 90066
+
+796KB
+I/flutter (25060): 796538
+I/flutter (25060): 90
+I/flutter (25060): 257319
+I/flutter (25060): 80
+I/flutter (25060): 151718
+I/flutter (25060): 60
+I/flutter (25060): 83032
+I/flutter (25060): 40
+I/flutter (25060): 54073
+I/flutter (25060): 20
+I/flutter (25060): 31389
+
+935K
+I/flutter (27827): 935604
+I/flutter (27827): 90
+I/flutter (27827): 324633
+I/flutter (27827): 80
+I/flutter (27827): 207784
+I/flutter (27827): 60
+I/flutter (27827): 130981
+I/flutter (27827): 40
+I/flutter (27827): 96919
+I/flutter (27827): 20
+I/flutter (27827): 62414
+
+
+964KB
+I/flutter (27827): 863644
+I/flutter (27827): 90
+I/flutter (27827): 285075
+I/flutter (27827): 80
+I/flutter (27827): 174917
+I/flutter (27827): 60
+I/flutter (27827): 106759
+I/flutter (27827): 40
+I/flutter (27827): 77550
+I/flutter (27827): 20
+I/flutter (27827): 49557
+
+888K
+I/flutter (25060): 888602
+I/flutter (25060): 90
+I/flutter (25060): 294822
+I/flutter (25060): 80
+I/flutter (25060): 178734
+I/flutter (25060): 60
+I/flutter (25060): 106509
+I/flutter (25060): 40
+I/flutter (25060): 76741
+I/flutter (25060): 20
+I/flutter (25060): 50807
+
+903K
+I/flutter (25060): 902911
+I/flutter (25060): 90
+I/flutter (25060): 301807
+I/flutter (25060): 80
+I/flutter (25060): 188290
+I/flutter (25060): 60
+I/flutter (25060): 115106
+I/flutter (25060): 40
+I/flutter (25060): 82830
+I/flutter (25060): 20
+I/flutter (25060): 50341
+
+1.01M
+I/flutter (25060): 1008204
+I/flutter (25060): 90
+I/flutter (25060): 359848
+I/flutter (25060): 80
+I/flutter (25060): 232568
+I/flutter (25060): 60
+I/flutter (25060): 146262
+I/flutter (25060): 40
+I/flutter (25060): 106305
+I/flutter (25060): 20
+I/flutter (25060): 66034
+
+1.16M
+I/flutter (25060): 1167076
+I/flutter (25060): 90
+I/flutter (25060): 379066
+I/flutter (25060): 80
+I/flutter (25060): 242347
+I/flutter (25060): 60
+I/flutter (25060): 146037
+I/flutter (25060): 40
+I/flutter (25060): 100807
+I/flutter (25060): 20
+I/flutter (25060): 57156
+
+1.44M
+I/flutter (27827): 1444131
+I/flutter (27827): 90
+I/flutter (27827): 551782
+I/flutter (27827): 80
+I/flutter (27827): 384245
+I/flutter (27827): 60
+I/flutter (27827): 263449
+I/flutter (27827): 40
+I/flutter (27827): 199994
+I/flutter (27827): 20
+I/flutter (27827): 132604
+
+2.04M (Receipt)
+I/flutter (27827): 2039992
+I/flutter (27827): 90
+I/flutter (27827): 343203
+I/flutter (27827): 80
+I/flutter (27827): 183340
+I/flutter (27827): 60
+I/flutter (27827): 100629
+I/flutter (27827): 40
+I/flutter (27827): 75292
+I/flutter (27827): 20
+I/flutter (27827): 52955
+
+2.05M (Receipt)
+I/flutter (27827): 2053247
+I/flutter (27827): 90
+I/flutter (27827): 347764
+I/flutter (27827): 80
+I/flutter (27827): 187667
+I/flutter (27827): 60
+I/flutter (27827): 105053
+I/flutter (27827): 40
+I/flutter (27827): 80065
+I/flutter (27827): 20
+I/flutter (27827): 56487
+
+2.23M (Receipt)
+I/flutter (27827): 2229962
+I/flutter (27827): 90
+I/flutter (27827): 397813
+I/flutter (27827): 80
+I/flutter (27827): 223463
+I/flutter (27827): 60
+I/flutter (27827): 126723
+I/flutter (27827): 40
+I/flutter (27827): 94143
+I/flutter (27827): 20
+I/flutter (27827): 66035
+
+2.33M (Receipt)
+I/flutter (27827): 2333320
+I/flutter (27827): 90
+I/flutter (27827): 441976
+I/flutter (27827): 80
+I/flutter (27827): 260669
+I/flutter (27827): 60
+I/flutter (27827): 154736
+I/flutter (27827): 40
+I/flutter (27827): 113268
+I/flutter (27827): 20
+I/flutter (27827): 73526
+
+2.34M (Receipt)
+I/flutter (27827): 2335991
+I/flutter (27827): 90
+I/flutter (27827): 443005
+I/flutter (27827): 80
+I/flutter (27827): 260767
+I/flutter (27827): 60
+I/flutter (27827): 154566
+I/flutter (27827): 40
+I/flutter (27827): 112507
+I/flutter (27827): 20
+I/flutter (27827): 72707
+
+2.59M (Receipt)
+I/flutter (27827): 2590958
+I/flutter (27827): 90
+I/flutter (27827): 820378
+I/flutter (27827): 80
+I/flutter (27827): 488773
+I/flutter (27827): 60
+I/flutter (27827): 289190
+I/flutter (27827): 40
+I/flutter (27827): 207881
+I/flutter (27827): 20
+I/flutter (27827): 139321
+
+2.61M
+I/flutter (27827): 2613495
+I/flutter (27827): 90
+I/flutter (27827): 498350
+I/flutter (27827): 80
+I/flutter (27827): 299649
+I/flutter (27827): 60
+I/flutter (27827): 182223
+I/flutter (27827): 40
+I/flutter (27827): 131017
+I/flutter (27827): 20
+I/flutter (27827): 77531
+
+2.84M
+I/flutter (27827): 2844950
+I/flutter (27827): 90
+I/flutter (27827): 922467
+I/flutter (27827): 80
+I/flutter (27827): 569926
+I/flutter (27827): 60
+I/flutter (27827): 345281
+I/flutter (27827): 40
+I/flutter (27827): 243884
+I/flutter (27827): 20
+I/flutter (27827): 142888
+
+3.84M
+I/flutter (27827): 3855623
+I/flutter (27827): 90
+I/flutter (27827): 705798
+I/flutter (27827): 80
+I/flutter (27827): 405134
+I/flutter (27827): 60
+I/flutter (27827): 226925
+I/flutter (27827): 40
+I/flutter (27827): 155860
+I/flutter (27827): 20
+I/flutter (27827): 91806
+
+4.10M
+I/flutter (27827): 4103337
+I/flutter (27827): 90
+I/flutter (27827): 883883
+I/flutter (27827): 80
+I/flutter (27827): 597457
+I/flutter (27827): 60
+I/flutter (27827): 386901
+I/flutter (27827): 40
+I/flutter (27827): 285529
+I/flutter (27827): 20
+I/flutter (27827): 171444
+
+5M
+I/flutter (27827): 5000811
+I/flutter (27827): 90
+I/flutter (27827): 1717187
+I/flutter (27827): 80
+I/flutter (27827): 1172212
+I/flutter (27827): 60
+I/flutter (27827): 780293
+I/flutter (27827): 40
+I/flutter (27827): 591074
+I/flutter (27827): 20
+I/flutter (27827): 370545
+

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intelligent_receipt/data_model/GeneralUtility.dart';
 import 'package:intelligent_receipt/data_model/receipt_repository.dart';
 import 'package:intelligent_receipt/translations/global_translations.dart';
 import 'package:intelligent_receipt/user_repository.dart';
@@ -11,6 +12,8 @@ import '../add_edit_reciept_manual/add_edit_receipt_manual.dart';
 import 'package:intelligent_receipt/data_model/exception_handlers/unsupported_version.dart';
 import 'package:intelligent_receipt/data_model/http_statuscode.dart';
 import 'package:intelligent_receipt/main_screen/bloc/bloc.dart';
+import 'package:intelligent_receipt/data_model/GeneralUtility.dart';
+
 
 class UploadReceiptImage extends StatefulWidget {
   final UserRepository _userRepository;
@@ -36,6 +39,7 @@ enum AppState {
 class _UploadReceiptImageState extends State<UploadReceiptImage> {
   UserRepository get _userRepository => widget._userRepository;
   AppState state;
+  bool _imageFileChanged = false;
   File imageFileToCrop;
   Future<DataResult> _uploadReceiptFulture;
 
@@ -44,7 +48,14 @@ class _UploadReceiptImageState extends State<UploadReceiptImage> {
     super.initState();
     imageFileToCrop = widget.imageFile;
     state = AppState.picked;
-    _uploadReceipt(imageFileToCrop);
+  }
+
+  @override
+  void dispose() {
+    if (_imageFileChanged && ( imageFileToCrop != null)) {
+      imageFileToCrop.delete();
+    }
+    super.dispose();
   }
 
   void _uploadReceipt(File imageFile) async {
@@ -106,10 +117,11 @@ class _UploadReceiptImageState extends State<UploadReceiptImage> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       getIcon(alertType),
-                      Text(message,
+                      Center( child: Text(message,
                           style: TextStyle(
                               color: Colors.indigo,
-                              fontSize: 16)),
+                              fontSize: 16))
+                      ),
                       Container(
                         height: 16,
                       ),
@@ -271,11 +283,7 @@ class _UploadReceiptImageState extends State<UploadReceiptImage> {
                   state == AppState.picked
                       ? FloatingActionButton(
                           heroTag: "continue",
-                          onPressed: () {
-                            setState(() {
-                              state = AppState.cropped;
-                            });
-                          },
+                          onPressed: () { _continueWithoutCrop(); },
                           child: Icon(Icons.check),
                         )
                       : FloatingActionButton(
@@ -315,9 +323,22 @@ class _UploadReceiptImageState extends State<UploadReceiptImage> {
       return Container();
   }
 
+  Future<Null> _continueWithoutCrop() async {
+    File compressedFile = await compressImage(imageFileToCrop);
+    if (compressedFile != null) {
+      imageFileToCrop = compressedFile;
+      _imageFileChanged = true;
+      setState(() {
+        _uploadReceipt(imageFileToCrop);
+        state = AppState.cropped;
+      });
+    }
+  }
+
   Future<Null> _cropImage() async {
+    File compressedFile = await compressImage(imageFileToCrop);
     File croppedFile = await ImageCropper.cropImage(
-      sourcePath: imageFileToCrop.path,
+      sourcePath: compressedFile.path,
       aspectRatioPresets: Platform.isAndroid
           ? [
               CropAspectRatioPreset.square,
@@ -345,9 +366,12 @@ class _UploadReceiptImageState extends State<UploadReceiptImage> {
     );
     if (croppedFile != null) {
       imageFileToCrop = croppedFile;
+      _imageFileChanged = true;
       setState(() {
+        _uploadReceipt(imageFileToCrop);
         state = AppState.cropped;
       });
     }
+    compressedFile.delete();
   }
 }
