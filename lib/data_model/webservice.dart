@@ -10,7 +10,7 @@ import 'message_code.dart';
 export 'data_result.dart';
 
 class Urls {
-  static String ServiceBaseUrl = "http://irapp.superiortech.com.au:3001/";
+  static String ServiceBaseUrl = "https://irapp.superiortech.com.au:443/";
   static String ExchangeRateBaseUrl = "https://api.exchangeratesapi.io/";
 
   // Receipt related APIs
