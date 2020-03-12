@@ -444,9 +444,9 @@ class AddEditReport2State extends State<AddEditReport2> {
 //    _report.description = _descriptionController.text;
     _report.reportName = person.name;
     _report.description = person.email;
-    _report.receiptIds = [];
+    _report.receipts = [];
     for (int i = 0; i < _receiptList.length; i++) {
-      _report.receiptIds.add(_receiptList[i].id);
+      _report.receipts.add(new ReportReceipt(receiptId: _receiptList[i].id));
     }
 
     DataResult dataResult = isNewReport() ? await _userRepository.reportRepository.addReport(_report) :  await _userRepository.reportRepository.updateReport(_report, true);

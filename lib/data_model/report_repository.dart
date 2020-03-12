@@ -128,7 +128,7 @@ class ReportRepository extends IRRepository {
         result = await webserviceGet(Urls.GetReports, await getToken(), timeout: 5000);
         if (result.success) {
           Iterable l = result.obj;
-          reports = l.map((model) => Report.fromJason(model)).toList();
+          reports = l.map((model) => Report.fromJson(model)).toList();
           result.obj = reports;
         }
       }
@@ -142,7 +142,7 @@ class ReportRepository extends IRRepository {
   Future<DataResult> addReport(Report report) async {
     DataResult result = await webservicePost(Urls.AddReport, await getToken(), jsonEncode(report));
     if (result.success) {
-      Report newReport = Report.fromJason(result.obj);
+      Report newReport = Report.fromJson(result.obj);
       result.obj = newReport;
       _lock.synchronized(() {
         reports.add(newReport);
@@ -152,13 +152,13 @@ class ReportRepository extends IRRepository {
     return result;
   }
 
-  Future<DataResult> addReceiptToReport(int reportId, int receiptId, {updateLocal: true}) async {
+  Future<DataResult> addReceiptToReport(int reportId, int receiptId, {updateLocal: true, percentageOnWork: 100}) async {
     DataResult result = await webservicePost(Urls.AddReceiptToReport  + reportId.toString() + "/" + receiptId.toString(), await getToken(), "");
     if (result.success) {
       if (updateLocal) {
         Report report = getReport(reportId);
         if (report != null) {
-          report.receiptIds.add(reportId);
+          report.receipts.add(new ReportReceipt(receiptId: receiptId, percentageOnWork: percentageOnWork));
         }
       }
     }
@@ -183,7 +183,7 @@ class ReportRepository extends IRRepository {
       if (updateLocal) {
         Report report = getReport(reportId);
         if (report != null) {
-          report.receiptIds.removeWhere((rid) => rid == receiptId);
+          report.receipts.removeWhere((rid) => rid.receiptId == receiptId);
         }
       }
     }
@@ -194,14 +194,14 @@ class ReportRepository extends IRRepository {
   Future<DataResult> updateReport(Report report, bool updateReceiptList, {updateLocal: true}) async {
     DataResult result = await webservicePost(updateReceiptList ? Urls.UpdateReportWithReceipts : Urls.UpdateReportWithoutReceipts, await getToken(), jsonEncode(report));
     if (result.success) {
-      result.obj = Report.fromJason(result.obj);
+      result.obj = Report.fromJson(result.obj);
       if (updateLocal) {
         Report localReport = getReport(report.id);
         localReport.reportName = report.reportName;
         localReport.description = report.description;
         localReport.statusId = report.statusId;
         if (updateReceiptList) {
-          localReport.receiptIds = report.receiptIds;
+          localReport.receipts = report.receipts;
         }
       }
     }
