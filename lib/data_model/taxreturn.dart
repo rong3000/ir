@@ -13,6 +13,6 @@ class TaxReturn {
 
   TaxReturn();
 
-  factory TaxReturn.fromJason(Map<String, dynamic> json) => _$TaxReturnFromJson(json);
+  factory TaxReturn.fromJson(Map<String, dynamic> json) => _$TaxReturnFromJson(json);
   Map<String, dynamic> toJson() => _$TaxReturnToJson(this);
 }

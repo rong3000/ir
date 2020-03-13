@@ -11,8 +11,8 @@ class ReportReceipt {
   int percentageOnWork;
 
   ReportReceipt({int receiptId : 0, int percentageOnWork: 100}) {
-    receiptId = receiptId;
-    percentageOnWork = percentageOnWork;
+    this.receiptId = receiptId;
+    this.percentageOnWork = percentageOnWork;
   }
 
   factory ReportReceipt.fromJson(Map<String, dynamic> json) => _$ReportReceiptFromJson(json);

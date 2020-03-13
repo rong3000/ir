@@ -10,7 +10,8 @@ import 'message_code.dart';
 export 'data_result.dart';
 
 class Urls {
-  static String ServiceBaseUrl = "https://irapp.superiortech.com.au:443/";
+  static String ServiceBaseUrl = "http://10.0.2.2:3001/";
+  //static String ServiceBaseUrl = "https://irapp.superiortech.com.au:443/";
   static String ExchangeRateBaseUrl = "https://api.exchangeratesapi.io/";
 
   // Receipt related APIs
@@ -42,6 +43,10 @@ class Urls {
   static String RemoveReceiptFromReport = ServiceBaseUrl + "Report/RemoveReceiptFromReport/";
   static String UpdateReportWithReceipts = ServiceBaseUrl + "Report/UpdateReportWithReceipts";
   static String UpdateReportWithoutReceipts = ServiceBaseUrl + "Report/UpdateReportWithoutReceipts";
+
+  // Tax return related APIs
+  static String GetTaxReturns = ServiceBaseUrl + "TaxReturn/GetTaxReturns/";
+  static String GetTaxReturnByYear = ServiceBaseUrl + "TaxReturn/GetTaxReturn/";
 
   static String GetExchangeRate = ExchangeRateBaseUrl;
   // User Urls
