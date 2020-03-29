@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:intelligent_receipt/data_model/archived_receipt_models/archivedreceiptdatarange.dart';
 import 'package:intelligent_receipt/data_model/ir_repository.dart';
 import "receipt.dart";
 import 'report_repository.dart';
@@ -216,5 +217,52 @@ class ReceiptRepository extends IRRepository {
     final token = await getToken();
 
     return await getImageFromNetwork(url, token);
+  }
+
+  Future<DataResult> archiveReceipt(int receiptId) async {
+    var url = Urls.ArchiveReceipt + receiptId.toString();
+    return await webservicePost(url, await getToken(), null);
+  }
+
+  Future<DataResult> unArchiveReceipt(int receiptId) async {
+    var url = Urls.UnArchiveReceipt + receiptId.toString();
+    return await webservicePost(url, await getToken(), null);
+  }
+
+  Future<DataResult> getArchivedReceiptMetaData() async {
+    var url = Urls.ArchiveReceiptMetaData;
+    var result = await webserviceGet(url, await getToken());
+    
+    if (result.success) {
+      var data = ArchivedReceiptDataRange.fromJson(result.obj);
+      result.obj = data;
+    }
+
+    return result;    
+  }
+
+  Future<DataResult> getArchivedReceipts(String yearMonth) async {
+    var year = int.parse(yearMonth.substring(0,4));
+    var month = int.parse(yearMonth.substring(4));
+    var fromDate = DateTime(year, month);
+    var toDate = DateTime(year, month + 1);//.add(Duration(days: -1));
+    
+    var params = {
+      'statusType' : ReceiptStatusType.Archived.index.toString(),
+      'fromDate': fromDate.toIso8601String(),
+      'toDate': toDate.toIso8601String()
+    };
+    
+    var query = Uri(queryParameters: params).query;  
+    var url =  Urls.GetReceipts + '?' + query;
+    var result = await webserviceGet(url, await getToken());
+    
+    if (result.success) {
+      Iterable l = result.obj;
+      var r = l.map((model) => ReceiptListItem.fromJason(model)).toList();
+      result.obj = r;
+    }
+
+    return result;    
   }
 }

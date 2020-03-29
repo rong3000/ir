@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intelligent_receipt/authentication_bloc/bloc.dart';
 import 'package:intelligent_receipt/data_model/enums.dart';
 import 'package:intelligent_receipt/main_screen/bloc/bloc.dart';
+import 'package:intelligent_receipt/main_screen/home_page/archived_receipts_page/archived_receipts_page.dart';
 import 'package:intelligent_receipt/main_screen/home_page/home_page.dart';
 import 'package:intelligent_receipt/main_screen/search_bar/search_bar.dart';
 import 'package:intelligent_receipt/main_screen/settings_page/check_update_screen/check_update_screen_ios.dart';
@@ -117,7 +118,6 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     userReload();
     ConnectionStatusSingleton connectionStatus = ConnectionStatusSingleton.getInstance();
@@ -245,18 +245,19 @@ class _MainScreenState extends State<MainScreen> {
                   Navigator.pop(context);
                 },
               ),
-//              ListTile(
-//                title: Text('View Archived Groups'),
-//                onTap: () {
-//                  Navigator.of(context).push(
-//                    MaterialPageRoute(builder: (context) {
-//                      return ReportsPage(
-//                          userRepository: _userRepository,
-//                          reportStatusType: ReportStatusType.Submitted);
-//                    }),
-//                  );
-//                },
-//              ),
+             ListTile(
+               title: Text(allTranslations.text('app.main-screen.view-archived-receipts')),
+               onTap: () {
+                 Navigator.of(context).pop();
+                 Navigator.of(context).push(
+                   MaterialPageRoute(builder: (context) {
+                     return ArchivedReceiptsPage(
+                         userRepository: _userRepository,
+                        );
+                   }),
+                 );
+               },
+             ),
               _userRepository.currentUser?.isEmailVerified? Container(): ListTile(
                 title: Text(allTranslations.text('app.main-screen.email-verification')),
                 onTap: () {

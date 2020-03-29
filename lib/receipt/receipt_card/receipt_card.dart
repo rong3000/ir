@@ -7,10 +7,8 @@ import 'package:intelligent_receipt/data_model/receipt_repository.dart';
 import 'package:intelligent_receipt/data_model/webservice.dart';
 import 'package:intelligent_receipt/translations/global_translations.dart';
 import 'package:intelligent_receipt/user_repository.dart';
-import 'package:intl/intl.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import '../../helper_widgets/zoomable_image.dart';
-import 'package:intelligent_receipt/translations/global_translations.dart';
 import 'package:intelligent_receipt/data_model/setting_repository.dart';
 import 'package:intelligent_receipt/data_model/GeneralUtility.dart';
 
@@ -36,6 +34,7 @@ class _ReceiptCardState extends State<ReceiptCard> {
   Currency _defaultCurrency;
   Future<Image> _getImageFuture;
   String _imagePath;
+  final double iconSize = 26;
 
   void _retrieveImage(String imagePath) {
     if (imagePath != _imagePath) {
@@ -68,6 +67,10 @@ class _ReceiptCardState extends State<ReceiptCard> {
         )
         ?.categoryName;
 
+    if ((text == unknownText) && (receipt.statusId == ReceiptStatusType.Archived.index)){
+      text = allTranslations.text('app.receipt-card.receipt-in-process-archived');
+    }
+
     if ((text == unknownText) && (receipt.statusId == ReceiptStatusType.Uploaded.index)) {
       if (receipt.decodeStatus == DecodeStatusType.Success.index) {
         text = allTranslations.text('app.receipt-card.receipt-processed-review');
@@ -90,17 +93,13 @@ class _ReceiptCardState extends State<ReceiptCard> {
     Widget _actionButton(BuildContext context, ActionWithLabel action) {
       if (action.action != null) {
         return Container(
-          height: 25,
-          child: OutlineButton(
-              child: Text(action.label,
-                  style: dateStyle
-                      .copyWith(color: Colors.blue)
-                      .apply(fontSizeFactor: 0.75),
-                  semanticsLabel: '${action.label} ${widget._receiptItem.id}'),
-              onPressed: () => action.action(widget._receiptItem.id),
-              borderSide: BorderSide(color: Colors.blue),
-              shape: new RoundedRectangleBorder(
-                  borderRadius: new BorderRadius.circular(4.0))),
+          height: 35,
+          child: GestureDetector(
+            child: Icon(action.icon, size: iconSize),
+            onTap: (){ 
+              action.action(widget._receiptItem.id);
+            },
+          )
         );
       } else
         return null;
@@ -288,15 +287,16 @@ class _ReceiptCardState extends State<ReceiptCard> {
                   ButtonBarTheme(
                     data: ButtonBarThemeData(
                       buttonMinWidth: 56,
-                      buttonPadding: const EdgeInsets.symmetric(horizontal: 4.0),
                     ),
                     child: ButtonBar(
-                      mainAxisSize: MainAxisSize.min,
-                      alignment: MainAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.max,
+                      alignment: MainAxisAlignment.spaceEvenly,
+                      buttonPadding: EdgeInsets.symmetric(horizontal: 5),
                       children: widget.actions
                           .map<Widget>((ActionWithLabel action) =>
                               _actionButton(context, action))
                           .toList(),
+                          
                     ),
                   ),
                 ],

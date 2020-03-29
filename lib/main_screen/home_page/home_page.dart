@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intelligent_receipt/data_model/GeneralUtility.dart';
 import 'package:intelligent_receipt/main_screen/bloc/bloc.dart';
 import 'package:intelligent_receipt/receipt/add_edit_reciept_manual/add_edit_receipt_manual.dart';
 import 'package:intelligent_receipt/receipt/upload_receipt_image/upload_receipt_image.dart';
@@ -51,7 +50,6 @@ class _HomePageState extends State<HomePage> {
   Future<ImageSource> _getImageSource() async {
     return showDialog<ImageSource>(
       context: context,
-      //barrierDismissible: true, // Allow to be closed without selecting option
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(allTranslations.text('app.select-image-source-dialog.title')),
