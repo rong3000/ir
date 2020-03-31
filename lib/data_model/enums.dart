@@ -5,7 +5,8 @@ enum ReceiptStatusType
   Assigned,
   Decoded,
   Reviewed,
-  Deleted
+  Deleted,
+  Archived
 }
 
 enum DecodeStatusType

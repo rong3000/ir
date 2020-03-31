@@ -4,6 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intelligent_receipt/data_model/action_with_lable.dart';
 import 'package:intelligent_receipt/data_model/enums.dart';
 import 'package:intelligent_receipt/data_model/receipt_repository.dart';
+import 'package:intelligent_receipt/helper_widgets/confirm-dialog.dart';
 import 'package:intelligent_receipt/main_screen/bloc/bloc.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intelligent_receipt/receipt/add_edit_reciept_manual/add_edit_receipt_manual.dart';
@@ -156,8 +157,31 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
     }
   }
 
-  Future<void> _getReceiptsFromServer ({bool forceRefresh : false}) {
-    _getReceiptsFromServerFuture = _userRepository.receiptRepository.getReceiptsFromServer(forceRefresh: forceRefresh);
+  Future<void> archiveAction(int receiptId) async {
+    
+    var shouldArchive = await showDialog<bool>(
+      context: context, 
+      builder: ConfirmDialog.builder(context, 
+          title: Text(allTranslations.text('words.archive')),
+          content: Text(allTranslations.text('app.common.are-you-sure') + '?') 
+        ) 
+      );
+    
+    if (shouldArchive){
+      DataResult result = await _userRepository.receiptRepository.archiveReceipt(receiptId);
+      if (result.success){
+        _getReceiptsFromServer(forceRefresh: true).then((result) {
+          setState(() {});
+        });
+      } else {
+        _showInSnackBar("${allTranslations.text("app.receipts-page.failed-archive-receipt-message")} \n${result.message}");
+      }
+    }
+  }
+
+  Future<void> _getReceiptsFromServer ({bool forceRefresh : false}) async {
+     _getReceiptsFromServerFuture = _userRepository.receiptRepository.getReceiptsFromServer(forceRefresh: forceRefresh);
+     return _getReceiptsFromServerFuture;
   }
 
   Future<void> _forceGetReceiptsFromServer() async {
@@ -232,10 +256,19 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
                             ActionWithLabel r = new ActionWithLabel();
                             r.action = reviewAction;
                             r.label = allTranslations.text('words.review');
+                            r.icon = Icons.edit;
                             ActionWithLabel d = new ActionWithLabel();
                             d.action = deleteAction;
                             d.label = allTranslations.text('words.delete');
+                            d.icon = Icons.delete;
                             actions.add(r);
+                            if (_receiptStatusType == ReceiptStatusType.Reviewed){
+                              var archive = ActionWithLabel();
+                              archive.label = allTranslations.text('words.archive');
+                              archive.action = archiveAction;
+                              archive.icon = Icons.archive;
+                              actions.add(archive);
+                            }
                             actions.add(d);
                             return  Column(
                               children: <Widget>[

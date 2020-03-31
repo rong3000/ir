@@ -11,7 +11,8 @@
       "no-image-text": "No Image!",
       "invalid-email-message": "Invalid Email",
       "invalid-password-message": "At least one letter, one number and minimum 8 characters",
-      "password-mismatch-message": "Password is not the same as above"
+      "password-mismatch-message": "Password is not the same as above",
+      "are-you-sure": "Are you sure"
     },
     "settings-page": {
       "title": "Settings",
@@ -65,7 +66,8 @@
       "network-recovered" : "Network connection recovered",
       "log-out" : "Log Out",
       "check-update" : "Check Update",
-      "email-verification" : "Email Verification"
+      "email-verification" : "Email Verification",
+      "view-archived-receipts": "View Archived Receipts"
     },
     "login-screen": {
       "create-account-label": "Create an Account",
@@ -103,7 +105,8 @@
       "add-receipt-manual-tooltip": "Manually Add Receipt",
       "failed-load-receipts-message": "Failed to load receipts: ",
       "failed-review-receipt-message": "Failed to review receipt: ",
-      "failed-delete-receipt-message": "Failed to delete receipt: "
+      "failed-delete-receipt-message": "Failed to delete receipt: ",
+      "failed-archive-receipt-message": "Failed to archive receipt: "
     },
 
     "snap-receipt-page": {
@@ -178,6 +181,7 @@
       "unknown-category": "Click 'Review' button to select receipt category.",
       "receipt-processed-review": "Click 'Review' button to verify and fulfill receipt data.",
       "receipt-in-process-review": "Click 'Review' button to verify and fulfill receipt data.",
+      "receipt-in-process-archived": "Un-Archive to modify receipt data.",
       "receipt-date-prefix": "Receipt Date",
       "total-amount-prefix": "Total",
       "uploaded-prefix": "Uploaded Date",
@@ -255,6 +259,12 @@
       "upgrade-failed-prefix": "Upgrade failed: ",
       "unsupported-platform": "Unsupported platform",
       "opening-app-store": "Opening App Store to download the latest version ..."
+    },
+    "archived-receipts-screen" :{
+      "title": "Archived Receipts",
+      "fail-load": "Failed to Load Archived Data",
+      "un-archive-label": "Un-Archive",
+      "fail-un-archive": "Failed, check network and try again"
     }
   },
   "words": {
@@ -264,6 +274,7 @@
     "camera": "Camera",
     "gallery": "Gallery",
     "review": "Review",
+    "archive": "Archive",
     "delete": "Delete",
     "add": "Add",
     "toggle": "Toggle",

@@ -23,6 +23,9 @@ class Urls {
   static String DeleteReceipts = ServiceBaseUrl + "Receipt/DeleteReceipts";
   static String GetImage = ServiceBaseUrl + "Receipt/GetImage";
   static String AddReceipts = ServiceBaseUrl + "Receipt/AddReceipts";
+  static String ArchiveReceipt = ServiceBaseUrl + "Receipt/archive/";
+  static String UnArchiveReceipt = ServiceBaseUrl + "Receipt/unarchive/";
+  static String ArchiveReceiptMetaData = ServiceBaseUrl + "Receipt/archive/dataRange";
 
   // Category related APIs
   static String GetCategories = ServiceBaseUrl + "Settings/GetCategories";
@@ -57,7 +60,7 @@ class Urls {
   static String MarkNewsItemsRead = ServiceBaseUrl + "news/mark-read/";
 }
 
-const int default_timeout = 2000; // millisecons
+const int default_timeout = 20000; // millisecons
 
 String getAPIVersion() {
   return "0.1";

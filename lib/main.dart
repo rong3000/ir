@@ -4,9 +4,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intelligent_receipt/authentication_bloc/bloc.dart';
 import 'package:intelligent_receipt/login/login.dart';
+import 'package:intelligent_receipt/main_screen/home_page/archived_receipts_page/bloc/archived_receipts_bloc.dart';
 import 'package:intelligent_receipt/main_screen/main_screen.dart';
 import 'package:intelligent_receipt/main_screen/news/bloc/news_bloc.dart';
-import 'package:intelligent_receipt/main_screen/news/bloc/news_event.dart';
 import 'package:intelligent_receipt/main_screen/settings_page/preferences/bloc/preferences_bloc.dart';
 import 'package:intelligent_receipt/main_screen/settings_page/preferences/bloc/preferences_event.dart';
 import 'package:intelligent_receipt/main_screen/settings_page/preferences/bloc/preferences_state.dart';
@@ -16,13 +16,18 @@ import 'package:intelligent_receipt/user_repository.dart';
 import 'package:intelligent_receipt/splash_screen.dart';
 import 'package:intelligent_receipt/simple_bloc_delegate.dart';
 import 'package:intelligent_receipt/main_screen/bloc/bloc.dart';
+import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 void main() async {
+  
   WidgetsFlutterBinding.ensureInitialized();
   BlocSupervisor.delegate = SimpleBlocDelegate();
   final UserRepository userRepository = UserRepository();
   await userRepository.preferencesRepository.initialisePrefsInstance();
   await allTranslations.init(userRepository.preferencesRepository);
+  var locale = userRepository.preferencesRepository.getPreferredLanguage();
+  await initializeDateFormatting(locale, null);
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
@@ -50,6 +55,9 @@ void main() async {
           ),
           BlocProvider<MainScreenBloc>(
               builder: (context) => MainScreenBloc(userRepository: userRepository),
+          ),
+          BlocProvider<ArchivedReceiptsBloc>(
+              builder: (context) => ArchivedReceiptsBloc(receiptRepository: userRepository.receiptRepository),
           )
         ],
         child: App(userRepository: userRepository),
@@ -74,6 +82,8 @@ class App extends StatelessWidget {
       child: BlocBuilder(
         bloc: BlocProvider.of<PreferencesBloc>(context),
         builder: (BuildContext context, PreferencesState prefsState) {
+          Intl.defaultLocale = prefsState.language;
+          
           return MaterialApp(
             routes: {
               MainScreen.routeName: (context) => _mainScreen,
