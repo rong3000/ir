@@ -223,15 +223,12 @@ class ReceiptRepository extends IRRepository {
     var url = Urls.ArchiveReceipt + receiptId.toString();
     var result = await webservicePost(url, await getToken(), null);
     if (result.success) {
-      _lock.synchronized(() {
-        // update local cache
-        for (int j = 0; j < receipts.length; j++) {
-          if (receipts[j].id == receiptId) {
-            receipts[j].statusId = ReceiptStatusType.Archived.index;
-            break;
-          }
+      for (int j = 0; j < receipts.length; j++) {
+        if (receipts[j].id == receiptId) {
+          receipts[j].statusId = ReceiptStatusType.Archived.index;
+          break;
         }
-      });
+      }
     }
     return result;
   }
@@ -240,15 +237,12 @@ class ReceiptRepository extends IRRepository {
     var url = Urls.UnArchiveReceipt + receiptId.toString();
     var result = await webservicePost(url, await getToken(), null);
     if (result.success) {
-      _lock.synchronized(() {
-        // update local cache
-        for (int j = 0; j < receipts.length; j++) {
-          if (receipts[j].id == receiptId) {
-            receipts[j].statusId = ReceiptStatusType.Reviewed.index;
-            break;
-          }
+      for (int j = 0; j < receipts.length; j++) {
+        if (receipts[j].id == receiptId) {
+          receipts[j].statusId = ReceiptStatusType.Reviewed.index;
+          break;
         }
-      });
+      }
     }
     return result;
   }
