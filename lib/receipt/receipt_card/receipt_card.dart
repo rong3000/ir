@@ -92,17 +92,33 @@ class _ReceiptCardState extends State<ReceiptCard> {
 
     Widget _actionButton(BuildContext context, ActionWithLabel action) {
       if (action.action != null) {
-        return Container(
-          height: 35,
-          child: GestureDetector(
-            child: Icon(action.icon, size: iconSize),
-            onTap: (){ 
-              action.action(widget._receiptItem.id);
-            },
-          )
-        );
-      } else
+        if (action.icon != null) {
+          return Container(
+            height: 35,
+            child: GestureDetector(
+              child: Icon(action.icon, size: iconSize),
+              onTap: () {
+                action.action(widget._receiptItem.id);
+              },
+            )
+          );
+        } else {
+          return Container(
+            height: 25,
+            child: OutlineButton(
+              child: Text(action.label,
+                style: dateStyle
+                  .copyWith(color: Colors.blue)
+                  .apply(fontSizeFactor: 0.75),
+                semanticsLabel: '${action.label} ${widget._receiptItem.id}'),
+              onPressed: () => action.action(widget._receiptItem.id),
+              borderSide: BorderSide(color: Colors.blue),
+              shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(4.0)))
+          );
+        }
+      } else {
         return null;
+      }
     }
 
     BoxDecoration myBoxDecoration() {

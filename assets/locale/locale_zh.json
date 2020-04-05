@@ -67,7 +67,7 @@
       "log-out" : "退出",
       "check-update" : "检查版本更新",
       "email-verification" : "电子邮件验证",
-      "view-archived-receipts": "View Archived Receipts"
+      "view-archived-receipts": "查看存档的收据"
     },
     "login-screen": {
       "create-account-label": "创建账户",
@@ -106,7 +106,11 @@
       "failed-load-receipts-message": "加载票据失败: ",
       "failed-review-receipt-message": "查看票据失败: ",
       "failed-delete-receipt-message": "删除票据失败: ",
-      "failed-archive-receipt-message": "Failed to archive receipt: "
+      "failed-archive-receipt-message": "存档票据失败: ",
+	  "archive-receipt-title": "票据存档",
+	  "archive-receipt-message": "存档后的票据将不再显示在已审核的票据列表中，您可以到'查看存档的票据'中，查看所有存档的票据，并可以在那里撤销存档。\n\n确定存档票据吗？",
+	  "delete-receipt-title": "删除票据",
+	  "delete-receipt-message": "删除的票据不可恢复。\n\n您确定删除票据吗？"
     },
 
     "snap-receipt-page": {
@@ -181,7 +185,7 @@
       "unknown-category": "点击'查看'按键选择票据类别.",
       "receipt-processed-review": "点击'查看'按键查看审核、完善票据信息.",
       "receipt-in-process-review": "点击'查看'按键查看审核、完善票据信息.",
-      "receipt-in-process-archived": "Un-Archive to modify receipt data.",
+      "receipt-in-process-archived": "点击'撤销存档'按键，票据将会出现在票据列表中.",
       "receipt-date-prefix": "票据日期",
       "total-amount-prefix": "总额",
       "uploaded-prefix": "上传日期",
@@ -261,10 +265,10 @@
       "opening-app-store": "正在打开程序商店 ..."
     },
     "archived-receipts-screen" :{
-      "title": "Archived Receipts",
-      "fail-load": "Failed to Load Archived Data",
-      "un-archive-label": "Un-Archive",
-      "fail-un-archive": "Failed, check network and try again"
+      "title": "已存档的票据",
+      "fail-load": "加载已存档的票据失败",
+      "un-archive-label": "撤销存档",
+      "fail-un-archive": "失败, 请检查网络并重试"
     }
   },
   "words": {
@@ -274,7 +278,7 @@
     "camera": "摄像头",
     "gallery": "图片库",
     "review": "查看",
-    "archive":"封存",
+    "archive":"存档",
     "delete": "删除",
     "add": "添加",
     "toggle": "切换",

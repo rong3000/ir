@@ -158,12 +158,11 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
   }
 
   Future<void> archiveAction(int receiptId) async {
-    
     var shouldArchive = await showDialog<bool>(
       context: context, 
       builder: ConfirmDialog.builder(context, 
-          title: Text(allTranslations.text('words.archive')),
-          content: Text(allTranslations.text('app.common.are-you-sure') + '?') 
+          title: Text(allTranslations.text('app.receipts-page.archive-receipt-title')),
+          content: Text(allTranslations.text('app.receipts-page.archive-receipt-message'))
         ) 
       );
     
@@ -191,12 +190,22 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
   }
 
   Future<void> deleteAndSetState(List<int> receiptIds) async {
-    DataResult dataResult = await _userRepository.receiptRepository.deleteReceipts(receiptIds);
-    if (dataResult.success) {
-      _getReceiptsFromServer();
-      setState(() {});
-    } else {
-      _showInSnackBar("${allTranslations.text("app.receipts-page.failed-delete-receipt-message")} \n${dataResult.message}");
+    var shouldDelete = await showDialog<bool>(
+      context: context,
+      builder: ConfirmDialog.builder(context,
+        title: Text(allTranslations.text('app.receipts-page.delete-receipt-title')),
+        content: Text(allTranslations.text('app.receipts-page.delete-receipt-message'))
+      )
+    );
+
+    if (shouldDelete) {
+      DataResult dataResult = await _userRepository.receiptRepository.deleteReceipts(receiptIds);
+      if (dataResult.success) {
+        _getReceiptsFromServer();
+        setState(() {});
+      } else {
+        _showInSnackBar("${allTranslations.text("app.receipts-page.failed-delete-receipt-message")} \n${dataResult.message}");
+      }
     }
   }
 
