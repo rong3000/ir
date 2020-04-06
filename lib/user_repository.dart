@@ -5,6 +5,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:intelligent_receipt/data_model/news/news_repository.dart';
 import 'package:intelligent_receipt/data_model/preferences/preferences_repository.dart';
+import 'package:intelligent_receipt/data_model/taxreturn_repository.dart';
 import 'package:intelligent_receipt/data_model/user.dart';
 import 'package:intelligent_receipt/data_model/receipt_repository.dart';
 import 'package:intelligent_receipt/data_model/category_repository.dart';
@@ -24,6 +25,7 @@ class UserRepository {
   ReportRepository reportRepository;
   PreferencesRepository preferencesRepository;
   NewsRepository newsRepository;
+  TaxReturnRepository taxReturnRepository;
 
 
   FirebaseUser currentUser;
@@ -39,6 +41,7 @@ class UserRepository {
      reportRepository = new ReportRepository(this);
      preferencesRepository = new PreferencesRepository();
      newsRepository = new NewsRepository(this);
+     taxReturnRepository = new TaxReturnRepository(this);
   }
 
   Future<FirebaseUser> signInWithGoogle() async {
@@ -163,6 +166,7 @@ Future<FirebaseUser> signInWithFacebook() async {
       settingRepository.getCurrenciesFromServer();
       settingRepository.getSettingsFromServer();
       reportRepository.getReportsFromServer(forceRefresh: true);
+      taxReturnRepository.getTaxReturns();
     }
     /*
     // Get receipts from server;

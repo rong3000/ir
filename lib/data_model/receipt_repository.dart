@@ -221,12 +221,30 @@ class ReceiptRepository extends IRRepository {
 
   Future<DataResult> archiveReceipt(int receiptId) async {
     var url = Urls.ArchiveReceipt + receiptId.toString();
-    return await webservicePost(url, await getToken(), null);
+    var result = await webservicePost(url, await getToken(), null);
+    if (result.success) {
+      for (int j = 0; j < receipts.length; j++) {
+        if (receipts[j].id == receiptId) {
+          receipts[j].statusId = ReceiptStatusType.Archived.index;
+          break;
+        }
+      }
+    }
+    return result;
   }
 
   Future<DataResult> unArchiveReceipt(int receiptId) async {
     var url = Urls.UnArchiveReceipt + receiptId.toString();
-    return await webservicePost(url, await getToken(), null);
+    var result = await webservicePost(url, await getToken(), null);
+    if (result.success) {
+      for (int j = 0; j < receipts.length; j++) {
+        if (receipts[j].id == receiptId) {
+          receipts[j].statusId = ReceiptStatusType.Reviewed.index;
+          break;
+        }
+      }
+    }
+    return result;
   }
 
   Future<DataResult> getArchivedReceiptMetaData() async {

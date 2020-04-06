@@ -106,7 +106,11 @@
       "failed-load-receipts-message": "Failed to load receipts: ",
       "failed-review-receipt-message": "Failed to review receipt: ",
       "failed-delete-receipt-message": "Failed to delete receipt: ",
-      "failed-archive-receipt-message": "Failed to archive receipt: "
+      "failed-archive-receipt-message": "Failed to archive receipt: ",
+	  "archive-receipt-title": "Archive Receipt",
+	  "archive-receipt-message": "Archived receipt won't be listed in the Reviewed receipt list; you can go to 'View Archived Receipts' to view  all archived receipts and Un-Archive receipt there if you want.\n\nAre you sure to archive the receipt?",
+	  "delete-receipt-title": "Delete Receipt",
+	  "delete-receipt-message": "Deleted receipt cannot be restored.\n\nAre you sure to delete the receipt?"
     },
 
     "snap-receipt-page": {

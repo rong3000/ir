@@ -4,12 +4,15 @@ import 'package:flutter/widgets.dart';
 import 'package:intelligent_receipt/data_model/currency.dart';
 import 'package:intelligent_receipt/data_model/report.dart';
 import 'package:intelligent_receipt/data_model/webservice.dart';
-import 'package:intelligent_receipt/report/report_list/report_list.dart';
 import 'package:intelligent_receipt/translations/global_translations.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 import 'package:intl/intl.dart';
 import 'package:intelligent_receipt/data_model/GeneralUtility.dart';
 
+class ActionWithLable {
+  Function(int) action;
+  String lable;
+}
 
 class ReportCard extends StatefulWidget {
   final UserRepository _userRepository;

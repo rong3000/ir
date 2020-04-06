@@ -46,3 +46,9 @@ enum ReportSortType {
   UpdateTime,
   GroupName,
 }
+
+enum FiscYear
+{
+  Current,
+  Previous,
+}
