@@ -15,105 +15,24 @@ import 'package:intelligent_receipt/data_model/GeneralUtility.dart';
 
 import '../../data_model/webservice.dart';
 
-//TODO: this file needs a tidy up before translattions added
-
-class _InputDropdown extends StatelessWidget {
-  const _InputDropdown({
-    Key key,
-    this.child,
-    this.labelText,
-    this.valueText,
-    this.valueStyle,
-    this.onPressed,
-  }) : super(key: key);
-
-  final String labelText;
-  final String valueText;
-  final TextStyle valueStyle;
-  final VoidCallback onPressed;
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onPressed,
-      child: InputDecorator(
-        decoration: InputDecoration(
-          labelText: labelText,
-        ),
-        baseStyle: valueStyle,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Text(valueText, style: valueStyle),
-            Icon(
-              Icons.arrow_drop_down,
-              color: Theme.of(context).brightness == Brightness.light
-                  ? Colors.grey.shade700
-                  : Colors.white70,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _DateTimePicker extends StatelessWidget {
-  const _DateTimePicker({
-    Key key,
-    this.labelText,
-    this.selectedDate,
-    this.selectDate,
-  }) : super(key: key);
-
-  final String labelText;
-  final DateTime selectedDate;
-  final ValueChanged<DateTime> selectDate;
-
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime picked = await showDatePicker(
-      context: context,
-      initialDate: selectedDate,
-      firstDate: DateTime(2015, 8),
-      lastDate: DateTime(2101),
-    );
-    if (picked != null && picked != selectedDate) selectDate(picked);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final TextStyle valueStyle = Theme.of(context).textTheme.title;
-    return _InputDropdown(
-      labelText: labelText,
-      valueText: getDateFormatForYMD().format(selectedDate),
-      valueStyle: valueStyle,
-      onPressed: () {
-        _selectDate(context);
-      },
-    );
-  }
-}
-
-class ReportList extends StatefulWidget {
+class DeviceGroup extends StatefulWidget {
   final UserRepository _userRepository;
-  final ReportStatusType _reportStatusType;
+  final FiscYear _fiscYear;
 
-  ReportList({
+  DeviceGroup({
     Key key,
     @required UserRepository userRepository,
-    @required ReportStatusType reportStatusType,
+    @required FiscYear fiscYear,
   })  : assert(userRepository != null),
         _userRepository = userRepository,
-        _reportStatusType = reportStatusType,
+        _fiscYear = fiscYear,
         super(key: key) {}
 
   @override
-  ReportListState createState() => ReportListState();
+  DeviceGroupState createState() => DeviceGroupState();
 }
 
-class ReportListState extends State<ReportList> {
+class DeviceGroupState extends State<DeviceGroup> {
   final List<String> items = List<String>.generate(10000, (i) => "Item $i");
   ScrollController _scrollController = ScrollController();
   List<Report> reports;
@@ -135,7 +54,7 @@ class ReportListState extends State<ReportList> {
   Currency _baseCurrency;
 
   UserRepository get _userRepository => widget._userRepository;
-  get _reportStatusType => widget._reportStatusType;
+  get _fiscYear => widget._fiscYear;
 
   String dropdown1Value = 'Free';
 
@@ -188,7 +107,7 @@ class ReportListState extends State<ReportList> {
     _getBaseCurrency();
     ascending = false;
     super.initState();
-    if (_reportStatusType == ReportStatusType.Active) {
+    if (_fiscYear == FiscYear.Current) {
       sortingType = ReportSortType.CreateTime;
     } else {
       sortingType = ReportSortType.UpdateTime;
@@ -197,7 +116,7 @@ class ReportListState extends State<ReportList> {
       subMenuOverlayEntry.remove();
       subMenuOverlayEntry = null;
     }
-    if (_reportStatusType == ReportStatusType.Active) {
+    if (_fiscYear == FiscYear.Current) {
       _sortByValue = _sortByCreateTime;
     } else {
       _sortByValue = _sortByUpdateTime;
@@ -488,7 +407,7 @@ class ReportListState extends State<ReportList> {
                       if (snapshot.data.success) {
                         List<Report> sortedReportItems =
                         _userRepository.reportRepository.getSortedReportItems(
-                            _reportStatusType,
+                            _fiscYear,
                             sortingType,
                             ascending,
                             _fromDate,

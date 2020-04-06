@@ -10,6 +10,7 @@ import 'package:intelligent_receipt/main_screen/search_bar/search_bar.dart';
 import 'package:intelligent_receipt/main_screen/settings_page/check_update_screen/check_update_screen_ios.dart';
 import 'package:intelligent_receipt/main_screen/settings_page/settings_page.dart';
 import 'package:intelligent_receipt/main_screen/reports_page/reports_page.dart';
+import 'package:intelligent_receipt/main_screen/tax_return_page/tax_return_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intelligent_receipt/translations/global_translations.dart';
 import 'package:intelligent_receipt/user_repository.dart';
@@ -276,6 +277,26 @@ class _MainScreenState extends State<MainScreen> {
                       return Platform.isIOS ? CheckUpdateScreenIos(
                       ): CheckUpdateScreenIos(
                       );
+                    }),
+                  );
+                },
+              ),
+              ListTile(
+                title: Text(allTranslations.text('Tax Return 2019-2020')),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) {
+                      return TaxReturnPage(userRepository: _userRepository, fiscYear: FiscYear.Current);
+                    }),
+                  );
+                },
+              ),
+              ListTile(
+                title: Text(allTranslations.text('Tax Return 2018-2019')),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) {
+                      return TaxReturnPage(userRepository: _userRepository, fiscYear: FiscYear.Previous);
                     }),
                   );
                 },
