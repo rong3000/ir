@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intelligent_receipt/authentication_bloc/bloc.dart';
 import 'package:intelligent_receipt/login/login.dart';
-import 'package:intelligent_receipt/main_screen/home_page/archived_receipts_page/bloc/archived_receipts_bloc.dart';
+import 'package:intelligent_receipt/receipt/archived_receipts_page/bloc/archived_receipts_bloc.dart';
 import 'package:intelligent_receipt/main_screen/main_screen.dart';
 import 'package:intelligent_receipt/main_screen/news/bloc/news_bloc.dart';
 import 'package:intelligent_receipt/main_screen/settings_page/preferences/bloc/preferences_bloc.dart';

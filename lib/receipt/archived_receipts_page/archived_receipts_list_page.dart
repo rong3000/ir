@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intelligent_receipt/data_model/action_with_lable.dart';
 import 'package:intelligent_receipt/data_model/receipt.dart';
-import 'package:intelligent_receipt/main_screen/home_page/archived_receipts_page/bloc/archived_receipts_bloc.dart';
-import 'package:intelligent_receipt/main_screen/home_page/archived_receipts_page/bloc/archived_receipts_events.dart';
-import 'package:intelligent_receipt/main_screen/home_page/archived_receipts_page/bloc/archived_receipts_state.dart';
-import 'package:intelligent_receipt/main_screen/home_page/archived_receipts_page/loading_spinner.dart';
+import './bloc/archived_receipts_bloc.dart';
+import './bloc/archived_receipts_events.dart';
+import './bloc/archived_receipts_state.dart';
+import './loading_spinner.dart';
 import 'package:intelligent_receipt/receipt/receipt_card/receipt_card.dart';
 import 'package:intelligent_receipt/translations/global_translations.dart';
 

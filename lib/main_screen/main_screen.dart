@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:intelligent_receipt/authentication_bloc/bloc.dart';
 import 'package:intelligent_receipt/data_model/enums.dart';
 import 'package:intelligent_receipt/main_screen/bloc/bloc.dart';
-import 'package:intelligent_receipt/main_screen/home_page/archived_receipts_page/archived_receipts_page.dart';
+import 'package:intelligent_receipt/main_screen/functions_page/functions_page.dart';
+import 'package:intelligent_receipt/receipt/archived_receipts_page/archived_receipts_page.dart';
 import 'package:intelligent_receipt/main_screen/home_page/home_page.dart';
 import 'package:intelligent_receipt/main_screen/search_bar/search_bar.dart';
 import 'package:intelligent_receipt/main_screen/settings_page/check_update_screen/check_update_screen_ios.dart';
@@ -33,12 +34,14 @@ class MainScreen extends StatefulWidget {
   static const homePageIndex = 0;
   static const receiptsPageIndex = 1;
   static const reportsPageIndex = 2;
-  static const settingsPageIndex = 3;
+  static const functionsPageIndex = 3;
+  static const settingsPageIndex = 4;
 
   final UserRepository _userRepository;
   HomePage _homePage;
   ReceiptsPage _receiptsPage;
   ReportsPage _reportsPage;
+  FunctionsPage _functionsPage;
   SettingsPage _settingsPage;
 
   final String name;
@@ -50,6 +53,7 @@ class MainScreen extends StatefulWidget {
     _homePage = new HomePage(userRepository: userRepository);
     _receiptsPage = new ReceiptsPage(userRepository: userRepository);
     _reportsPage = new ReportsPage(userRepository: userRepository, reportStatusType: ReportStatusType.Active);
+    _functionsPage = new FunctionsPage(userRepository: userRepository, name: name);
     _settingsPage = new SettingsPage(userRepository: userRepository, name: name);
   }
 
@@ -63,6 +67,7 @@ class _MainScreenState extends State<MainScreen> {
   String get homeTabLabel => allTranslations.text('app.main-screen.home-tab-label');
   String get receiptsTabLabel => allTranslations.text('app.main-screen.receipts-tab-label');
   String get groupsTabLabel => allTranslations.text('app.main-screen.groups-tab-label');
+  String get functionsTabLabel => allTranslations.text('app.main-screen.functions-tab-label');
   String get settingsTabLabel => allTranslations.text('app.main-screen.settings-tab-label');
   String get noNetworkText => allTranslations.text('app.main-screen.no-network');
   String get networkRecoveredText => allTranslations.text('app.main-screen.network-recovered');
@@ -173,6 +178,7 @@ class _MainScreenState extends State<MainScreen> {
             widget._homePage,
             widget._receiptsPage,
             widget._reportsPage,
+            widget._functionsPage,
             widget._settingsPage,
           ],
         ),
@@ -214,6 +220,15 @@ class _MainScreenState extends State<MainScreen> {
                     style: TextStyle(
                         color:
                             _currentIndex != MainScreen.reportsPageIndex ? _defaultColor : _activeColor),
+                  )),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.list, color: _defaultColor),
+                  activeIcon: Icon(Icons.list, color: _activeColor),
+                  title: Text(
+                    functionsTabLabel,
+                    style: TextStyle(
+                        color:
+                        _currentIndex != MainScreen.functionsPageIndex ? _defaultColor : _activeColor),
                   )),
               BottomNavigationBarItem(
                   icon: Icon(Icons.settings, color: _defaultColor),
