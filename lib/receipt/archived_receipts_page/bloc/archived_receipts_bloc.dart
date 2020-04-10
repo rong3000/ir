@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:intelligent_receipt/data_model/receipt_repository.dart';
-import 'package:intelligent_receipt/main_screen/home_page/archived_receipts_page/bloc/archived_receipts_events.dart';
-import 'package:intelligent_receipt/main_screen/home_page/archived_receipts_page/bloc/archived_receipts_state.dart';
+import 'archived_receipts_events.dart';
+import 'archived_receipts_state.dart';
 import 'package:meta/meta.dart';
 
 class ArchivedReceiptsBloc extends Bloc<ArchivedReceiptsEvent, ArchivedReceiptsState> {

@@ -61,6 +61,7 @@
       "home-tab-label": "Home",
       "receipts-tab-label": "Rceipts",
       "groups-tab-label": "Groups",
+      "functions-tab-label": "Features",
       "settings-tab-label": "Settings",
       "no-network" : "No network connection",
       "network-recovered" : "Network connection recovered",
@@ -269,6 +270,10 @@
       "fail-load": "Failed to Load Archived Data",
       "un-archive-label": "Un-Archive",
       "fail-un-archive": "Failed, check network and try again"
+    },
+    "functions-page" :{
+      "archived-receipts-title": "Archived Receipts",
+      "archived-receipts-description": "View all archived receipts here; In the archived receipt list, you can un-archive some receipts by clicking 'un-archive' icon."
     }
   },
   "words": {

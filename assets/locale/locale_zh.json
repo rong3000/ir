@@ -61,6 +61,7 @@
       "home-tab-label": "首页",
       "receipts-tab-label": "票据",
       "groups-tab-label": "票据组",
+      "functions-tab-label": "功能",
       "settings-tab-label": "设置",
       "no-network" : "没有网络",
       "network-recovered" : "网络连接恢复",
@@ -269,6 +270,10 @@
       "fail-load": "加载已存档的票据失败",
       "un-archive-label": "撤销存档",
       "fail-un-archive": "失败, 请检查网络并重试"
+    },
+    "functions-page" :{
+      "archived-receipts-title": "已存档的票据",
+      "archived-receipts-description": "查看所有已存档的票据; 可以在存档票据列表中点击'撤销存档'来撤销某个票据的存档状态, 从而在已审核的票据和报告中重新使用它."
     }
   },
   "words": {
