@@ -7,8 +7,10 @@ import "package:intelligent_receipt/user_repository.dart";
 import 'package:synchronized/synchronized.dart';
 
 export 'currency.dart';
+export 'data_result.dart';
 
 class SettingRepository extends IRRepository {
+  bool _dataFetched = false;
   List<Currency> _currencies;
   List<Setting> _generalSettings;
   Lock _lockCurrencies = new Lock();
@@ -17,6 +19,10 @@ class SettingRepository extends IRRepository {
   SettingRepository(UserRepository userRepository) : super (userRepository) {
     _currencies = new List<Currency>();
     _generalSettings = new List<Setting>();
+  }
+
+  bool isDataFetched() {
+    return _dataFetched;
   }
 
   List<Currency> getCurrencies() {
@@ -54,21 +60,46 @@ class SettingRepository extends IRRepository {
     return _addOrUpdateSystemSetting(Setting_DefaultCurrency, currencyId.toString());
   }
 
-  Future<DataResult> getCurrenciesFromServer() async {
+  bool isTaxInclusive() {
+    String taxInclusiveStr = _getSettingValue(Setting_IsTaxInclusive);
+    bool isTaxInclusive = true;
+    if (taxInclusiveStr.isNotEmpty) {
+      isTaxInclusive = (taxInclusiveStr == "1") ? true : false;
+    }
+    return isTaxInclusive;
+  }
+
+  Future<DataResult> setTaxInclusive(bool isTaxInclusive) {
+    return _addOrUpdateSystemSetting(Setting_IsTaxInclusive, isTaxInclusive ? "1" : "0");
+  }
+
+  int getTaxPercentage() {
+    String taxPercentageStr = _getSettingValue(Setting_TaxPercentage);
+    return taxPercentageStr.isNotEmpty ? int.tryParse(taxPercentageStr) : 10;
+  }
+
+  Future<DataResult> setTaxPercentage(int taxPercentage) {
+    return _addOrUpdateSystemSetting(Setting_TaxPercentage, taxPercentage.toString());
+  }
+
+  Future<DataResult> getCurrenciesFromServer({bool forceRefresh : false}) async {
     DataResult result = new DataResult(false, "Unknown");
     await _lockCurrencies.synchronized(() async {
-      if ((userRepository == null) || (userRepository.userGuid == null)) {
+      if (_dataFetched && !forceRefresh) {
+        result = DataResult.success(_currencies);
+      } else if ((userRepository == null) || (userRepository.userGuid == null)) {
         // Log an error
         result = DataResult.fail();
-      }
-
-      result = await webserviceGet(
-          Urls.GetCurrencies, await getToken(),
-          timeout: 3000);
-      if (result.success) {
-        Iterable l = result.obj;
-        _currencies = l.map((model) => Currency.fromJason(model)).toList();
-        result.obj = _currencies;
+      } else {
+        result = await webserviceGet(
+            Urls.GetCurrencies, await getToken(),
+            timeout: 5000);
+        if (result.success) {
+          Iterable l = result.obj;
+          _currencies = l.map((model) => Currency.fromJason(model)).toList();
+          result.obj = _currencies;
+          _dataFetched = true;
+        }
       }
     });
 
@@ -150,4 +181,6 @@ class SettingRepository extends IRRepository {
   }
 
   static String Setting_DefaultCurrency = "DefaultCurrency";
+  static String Setting_IsTaxInclusive = "IsTaxInclusive";
+  static String Setting_TaxPercentage = "TaxPercentage";
 }

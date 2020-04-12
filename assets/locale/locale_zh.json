@@ -16,7 +16,7 @@
     },
     "settings-page": {
       "title": "设置",
-      "preferences-menu-item-title": "App Language (软件语言)",
+      "preferences-menu-item-title": "区域和语言 (Regional and Language)",
       "currency-menu-item-title": "缺省货币",
       "category-menu-item-title": "票据类别",
       "plan-info-menu-item-title": "软件使用许可信息",
@@ -37,8 +37,14 @@
       "current-playstore-version-label": "当前Play Store版本是 "
     },
     "preferences-page": {
-      "title": "软件语言",
-      "language-dropdown-label": "选择语言（Select App Language）"
+      "title": "区域和语言",
+      "language-dropdown-label": "选择语言（Select App Language）",
+      "tax-percentage-label": "税费(GST)比率",
+      "tax-inclusive-lable": "税费(GST)是否包含在票据总额中: ",
+      "tax-inclusive-saved-success": "成功保存税费(GST)是否包含在票据总额中的状态.",
+      "tax-inclusive-saved-fail": "保存税费(GST)是否包含在票据总额中状态失败: \n",
+      "tax-percentage-saved-success": "成功保存税费(GST)比率.",
+      "tax-percentage-saved-fail": "保存税费(GST)比率失败: \n"
     },
     "currency-screen":{
       "title": "选择货币"

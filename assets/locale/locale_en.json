@@ -16,7 +16,7 @@
     },
     "settings-page": {
       "title": "Settings",
-      "preferences-menu-item-title": "App Language (选择语言)",
+      "preferences-menu-item-title": "Regional and Language (区域和语言)",
       "currency-menu-item-title": "Default Currency",
       "category-menu-item-title": "Categories",
       "plan-info-menu-item-title": "License Information",
@@ -37,8 +37,14 @@
       "current-playstore-version-label": "IR version in Play Store is "
     },
     "preferences-page": {
-      "title": "App Preferences",
-      "language-dropdown-label": "Select App Language(选择软件语言)"
+      "title": "Regional and Language",
+      "language-dropdown-label": "Select App Language(选择软件语言)",
+      "tax-percentage-label": "Tax(GST) Percentage (%)",
+      "tax-inclusive-lable": "Is tax(GST) included in total: ",
+      "tax-inclusive-saved-success": "Tax inclusive change was saved successfully.",
+      "tax-inclusive-saved-fail": "Failed to save tax inclusive: \n",
+      "tax-percentage-saved-success": "Tax percentage change was saved successfully.",
+      "tax-percentage-saved-fail": "Failed to save tax percentage: \n"
     },
     "currency-screen":{
       "title": "Choose Currency"

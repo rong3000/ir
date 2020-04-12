@@ -39,7 +39,7 @@ class AddEditReiptForm extends StatefulWidget {
         ..receiptDatetime = DateTime.now()
         ..receiptTypeId = 0
         ..productName = ""
-        ..gstInclusive = true
+        ..taxInclusive = true
         ..totalAmount = 0
         ..companyName = ""
         ..warrantyPeriod = 0
@@ -48,8 +48,8 @@ class AddEditReiptForm extends StatefulWidget {
     } else {
       receipt = _receiptItem;
     }
-    if (receipt.gstInclusive == null) {
-      receipt.gstInclusive = true;
+    if (receipt.taxInclusive == null) {
+      receipt.taxInclusive = true;
     }
 
     return _AddEditReiptFormState(receipt, isNew);
@@ -552,15 +552,15 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
                         FormField<bool>(
                           builder: (formState) => CheckboxListTile(
                             title: Text(allTranslations.text('app.add-edit-manual-page.gst-inclusive-label')),
-                            value: receipt.gstInclusive ?? true,
+                            value: receipt.taxInclusive ?? true,
                             onChanged: (newValue) {
                               setState(() {
-                                receipt.gstInclusive = !receipt.gstInclusive;
+                                receipt.taxInclusive = !receipt.taxInclusive;
                               });
                             },
                           ),
                           onSaved: (newValue) {
-                            receipt.gstInclusive = receipt.gstInclusive;
+                            receipt.taxInclusive = receipt.taxInclusive;
                           },
                         ),
                         DropdownButtonFormField<int>(

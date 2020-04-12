@@ -24,7 +24,8 @@ ReceiptListItem _$ReceiptListItemFromJson(Map<String, dynamic> json) {
     ..productName = json['productName'] as String
     ..currencyCode = json['currencyCode'] as String
     ..notes = json['notes'] as String
-    ..gstInclusive = json['gstInclusive'] as bool
+    ..taxInclusive = json['taxInclusive'] as bool
+    ..taxAmount = (json['taxAmount'] as num)?.toDouble()
     ..warrantyPeriod = (json['warrantyPeriod'] as num)?.toDouble()
     ..decodeStatus = json['decodeStatus'] as int
     ..altTotalAmount = (json['altTotalAmount'] as num)?.toDouble()
@@ -45,7 +46,8 @@ Map<String, dynamic> _$ReceiptListItemToJson(ReceiptListItem instance) =>
       'productName': instance.productName,
       'currencyCode': instance.currencyCode,
       'notes': instance.notes,
-      'gstInclusive': instance.gstInclusive,
+      'taxInclusive': instance.taxInclusive,
+      'taxAmount': instance.taxAmount,
       'warrantyPeriod': instance.warrantyPeriod,
       'decodeStatus': instance.decodeStatus,
       'altTotalAmount': instance.altTotalAmount,
@@ -69,7 +71,8 @@ Receipt _$ReceiptFromJson(Map<String, dynamic> json) {
     ..productName = json['productName'] as String
     ..currencyCode = json['currencyCode'] as String
     ..notes = json['notes'] as String
-    ..gstInclusive = json['gstInclusive'] as bool
+    ..taxInclusive = json['taxInclusive'] as bool
+    ..taxAmount = (json['taxAmount'] as num)?.toDouble()
     ..warrantyPeriod = (json['warrantyPeriod'] as num)?.toDouble()
     ..altTotalAmount = (json['altTotalAmount'] as num)?.toDouble()
     ..altCurrencyCode = json['altCurrencyCode'] as String
@@ -98,7 +101,8 @@ Map<String, dynamic> _$ReceiptToJson(Receipt instance) => <String, dynamic>{
       'productName': instance.productName,
       'currencyCode': instance.currencyCode,
       'notes': instance.notes,
-      'gstInclusive': instance.gstInclusive,
+      'taxInclusive': instance.taxInclusive,
+      'taxAmount': instance.taxAmount,
       'warrantyPeriod': instance.warrantyPeriod,
       'altTotalAmount': instance.altTotalAmount,
       'altCurrencyCode': instance.altCurrencyCode,

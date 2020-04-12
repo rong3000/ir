@@ -20,7 +20,8 @@ class ReceiptListItem {
   String productName;
   String currencyCode;
   String notes; 
-  bool gstInclusive; 
+  bool taxInclusive;
+  double taxAmount;
   double warrantyPeriod;
   int decodeStatus;
   double altTotalAmount;
