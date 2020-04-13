@@ -39,25 +39,6 @@ class _TaxReturnPageState extends State<TaxReturnPage> {
   UserRepository get _userRepository => widget._userRepository;
   get _fiscYear => widget._fiscYear;
 
-  void _showMessage() {
-    showDialog<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          content: const Text('You tapped the floating action button.'),
-          actions: <Widget>[
-            FlatButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text(allTranslations.text('words.ok')),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   @override
   void initState() {
     super.initState();
