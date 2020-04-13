@@ -163,12 +163,14 @@ class ReportListState extends State<ReportList> {
       });
   }
 
-  Future<void> _getReportsFromServer({forceRefresh : false}) {
-    _getReportsFuture = _userRepository.reportRepository.getReportsFromServer(forceRefresh: forceRefresh);
+  Future<void> _getReportsFromServer({forceRefresh: false}) {
+    _getReportsFuture = _userRepository.reportRepository
+        .getReportsFromServer(forceRefresh: forceRefresh);
   }
 
   Future<void> _forceGetReportsFromServer() async {
-    _getReportsFuture = _userRepository.reportRepository.getReportsFromServer(forceRefresh: true);
+    _getReportsFuture = _userRepository.reportRepository
+        .getReportsFromServer(forceRefresh: true);
     setState(() {});
   }
 
@@ -177,8 +179,7 @@ class ReportListState extends State<ReportList> {
     if (_baseCurrency == null) {
       await _userRepository.settingRepository.getSettingsFromServer();
       _baseCurrency = _userRepository.settingRepository.getDefaultCurrency();
-      setState(() {
-      });
+      setState(() {});
     }
   }
 
@@ -239,7 +240,7 @@ class ReportListState extends State<ReportList> {
   }
 
   String _getSortByValueStr(ReportSortType sortType) {
-    if (sortType == _sortByCreateTime){
+    if (sortType == _sortByCreateTime) {
       return allTranslations.text('app.reports-list.create-time');
     } else if (sortType == _sortByUpdateTime) {
       return allTranslations.text('app.reports-list.update-time');
@@ -250,7 +251,8 @@ class ReportListState extends State<ReportList> {
     }
   }
 
-  void _showInSnackBar(String value, {IconData icon: Icons.error, color: Colors.red}) {
+  void _showInSnackBar(String value,
+      {IconData icon: Icons.error, color: Colors.red}) {
     _scaffoldKey.currentState.showSnackBar(SnackBar(
       content: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -266,21 +268,23 @@ class ReportListState extends State<ReportList> {
     Navigator.of(context).push(
       MaterialPageRoute(builder: (context) {
         return AddEditReport2(
-          userRepository: _userRepository,
-          title: 'Edit Receipt Group',
-          reportId: id,
-        );
+            userRepository: _userRepository,
+            title: 'Edit Receipt Group',
+            reportId: id,
+            taxReturnGroupId: 0);
       }),
     );
     print('Review ${id}');
   }
 
   Future<void> deleteAndSetState(int reportId) async {
-    DataResult result = await _userRepository.reportRepository.deleteReport(reportId);
+    DataResult result =
+        await _userRepository.reportRepository.deleteReport(reportId);
     if (result.success) {
       setState(() => {});
     } else {
-      _showInSnackBar("${allTranslations.text("app.reports-list.failed-delete-group-message")} \n${result.message}");
+      _showInSnackBar(
+          "${allTranslations.text("app.reports-list.failed-delete-group-message")} \n${result.message}");
     }
   }
 
@@ -314,7 +318,8 @@ class ReportListState extends State<ReportList> {
                           subMenuOverlayEntry.remove();
                           subMenuOverlayEntry = null;
                         },
-                        child: Text(allTranslations.text('app.reports-list.create-time')),
+                        child: Text(allTranslations
+                            .text('app.reports-list.create-time')),
                       ),
                     ),
                   ),
@@ -328,7 +333,8 @@ class ReportListState extends State<ReportList> {
                           subMenuOverlayEntry.remove();
                           subMenuOverlayEntry = null;
                         },
-                        child: Text(allTranslations.text('app.reports-list.update-time')),
+                        child: Text(allTranslations
+                            .text('app.reports-list.update-time')),
                       ),
                     ),
                   ),
@@ -346,7 +352,8 @@ class ReportListState extends State<ReportList> {
                           subMenuOverlayEntry.remove();
                           subMenuOverlayEntry = null;
                         },
-                        child: Text(allTranslations.text('app.reports-list.group-name')),
+                        child: Text(allTranslations
+                            .text('app.reports-list.group-name')),
                       ),
                     ),
                   ),
@@ -361,7 +368,8 @@ class ReportListState extends State<ReportList> {
                           },
                           value: this.ascending,
                         ),
-                        Text(allTranslations.text('app.reports-list.ascending')),
+                        Text(
+                            allTranslations.text('app.reports-list.ascending')),
                       ],
                     ),
                   ),
@@ -381,155 +389,159 @@ class ReportListState extends State<ReportList> {
     final TextStyle descriptionStyle = theme.textTheme.subhead;
 
     return MaterialApp(
-      home: Scaffold(
-        appBar: PreferredSize(
-          preferredSize: Size(60.0, 60.0),
-          child: Container(
-            height: 60.0,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: <Widget>[
-                    Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        GestureDetector(
-                          onTap: () {
-                            _selectFromDate(context);
-                          },
-                          child: Text(
-                            "${getDateFormatForYMD().format(_fromDate.toLocal())}",
-                            style: TextStyle(height: 1, fontSize: 12),
-                          ),
+        home: Scaffold(
+      appBar: PreferredSize(
+        preferredSize: Size(60.0, 60.0),
+        child: Container(
+          height: 60.0,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      GestureDetector(
+                        onTap: () {
+                          _selectFromDate(context);
+                        },
+                        child: Text(
+                          "${getDateFormatForYMD().format(_fromDate.toLocal())}",
+                          style: TextStyle(height: 1, fontSize: 12),
                         ),
-                        Icon(Icons.arrow_forward),
-                        GestureDetector(
-                          onTap: () {
-                            _selectToDate(context);
-                          },
-                          child: Text(
-                            "${getDateFormatForYMD().format(_toDate.toLocal())}",
-                            style: TextStyle(height: 1, fontSize: 12),
-                          ),
-                        ),
-                      ],
-                    ),
-                    PopupMenuButton<ReportSortType>(
-                      padding: EdgeInsets.zero,
-                      initialValue: _sortByValue,
-                      onSelected: showMenuSelection,
-                      child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            Icon(Icons.sort),
-                            Text(
-                              "[${_getSortByValueStr(_sortByValue)}]",
-                              style: TextStyle(height: 1, fontSize: 12),
-                            ),
-                          ]),
-                      itemBuilder: (BuildContext context) =>
-                          <PopupMenuItem<ReportSortType>>[
-                        PopupMenuItem<ReportSortType>(
-                          value: _sortByCreateTime,
-                          child: Text(allTranslations.text('app.reports-list.create-time')),
-                        ),
-                        PopupMenuItem<ReportSortType>(
-                          value: _sortByUpdateTime,
-                          child: Text(allTranslations.text('app.reports-list.update-time')),
-                        ),
-                        PopupMenuItem<ReportSortType>(
-                          value: _sortByGroupName,
-                          child: Text(allTranslations.text('app.reports-list.group-name')),
-                        ),
-                      ],
-                    ),
-                    IconButton(
-                      icon: Icon(
-                        ascending ? Icons.arrow_upward : Icons.arrow_downward,
-                        color: Colors.black,
                       ),
-                      tooltip: 'Toggle ascending',
-                      onPressed: () {
-                        setState(() {
-                          ascending = !ascending;
-                        });
-                      },
+                      Icon(Icons.arrow_forward),
+                      GestureDetector(
+                        onTap: () {
+                          _selectToDate(context);
+                        },
+                        child: Text(
+                          "${getDateFormatForYMD().format(_toDate.toLocal())}",
+                          style: TextStyle(height: 1, fontSize: 12),
+                        ),
+                      ),
+                    ],
+                  ),
+                  PopupMenuButton<ReportSortType>(
+                    padding: EdgeInsets.zero,
+                    initialValue: _sortByValue,
+                    onSelected: showMenuSelection,
+                    child:
+                        Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
+                      Icon(Icons.sort),
+                      Text(
+                        "[${_getSortByValueStr(_sortByValue)}]",
+                        style: TextStyle(height: 1, fontSize: 12),
+                      ),
+                    ]),
+                    itemBuilder: (BuildContext context) =>
+                        <PopupMenuItem<ReportSortType>>[
+                      PopupMenuItem<ReportSortType>(
+                        value: _sortByCreateTime,
+                        child: Text(allTranslations
+                            .text('app.reports-list.create-time')),
+                      ),
+                      PopupMenuItem<ReportSortType>(
+                        value: _sortByUpdateTime,
+                        child: Text(allTranslations
+                            .text('app.reports-list.update-time')),
+                      ),
+                      PopupMenuItem<ReportSortType>(
+                        value: _sortByGroupName,
+                        child: Text(allTranslations
+                            .text('app.reports-list.group-name')),
+                      ),
+                    ],
+                  ),
+                  IconButton(
+                    icon: Icon(
+                      ascending ? Icons.arrow_upward : Icons.arrow_downward,
+                      color: Colors.black,
                     ),
-                  ],
-                ),
-              ],
-            ),
+                    tooltip: 'Toggle ascending',
+                    onPressed: () {
+                      setState(() {
+                        ascending = !ascending;
+                      });
+                    },
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
-        body: RefreshIndicator(
-          onRefresh: _forceGetReportsFromServer,
-          child: FutureBuilder<DataResult>(
-              future: _getReportsFuture,
-              builder:
-                  (BuildContext context, AsyncSnapshot<DataResult> snapshot) {
-                switch (snapshot.connectionState) {
-                  case ConnectionState.none:
-                    return new Text(allTranslations.text('app.reports-list.loading'));
-                  case ConnectionState.waiting:
-                    return new Center(child: new CircularProgressIndicator());
-                  case ConnectionState.active:
-                    return new Text('');
-                  case ConnectionState.done:
-                    if (snapshot.hasError) {
-                      return new Text(
-                        '${snapshot.error}',
-                        style: TextStyle(color: Colors.red),
-                      );
+      ),
+      body: RefreshIndicator(
+        onRefresh: _forceGetReportsFromServer,
+        child: FutureBuilder<DataResult>(
+            future: _getReportsFuture,
+            builder:
+                (BuildContext context, AsyncSnapshot<DataResult> snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.none:
+                  return new Text(
+                      allTranslations.text('app.reports-list.loading'));
+                case ConnectionState.waiting:
+                  return new Center(child: new CircularProgressIndicator());
+                case ConnectionState.active:
+                  return new Text('');
+                case ConnectionState.done:
+                  if (snapshot.hasError) {
+                    return new Text(
+                      '${snapshot.error}',
+                      style: TextStyle(color: Colors.red),
+                    );
+                  } else {
+                    if (snapshot.data.success) {
+                      List<Report> sortedReportItems =
+                          _userRepository.reportRepository.getSortedReportItems(
+                              _reportStatusType,
+                              sortingType,
+                              ascending,
+                              _fromDate,
+                              _toDate);
+                      List<ActionWithLable> actions = [];
+                      ActionWithLable r = new ActionWithLable();
+                      r.action = reviewAction;
+                      r.lable = allTranslations.text('app.reports-list.review');
+                      ActionWithLable d = new ActionWithLable();
+                      d.action = deleteAction;
+                      d.lable = allTranslations.text('app.reports-list.delete');
+                      actions.add(r);
+                      actions.add(d);
+                      return ListView.builder(
+                          itemCount: sortedReportItems.length,
+                          controller: _scrollController,
+                          physics: AlwaysScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            return ReportCard(
+                              reportItem: sortedReportItems[index],
+                              userRepository: _userRepository,
+                              actions: actions,
+                              baseCurrency: _baseCurrency,
+                            );
+                          });
                     } else {
-                      if (snapshot.data.success) {
-                        List<Report> sortedReportItems =
-                        _userRepository.reportRepository.getSortedReportItems(
-                            _reportStatusType,
-                            sortingType,
-                            ascending,
-                            _fromDate,
-                            _toDate);
-                        List<ActionWithLable> actions = [];
-                        ActionWithLable r = new ActionWithLable();
-                        r.action = reviewAction;
-                        r.lable = allTranslations.text('app.reports-list.review');
-                        ActionWithLable d = new ActionWithLable();
-                        d.action = deleteAction;
-                        d.lable = allTranslations.text('app.reports-list.delete');
-                        actions.add(r);
-                        actions.add(d);
-                        return ListView.builder(
-                            itemCount: sortedReportItems.length,
-                            controller: _scrollController,
-                            physics: AlwaysScrollableScrollPhysics(),
-                            itemBuilder: (context, index) {
-                              return ReportCard(
-                                reportItem: sortedReportItems[index],
-                                userRepository: _userRepository,
-                                actions: actions,
-                                baseCurrency: _baseCurrency,
-                              );
-                            });
-                      } else {
-                        if (snapshot.data.messageCode == HTTPStatusCode.UNSUPPORTED_VERSION) {
-                          return UnsupportedVersion();
-                        }
-
-                        return Column(
-                          children: <Widget>[
-                            Text('${allTranslations.text("app.reports-list.failed-load-groups-message")} ${snapshot.data.messageCode} ${snapshot.data.message}'),
-                          ],
-                        );
+                      if (snapshot.data.messageCode ==
+                          HTTPStatusCode.UNSUPPORTED_VERSION) {
+                        return UnsupportedVersion();
                       }
+
+                      return Column(
+                        children: <Widget>[
+                          Text(
+                              '${allTranslations.text("app.reports-list.failed-load-groups-message")} ${snapshot.data.messageCode} ${snapshot.data.message}'),
+                        ],
+                      );
                     }
-                 }
-              }),
-        ),
-      )
-    );
+                  }
+              }
+            }),
+      ),
+    ));
   }
 }

@@ -42,14 +42,18 @@ class AddEditReport2 extends StatefulWidget {
   final String title;
   final UserRepository _userRepository;
   final int _reportId;
+  final int _taxReturnGroupId;
   AddEditReport2(
       {Key key,
         @required UserRepository userRepository,
         this.title,
-        int reportId : 0})
+        int reportId : 0,
+        int taxReturnGroupId,
+      })
       : assert(userRepository != null),
         _userRepository = userRepository,
         _reportId = reportId,
+        _taxReturnGroupId = taxReturnGroupId,
         super(key: key);
 
   static const String routeName = '/material/text-form-field';
@@ -68,6 +72,7 @@ class PersonData {
 
 class AddEditReport2State extends State<AddEditReport2> {
   UserRepository get _userRepository => widget._userRepository;
+  int get _taxReturnGroupId => widget._taxReturnGroupId;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   PersonData person = PersonData();
@@ -436,6 +441,7 @@ class AddEditReport2State extends State<AddEditReport2> {
       _report.id = 0;
       _report.statusId = 1;
       _report.createDateTime = DateTime.now();
+      _report.taxReturnGroupId = _taxReturnGroupId;
     }
     _report.totalAmount = _totalAmount;
     _report.currencyCode = (_reportCurrency != null) ? _reportCurrency.code : "";

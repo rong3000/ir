@@ -116,6 +116,7 @@ class _ReportsPageState extends State<ReportsPage> {
               return AddEditReport2(
                   userRepository: _userRepository,
                   title: allTranslations.text('app.add-reports-page.title'),
+                  taxReturnGroupId: 0
               );
             }),
           );
