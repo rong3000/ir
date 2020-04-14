@@ -48,7 +48,7 @@ class AddEditReport2 extends StatefulWidget {
         @required UserRepository userRepository,
         this.title,
         int reportId : 0,
-        int taxReturnGroupId,
+        int taxReturnGroupId : 0,
       })
       : assert(userRepository != null),
         _userRepository = userRepository,

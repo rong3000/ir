@@ -182,14 +182,13 @@ class DeviceGroupState extends State<DeviceGroup> {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  void reviewAction(int id) {
+  void taxReviewAction(int id) {
     Navigator.of(context).push(
       MaterialPageRoute(builder: (context) {
         return AddEditReport2(
             userRepository: _userRepository,
             title: 'Edit Receipt Group',
-            reportId: id,
-            taxReturnGroupId: 1);
+            taxReturnGroupId: id);
       }),
     );
     print('Review ${id}');
@@ -345,7 +344,7 @@ class DeviceGroupState extends State<DeviceGroup> {
 //                            _toDate);
                       List<ActionWithLable> actions = [];
                       ActionWithLable r = new ActionWithLable();
-                      r.action = reviewAction;
+                      r.action = taxReviewAction;
                       r.lable = allTranslations.text('app.reports-list.review');
 //                        ActionWithLable d = new ActionWithLable();
 //                        d.action = deleteAction;
