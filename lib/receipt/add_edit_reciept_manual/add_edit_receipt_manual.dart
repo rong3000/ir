@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -31,7 +32,7 @@ class AddEditReiptForm extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    var isNew = _receiptItem == null;
+    var isNew = (_receiptItem == null) || (_receiptItem.id == 0);
     Receipt receipt;
 
     if (isNew) {
@@ -41,6 +42,7 @@ class AddEditReiptForm extends StatefulWidget {
         ..productName = ""
         ..taxInclusive = true
         ..totalAmount = 0
+        ..taxAmount = 0
         ..companyName = ""
         ..warrantyPeriod = 0
         ..notes = ""
@@ -60,6 +62,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
   final _formKey = GlobalKey<FormState>();
   String get pageTitleEdit => allTranslations.text('app.add-edit-manual-page.edit-title');
   String get pageTitleNew => allTranslations.text('app.add-edit-manual-page.new-title');
+  final TextEditingController _taxAmountController = new TextEditingController();
 
   var isNew;
   File receiptImageFile;
@@ -122,6 +125,11 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
         });
       });
     }
+
+    if (isNew) {
+      this.receipt.taxInclusive = _userRepository.settingRepository.isTaxInclusive();
+    }
+    _taxAmountController.text = receipt.taxAmount.toString();
     super.initState();
   }
 
@@ -130,7 +138,24 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
     if (receiptImageFile != null) {
       receiptImageFile.delete();
     }
+    _taxAmountController.dispose();
     super.dispose();
+  }
+
+  double roundDouble(double val, int places){
+    double mod = pow(10.0, places);
+    return ((val * mod).round().toDouble() / mod);
+  }
+
+  void _calcTaxAmount(Receipt receipt) {
+    double taxPercentage = _userRepository.settingRepository.getTaxPercentage();
+    if (receipt.taxInclusive) {
+      receipt.taxAmount = roundDouble(receipt.totalAmount * taxPercentage / (100 + taxPercentage), 2);
+    } else {
+      receipt.taxAmount = roundDouble(receipt.totalAmount * taxPercentage / 100, 2);
+    }
+    _taxAmountController.text = receipt.taxAmount.toString();
+    print(receipt.taxAmount);
   }
 
   Future<void> _deleteReceipt() async {
@@ -150,6 +175,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
 
     this.receipt.decodeStatus = DecodeStatusType.Success.index;
     this.receipt.receiptTypeId = 0;
+    this.receipt.taxAmount = double.tryParse(_taxAmountController.text);
 
     // Update receipt date time if it is invalid
     _getReceiptDateTime(this.receipt);
@@ -521,6 +547,10 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
                                     receipt.totalAmount == 0 ? allTranslations.text('app.add-edit-manual-page.enter-total-amount-label') : allTranslations.text('app.add-edit-manual-page.total-amount-label')),
                                   initialValue: receipt.totalAmount == 0 ? "" : receipt.totalAmount.toString(),
                                   validator: textFieldValidator,
+                                  onChanged: (String value) {
+                                    receipt.totalAmount = value.isNotEmpty ? double.tryParse(value) : 0;
+                                    _calcTaxAmount(receipt);
+                                  },
                                   onSaved: (String value) {
                                     receipt.totalAmount = double.tryParse(value);
                                   },
@@ -549,19 +579,48 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
                             ),
                           ],
                         ),
-                        FormField<bool>(
-                          builder: (formState) => CheckboxListTile(
-                            title: Text(allTranslations.text('app.add-edit-manual-page.gst-inclusive-label')),
-                            value: receipt.taxInclusive ?? true,
-                            onChanged: (newValue) {
-                              setState(() {
-                                receipt.taxInclusive = !receipt.taxInclusive;
-                              });
-                            },
-                          ),
-                          onSaved: (newValue) {
-                            receipt.taxInclusive = receipt.taxInclusive;
-                          },
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Flexible(
+                              flex: 4,
+                              child: Padding(
+                                padding: EdgeInsets.only(top: 5),
+                                child: TextFormField(
+                                  controller: _taxAmountController,
+                                  decoration: InputDecoration(labelText: allTranslations.text('app.add-edit-manual-page.tax-amount-label')),
+                                  validator: (String value) {
+                                    double taxAmount = double.tryParse(value);
+                                    if (taxAmount < 0 || taxAmount > receipt.totalAmount) {
+                                      return allTranslations.text('app.add-edit-manual-page.invalid-tax-amount');
+                                    }
+                                    return null;
+                                  },
+                                  onSaved: (String value) {
+                                    receipt.taxAmount = double.tryParse(value);
+                                  },
+                                ),
+                              ),
+                            ),
+                            Flexible(
+                              flex: 6,
+                              child: FormField<bool>(
+                                builder: (formState) => CheckboxListTile(
+                                  title: Text(allTranslations.text('app.add-edit-manual-page.gst-inclusive-label')),
+                                  value: receipt.taxInclusive ?? true,
+                                  onChanged: (newValue) {
+                                    setState(() {
+                                      receipt.taxInclusive = !receipt.taxInclusive;
+                                      _calcTaxAmount(receipt);
+                                    });
+                                  },
+                                ),
+                                onSaved: (newValue) {
+                                  receipt.taxInclusive = receipt.taxInclusive;
+                                },
+                              ),
+                            ),
+                          ],
                         ),
                         DropdownButtonFormField<int>(
                           isDense: true,

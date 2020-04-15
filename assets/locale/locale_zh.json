@@ -44,7 +44,8 @@
       "tax-inclusive-saved-success": "成功保存税费(GST)是否包含在票据总额中的状态.",
       "tax-inclusive-saved-fail": "保存税费(GST)是否包含在票据总额中状态失败: \n",
       "tax-percentage-saved-success": "成功保存税费(GST)比率.",
-      "tax-percentage-saved-fail": "保存税费(GST)比率失败: \n"
+      "tax-percentage-saved-fail": "保存税费(GST)比率失败: \n",
+      "tax-percentage-range": "税费(GST)比率的范围为(0 ~ 100)."
     },
     "currency-screen":{
       "title": "选择货币"
@@ -180,13 +181,15 @@
       "purchase-date-label": "购买日期",
       "total-amount-label": "票据总额",
       "currency-code-label": "货币代码",
-      "gst-inclusive-label": "是否包括GST",
+      "gst-inclusive-label": "总额是否包括GST",
       "category-label": "类别",
       "vendor-label": "票据公司",
       "product-name-label": "产品名",
       "warranty-period-label": "保修期",
       "notes-label": "说明",
-      "enter-total-amount-label": "输入票据金额"
+      "enter-total-amount-label": "输入票据金额",
+      "tax-amount-label": "税费(GST)金额",
+      "invalid-tax-amount": "无效税费金额"
     },
     "receipt-card" : {
       "unknown-category": "点击'查看'按键选择票据类别.",

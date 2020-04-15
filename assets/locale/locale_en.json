@@ -44,7 +44,8 @@
       "tax-inclusive-saved-success": "Tax inclusive change was saved successfully.",
       "tax-inclusive-saved-fail": "Failed to save tax inclusive: \n",
       "tax-percentage-saved-success": "Tax percentage change was saved successfully.",
-      "tax-percentage-saved-fail": "Failed to save tax percentage: \n"
+      "tax-percentage-saved-fail": "Failed to save tax percentage: \n",
+      "tax-percentage-range": "Tax(GST) percentage must be between 0 and 100."
     },
     "currency-screen":{
       "title": "Choose Currency"
@@ -180,13 +181,15 @@
       "purchase-date-label": "Purchase Date",
       "total-amount-label": "Total Amount",
       "currency-code-label": "Currency Code",
-      "gst-inclusive-label": "GST Inclusive",
+      "gst-inclusive-label": "Is tax(GST) included in total?",
       "category-label": "Category",
       "vendor-label": "Shop/Vendor",
       "product-name-label": "Product Name",
       "warranty-period-label": "Warranty Period",
       "notes-label": "Notes",
-      "enter-total-amount-label": "Enter Total Amount"
+      "enter-total-amount-label": "Enter Total Amount",
+      "tax-amount-label": "Tax(GST) Amount",
+      "invalid-tax-amount": "Invalid tax amount"
     },
     "receipt-card" : {
       "unknown-category": "Click 'Review' button to select receipt category.",

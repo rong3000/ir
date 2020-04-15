@@ -73,12 +73,12 @@ class SettingRepository extends IRRepository {
     return _addOrUpdateSystemSetting(Setting_IsTaxInclusive, isTaxInclusive ? "1" : "0");
   }
 
-  int getTaxPercentage() {
+  double getTaxPercentage() {
     String taxPercentageStr = _getSettingValue(Setting_TaxPercentage);
-    return taxPercentageStr.isNotEmpty ? int.tryParse(taxPercentageStr) : 10;
+    return taxPercentageStr.isNotEmpty ? double.tryParse(taxPercentageStr) : 10;
   }
 
-  Future<DataResult> setTaxPercentage(int taxPercentage) {
+  Future<DataResult> setTaxPercentage(double taxPercentage) {
     return _addOrUpdateSystemSetting(Setting_TaxPercentage, taxPercentage.toString());
   }
 
