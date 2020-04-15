@@ -169,7 +169,21 @@ class AddEditReport2State extends State<AddEditReport2> {
   void initState() {
     if (isNewReport()) {
       _report = new Report();
-      _report.reportName = "";
+      if (widget._taxReturnGroupId == 0)
+      {_report.reportName = "";} else {
+//        _report.reportName = _userRepository
+//            .taxReturnRepository.taxReturns[1].receiptGroups[0].reportName;
+        for (int i = 0; i < _userRepository.taxReturnRepository.taxReturns.length; i++) {
+          for (int j = 0; j < _userRepository.taxReturnRepository.taxReturns[i].receiptGroups.length; j++) {
+            if (widget._taxReturnGroupId ==
+                _userRepository.taxReturnRepository.taxReturns[i].receiptGroups[j].taxReturnGroupId) {
+      print(widget._taxReturnGroupId);
+      print(_userRepository.taxReturnRepository.taxReturns[i].receiptGroups[j].reportName);
+              _report.reportName = _userRepository.taxReturnRepository.taxReturns[i].receiptGroups[j].reportName;
+            }
+          }
+        }
+      }
       _report.description = "";
     } else {
       _report = _userRepository.reportRepository.getReport(widget._reportId);
@@ -330,6 +344,7 @@ class AddEditReport2State extends State<AddEditReport2> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
                   const SizedBox(height: 6.0),
+//                  _report.taxReturnGroupId == 0?
                   TextFormField(
                     textCapitalization: TextCapitalization.words,
                     decoration: InputDecoration(
@@ -342,7 +357,9 @@ class AddEditReport2State extends State<AddEditReport2> {
 //                    initialValue: 'x',
                     onSaved: (String value) { person.name = value; },
                     validator: _validateGroupName,
-                  ),
+                    readOnly: widget._taxReturnGroupId > 0,
+                  ) ,
+//                      : Text(_report.reportName),
                   const SizedBox(height: 6.0),
                   TextFormField(
                     decoration: InputDecoration(
