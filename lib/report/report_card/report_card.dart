@@ -52,7 +52,7 @@ class _ReportCardState extends State<ReportCard> {
     }
 
     Widget _actionButton(BuildContext context, ActionWithLable action) {
-      if (action.action != null) {
+      if (action.action != null && widget._reportItem.taxReturnGroupId == 0) {
         return Container(
           height: 25,
           child: OutlineButton(
@@ -62,6 +62,20 @@ class _ReportCardState extends State<ReportCard> {
                       .apply(fontSizeFactor: 0.75),
                   semanticsLabel: '${action.lable} ${widget._reportItem.id}'),
               onPressed: () => action.action(widget._reportItem.id),
+              borderSide: BorderSide(color: Colors.blue),
+              shape: new RoundedRectangleBorder(
+                  borderRadius: new BorderRadius.circular(4.0))),
+        );
+      } else if (action.action != null && widget._reportItem.taxReturnGroupId > 0) {
+        return Container(
+          height: 25,
+          child: OutlineButton(
+              child: Text(action.lable,
+                  style: dateStyle
+                      .copyWith(color: Colors.blue)
+                      .apply(fontSizeFactor: 0.75),
+                  semanticsLabel: '${action.lable} ${widget._reportItem.taxReturnGroupId}'),
+              onPressed: () => action.action(widget._reportItem.taxReturnGroupId),
               borderSide: BorderSide(color: Colors.blue),
               shape: new RoundedRectangleBorder(
                   borderRadius: new BorderRadius.circular(4.0))),
