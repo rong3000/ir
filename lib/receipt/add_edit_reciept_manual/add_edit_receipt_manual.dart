@@ -27,8 +27,11 @@ import 'package:intelligent_receipt/data_model/GeneralUtility.dart';
 
 class AddEditReiptForm extends StatefulWidget {
   final Receipt _receiptItem;
+  bool _disableSave = false;
 
-  AddEditReiptForm(this._receiptItem);
+  AddEditReiptForm(this._receiptItem, {bool disableSave: false}) {
+    _disableSave = disableSave;
+  }
 
   @override
   State<StatefulWidget> createState() {
@@ -413,14 +416,16 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
       ));
     }
 
-    buttons.add(IconButton(
-      icon: const Icon(Icons.done),
-      onPressed: () {
-        if ( _state == null || !_state.uploadinProgress){
-          this._saveForm();
-        }
-      },
-    ));
+    if (!widget._disableSave) {
+      buttons.add(IconButton(
+        icon: const Icon(Icons.done),
+        onPressed: () {
+          if ( _state == null || !_state.uploadinProgress){
+            this._saveForm();
+          }
+        },
+      ));
+    }
 
     return buttons;
   }
