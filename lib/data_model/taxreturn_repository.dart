@@ -46,6 +46,14 @@ class TaxReturnRepository extends IRRepository {
   }
 
   void updateReport(Report report) {
+    for (int i = 0; i< taxReturns.length; i++) {
+      for (int j = 0; j< taxReturns[i].receiptGroups.length; j++) {
+        if (report.taxReturnGroupId == taxReturns[i].receiptGroups[j].taxReturnGroupId) {
+          taxReturns[i].receiptGroups[j] = report;
+        }
+      }
+
+    }
 
   }
 }
