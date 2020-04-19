@@ -475,6 +475,9 @@ class AddEditReport2State extends State<AddEditReport2> {
     DataResult dataResult = isNewReport() ? await _userRepository.reportRepository.addReport(_report) :  await _userRepository.reportRepository.updateReport(_report, true);
     if (dataResult.success) {
       Navigator.pop(context);
+      if (_report.taxReturnGroupId != 0) {
+        _userRepository.taxReturnRepository.updateReport(dataResult.obj);
+      }
     } else if (dataResult.messageCode == HTTPStatusCode.UNSUPPORTED_VERSION) {
       showUnsupportedVersionAlert(context);
     } else {
