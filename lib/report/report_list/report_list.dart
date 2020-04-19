@@ -179,7 +179,10 @@ class ReportListState extends State<ReportList> {
     if (_baseCurrency == null) {
       await _userRepository.settingRepository.getSettingsFromServer();
       _baseCurrency = _userRepository.settingRepository.getDefaultCurrency();
-      setState(() {});
+      if (this.mounted) {
+        setState(() {
+        });
+      }
     }
   }
 
