@@ -35,7 +35,8 @@ class ReportRepository extends IRRepository {
       for (var i = 0; i < reports.length; i++) {
         if (reports[i].statusId == reportStatus.index
             && reports[i].createDateTime.isAfter(fromDate)
-            && reports[i].createDateTime.isBefore(toDate.add(Duration(days: 1)))) {
+            && reports[i].createDateTime.isBefore(toDate.add(Duration(days: 1)))
+            && reports[i].taxReturnGroupId == 0 ) {
           selectedReports.add(reports[i]);
           if (ascending) {
             switch (type) {

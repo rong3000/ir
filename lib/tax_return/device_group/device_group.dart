@@ -223,10 +223,6 @@ class DeviceGroupState extends State<DeviceGroup> {
                 children: <Widget>[
                   Expanded(
                     child: new ListTile(
-//                          leading: Icon(
-//                            Icons.edit,
-////                            color: Colors.white,
-//                          ),
                       title: GestureDetector(
                         onTap: () {
                           setState(() {
@@ -332,47 +328,15 @@ class DeviceGroupState extends State<DeviceGroup> {
                       if (widget._fiscYear == FiscYear.Current) {
                         sortedReportItems = _userRepository
                             .taxReturnRepository.taxReturns[1].receiptGroups;
-
-//                          for (int i = 0; i < _userRepository.reportRepository.reports.length; i++) {
-//                            if (_userRepository.reportRepository.reports[i].taxReturnGroupId > 0) {
-//                              sortedReportItems.add(_userRepository.reportRepository.reports[i]);
-//                              for (int j=0; j < _userRepository.taxReturnRepository.taxReturns[1].receiptGroups.length; j++) {
-//                                if (_userRepository.reportRepository.reports[i].taxReturnGroupId == _userRepository.taxReturnRepository.taxReturns[1].receiptGroups[j].taxReturnGroupId) {
-//                                  sortedReportItems.remove(_userRepository.taxReturnRepository.taxReturns[1].receiptGroups[j]);
-//                                }
-//                              }
-//                            }
-//                          }
-
                       } else {
                         sortedReportItems = _userRepository
                             .taxReturnRepository.taxReturns[0].receiptGroups;
-//                        for (int i = 0; i < _userRepository.reportRepository.reports.length; i++) {
-//                          if (_userRepository.reportRepository.reports[i].taxReturnGroupId > 0) {
-//                            sortedReportItems.add(_userRepository.reportRepository.reports[i]);
-//                            for (int j=0; j < _userRepository.taxReturnRepository.taxReturns[0].receiptGroups.length; j++) {
-//                              if (_userRepository.reportRepository.reports[i].taxReturnGroupId == _userRepository.taxReturnRepository.taxReturns[0].receiptGroups[j].taxReturnGroupId) {
-//                                sortedReportItems.remove(_userRepository.taxReturnRepository.taxReturns[0].receiptGroups[j]);
-//                              }
-//                            }
-//                          }
-//                        }
                       }
-//                        _userRepository.reportRepository.getSortedReportItems(
-//                            ReportStatusType.Active,
-//                            sortingType,
-//                            ascending,
-//                            _fromDate,
-//                            _toDate);
                       List<ActionWithLable> actions = [];
                       ActionWithLable r = new ActionWithLable();
                       r.action = taxReviewAction;
                       r.lable = allTranslations.text('app.reports-list.review');
-//                        ActionWithLable d = new ActionWithLable();
-//                        d.action = deleteAction;
-//                        d.lable = allTranslations.text('app.reports-list.delete');
                       actions.add(r);
-//                        actions.add(d);
                       return ListView.builder(
                           itemCount: sortedReportItems.length,
                           controller: _scrollController,
