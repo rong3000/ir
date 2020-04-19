@@ -30,13 +30,102 @@ class _FunctionsPageState extends State<FunctionsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView(
+      body: OrientationBuilder(builder: (context, orientation) {
+        return
+        Column(
         children: <Widget>[
           FunctionCard(ArchivedReceiptsPage(userRepository: _userRepository),
-            allTranslations.text('app.functions-page.archived-receipts-title'),
-            allTranslations.text('app.functions-page.archived-receipts-description'))
+              allTranslations.text('app.functions-page.archived-receipts-title'),
+              allTranslations.text('app.functions-page.archived-receipts-description')),
+          Flexible(
+            fit: FlexFit.tight,
+            child: Wrap(
+              children: <Widget>[
+                FractionallySizedBox(
+                  widthFactor: orientation == Orientation.portrait ? 0.5: 0.25,
+                  child: Container(
+                    height: MediaQuery.of(context).size.height * (orientation == Orientation.portrait ? 0.2: 0.4),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => ArchivedReceiptsPage(userRepository: _userRepository))
+                        );
+                      },
+                      child: Card(
+                        child: ListTile(
+                          title: Text(allTranslations.text('app.functions-page.archived-receipts-title')),
+                          subtitle: Text(allTranslations.text('app.functions-page.archived-receipts-description')),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                FractionallySizedBox(
+                  widthFactor: orientation == Orientation.portrait ? 0.5: 0.25,
+                  child: Container(
+                    height: MediaQuery.of(context).size.height * (orientation == Orientation.portrait ? 0.2: 0.4),
+                    child:
+                    GestureDetector(
+                      onTap: () {
+//                        Navigator.push(
+//                            context,
+//                            MaterialPageRoute(builder: (context) => AddEditReiptForm(null))
+//                        );
+                      },
+                      child:
+                      Card(
+                        child: ListTile(
+                          title: Text(allTranslations.text('app.home-page.manual-add-card-title')),
+                          subtitle: Icon(Icons.edit, size: MediaQuery.of(context).size.height * 0.1,),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                FractionallySizedBox(
+                  widthFactor: orientation == Orientation.portrait ? 0.5: 0.25,
+                  child: Container(
+                    height: MediaQuery.of(context).size.height * (orientation == Orientation.portrait ? 0.2: 0.4),
+                    child:GestureDetector(
+                      onTap: () {
+//                        widget.action(1);
+                      },
+                      child: Card(
+                        child: ListTile(
+                          title: Text(allTranslations.text('app.home-page.view-imported-receipts-card-title')),
+                          subtitle: Icon(Icons.receipt, size: MediaQuery.of(context).size.height * 0.1,),
+                        ),
+                      ),
+                    ),
+
+                  ),
+                ),
+                FractionallySizedBox(
+                  widthFactor: orientation == Orientation.portrait ? 0.5: 0.25,
+                  child: Container(
+                    height: MediaQuery.of(context).size.height * (orientation == Orientation.portrait ? 0.2: 0.4),
+                    child:GestureDetector(
+                      onTap: () {
+//                        widget.action(2);
+                      },
+                      child: Card(
+                        child: ListTile(
+                          title: Text(allTranslations.text('app.home-page.view-receipts-group-card-title')),
+                          subtitle: Icon(Icons.collections_bookmark, size: MediaQuery.of(context).size.height * 0.1,),
+                        ),
+                      ),
+                    ),
+
+                  ),
+                ),
+              ],
+            ),
+          ),
+
         ],
-      ),
+      );}),
     );
+
   }
 }
