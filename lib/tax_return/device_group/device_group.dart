@@ -333,30 +333,30 @@ class DeviceGroupState extends State<DeviceGroup> {
                         sortedReportItems = _userRepository
                             .taxReturnRepository.taxReturns[1].receiptGroups;
 
-                          for (int i = 0; i < _userRepository.reportRepository.reports.length; i++) {
-                            if (_userRepository.reportRepository.reports[i].taxReturnGroupId > 0) {
-                              sortedReportItems.add(_userRepository.reportRepository.reports[i]);
-                              for (int j=0; j < _userRepository.taxReturnRepository.taxReturns[1].receiptGroups.length; j++) {
-                                if (_userRepository.reportRepository.reports[i].taxReturnGroupId == _userRepository.taxReturnRepository.taxReturns[1].receiptGroups[j].taxReturnGroupId) {
-                                  sortedReportItems.remove(_userRepository.taxReturnRepository.taxReturns[1].receiptGroups[j]);
-                                }
-                              }
-                            }
-                          }
+//                          for (int i = 0; i < _userRepository.reportRepository.reports.length; i++) {
+//                            if (_userRepository.reportRepository.reports[i].taxReturnGroupId > 0) {
+//                              sortedReportItems.add(_userRepository.reportRepository.reports[i]);
+//                              for (int j=0; j < _userRepository.taxReturnRepository.taxReturns[1].receiptGroups.length; j++) {
+//                                if (_userRepository.reportRepository.reports[i].taxReturnGroupId == _userRepository.taxReturnRepository.taxReturns[1].receiptGroups[j].taxReturnGroupId) {
+//                                  sortedReportItems.remove(_userRepository.taxReturnRepository.taxReturns[1].receiptGroups[j]);
+//                                }
+//                              }
+//                            }
+//                          }
 
                       } else {
                         sortedReportItems = _userRepository
                             .taxReturnRepository.taxReturns[0].receiptGroups;
-                        for (int i = 0; i < _userRepository.reportRepository.reports.length; i++) {
-                          if (_userRepository.reportRepository.reports[i].taxReturnGroupId > 0) {
-                            sortedReportItems.add(_userRepository.reportRepository.reports[i]);
-                            for (int j=0; j < _userRepository.taxReturnRepository.taxReturns[0].receiptGroups.length; j++) {
-                              if (_userRepository.reportRepository.reports[i].taxReturnGroupId == _userRepository.taxReturnRepository.taxReturns[0].receiptGroups[j].taxReturnGroupId) {
-                                sortedReportItems.remove(_userRepository.taxReturnRepository.taxReturns[0].receiptGroups[j]);
-                              }
-                            }
-                          }
-                        }
+//                        for (int i = 0; i < _userRepository.reportRepository.reports.length; i++) {
+//                          if (_userRepository.reportRepository.reports[i].taxReturnGroupId > 0) {
+//                            sortedReportItems.add(_userRepository.reportRepository.reports[i]);
+//                            for (int j=0; j < _userRepository.taxReturnRepository.taxReturns[0].receiptGroups.length; j++) {
+//                              if (_userRepository.reportRepository.reports[i].taxReturnGroupId == _userRepository.taxReturnRepository.taxReturns[0].receiptGroups[j].taxReturnGroupId) {
+//                                sortedReportItems.remove(_userRepository.taxReturnRepository.taxReturns[0].receiptGroups[j]);
+//                              }
+//                            }
+//                          }
+//                        }
                       }
 //                        _userRepository.reportRepository.getSortedReportItems(
 //                            ReportStatusType.Active,

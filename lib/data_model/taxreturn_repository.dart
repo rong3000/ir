@@ -3,6 +3,7 @@ import 'taxreturn.dart';
 import "../user_repository.dart";
 import 'package:synchronized/synchronized.dart';
 import "webservice.dart";
+import "report.dart";
 
 class TaxReturnRepository extends IRRepository {
   List<TaxReturn> taxReturns = new List<TaxReturn>();
@@ -42,5 +43,9 @@ class TaxReturnRepository extends IRRepository {
     }
 
     return result;
+  }
+
+  void updateReport(Report report) {
+
   }
 }
