@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:intelligent_receipt/main_screen/functions_page/tax_return_subpage.dart';
 import 'package:intelligent_receipt/translations/global_translations.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 import 'function_card.dart';
@@ -65,36 +66,19 @@ class _FunctionsPageState extends State<FunctionsPage> {
                   widthFactor: orientation == Orientation.portrait ? 0.5: 0.25,
                   child: Container(
                     height: MediaQuery.of(context).size.height * (orientation == Orientation.portrait ? 0.2: 0.4),
-                    child:
-                    GestureDetector(
-                      onTap: () {
-//                        Navigator.push(
-//                            context,
-//                            MaterialPageRoute(builder: (context) => AddEditReiptForm(null))
-//                        );
-                      },
-                      child:
-                      Card(
-                        child: ListTile(
-                          title: Text(allTranslations.text('app.home-page.manual-add-card-title')),
-                          subtitle: Icon(Icons.edit, size: MediaQuery.of(context).size.height * 0.1,),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                FractionallySizedBox(
-                  widthFactor: orientation == Orientation.portrait ? 0.5: 0.25,
-                  child: Container(
-                    height: MediaQuery.of(context).size.height * (orientation == Orientation.portrait ? 0.2: 0.4),
                     child:GestureDetector(
                       onTap: () {
-//                        widget.action(1);
+                        Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) {
+                            return TaxReturnSubpage(userRepository: _userRepository);
+                          }),
+                        );
                       },
                       child: Card(
                         child: ListTile(
-                          title: Text(allTranslations.text('app.home-page.view-imported-receipts-card-title')),
-                          subtitle: Icon(Icons.receipt, size: MediaQuery.of(context).size.height * 0.1,),
+                          title: Text(allTranslations.text('Tax Return')),
+                          subtitle: Text(allTranslations.text('Tax Returnv')),
+//                          subtitle: Icon(Icons.collections_bookmark, size: MediaQuery.of(context).size.height * 0.1,),
                         ),
                       ),
                     ),
@@ -111,8 +95,28 @@ class _FunctionsPageState extends State<FunctionsPage> {
                       },
                       child: Card(
                         child: ListTile(
-                          title: Text(allTranslations.text('app.home-page.view-receipts-group-card-title')),
-                          subtitle: Icon(Icons.collections_bookmark, size: MediaQuery.of(context).size.height * 0.1,),
+                          title: Text(allTranslations.text('tbd')),
+                          subtitle: Text(allTranslations.text('tbd')),
+//                          subtitle: Icon(Icons.collections_bookmark, size: MediaQuery.of(context).size.height * 0.1,),
+                        ),
+                      ),
+                    ),
+
+                  ),
+                ),
+                FractionallySizedBox(
+                  widthFactor: orientation == Orientation.portrait ? 0.5: 0.25,
+                  child: Container(
+                    height: MediaQuery.of(context).size.height * (orientation == Orientation.portrait ? 0.2: 0.4),
+                    child:GestureDetector(
+                      onTap: () {
+//                        widget.action(2);
+                      },
+                      child: Card(
+                        child: ListTile(
+                          title: Text(allTranslations.text('tbd')),
+                          subtitle: Text(allTranslations.text('tbd')),
+//                          subtitle: Icon(Icons.collections_bookmark, size: MediaQuery.of(context).size.height * 0.1,),
                         ),
                       ),
                     ),
