@@ -8,6 +8,9 @@ import './bloc/archived_receipts_state.dart';
 import './loading_spinner.dart';
 import 'package:intelligent_receipt/receipt/receipt_card/receipt_card.dart';
 import 'package:intelligent_receipt/translations/global_translations.dart';
+import 'package:intelligent_receipt/receipt/add_edit_reciept_manual/add_edit_receipt_manual.dart';
+import 'package:intelligent_receipt/data_model/receipt_repository.dart';
+import 'package:intelligent_receipt/user_repository.dart';
 
 class ArchivedReceiptsListPage extends StatefulWidget {
   final String yearMonth;
@@ -24,9 +27,11 @@ class _ArchivedReceiptsListSate extends State<ArchivedReceiptsListPage> {
   List<ReceiptListItem> _receipts = [];
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool _hasChanges = false;
+  UserRepository _userRepository;
 
   @override
   void initState() {
+    _userRepository = RepositoryProvider.of<UserRepository>(context);
     _archivedReceiptsBloc = BlocProvider.of<ArchivedReceiptsBloc>(context);
     _archivedReceiptsBloc.dispatch(GetArchivedReceipts(widget.yearMonth));
 
@@ -45,15 +50,33 @@ class _ArchivedReceiptsListSate extends State<ArchivedReceiptsListPage> {
     _archivedReceiptsBloc.dispatch(UnArchivedReceipt(receiptId));
   }
 
+  Future<void> reviewAction(int receiptId) async {
+    // Try to get the receipt detailed information from server
+    DataResult dataResult = await _userRepository.receiptRepository.getReceipt(receiptId);
+    if (dataResult.success) {
+      Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) {
+          return AddEditReiptForm(dataResult.obj as Receipt, disableSave: true);
+        }),
+      );
+    } else {
+      _showInSnackBar("${allTranslations.text("app.receipts-page.failed-review-receipt-message")} \n${dataResult.message}");
+    }
+  }
+
   List<Widget> _buildReceiptCards() {
     var result = List<Widget>();
     for (var receipt in _receipts) {
-      var action = ActionWithLabel();
-      action.action = unArchiveAction;
-      action.icon = Icons.unarchive;
-      action.label =
-          allTranslations.text('app.archived-receipts-screen.un-archive-label');
-      result.add(ReceiptCard(receiptItem: receipt, actions: [action]));
+      ActionWithLabel actionReview = new ActionWithLabel();
+      actionReview.action = reviewAction;
+      actionReview.label = allTranslations.text('words.review');
+      actionReview.icon = Icons.edit;
+      var archiveUnarchive = ActionWithLabel();
+      archiveUnarchive.action = unArchiveAction;
+      archiveUnarchive.icon = Icons.unarchive;
+      archiveUnarchive.label = allTranslations.text('app.archived-receipts-screen.un-archive-label');
+
+      result.add(ReceiptCard(receiptItem: receipt, actions: [actionReview, archiveUnarchive]));
     }
     return result;
   }
