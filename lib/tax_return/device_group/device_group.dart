@@ -4,7 +4,7 @@ import 'package:intelligent_receipt/data_model/currency.dart';
 import 'package:intelligent_receipt/data_model/enums.dart';
 import 'package:intelligent_receipt/data_model/report.dart';
 import 'package:intelligent_receipt/report/add_edit_report/add_edit_report.dart';
-import 'package:intelligent_receipt/report/add_edit_report/add_edit_report2.dart';
+import 'package:intelligent_receipt/report/add_edit_report/add_edit_report.dart';
 import 'package:intelligent_receipt/report/report_card/report_card.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 import 'package:intl/intl.dart';
@@ -183,12 +183,17 @@ class DeviceGroupState extends State<DeviceGroup> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   void taxReviewAction(int id) {
+    Report taxReturnGroup = _userRepository.taxReturnRepository.getReportByTaxReturnGroupId(id);
+    if (taxReturnGroup == null) {
+      // xxx log an error and return
+      return;
+    }
     Navigator.of(context).push(
       MaterialPageRoute(builder: (context) {
-        return AddEditReport2(
+        return AddEditReport(
             userRepository: _userRepository,
             title: 'Edit Receipt Group',
-            taxReturnGroupId: id);
+            report: taxReturnGroup);
       }),
     );
     print('TaxReturn GroupId is ${id}');

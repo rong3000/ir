@@ -14,8 +14,10 @@ class Currency {
   String symbol;
   String country;
 
-  Currency();
+  Currency({this.id = 0, this.code = "",this.name = "", this.symbol = "", this.country = ""});
 
   factory Currency.fromJason(Map<String, dynamic> json) => _$CurrencyFromJson(json);
   Map<String, dynamic> toJson() => _$CurrencyToJson(this);
 }
+
+Currency CURRENCY_AUS = Currency(id: 1, code: "AUD", name: "Australian Dollars", symbol: "\$", country: "Australia");

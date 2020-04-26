@@ -1,3 +1,5 @@
+import 'package:intelligent_receipt/data_model/quarterlygroup.dart';
+import 'package:intelligent_receipt/user_repository.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'receipt_repository.dart';
 
@@ -8,11 +10,9 @@ part 'report.g.dart';
 @JsonSerializable()
 class ReportReceipt {
   int receiptId;
-  int percentageOnWork;
 
-  ReportReceipt({int receiptId : 0, int percentageOnWork: 100}) {
+  ReportReceipt({int receiptId : 0}) {
     this.receiptId = receiptId;
-    this.percentageOnWork = percentageOnWork;
   }
 
   factory ReportReceipt.fromJson(Map<String, dynamic> json) => _$ReportReceiptFromJson(json);
@@ -22,18 +22,24 @@ class ReportReceipt {
 // Used for receipt list
 @JsonSerializable()
 class Report {
-  int id;
+  int id = 0;
   int statusId;
   DateTime createDateTime;
   DateTime updateDateTime;
-  String reportName;
-  String description;
+  String reportName = "";
+  String description = "";
   List<ReportReceipt> receipts;
   double totalAmount;
-  String currencyCode;
-  int taxReturnGroupId;
+  double taxAmount;
+  String currencyCode = "";
+  int taxReturnGroupId = 0;
+  int quarterlyGroupId = 0;
 
   Report();
+
+  bool isNormalReport() {
+    return (taxReturnGroupId == 0) && (quarterlyGroupId == 0);
+  }
 
   factory Report.fromJson(Map<String, dynamic> json) => _$ReportFromJson(json);
   Map<String, dynamic> toJson() => _$ReportToJson(this);
@@ -67,5 +73,17 @@ class Report {
       }
     }
     return count;
+  }
+
+  void rePopulateReceipsForQuarterlyGroup(UserRepository userRepository, int quarterlyGroupId) {
+    // get quarterly group
+    receipts.clear();
+    QuarterlyGroup quarterlyGroup = userRepository.quarterlyGroupRepository.getQuarterGroupById(quarterlyGroupId);
+    if (quarterlyGroup != null) {
+      List<ReceiptListItem> receiptItems = userRepository.receiptRepository.getReceiptItemsBetweenDateRange(quarterlyGroup.startDatetime, quarterlyGroup.endDatetime);
+      for (int i = 0; i < receiptItems.length; i++) {
+        receipts.add(new ReportReceipt(receiptId: receiptItems[i].id));
+      }
+    }
   }
 }

@@ -51,6 +51,10 @@ class Urls {
   static String GetTaxReturns = ServiceBaseUrl + "TaxReturn/GetTaxReturns/";
   static String GetTaxReturnByYear = ServiceBaseUrl + "TaxReturn/GetTaxReturn/";
 
+  // Quarterly group related APIs
+  static String GetQuarterlyGroups = ServiceBaseUrl + "QuarterlyGroup/GetQuarterlyGroups/";
+  static String GetQuarterlyGroupById = ServiceBaseUrl + "QuarterlyGroup/GetQuarterlyGroup/";
+
   static String GetExchangeRate = ExchangeRateBaseUrl;
   // User Urls
   static String CreateNewUser = ServiceBaseUrl + "User/create";
