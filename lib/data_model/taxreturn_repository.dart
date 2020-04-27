@@ -3,12 +3,25 @@ import 'taxreturn.dart';
 import "../user_repository.dart";
 import 'package:synchronized/synchronized.dart';
 import "webservice.dart";
+import 'report.dart';
 
 class TaxReturnRepository extends IRRepository {
   List<TaxReturn> taxReturns = new List<TaxReturn>();
   Lock _lock = new Lock();
   bool _dataFetched = false;
   TaxReturnRepository(UserRepository userRepository) : super(userRepository);
+
+  Report getReportByTaxReturnGroupId(int taxReturnGroupId) {
+    for (int i = 0; i < taxReturns.length; i++) {
+      for (int j = 0; j < taxReturns[i].receiptGroups.length; j++) {
+        if (taxReturnGroupId == taxReturns[i].receiptGroups[j].taxReturnGroupId) {
+          return taxReturns[i].receiptGroups[j];
+        }
+      }
+    }
+
+    return null;
+  }
 
   Future<DataResult> getTaxReturns() async {
     DataResult result = new DataResult(false, "Unknown");

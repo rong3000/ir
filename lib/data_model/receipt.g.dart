@@ -29,7 +29,8 @@ ReceiptListItem _$ReceiptListItemFromJson(Map<String, dynamic> json) {
     ..warrantyPeriod = (json['warrantyPeriod'] as num)?.toDouble()
     ..decodeStatus = json['decodeStatus'] as int
     ..altTotalAmount = (json['altTotalAmount'] as num)?.toDouble()
-    ..altCurrencyCode = json['altCurrencyCode'] as String;
+    ..altCurrencyCode = json['altCurrencyCode'] as String
+    ..percentageOnWork = json['percentageOnWork'] as int;
 }
 
 Map<String, dynamic> _$ReceiptListItemToJson(ReceiptListItem instance) =>
@@ -51,7 +52,8 @@ Map<String, dynamic> _$ReceiptListItemToJson(ReceiptListItem instance) =>
       'warrantyPeriod': instance.warrantyPeriod,
       'decodeStatus': instance.decodeStatus,
       'altTotalAmount': instance.altTotalAmount,
-      'altCurrencyCode': instance.altCurrencyCode
+      'altCurrencyCode': instance.altCurrencyCode,
+      'percentageOnWork': instance.percentageOnWork
     };
 
 Receipt _$ReceiptFromJson(Map<String, dynamic> json) {
@@ -76,6 +78,7 @@ Receipt _$ReceiptFromJson(Map<String, dynamic> json) {
     ..warrantyPeriod = (json['warrantyPeriod'] as num)?.toDouble()
     ..altTotalAmount = (json['altTotalAmount'] as num)?.toDouble()
     ..altCurrencyCode = json['altCurrencyCode'] as String
+    ..percentageOnWork = json['percentageOnWork'] as int
     ..decodeStatus = json['decodeStatus'] as int
     ..imagePath = json['imagePath'] as String
     ..extractedContent = json['extractedContent'] as String
@@ -106,6 +109,7 @@ Map<String, dynamic> _$ReceiptToJson(Receipt instance) => <String, dynamic>{
       'warrantyPeriod': instance.warrantyPeriod,
       'altTotalAmount': instance.altTotalAmount,
       'altCurrencyCode': instance.altCurrencyCode,
+      'percentageOnWork': instance.percentageOnWork,
       'decodeStatus': instance.decodeStatus,
       'imagePath': instance.imagePath,
       'extractedContent': instance.extractedContent,

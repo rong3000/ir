@@ -129,7 +129,7 @@ class SettingRepository extends IRRepository {
   }
 
   Currency _getCurrencyById(int currencyId) {
-    Currency currency;
+    Currency currency = CURRENCY_AUS;
     _lockCurrencies.synchronized(() {
       for (int i = 0; i < _currencies.length; i++) {
         if (_currencies[i].id == currencyId) {

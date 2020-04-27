@@ -4,6 +4,7 @@ import 'package:intelligent_receipt/translations/global_translations.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 import 'function_card.dart';
 import 'package:intelligent_receipt/receipt/archived_receipts_page/archived_receipts_page.dart';
+import 'quarterlygroup_function_card.dart';
 
 class FunctionsPage extends StatefulWidget {
   final UserRepository _userRepository;
@@ -34,7 +35,8 @@ class _FunctionsPageState extends State<FunctionsPage> {
         children: <Widget>[
           FunctionCard(ArchivedReceiptsPage(userRepository: _userRepository),
             allTranslations.text('app.functions-page.archived-receipts-title'),
-            allTranslations.text('app.functions-page.archived-receipts-description'))
+            allTranslations.text('app.functions-page.archived-receipts-description')),
+          QuarterlyGroupCard(_userRepository)
         ],
       ),
     );

@@ -26,6 +26,7 @@ class ReceiptListItem {
   int decodeStatus;
   double altTotalAmount;
   String altCurrencyCode;
+  int percentageOnWork = 100;
 
   ReceiptListItem();
 
