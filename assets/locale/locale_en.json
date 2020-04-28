@@ -282,7 +282,16 @@
     },
     "functions-page" :{
       "archived-receipts-title": "Archived Receipts",
-      "archived-receipts-description": "View all archived receipts here; In the archived receipt list, you can un-archive some receipts by clicking 'un-archive' icon."
+      "archived-receipts-description": "View all archived receipts here; In the archived receipt list, you can un-archive some receipts by clicking 'un-archive' icon.",
+      "quarterly-report-title": "Quarterly Activety Report",
+      "quarterly-report-description": "Select quarterly report from the below list, and press 'View' button, system will automatically populate the quarter's receipts into the report; you can manually modify it afterwards.",
+      "quarterly-report-list": "List of Quarterly Reports",
+      "quarterly-report-view": "View",
+      "quarterly-report-edit-title": "View and Edit Quarterly Activety Report",
+      "quarterly-report-list-loading": "Loading quarterly reports",
+      "quarterly-report-list-loading-failed": "Failed to load quarterly reports: ",
+      "quarterly-report-loading-failed-title": "Failed to Load Quarterly Report",
+      "quarterly-report-loading-failed-message": "Failed reason: "
     }
   },
   "words": {

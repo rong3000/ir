@@ -4,7 +4,7 @@ import 'package:intelligent_receipt/data_model/currency.dart';
 import 'package:intelligent_receipt/data_model/enums.dart';
 import 'package:intelligent_receipt/data_model/report.dart';
 import 'package:intelligent_receipt/report/add_edit_report/add_edit_report.dart';
-import 'package:intelligent_receipt/report/add_edit_report/add_edit_report2.dart';
+import 'package:intelligent_receipt/report/add_edit_report/add_edit_report.dart';
 import 'package:intelligent_receipt/report/report_card/report_card.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 import 'package:intl/intl.dart';
@@ -268,13 +268,18 @@ class ReportListState extends State<ReportList> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   void reviewAction(int id) {
+    Report receiptGroup = _userRepository.reportRepository.getReport(id);
+    if (receiptGroup == null){
+      // xxx log an error
+      return;
+    }
+
     Navigator.of(context).push(
       MaterialPageRoute(builder: (context) {
-        return AddEditReport2(
+        return AddEditReport(
             userRepository: _userRepository,
             title: 'Edit Receipt Group',
-            reportId: id,
-            taxReturnGroupId: 0);
+            report: receiptGroup);
       }),
     );
     print('Review ${id}');

@@ -282,7 +282,16 @@
     },
     "functions-page" :{
       "archived-receipts-title": "已存档的票据",
-      "archived-receipts-description": "查看所有已存档的票据; 可以在存档票据列表中点击'撤销存档'来撤销某个票据的存档状态, 从而在已审核的票据和报告中重新使用它."
+      "archived-receipts-description": "查看所有已存档的票据; 可以在存档票据列表中点击'撤销存档'来撤销某个票据的存档状态, 从而在已审核的票据和报告中重新使用它.",
+      "quarterly-report-title": "季度报告",
+      "quarterly-report-description": "系统允许您查看一年的季度报告；您可以选择某个季度，然后点击'查看'按键，系统自动把这个季度的所有票据加入到该季度报告中，同时允许您手动编辑。",
+      "quarterly-report-list": "季度报告列表",
+      "quarterly-report-view": "查看",
+      "quarterly-report-edit-title": "查看编辑季度报告",
+      "quarterly-report-list-loading": "加载季度报告列表",
+      "quarterly-report-list-loading-failed": "加载季度报告列表列表失败: ",
+      "quarterly-report-loading-failed-title": "加载季度报告失败",
+      "quarterly-report-loading-failed-message": "失败原因: "
     }
   },
   "words": {

@@ -11,8 +11,7 @@ export 'data_result.dart';
 
 class Urls {
   //static String ServiceBaseUrl = "http://10.0.2.2:3001/";
-  static String ServiceBaseUrl = "http://13.210.246.13:3001/";
-//  static String ServiceBaseUrl = "https://irapp.superiortech.com.au:443/";
+  static String ServiceBaseUrl = "https://irapp.superiortech.com.au:443/";
   static String ExchangeRateBaseUrl = "https://api.exchangeratesapi.io/";
 
   // Receipt related APIs
@@ -51,6 +50,10 @@ class Urls {
   // Tax return related APIs
   static String GetTaxReturns = ServiceBaseUrl + "TaxReturn/GetTaxReturns/";
   static String GetTaxReturnByYear = ServiceBaseUrl + "TaxReturn/GetTaxReturn/";
+
+  // Quarterly group related APIs
+  static String GetQuarterlyGroups = ServiceBaseUrl + "QuarterlyGroup/GetQuarterlyGroups/";
+  static String GetQuarterlyGroupById = ServiceBaseUrl + "QuarterlyGroup/GetQuarterlyGroup/";
 
   static String GetExchangeRate = ExchangeRateBaseUrl;
   // User Urls

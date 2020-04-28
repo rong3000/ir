@@ -4,7 +4,7 @@ import 'package:intelligent_receipt/data_model/currency.dart';
 import 'package:intelligent_receipt/data_model/enums.dart';
 import 'package:intelligent_receipt/data_model/report.dart';
 import 'package:intelligent_receipt/report/add_edit_report/add_edit_report.dart';
-import 'package:intelligent_receipt/report/add_edit_report/add_edit_report2.dart';
+import 'package:intelligent_receipt/report/add_edit_report/add_edit_report.dart';
 import 'package:intelligent_receipt/report/report_card/report_card.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 import 'package:intl/intl.dart';
@@ -183,12 +183,17 @@ class DeviceGroupState extends State<DeviceGroup> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   void taxReviewAction(int id) {
+    Report taxReturnGroup = _userRepository.taxReturnRepository.getReportByTaxReturnGroupId(id);
+    if (taxReturnGroup == null) {
+      // xxx log an error and return
+      return;
+    }
     Navigator.of(context).push(
       MaterialPageRoute(builder: (context) {
-        return AddEditReport2(
+        return AddEditReport(
             userRepository: _userRepository,
             title: 'Edit Receipt Group',
-            taxReturnGroupId: id);
+            report: taxReturnGroup);
       }),
     );
     print('TaxReturn GroupId is ${id}');
@@ -223,6 +228,10 @@ class DeviceGroupState extends State<DeviceGroup> {
                 children: <Widget>[
                   Expanded(
                     child: new ListTile(
+//                          leading: Icon(
+//                            Icons.edit,
+////                            color: Colors.white,
+//                          ),
                       title: GestureDetector(
                         onTap: () {
                           setState(() {
@@ -328,15 +337,47 @@ class DeviceGroupState extends State<DeviceGroup> {
                       if (widget._fiscYear == FiscYear.Current) {
                         sortedReportItems = _userRepository
                             .taxReturnRepository.taxReturns[1].receiptGroups;
+
+                          for (int i = 0; i < _userRepository.reportRepository.reports.length; i++) {
+                            if (_userRepository.reportRepository.reports[i].taxReturnGroupId > 0) {
+                              sortedReportItems.add(_userRepository.reportRepository.reports[i]);
+                              for (int j=0; j < _userRepository.taxReturnRepository.taxReturns[1].receiptGroups.length; j++) {
+                                if (_userRepository.reportRepository.reports[i].taxReturnGroupId == _userRepository.taxReturnRepository.taxReturns[1].receiptGroups[j].taxReturnGroupId) {
+                                  sortedReportItems.remove(_userRepository.taxReturnRepository.taxReturns[1].receiptGroups[j]);
+                                }
+                              }
+                            }
+                          }
+
                       } else {
                         sortedReportItems = _userRepository
                             .taxReturnRepository.taxReturns[0].receiptGroups;
+                        for (int i = 0; i < _userRepository.reportRepository.reports.length; i++) {
+                          if (_userRepository.reportRepository.reports[i].taxReturnGroupId > 0) {
+                            sortedReportItems.add(_userRepository.reportRepository.reports[i]);
+                            for (int j=0; j < _userRepository.taxReturnRepository.taxReturns[0].receiptGroups.length; j++) {
+                              if (_userRepository.reportRepository.reports[i].taxReturnGroupId == _userRepository.taxReturnRepository.taxReturns[0].receiptGroups[j].taxReturnGroupId) {
+                                sortedReportItems.remove(_userRepository.taxReturnRepository.taxReturns[0].receiptGroups[j]);
+                              }
+                            }
+                          }
+                        }
                       }
+//                        _userRepository.reportRepository.getSortedReportItems(
+//                            ReportStatusType.Active,
+//                            sortingType,
+//                            ascending,
+//                            _fromDate,
+//                            _toDate);
                       List<ActionWithLable> actions = [];
                       ActionWithLable r = new ActionWithLable();
                       r.action = taxReviewAction;
                       r.lable = allTranslations.text('app.reports-list.review');
+//                        ActionWithLable d = new ActionWithLable();
+//                        d.action = deleteAction;
+//                        d.lable = allTranslations.text('app.reports-list.delete');
                       actions.add(r);
+//                        actions.add(d);
                       return ListView.builder(
                           itemCount: sortedReportItems.length,
                           controller: _scrollController,

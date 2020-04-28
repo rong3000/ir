@@ -7,16 +7,11 @@ part of 'report.dart';
 // **************************************************************************
 
 ReportReceipt _$ReportReceiptFromJson(Map<String, dynamic> json) {
-  return ReportReceipt(
-      receiptId: json['receiptId'] as int,
-      percentageOnWork: json['percentageOnWork'] as int);
+  return ReportReceipt(receiptId: json['receiptId'] as int);
 }
 
 Map<String, dynamic> _$ReportReceiptToJson(ReportReceipt instance) =>
-    <String, dynamic>{
-      'receiptId': instance.receiptId,
-      'percentageOnWork': instance.percentageOnWork
-    };
+    <String, dynamic>{'receiptId': instance.receiptId};
 
 Report _$ReportFromJson(Map<String, dynamic> json) {
   return Report()
@@ -36,8 +31,10 @@ Report _$ReportFromJson(Map<String, dynamic> json) {
             : ReportReceipt.fromJson(e as Map<String, dynamic>))
         ?.toList()
     ..totalAmount = (json['totalAmount'] as num)?.toDouble()
+    ..taxAmount = (json['taxAmount'] as num)?.toDouble()
     ..currencyCode = json['currencyCode'] as String
-    ..taxReturnGroupId = json['taxReturnGroupId'] as int;
+    ..taxReturnGroupId = json['taxReturnGroupId'] as int
+    ..quarterlyGroupId = json['quarterlyGroupId'] as int;
 }
 
 Map<String, dynamic> _$ReportToJson(Report instance) => <String, dynamic>{
@@ -49,6 +46,8 @@ Map<String, dynamic> _$ReportToJson(Report instance) => <String, dynamic>{
       'description': instance.description,
       'receipts': instance.receipts,
       'totalAmount': instance.totalAmount,
+      'taxAmount': instance.taxAmount,
       'currencyCode': instance.currencyCode,
-      'taxReturnGroupId': instance.taxReturnGroupId
+      'taxReturnGroupId': instance.taxReturnGroupId,
+      'quarterlyGroupId': instance.quarterlyGroupId
     };

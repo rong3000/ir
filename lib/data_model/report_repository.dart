@@ -20,7 +20,7 @@ class ReportRepository extends IRRepository {
     List<Report> selectedReports = new List<Report>();
     _lock.synchronized(() {
       for (var i = 0; i < reports.length; i++) {
-        if (reports[i].statusId == reportStatus.index) {
+        if (reports[i].isNormalReport() && (reports[i].statusId == reportStatus.index)) {
           selectedReports.add(reports[i]);
         }
       }
@@ -29,14 +29,16 @@ class ReportRepository extends IRRepository {
   }
 
   List<Report> getSortedReportItems(ReportStatusType reportStatus,
-      ReportSortType type, bool ascending, DateTime fromDate, DateTime toDate) {
+    ReportSortType type, bool ascending, DateTime fromDate, DateTime toDate) {
     List<Report> selectedReports = new List<Report>();
     _lock.synchronized(() {
       for (var i = 0; i < reports.length; i++) {
+        if (!reports[i].isNormalReport()) {
+          continue;
+        }
         if (reports[i].statusId == reportStatus.index
             && reports[i].createDateTime.isAfter(fromDate)
-            && reports[i].createDateTime.isBefore(toDate.add(Duration(days: 1)))
-            && reports[i].taxReturnGroupId == 0 ) {
+            && reports[i].createDateTime.isBefore(toDate.add(Duration(days: 1)))) {
           selectedReports.add(reports[i]);
           if (ascending) {
             switch (type) {
@@ -84,7 +86,7 @@ class ReportRepository extends IRRepository {
     List<Report> selectedReports = new List<Report>();
     _lock.synchronized(() {
       for (var i = 0; i < reports.length; i++) {
-        if (reports[i].statusId == reportStatus.index) {
+        if (reports[i].isNormalReport() && (reports[i].statusId == reportStatus.index)) {
           selectedReports.add(reports[i]);
         }
       }
@@ -96,7 +98,7 @@ class ReportRepository extends IRRepository {
     int reportCount = 0;
     _lock.synchronized(() {
       for (var i = 0; i < reports.length; i++) {
-        if (reports[i].statusId == reportStatus.index) {
+        if (reports[i].isNormalReport() && (reports[i].statusId == reportStatus.index)) {
           reportCount++;
         }
       }
@@ -146,20 +148,22 @@ class ReportRepository extends IRRepository {
       Report newReport = Report.fromJson(result.obj);
       result.obj = newReport;
       _lock.synchronized(() {
-        reports.add(newReport);
+        if (newReport.isNormalReport()) {
+          reports.add(newReport);
+        }
       });
     }
 
     return result;
   }
 
-  Future<DataResult> addReceiptToReport(int reportId, int receiptId, {updateLocal: true, percentageOnWork: 100}) async {
+  Future<DataResult> addReceiptToReport(int reportId, int receiptId, {updateLocal: true}) async {
     DataResult result = await webservicePost(Urls.AddReceiptToReport  + reportId.toString() + "/" + receiptId.toString(), await getToken(), "");
     if (result.success) {
       if (updateLocal) {
         Report report = getReport(reportId);
-        if (report != null) {
-          report.receipts.add(new ReportReceipt(receiptId: receiptId, percentageOnWork: percentageOnWork));
+        if ((report != null) && report.isNormalReport()) {
+          report.receipts.add(new ReportReceipt(receiptId: receiptId));
         }
       }
     }
@@ -198,11 +202,13 @@ class ReportRepository extends IRRepository {
       result.obj = Report.fromJson(result.obj);
       if (updateLocal) {
         Report localReport = getReport(report.id);
-        localReport.reportName = report.reportName;
-        localReport.description = report.description;
-        localReport.statusId = report.statusId;
-        if (updateReceiptList) {
-          localReport.receipts = report.receipts;
+        if ((localReport != null) && localReport.isNormalReport()) {
+          localReport.reportName = report.reportName;
+          localReport.description = report.description;
+          localReport.statusId = report.statusId;
+          if (updateReceiptList) {
+            localReport.receipts = report.receipts;
+          }
         }
       }
     }
