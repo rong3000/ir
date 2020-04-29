@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:intelligent_receipt/main_screen/functions_page/tax_return_card.dart';
 import 'package:intelligent_receipt/translations/global_translations.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 import 'function_card.dart';
@@ -36,6 +37,7 @@ class _FunctionsPageState extends State<FunctionsPage> {
           FunctionCard(ArchivedReceiptsPage(userRepository: _userRepository),
             allTranslations.text('app.functions-page.archived-receipts-title'),
             allTranslations.text('app.functions-page.archived-receipts-description')),
+          TaxReturnCard(userRepository: _userRepository),
           QuarterlyGroupCard(_userRepository)
         ],
       ),
