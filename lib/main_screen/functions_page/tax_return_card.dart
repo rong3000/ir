@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:intelligent_receipt/data_model/enums.dart';
+import 'package:intelligent_receipt/data_model/taxreturn.dart';
+import 'package:intelligent_receipt/main_screen/tax_return_page/tax_return_page.dart';
 import 'package:intelligent_receipt/translations/global_translations.dart';
 import 'package:intelligent_receipt/data_model/data_result.dart';
 import 'package:intelligent_receipt/user_repository.dart';
@@ -75,17 +78,10 @@ class _TaxReturnCardState extends State<TaxReturnCard> {
   Future<void> _viewTaxReturnList() async {
     DataResult result = await _userRepository.taxReturnRepository.getTaxReturn(_selectedTaxReturnYear);
     if (result.success) {
-      Report report = result.obj;
-      if (report.id == 0) {
-        // initialize the tax return report
-//        report.rePopulateReceipsForQuarterlyGroup(_userRepository, _selectedTaxReturnYear);
-      }
+      TaxReturn taxReturn = result.obj;
       Navigator.of(context).push(
         MaterialPageRoute(builder: (context) {
-          return AddEditReport(
-              userRepository: _userRepository,
-              title: allTranslations.text('app.functions-page.tax-return-edit-title'),
-              report: report);
+          return TaxReturnPage(userRepository: _userRepository, taxReturn: taxReturn,);
         }),
       );
     } else {

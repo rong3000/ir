@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intelligent_receipt/data_model/currency.dart';
 import 'package:intelligent_receipt/data_model/enums.dart';
+import 'package:intelligent_receipt/data_model/taxreturn.dart';
 import 'package:intelligent_receipt/report/add_edit_report/add_edit_report.dart';
 import 'package:intelligent_receipt/report/add_edit_report/add_edit_report.dart';
 import 'package:intelligent_receipt/report/report_list/report_list.dart';
@@ -13,18 +14,21 @@ import 'package:intelligent_receipt/user_repository.dart';
 class TaxReturnPage extends StatefulWidget {
   final UserRepository _userRepository;
   final FiscYear _fiscYear;
+  final TaxReturn _taxReturn;
   DeviceGroup _deviceGroup;
 
 //  ReportsTabs({
   TaxReturnPage({
     Key key,
     @required UserRepository userRepository,
-    @required FiscYear fiscYear,
+    FiscYear fiscYear,
+    @required TaxReturn taxReturn,
   })  : assert(userRepository != null),
         _userRepository = userRepository,
         _fiscYear = fiscYear,
+        _taxReturn = taxReturn,
         super(key: key) {
-    _deviceGroup = DeviceGroup(userRepository: _userRepository, fiscYear: _fiscYear);
+    _deviceGroup = DeviceGroup(userRepository: _userRepository, taxReturn: _taxReturn,);
   }
 
   @override
@@ -47,12 +51,8 @@ class _TaxReturnPageState extends State<TaxReturnPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _fiscYear == FiscYear.Current
-          ? AppBar(
-              title: Text(allTranslations.text('Tax Return 2019-2020')),
-            )
-          : AppBar(
-              title: Text(allTranslations.text('Tax Return 2018-2019')),
+      appBar: AppBar(
+              title: Text(widget._taxReturn.description),
             ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
