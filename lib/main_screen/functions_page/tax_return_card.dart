@@ -94,14 +94,14 @@ class _TaxReturnCardState extends State<TaxReturnCard> {
   List<DropdownMenuItem<int>> _getTaxReturnList() {
     var list = List<DropdownMenuItem<int>>();
     var taxReturnList = _userRepository.taxReturnRepository.taxReturns;
-    for (var group in taxReturnList) {
+    for (var tax in taxReturnList) {
       list.add(
-        DropdownMenuItem<int>(value: group.year, child: Text(group.description)),
+        DropdownMenuItem<int>(value: tax.year, child: Text(tax.description)),
       );
     }
-    if ((_selectedTaxReturnYear <= 0) && (list.length > 0)) {
-      _selectedTaxReturnYear = taxReturnList[0].year;
-    }
+//    if ((_selectedTaxReturnYear <= 0) && (list.length > 0)) {
+//      _selectedTaxReturnYear = taxReturnList[0].year;
+//    }
     return list;
   }
 
