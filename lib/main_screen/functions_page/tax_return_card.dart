@@ -99,9 +99,6 @@ class _TaxReturnCardState extends State<TaxReturnCard> {
         DropdownMenuItem<int>(value: tax.year, child: Text(tax.description)),
       );
     }
-//    if ((_selectedTaxReturnYear <= 0) && (list.length > 0)) {
-//      _selectedTaxReturnYear = taxReturnList[0].year;
-//    }
     return list;
   }
 

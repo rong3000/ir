@@ -10,14 +10,12 @@ import 'package:intelligent_receipt/tax_return/device_group/device_group.dart';
 import 'package:intelligent_receipt/translations/global_translations.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 
-//class ReportsTabs extends StatefulWidget {
 class TaxReturnPage extends StatefulWidget {
   final UserRepository _userRepository;
   final FiscYear _fiscYear;
   final TaxReturn _taxReturn;
   DeviceGroup _deviceGroup;
 
-//  ReportsTabs({
   TaxReturnPage({
     Key key,
     @required UserRepository userRepository,
@@ -32,13 +30,10 @@ class TaxReturnPage extends StatefulWidget {
   }
 
   @override
-//  _ReportsTabsState createState() => _ReportsTabsState();
   _TaxReturnPageState createState() => _TaxReturnPageState();
 }
 
-//class _ReportsTabsState extends State<ReportsTabs> {
 class _TaxReturnPageState extends State<TaxReturnPage> {
-//  HomeBloc _homeBloc;
 
   UserRepository get _userRepository => widget._userRepository;
   get _fiscYear => widget._fiscYear;

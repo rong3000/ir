@@ -92,7 +92,6 @@ class DeviceGroupState extends State<DeviceGroup> {
 
   Future<void> _forceGetReportsFromServer() async {
     _getReportsFuture = _userRepository.taxReturnRepository.getTaxReturns();
-//    _getReportsFuture = _userRepository.reportRepository.getReportsFromServer(forceRefresh: true);
     setState(() {});
   }
 
@@ -152,9 +151,7 @@ class DeviceGroupState extends State<DeviceGroup> {
   ReportSortType _sortByValue;
 
   void showMenuSelection(ReportSortType value) {
-//    if (<String>[_sortByCreateTime, _sortByUpdateTime, _sortByGroupName].contains(value))
     _sortByValue = value;
-//    showInSnackBar('You selected: $value');
     print('You selected: $value');
     setState(() {
       sortingType = value;
@@ -232,10 +229,6 @@ class DeviceGroupState extends State<DeviceGroup> {
                 children: <Widget>[
                   Expanded(
                     child: new ListTile(
-//                          leading: Icon(
-//                            Icons.edit,
-////                            color: Colors.white,
-//                          ),
                       title: GestureDetector(
                         onTap: () {
                           setState(() {
@@ -266,10 +259,6 @@ class DeviceGroupState extends State<DeviceGroup> {
                   ),
                   Expanded(
                     child: new ListTile(
-//                          leading: Icon(
-//                            Icons.edit,
-////                            color: Colors.white,
-//                          ),
                       title: GestureDetector(
                         onTap: () {
                           setState(() {
@@ -342,11 +331,7 @@ class DeviceGroupState extends State<DeviceGroup> {
                       ActionWithLable r = new ActionWithLable();
                       r.action = taxReviewAction;
                       r.lable = allTranslations.text('app.reports-list.review');
-//                        ActionWithLable d = new ActionWithLable();
-//                        d.action = deleteAction;
-//                        d.lable = allTranslations.text('app.reports-list.delete');
                       actions.add(r);
-//                        actions.add(d);
                       return ListView.builder(
                           itemCount: sortedReportItems.length,
                           controller: _scrollController,
