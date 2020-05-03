@@ -24,6 +24,7 @@ import 'package:intelligent_receipt/data_model/exception_handlers/unsupported_ve
 import 'package:intelligent_receipt/data_model/webservice.dart';
 import 'package:intelligent_receipt/main_screen/bloc/bloc.dart';
 import 'package:intelligent_receipt/data_model/GeneralUtility.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 class AddEditReiptForm extends StatefulWidget {
   final Receipt _receiptItem;
@@ -624,6 +625,43 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
                                   receipt.taxInclusive = receipt.taxInclusive;
                                 },
                               ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Flexible(
+                              flex: 5,
+                              child: Padding(
+                                padding: EdgeInsets.only(top: 5),
+                                child: TextFormField(
+                                  initialValue: receipt.percentageOnWork.toString(),
+                                  decoration: InputDecoration(labelText: allTranslations.text('app.add-edit-manual-page.percentage-on-work-label')),
+                                  validator: (String value) {
+                                    double taxAmount = double.tryParse(value);
+                                    if (taxAmount < 0 || taxAmount > 100) {
+                                      return allTranslations.text('app.add-edit-manual-page.invalid-percentage-on-work');
+                                    }
+                                    return null;
+                                  },
+                                  onSaved: (String value) {
+                                    receipt.percentageOnWork = double.tryParse(value);
+                                  },
+                                ),
+                              ),
+                            ),
+                            Flexible(
+                              flex: 5,
+                              child: AutoSizeText(
+                                allTranslations.text('app.add-edit-manual-page.percentage-on-work-description'),
+                                style: TextStyle(fontSize: 12)
+                                    .copyWith(color: Colors.black54)
+                                    .apply(fontSizeFactor: 0.85),
+                                minFontSize: 6,
+                                maxLines: 3,
+                                overflow: TextOverflow.ellipsis,
+                              )
                             ),
                           ],
                         ),

@@ -11,6 +11,7 @@ import 'package:intelligent_receipt/translations/global_translations.dart';
 import 'package:intelligent_receipt/receipt/add_edit_reciept_manual/add_edit_receipt_manual.dart';
 import 'package:intelligent_receipt/data_model/receipt_repository.dart';
 import 'package:intelligent_receipt/user_repository.dart';
+import 'package:intelligent_receipt/helper_widgets/confirm-dialog.dart';
 
 class ArchivedReceiptsListPage extends StatefulWidget {
   final String yearMonth;
@@ -64,6 +65,20 @@ class _ArchivedReceiptsListSate extends State<ArchivedReceiptsListPage> {
     }
   }
 
+  Future<void> deleteAction(int receiptId) async {
+    var shouldDelete = await showDialog<bool>(
+        context: context,
+        builder: ConfirmDialog.builder(context,
+            title: Text(allTranslations.text('app.receipts-page.delete-receipt-title')),
+            content: Text(allTranslations.text('app.receipts-page.delete-receipt-message'))
+        )
+    );
+
+    if (shouldDelete) {
+      _archivedReceiptsBloc.dispatch(DeleteReceipt(receiptId));
+    }
+  }
+
   List<Widget> _buildReceiptCards() {
     var result = List<Widget>();
     for (var receipt in _receipts) {
@@ -75,8 +90,12 @@ class _ArchivedReceiptsListSate extends State<ArchivedReceiptsListPage> {
       archiveUnarchive.action = unArchiveAction;
       archiveUnarchive.icon = Icons.unarchive;
       archiveUnarchive.label = allTranslations.text('app.archived-receipts-screen.un-archive-label');
+      var actionDelete = ActionWithLabel()
+        ..action = deleteAction
+        ..icon = Icons.delete
+        ..label = allTranslations.text('words.delete');
 
-      result.add(ReceiptCard(receiptItem: receipt, actions: [actionReview, archiveUnarchive]));
+      result.add(ReceiptCard(receiptItem: receipt, actions: [actionReview, archiveUnarchive, actionDelete]));
     }
     return result;
   }
@@ -105,38 +124,51 @@ class _ArchivedReceiptsListSate extends State<ArchivedReceiptsListPage> {
               onTap: () {
                 Navigator.of(context).pop(_hasChanges);
               })),
-      body: BlocBuilder(
+      body: BlocListener(
         bloc: _archivedReceiptsBloc,
-        builder: (BuildContext context, ArchivedReceiptsState state) {
-          if (state is GetArchivedReceiptsSuccessState) {
-            _receipts = state.receipts;
-            return ListView(children: _buildReceiptCards());
-          } else if (state is GetArchivedReceiptsFailState) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: <Widget>[
-                    Card(
-                      child: Text(allTranslations
-                          .text('app.archived-_receipt-screen.fail-load')),
-                    ),
-                  ],
-                )
-              ],
-            );
-          } else if (state is UnArchivedReceiptFailState) {
-            return ListView(children: _buildReceiptCards());
-          } else if (state is UnArchivedReceiptSuccessState) {
-            _receipts.removeWhere((item) => item.id == state.receiptId);
-            return ListView(children: _buildReceiptCards());
-          } else {
-            return ArchiveLoadingSpinner();
+        listener: (BuildContext context, ArchivedReceiptsState state) {
+          if (state is DeleteReceiptFailState) {
+            _showInSnackBar("${allTranslations.text("app.receipts-page.failed-delete-receipt-message")} \n${state.description}");
           }
         },
-      ),
+        child: BlocBuilder(
+          bloc: _archivedReceiptsBloc,
+          builder: (BuildContext context, ArchivedReceiptsState state) {
+            if (state is GetArchivedReceiptsSuccessState) {
+              _receipts = state.receipts;
+              return ListView(children: _buildReceiptCards());
+            } else if (state is GetArchivedReceiptsFailState) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: <Widget>[
+                      Card(
+                        child: Text(allTranslations
+                            .text('app.archived-_receipt-screen.fail-load')),
+                      ),
+                    ],
+                  )
+                ],
+              );
+            } else if (state is UnArchivedReceiptFailState) {
+              return ListView(children: _buildReceiptCards());
+            } else if (state is UnArchivedReceiptSuccessState) {
+              _receipts.removeWhere((item) => item.id == state.receiptId);
+              return ListView(children: _buildReceiptCards());
+            } else if (state is DeleteReceiptSuccessState) {
+              _receipts.removeWhere((item) => item.id == state.receiptId);
+              return ListView(children: _buildReceiptCards());
+            } else if (state is DeleteReceiptFailState) {
+              return ListView(children: _buildReceiptCards());
+            } else {
+              return ArchiveLoadingSpinner();
+            }
+          },
+        ),
+      )
     );
   }
 }

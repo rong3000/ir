@@ -33,3 +33,13 @@ class UnArchivedReceipt extends ArchivedReceiptsEvent {
   @override
   String toString() => 'Un Archive receipt with id $receiptId';
 }
+
+class DeleteReceipt extends ArchivedReceiptsEvent {
+//  final List<ReceiptListItem> receipts;
+  final int receiptId;
+
+  DeleteReceipt(this.receiptId) : super([receiptId]);
+
+  @override
+  String toString() => 'Delete receipt with id $receiptId';
+}

@@ -28,6 +28,55 @@ import 'package:intl/intl.dart';
 import 'package:intelligent_receipt/data_model/webservice.dart';
 import 'package:intelligent_receipt/data_model/exception_handlers/unsupported_version.dart';
 import 'package:intelligent_receipt/data_model/http_statuscode.dart';
+import 'package:intelligent_receipt/helper_widgets/confirm-dialog.dart';
+import "package:intelligent_receipt/data_model/quarterlygroup.dart";
+import 'package:intelligent_receipt/receipt/add_edit_reciept_manual/add_edit_receipt_manual.dart';
+
+class ReportTotals {
+  double total = 0;
+  double taxTotal = 0;
+  double workRelatedTotal = 0;
+  double workRelatedTaxTotal = 0;
+
+  ReportTotals();
+
+  factory ReportTotals.fromReceipt(ReceiptListItem receipt) {
+    return receipt == null ? ReportTotals() :
+     ReportTotals()
+        ..total = receipt.totalAmount
+        ..taxTotal = receipt.taxAmount
+        ..workRelatedTotal = (receipt.totalAmount * receipt.percentageOnWork / 100)
+        ..workRelatedTaxTotal = (receipt.taxAmount * receipt.percentageOnWork / 100);
+  }
+
+  factory ReportTotals.fromReport(Report report) {
+    return report == null ? ReportTotals() :
+    ReportTotals()
+      ..total = (report.totalAmount == null) ? 0 : report.totalAmount
+      ..taxTotal = (report.taxAmount == null) ? 0 : report.taxAmount
+      ..workRelatedTotal = (report.workRelatedTotalAmount == null) ? 0 : report.workRelatedTotalAmount
+      ..workRelatedTaxTotal = (report.workRelatedTaxAmount == null) ? 0 : report.workRelatedTaxAmount;
+  }
+
+  void adjustByAltAmount(double altTotalAmount) {
+    taxTotal = (total == 0) ? taxTotal : (taxTotal / total) * altTotalAmount;
+    workRelatedTotal = (total == 0) ? workRelatedTotal : (workRelatedTotal / total) * altTotalAmount;
+    workRelatedTaxTotal = (total == 0) ? workRelatedTaxTotal : (workRelatedTaxTotal / total) * altTotalAmount;
+    total = altTotalAmount;
+  }
+
+  void Add(ReportTotals reportTotals) {
+    total += reportTotals.total;
+    taxTotal += reportTotals.taxTotal;
+    workRelatedTotal += reportTotals.workRelatedTotal;
+    workRelatedTaxTotal += reportTotals.workRelatedTaxTotal;
+  }
+
+  bool isEqual(ReportTotals reportTotals) {
+    return (total == reportTotals.total) && (taxTotal == reportTotals.taxTotal) &&
+        (workRelatedTotal == reportTotals.workRelatedTotal) && (workRelatedTaxTotal == reportTotals.workRelatedTaxTotal);
+  }
+}
 
 class AddEditReport extends StatefulWidget {
   final String title;
@@ -55,10 +104,10 @@ class AddEditReportState extends State<AddEditReport> {
   UserRepository get _userRepository => widget._userRepository;
   Report get _report => widget._report;
   List<ReceiptListItem> _receiptList;
-  double _totalAmount;
+  ReportTotals _reportTotals;
   Currency _reportCurrency;
   Currency _defaultCurrency;
-  Future<double> _calcTotalAmountFuture;
+  Future<ReportTotals> _calcTotalAmountFuture;
   bool _receiptItemsChanged = false;
   bool _autovalidate = false;
   bool _formWasEdited = false;
@@ -110,7 +159,7 @@ class AddEditReportState extends State<AddEditReport> {
 
   @override
   void initState() {
-    _totalAmount = (_report != null && _report.totalAmount != null) ? _report.totalAmount : 0;
+    _reportTotals = ReportTotals.fromReport(_report);
     _reportCurrency = (_report != null) ? _userRepository.settingRepository.getCurrencyForCurrencyCode(_report.currencyCode) : null;
     _receiptList = _report.getReceiptList(_userRepository.receiptRepository);
     _defaultCurrency = _userRepository.settingRepository.getDefaultCurrency();
@@ -135,20 +184,22 @@ class AddEditReportState extends State<AddEditReport> {
     }
   }
 
-  Future<double> _getAmountForGivenCurrency(ReceiptListItem receiptItem, Currency currency) async {
+  Future<ReportTotals> _getAmountForGivenCurrency(ReceiptListItem receiptItem, Currency currency) async {
+    ReportTotals reportTotals = ReportTotals.fromReceipt(receiptItem);
     if (currency == null) {
-      return receiptItem.totalAmount;
+      return reportTotals;
     } else {
       if (receiptItem.currencyCode == currency.code) {
-        return receiptItem.totalAmount;
+        return reportTotals;
       } else if (receiptItem.altCurrencyCode == currency.code) {
-        return receiptItem.altTotalAmount;
+        reportTotals.adjustByAltAmount(receiptItem.altTotalAmount);
+        return reportTotals;
       } else {
         // Get currency exchange rate from server
         Exchange exchange = await getExchangeRateFromServer(receiptItem.receiptDatetime, currency.code);
         if (exchange == null) {
           LogHepper.warning("Cannot get currency exchange for ${receiptItem.receiptDatetime} ${currency.code}", saveToFile: true);
-          return receiptItem.totalAmount;
+          return reportTotals;
         } else {
           double rate = exchange.rates.getRate(receiptItem.currencyCode);
           if ((rate != null) && (rate > 0)) {
@@ -157,49 +208,64 @@ class AddEditReportState extends State<AddEditReport> {
             receiptItem.altTotalAmount = altTotalAmount;
             receiptItem.altCurrencyCode = currency.code;
             _userRepository.receiptRepository.updateReceiptListItem(receiptItem);
-            return altTotalAmount;
+            reportTotals.adjustByAltAmount(receiptItem.altTotalAmount);
+            return reportTotals;
           } else {
             LogHepper.warning("No exchange rate for ${receiptItem.receiptDatetime} ${currency.code} ${receiptItem.currencyCode}", saveToFile: true);
-            return receiptItem.totalAmount;
+            return reportTotals;
           }
         }
       }
     }
   }
 
-  Future<double> _calculateTotalAmount() async {
-    double totalAmount = 0;
+  Future<ReportTotals> _calculateTotalAmount() async {
+    ReportTotals reportTotals = ReportTotals();
     for (int i = 0; i < _receiptList.length; i++) {
-      double itemAmount = await _getAmountForGivenCurrency(_receiptList[i], _defaultCurrency);
-      totalAmount += itemAmount;
+      ReportTotals itemTotals = await _getAmountForGivenCurrency(_receiptList[i], _defaultCurrency);
+      reportTotals.Add(itemTotals);
     }
 
-    if (_totalAmount != totalAmount) {
-      _totalAmount = totalAmount;
+    if (!_reportTotals.isEqual(reportTotals)) {
+      _reportTotals = reportTotals;
       _reportCurrency = _defaultCurrency;
       if (!_receiptItemsChanged && !isNewReport()) {
         // Save report's total amount and currency code automatically
         // the totalAmount changes may be caused by receipt items deleted or default currency change
-        _report.totalAmount = _totalAmount;
+        _report.totalAmount = _reportTotals.total;
+        _report.taxAmount = _reportTotals.taxTotal;
+        _report.workRelatedTotalAmount = _reportTotals.workRelatedTotal;
+        _report.workRelatedTaxAmount = _reportTotals.workRelatedTaxTotal;
         _report.currencyCode = _defaultCurrency.code;
         _userRepository.reportRepository.updateReport(_report, false);
       }
     }
 
-    return totalAmount;
+    return reportTotals;
   }
 
-  String _getTotalAmountText(double totalAmount) {
-    final String total = allTranslations.text('app.add-edit-report-page.total-amount-prefix');
-    return "$total: ${_reportCurrency != null ? _reportCurrency.code: ''} "
-        "${_reportCurrency != null ? _reportCurrency.symbol: ''}"
-        "${totalAmount?.toStringAsFixed(2)}";
+  String _getTotalAmountText(ReportTotals reportTotals) {
+    String currencySymbol = _reportCurrency != null ? _reportCurrency.symbol: '';
+    final String totalPrefix = allTranslations.text('app.add-edit-report-page.total-amount-prefix');
+    final String taxAmountPrefix = allTranslations.text('app.add-edit-report-page.tax-amount-prefix');
+    final String workRelatedTotalPrefix = allTranslations.text('app.add-edit-report-page.work-related-total-prefix');
+    final String workRelatedTaxAmountPrefix = allTranslations.text('app.add-edit-report-page.work-related-tax-amount-prefix');
+    final String currencyCodePrefix = allTranslations.text('app.add-edit-report-page.currency-code-prefix');
+    return "$totalPrefix: $currencySymbol${reportTotals.total?.toStringAsFixed(2)}, "
+           "$workRelatedTotalPrefix: $currencySymbol${reportTotals.workRelatedTotal?.toStringAsFixed(2)}\n"
+           "$taxAmountPrefix: $currencySymbol${reportTotals.taxTotal?.toStringAsFixed(2)}, "
+           "$workRelatedTaxAmountPrefix: $currencySymbol${reportTotals.workRelatedTaxTotal?.toStringAsFixed(2)}\n"
+           "$currencyCodePrefix ${_reportCurrency != null ? _reportCurrency.code: 'AUD'}.";
   }
 
 
   @override
   Widget build(BuildContext context) {
     List<ActionWithLabel> actions = [];
+    actions.add(ActionWithLabel()
+      ..action = _reviewAction
+      ..label = allTranslations.text('words.review')
+    );
     actions.add(ActionWithLabel()
       ..action = removeAction
       ..label = allTranslations.text('app.add-edit-report-page.remove-label')
@@ -283,26 +349,38 @@ class AddEditReportState extends State<AddEditReport> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
-                        FutureBuilder<double> (
+                        FutureBuilder<ReportTotals> (
                             future: _calcTotalAmountFuture,
                             builder:
-                                (BuildContext context, AsyncSnapshot<double> snapshot) {
+                                (BuildContext context, AsyncSnapshot<ReportTotals> snapshot) {
                               switch (snapshot.connectionState) {
                                 case ConnectionState.none:
                                 case ConnectionState.waiting:
                                 case ConnectionState.active:
-                                  return Text(_getTotalAmountText(_totalAmount));
+                                  return Text(_getTotalAmountText(_reportTotals));
                                 case ConnectionState.done:
                                   return Text(_getTotalAmountText(snapshot.data));
                               }
                             }
                         ),
-                        ReportButton(
-                          onPressed: _onAddReceipts,
-                          buttonName: allTranslations.text('app.add-edit-report-page.add-receipts-button-label'),
-                        ),
                       ],
                     ),
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    //textDirection: TextDirection.rtl,
+                    children: <Widget>[
+                      _report.quarterlyGroupId <= 0 ? Container() :
+                      ReportButton(
+                        onPressed: _onRepopulateQuarterReceipts,
+                        buttonName: allTranslations.text('app.add-edit-report-page.re-populate-quarterly-receipts'),
+                      ),
+                      ReportButton(
+                        onPressed: _onAddReceipts,
+                        buttonName: allTranslations.text('app.add-edit-report-page.add-receipts-button-label'),
+                      ),
+                    ],
                   ),
                   Text(allTranslations.text('app.contact-screen.form-indication'),
                     style: Theme.of(context).textTheme.caption,
@@ -341,7 +419,10 @@ class AddEditReportState extends State<AddEditReport> {
       _report.statusId = 1;
       _report.createDateTime = DateTime.now();
     }
-    _report.totalAmount = _totalAmount;
+    _report.totalAmount = _reportTotals.total;
+    _report.taxAmount = _reportTotals.taxTotal;
+    _report.workRelatedTotalAmount = _reportTotals.workRelatedTotal;
+    _report.workRelatedTaxAmount = _reportTotals.workRelatedTaxTotal;
     _report.currencyCode = (_reportCurrency != null) ? _reportCurrency.code : "";
     _report.updateDateTime = DateTime.now();
     _report.receipts = [];
@@ -378,6 +459,46 @@ class AddEditReportState extends State<AddEditReport> {
     _receiptItemsChanged = true;
     _calcTotalAmountFuture = _calculateTotalAmount();
     setState(() {});
+  }
+
+  Future<void> _reviewAction(int receiptId) async {
+    // Try to get the receipt detailed information from server
+    DataResult dataResult =
+        await _userRepository.receiptRepository.getReceipt(receiptId);
+    if (dataResult.success) {
+      Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) {
+          return AddEditReiptForm(dataResult.obj as Receipt);
+        }),
+      );
+    } else {
+      _showInSnackBar("${allTranslations.text("app.receipts-page.failed-review-receipt-message")} \n${dataResult.message}");
+    }
+  }
+
+  Future<void>  _onRepopulateQuarterReceipts() async {
+    bool shouldRepopulate = true;
+    if (_receiptList.length > 0) {
+      shouldRepopulate = await showDialog<bool>(
+          context: context,
+          builder: ConfirmDialog.builder(context,
+              title: Text(allTranslations.text('app.add-edit-report-page.re-populate-quarterly-receipts')),
+              content: Text(allTranslations.text('app.add-edit-report-page.re-populate-quarterly-receipts-description'))
+          )
+      );
+    }
+
+    if (shouldRepopulate) {
+      setState(() {
+        _receiptList.clear();
+        QuarterlyGroup quarterlyGroup = _userRepository.quarterlyGroupRepository.getQuarterGroupById(_report.quarterlyGroupId);
+        if (quarterlyGroup != null ){
+          _receiptList = _userRepository.receiptRepository.getReceiptItemsBetweenDateRange(quarterlyGroup.startDatetime, quarterlyGroup.endDatetime);
+        }
+        _receiptItemsChanged = true;
+        _calcTotalAmountFuture = _calculateTotalAmount();
+      });
+    }
   }
 
   void _onAddReceipts() {

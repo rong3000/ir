@@ -34,7 +34,10 @@ Report _$ReportFromJson(Map<String, dynamic> json) {
     ..taxAmount = (json['taxAmount'] as num)?.toDouble()
     ..currencyCode = json['currencyCode'] as String
     ..taxReturnGroupId = json['taxReturnGroupId'] as int
-    ..quarterlyGroupId = json['quarterlyGroupId'] as int;
+    ..quarterlyGroupId = json['quarterlyGroupId'] as int
+    ..workRelatedTotalAmount =
+        (json['workRelatedTotalAmount'] as num)?.toDouble()
+    ..workRelatedTaxAmount = (json['workRelatedTaxAmount'] as num)?.toDouble();
 }
 
 Map<String, dynamic> _$ReportToJson(Report instance) => <String, dynamic>{
@@ -49,5 +52,7 @@ Map<String, dynamic> _$ReportToJson(Report instance) => <String, dynamic>{
       'taxAmount': instance.taxAmount,
       'currencyCode': instance.currencyCode,
       'taxReturnGroupId': instance.taxReturnGroupId,
-      'quarterlyGroupId': instance.quarterlyGroupId
+      'quarterlyGroupId': instance.quarterlyGroupId,
+      'workRelatedTotalAmount': instance.workRelatedTotalAmount,
+      'workRelatedTaxAmount': instance.workRelatedTaxAmount
     };

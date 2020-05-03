@@ -205,7 +205,7 @@ class ReceiptRepository extends IRRepository {
 
   Future<DataResult> deleteReceipts(List<int> receiptIds) async {
     DataResult result =
-        await webservicePost(Urls.DeleteReceipts, await getToken(), jsonEncode(receiptIds));
+        await webservicePost(Urls.DeleteReceipts, await getToken(), jsonEncode(receiptIds), timeout: 2000);
     if (result.success) {
       // Delete the local cache of the receipts
       for (int i = 0; i < receiptIds.length; i++) {

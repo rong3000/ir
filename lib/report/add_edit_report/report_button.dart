@@ -11,12 +11,15 @@ class ReportButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RaisedButton(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(30.0),
+    return SizedBox(
+      width: 150,
+      child: RaisedButton(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30.0),
+        ),
+        onPressed: _onPressed,
+        child: Text('${_buttonName}'),
       ),
-      onPressed: _onPressed,
-      child: Text('${_buttonName}'),
     );
   }
 }
