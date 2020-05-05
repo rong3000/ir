@@ -34,6 +34,8 @@ class Report {
   String currencyCode = "";
   int taxReturnGroupId = 0;
   int quarterlyGroupId = 0;
+  double workRelatedTotalAmount = 0;
+  double workRelatedTaxAmount = 0;
 
   Report();
 

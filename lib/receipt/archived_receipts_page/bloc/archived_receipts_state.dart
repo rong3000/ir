@@ -76,3 +76,22 @@ class UnArchivedReceiptFailState extends ArchivedReceiptsState {
   @override
   String toString() => 'GetArchive Receipts Successful';
 }
+
+class DeleteReceiptSuccessState extends ArchivedReceiptsState {
+  final int receiptId;
+
+  DeleteReceiptSuccessState({@required this.receiptId}) : super([receiptId]);
+
+  @override
+  String toString() => 'Delete Receipt Successfully';
+}
+
+class DeleteReceiptFailState extends ArchivedReceiptsState {
+  final int receiptId;
+  final String description;
+
+  DeleteReceiptFailState({@required this.receiptId, @required this.description}) : super([receiptId]);
+
+  @override
+  String toString() => 'Delete Receipt Failed';
+}

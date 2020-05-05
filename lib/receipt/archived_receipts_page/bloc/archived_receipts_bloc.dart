@@ -25,6 +25,8 @@ class ArchivedReceiptsBloc extends Bloc<ArchivedReceiptsEvent, ArchivedReceiptsS
     }
     else if (event is UnArchivedReceipt){
       yield*  _handleUnArchivedReceipt(event);
+    } else if (event is DeleteReceipt) {
+      yield* _handleDeleteReceipt(event);
     }
     // More cases here for different events
   }
@@ -60,6 +62,18 @@ class ArchivedReceiptsBloc extends Bloc<ArchivedReceiptsEvent, ArchivedReceiptsS
       yield UnArchivedReceiptSuccessState(receiptId: event.receiptId);
     } else {
       yield UnArchivedReceiptFailState(receiptId: event.receiptId);
+    }
+  }
+
+  Stream<ArchivedReceiptsState> _handleDeleteReceipt(DeleteReceipt event) async* {
+    List<int> receiptIds = new List<int>();
+    receiptIds.add(event.receiptId);
+    var result = await _receiptRepository.deleteReceipts(receiptIds);
+
+    if (result.success){
+      yield DeleteReceiptSuccessState(receiptId: event.receiptId);
+    } else {
+      yield DeleteReceiptFailState(receiptId: event.receiptId, description: result.message);
     }
   }
 }
