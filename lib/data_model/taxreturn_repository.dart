@@ -64,8 +64,6 @@ class TaxReturnRepository extends IRRepository {
           taxReturns[i].receiptGroups[j] = report;
         }
       }
-
     }
-
   }
 }
