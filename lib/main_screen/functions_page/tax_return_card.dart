@@ -99,6 +99,9 @@ class _TaxReturnCardState extends State<TaxReturnCard> {
         DropdownMenuItem<int>(value: tax.year, child: Text(tax.description)),
       );
     }
+    if ((_selectedTaxReturnYear <= 0) && (list.length > 0)) {
+      _selectedTaxReturnYear = taxReturnList[0].year;
+    }
     return list;
   }
 
@@ -146,7 +149,7 @@ class _TaxReturnCardState extends State<TaxReturnCard> {
                             borderRadius: BorderRadius.circular(30.0),
                           ),
                           onPressed: _viewTaxReturnList,
-                          child: Text(allTranslations.text('app.functions-page.tax-return-view')),
+                          child: Text(allTranslations.text('app.functions-page.quarterly-report-view')),
                           color: Colors.lightBlue,
                         )
                       ),

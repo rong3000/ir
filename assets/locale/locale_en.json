@@ -300,7 +300,10 @@
       "quarterly-report-list-loading": "Loading quarterly reports",
       "quarterly-report-list-loading-failed": "Failed to load quarterly reports: ",
       "quarterly-report-loading-failed-title": "Failed to Load Quarterly Report",
-      "quarterly-report-loading-failed-message": "Failed reason: "
+      "quarterly-report-loading-failed-message": "Failed reason: ",
+      "tax-return-title": "Tax Return Report",
+      "tax-return-description": "Select Tax Return report from the below list, and press 'View' button.",
+      "tax-return-list": "List of Tax Returns"
     }
   },
   "words": {
