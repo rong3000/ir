@@ -296,26 +296,6 @@ class _MainScreenState extends State<MainScreen> {
                   );
                 },
               ),
-              ListTile(
-                title: Text(allTranslations.text('Tax Return 2019-2020')),
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) {
-                      return TaxReturnPage(userRepository: _userRepository, fiscYear: FiscYear.Current);
-                    }),
-                  );
-                },
-              ),
-              ListTile(
-                title: Text(allTranslations.text('Tax Return 2018-2019')),
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) {
-                      return TaxReturnPage(userRepository: _userRepository, fiscYear: FiscYear.Previous);
-                    }),
-                  );
-                },
-              ),
             ],
           ),
         ),

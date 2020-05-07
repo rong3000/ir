@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intelligent_receipt/data_model/currency.dart';
 import 'package:intelligent_receipt/data_model/enums.dart';
 import 'package:intelligent_receipt/data_model/report.dart';
+import 'package:intelligent_receipt/data_model/taxreturn.dart';
 import 'package:intelligent_receipt/report/add_edit_report/add_edit_report.dart';
 import 'package:intelligent_receipt/report/add_edit_report/add_edit_report.dart';
 import 'package:intelligent_receipt/report/report_card/report_card.dart';
@@ -18,14 +19,17 @@ import '../../data_model/webservice.dart';
 class DeviceGroup extends StatefulWidget {
   final UserRepository _userRepository;
   final FiscYear _fiscYear;
+  final TaxReturn _taxReturn;
 
   DeviceGroup({
     Key key,
     @required UserRepository userRepository,
-    @required FiscYear fiscYear,
+    FiscYear fiscYear,
+    @required TaxReturn taxReturn,
   })  : assert(userRepository != null),
         _userRepository = userRepository,
         _fiscYear = fiscYear,
+        _taxReturn = taxReturn,
         super(key: key) {}
 
   @override
@@ -88,7 +92,6 @@ class DeviceGroupState extends State<DeviceGroup> {
 
   Future<void> _forceGetReportsFromServer() async {
     _getReportsFuture = _userRepository.taxReturnRepository.getTaxReturns();
-//    _getReportsFuture = _userRepository.reportRepository.getReportsFromServer(forceRefresh: true);
     setState(() {});
   }
 
@@ -148,9 +151,7 @@ class DeviceGroupState extends State<DeviceGroup> {
   ReportSortType _sortByValue;
 
   void showMenuSelection(ReportSortType value) {
-//    if (<String>[_sortByCreateTime, _sortByUpdateTime, _sortByGroupName].contains(value))
     _sortByValue = value;
-//    showInSnackBar('You selected: $value');
     print('You selected: $value');
     setState(() {
       sortingType = value;
@@ -228,10 +229,6 @@ class DeviceGroupState extends State<DeviceGroup> {
                 children: <Widget>[
                   Expanded(
                     child: new ListTile(
-//                          leading: Icon(
-//                            Icons.edit,
-////                            color: Colors.white,
-//                          ),
                       title: GestureDetector(
                         onTap: () {
                           setState(() {
@@ -262,10 +259,6 @@ class DeviceGroupState extends State<DeviceGroup> {
                   ),
                   Expanded(
                     child: new ListTile(
-//                          leading: Icon(
-//                            Icons.edit,
-////                            color: Colors.white,
-//                          ),
                       title: GestureDetector(
                         onTap: () {
                           setState(() {
@@ -333,51 +326,12 @@ class DeviceGroupState extends State<DeviceGroup> {
                     );
                   } else {
                     if (snapshot.data.success) {
-                      List<Report> sortedReportItems;
-                      if (widget._fiscYear == FiscYear.Current) {
-                        sortedReportItems = _userRepository
-                            .taxReturnRepository.taxReturns[1].receiptGroups;
-
-                          for (int i = 0; i < _userRepository.reportRepository.reports.length; i++) {
-                            if (_userRepository.reportRepository.reports[i].taxReturnGroupId > 0) {
-                              sortedReportItems.add(_userRepository.reportRepository.reports[i]);
-                              for (int j=0; j < _userRepository.taxReturnRepository.taxReturns[1].receiptGroups.length; j++) {
-                                if (_userRepository.reportRepository.reports[i].taxReturnGroupId == _userRepository.taxReturnRepository.taxReturns[1].receiptGroups[j].taxReturnGroupId) {
-                                  sortedReportItems.remove(_userRepository.taxReturnRepository.taxReturns[1].receiptGroups[j]);
-                                }
-                              }
-                            }
-                          }
-
-                      } else {
-                        sortedReportItems = _userRepository
-                            .taxReturnRepository.taxReturns[0].receiptGroups;
-                        for (int i = 0; i < _userRepository.reportRepository.reports.length; i++) {
-                          if (_userRepository.reportRepository.reports[i].taxReturnGroupId > 0) {
-                            sortedReportItems.add(_userRepository.reportRepository.reports[i]);
-                            for (int j=0; j < _userRepository.taxReturnRepository.taxReturns[0].receiptGroups.length; j++) {
-                              if (_userRepository.reportRepository.reports[i].taxReturnGroupId == _userRepository.taxReturnRepository.taxReturns[0].receiptGroups[j].taxReturnGroupId) {
-                                sortedReportItems.remove(_userRepository.taxReturnRepository.taxReturns[0].receiptGroups[j]);
-                              }
-                            }
-                          }
-                        }
-                      }
-//                        _userRepository.reportRepository.getSortedReportItems(
-//                            ReportStatusType.Active,
-//                            sortingType,
-//                            ascending,
-//                            _fromDate,
-//                            _toDate);
+                      List<Report> sortedReportItems = widget._taxReturn.receiptGroups;
                       List<ActionWithLable> actions = [];
                       ActionWithLable r = new ActionWithLable();
                       r.action = taxReviewAction;
                       r.lable = allTranslations.text('app.reports-list.review');
-//                        ActionWithLable d = new ActionWithLable();
-//                        d.action = deleteAction;
-//                        d.lable = allTranslations.text('app.reports-list.delete');
                       actions.add(r);
-//                        actions.add(d);
                       return ListView.builder(
                           itemCount: sortedReportItems.length,
                           controller: _scrollController,

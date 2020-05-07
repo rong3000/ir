@@ -300,7 +300,10 @@
       "quarterly-report-list-loading": "加载季度报告列表",
       "quarterly-report-list-loading-failed": "加载季度报告列表列表失败: ",
       "quarterly-report-loading-failed-title": "加载季度报告失败",
-      "quarterly-report-loading-failed-message": "失败原因: "
+      "quarterly-report-loading-failed-message": "失败原因: ",
+      "tax-return-title": "退税报告",
+      "tax-return-description": "请从下拉列表中选择退税报告，然后点击'查看'按键",
+      "tax-return-list": "退税报告列表"
     }
   },
   "words": {
