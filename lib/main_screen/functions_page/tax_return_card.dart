@@ -75,20 +75,18 @@ class _TaxReturnCardState extends State<TaxReturnCard> {
     );
   }
 
-  Future<void> _viewTaxReturnList() async {
-    DataResult result = await _userRepository.taxReturnRepository.getTaxReturn(_selectedTaxReturnYear);
-    if (result.success) {
-      TaxReturn taxReturn = result.obj;
-      Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) {
-          return TaxReturnPage(userRepository: _userRepository, taxReturn: taxReturn,);
-        }),
-      );
-    } else {
-      showAlertMessage(context,
-          title: allTranslations.text('app.functions-page.tax-return-loading-failed-title'),
-          message: allTranslations.text('app.functions-page.tax-return-loading-failed-message') + result.messageCode.toString() + " " + result.message);
+  void _viewTaxReturnList() {
+    TaxReturn taxReturn;
+    for (int i = 0; i < _userRepository.taxReturnRepository.taxReturns.length; i++) {
+      if (_userRepository.taxReturnRepository.taxReturns[i].year == _selectedTaxReturnYear) {
+        taxReturn = _userRepository.taxReturnRepository.taxReturns[i];
+      }
     }
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) {
+        return TaxReturnPage(userRepository: _userRepository, taxReturn: taxReturn,);
+      }),
+    );
   }
 
   List<DropdownMenuItem<int>> _getTaxReturnList() {
