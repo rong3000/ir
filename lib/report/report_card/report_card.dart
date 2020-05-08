@@ -99,7 +99,7 @@ class _ReportCardState extends State<ReportCard> {
                 mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(20.0, 8.0, 0.0, 0.0),
+                    padding: const EdgeInsets.fromLTRB(10.0, 6.0, 0.0, 0.0),
                     child: DefaultTextStyle(
                       softWrap: false,
                       overflow: TextOverflow.ellipsis,
@@ -108,20 +108,13 @@ class _ReportCardState extends State<ReportCard> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Padding(
-                            padding: const EdgeInsets.only(bottom: 6.0),
-                            child: Text(
+                            padding: const EdgeInsets.only(bottom: 4.0),
+                            child: AutoSizeText(
                               '${widget._reportItem.reportName}',
-                              style: dateStyle
-                                  .copyWith(color: Colors.black54)
-                                  .apply(fontSizeFactor: 0.75),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 0.0, bottom: 6.0),
-                            child: Text(
-                              '${allTranslations.text('app.report-card.total-amount-prefix')}: ${currency != null ? currency.code: ''} ${currency != null ? currency.symbol: ''}${widget._reportItem.totalAmount.toStringAsFixed(2)}',
-                              style: companyNameStyle.apply(fontSizeFactor: 1.2),
-
+                              style: TextStyle(fontSize: 16),
+                              minFontSize: 6,
+                              maxLines: 3,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                           Padding(
@@ -136,7 +129,6 @@ class _ReportCardState extends State<ReportCard> {
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-
                         ],
                       ),
                     ),
@@ -179,10 +171,23 @@ class _ReportCardState extends State<ReportCard> {
                             ),
                             Padding(
                               padding: const EdgeInsets.only(top: 0.0, bottom: 0.0),
-                              child: Text(
-                                '${widget._reportItem.getValidReceiptCount(_userRepository.receiptRepository)} ${allTranslations.text('app.report-card.expenses-suffix')}',
-                                style: companyNameStyle.apply(fontSizeFactor: 1.2),
-                              ),
+                              child: Row(
+                                children: <Widget>[
+                                  Text(
+                                    '${widget._reportItem.getValidReceiptCount(_userRepository.receiptRepository)} ${allTranslations.text('app.report-card.expenses-suffix')}',
+                                    style: dateStyle
+                                        .copyWith(color: Colors.black54)
+                                        .apply(fontSizeFactor: 0.75),
+                                  ),
+                                  Text(
+                                    '  ${allTranslations.text('app.report-card.total-amount-prefix')}: ${currency != null ? currency.code: ''} ${currency != null ? currency.symbol: ''}${widget._reportItem.totalAmount.toStringAsFixed(2)}',
+                                    style: dateStyle
+                                        .copyWith(color: Colors.black54)
+                                        .apply(fontSizeFactor: 0.75),
+
+                                  ),
+                                ],
+                              )
                             ),
                           ],
                         ),
