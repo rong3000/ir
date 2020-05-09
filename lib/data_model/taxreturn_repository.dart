@@ -66,4 +66,12 @@ class TaxReturnRepository extends IRRepository {
       }
     }
   }
+
+  TaxReturn getTaxReturnFromCache(int year) {
+    for (int i = 0; i < taxReturns.length; i++) {
+      if (taxReturns[i].year == year) {
+        return taxReturns[i];
+      }
+    }
+  }
 }

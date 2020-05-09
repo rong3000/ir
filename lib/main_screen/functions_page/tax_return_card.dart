@@ -76,12 +76,7 @@ class _TaxReturnCardState extends State<TaxReturnCard> {
   }
 
   void _viewTaxReturnList() {
-    TaxReturn taxReturn;
-    for (int i = 0; i < _userRepository.taxReturnRepository.taxReturns.length; i++) {
-      if (_userRepository.taxReturnRepository.taxReturns[i].year == _selectedTaxReturnYear) {
-        taxReturn = _userRepository.taxReturnRepository.taxReturns[i];
-      }
-    }
+    TaxReturn taxReturn = _userRepository.taxReturnRepository.getTaxReturnFromCache(_selectedTaxReturnYear);
     Navigator.of(context).push(
       MaterialPageRoute(builder: (context) {
         return TaxReturnPage(userRepository: _userRepository, taxReturn: taxReturn,);
