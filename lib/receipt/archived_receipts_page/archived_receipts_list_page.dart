@@ -15,7 +15,8 @@ import 'package:intelligent_receipt/helper_widgets/confirm-dialog.dart';
 
 class ArchivedReceiptsListPage extends StatefulWidget {
   final String yearMonth;
-  ArchivedReceiptsListPage(this.yearMonth);
+  final SaleExpenseType saleExpenseType;
+  ArchivedReceiptsListPage(this.yearMonth, this.saleExpenseType);
 
   @override
   State<StatefulWidget> createState() {
@@ -34,7 +35,7 @@ class _ArchivedReceiptsListSate extends State<ArchivedReceiptsListPage> {
   void initState() {
     _userRepository = RepositoryProvider.of<UserRepository>(context);
     _archivedReceiptsBloc = BlocProvider.of<ArchivedReceiptsBloc>(context);
-    _archivedReceiptsBloc.dispatch(GetArchivedReceipts(widget.yearMonth));
+    _archivedReceiptsBloc.dispatch(GetArchivedReceipts(widget.yearMonth, widget.saleExpenseType));
 
     var state = _archivedReceiptsBloc.state;
     state.listen((state) {

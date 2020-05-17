@@ -36,28 +36,13 @@ class AddEditReiptForm extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    var isNew = (_receiptItem == null) || (_receiptItem.id == 0);
-    Receipt receipt;
+    Receipt receipt = (_receiptItem == null) ? new Receipt() : _receiptItem;
 
-    if (isNew) {
-      receipt = Receipt()
-        ..receiptDatetime = DateTime.now()
-        ..receiptTypeId = 0
-        ..productName = ""
-        ..taxInclusive = true
-        ..totalAmount = 0
-        ..taxAmount = 0
-        ..companyName = ""
-        ..warrantyPeriod = 0
-        ..notes = ""
-        ..categoryId = 1;
-    } else {
-      receipt = _receiptItem;
-    }
     if (receipt.taxInclusive == null) {
       receipt.taxInclusive = true;
     }
 
+    var isNew = (receipt.id == 0);
     return _AddEditReiptFormState(receipt, isNew);
   }
 }
@@ -178,7 +163,6 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
     this.receipt.statusUpdateDatetime = DateTime.now();
 
     this.receipt.decodeStatus = DecodeStatusType.Success.index;
-    this.receipt.receiptTypeId = 0;
     this.receipt.taxAmount = double.tryParse(_taxAmountController.text);
 
     // Update receipt date time if it is invalid
@@ -480,7 +464,8 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
           }
           if (state.uploadSuccess) {
             Navigator.pop(context);
-            BlocProvider.of<MainScreenBloc>(context).dispatch(ShowReviewedReceiptEvent());
+            BlocProvider.of<MainScreenBloc>(context).dispatch(
+                GoToPageEvent(this.receipt.receiptTypeId == SaleExpenseType.Expense.index ? MainScreenPages.expenses.index : MainScreenPages.sales.index, ReceiptsSubPages.reviewed.index));
           }
           if (state.deleteSuccess) {
             Navigator.of(context).pop();

@@ -14,27 +14,21 @@ class MainScreenBloc
         _userRepository = userRepository;
 
   @override
-  MainScreenState get initialState => HomePageState();
+  MainScreenState get initialState => NormalState();
 
   @override
   Stream<MainScreenState> mapEventToState(
       MainScreenEvent event,
       ) async* {
-    if (event is ShowUnreviewedReceiptEvent) {
-      yield* _mapShowUnreviewedReceiptEventToState();
-    } else if (event is ShowReviewedReceiptEvent) {
-      yield* _mapShowReviewedReceiptEventToState();
+    if (event is GoToPageEvent) {
+      yield* _mapGoToPageState(event);
     } else if (event is ResetToNormalEvent) {
       yield* _mapResetToNormalEventToState();
     }
   }
 
-  Stream<MainScreenState> _mapShowUnreviewedReceiptEventToState() async* {
-    yield ShowUnreviewedReceiptState();
-  }
-
-  Stream<MainScreenState> _mapShowReviewedReceiptEventToState() async* {
-    yield ShowReviewedReceiptState();
+  Stream<MainScreenState> _mapGoToPageState(GoToPageEvent goToPageEvent) async* {
+    yield GoToPageState(goToPageEvent.pageIndex, goToPageEvent.subPageIndex);
   }
 
   Stream<MainScreenState> _mapResetToNormalEventToState() async* {

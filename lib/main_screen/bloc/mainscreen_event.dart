@@ -6,14 +6,13 @@ abstract class MainScreenEvent extends Equatable {
   MainScreenEvent([List props = const []]) : super(props);
 }
 
-class ShowUnreviewedReceiptEvent extends MainScreenEvent {
-  @override
-  String toString() => 'ShowUnreviewedReceiptEvent';
-}
+class GoToPageEvent extends MainScreenEvent {
+  final int pageIndex;
+  int subPageIndex = 0;
+  GoToPageEvent(@required this.pageIndex, this.subPageIndex);
 
-class ShowReviewedReceiptEvent extends MainScreenEvent {
   @override
-  String toString() => 'ShowReviewedReceiptEvent';
+  String toString() => 'GoToPageEvent';
 }
 
 // Reset to normal state

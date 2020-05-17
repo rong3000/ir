@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intelligent_receipt/data_model/archived_receipt_models/archivedreceiptdatarange.dart';
+import 'package:intelligent_receipt/data_model/enums.dart';
 import 'package:intelligent_receipt/data_model/preferences/preferences_repository.dart';
 import './bloc/archived_receipts_bloc.dart';
 import './bloc/archived_receipts_events.dart';
@@ -13,12 +14,14 @@ import 'package:intl/intl.dart';
 
 class ArchivedReceiptsPage extends StatefulWidget {
   final UserRepository _userRepository;
+  final SaleExpenseType _saleExpenseType;
 
   ArchivedReceiptsPage({
     Key key,
-    @required UserRepository userRepository,
+    @required UserRepository userRepository, @required SaleExpenseType saleExpenseType
   })  : assert(userRepository != null),
         _userRepository = userRepository,
+        _saleExpenseType = saleExpenseType,
         super(key: key);
 
   @override
@@ -35,7 +38,7 @@ class _ArchivedReceiptsPageState extends State<ArchivedReceiptsPage> {
   void initState() {
     super.initState();
     _archivedReceiptsBloc = BlocProvider.of<ArchivedReceiptsBloc>(context);
-    _archivedReceiptsBloc.dispatch(GetArchiveMetaData());
+    _archivedReceiptsBloc.dispatch(GetArchiveMetaData(widget._saleExpenseType));
 
     _preferencesRepository = widget._userRepository.preferencesRepository;
     var locale = _preferencesRepository.getPreferredLanguage();
@@ -45,11 +48,11 @@ class _ArchivedReceiptsPageState extends State<ArchivedReceiptsPage> {
   viewReceiptsAction(yearMonth) {
     Navigator.of(context)
         .push(MaterialPageRoute(
-            builder: (context) => ArchivedReceiptsListPage(yearMonth)))
+            builder: (context) => ArchivedReceiptsListPage(yearMonth, widget._saleExpenseType)))
         .then((shouldReload) {
           // Future enhancement could be to not reload based on the value of shouldReload
           // Would require a away to restore old state when navigating back from list page
-          _archivedReceiptsBloc.dispatch(GetArchiveMetaData());
+          _archivedReceiptsBloc.dispatch(GetArchiveMetaData(widget._saleExpenseType));
     });
   }
 
@@ -107,9 +110,6 @@ class _ArchivedReceiptsPageState extends State<ArchivedReceiptsPage> {
   Widget build(BuildContext context) {
     final Orientation orientation = MediaQuery.of(context).orientation;
     return Scaffold(
-      appBar: AppBar(
-        title: Text(allTranslations.text('app.archived-receipts-screen.title')),
-      ),
       body: BlocBuilder(
           bloc: _archivedReceiptsBloc,
           builder: (BuildContext context, ArchivedReceiptsState state) {

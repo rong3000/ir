@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intelligent_receipt/data_model/enums.dart';
 import 'package:intelligent_receipt/main_screen/bloc/bloc.dart';
 import 'package:intelligent_receipt/receipt/add_edit_reciept_manual/add_edit_receipt_manual.dart';
 import 'package:intelligent_receipt/receipt/upload_receipt_image/upload_receipt_image.dart';
 import 'package:intelligent_receipt/translations/global_translations.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 import 'package:intelligent_receipt/main_screen/news/news_item_display.dart';
+import 'package:intelligent_receipt/data_model/receipt.dart';
 
 
 class HomePage extends StatefulWidget {
@@ -42,7 +44,8 @@ class _HomePageState extends State<HomePage> {
       var ri = await ImagePicker.pickImage(source: source);
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => UploadReceiptImage(userRepository: _userRepository, title: allTranslations.text('app.snap-receipt-page.title'), imageFile: ri,)),
+        MaterialPageRoute(builder: (context) =>
+            UploadReceiptImage(userRepository: _userRepository, title: allTranslations.text('app.snap-receipt-page.title'), imageFile: ri, saleExpenseType: SaleExpenseType.Expense)),
       );
     }
   }
@@ -115,9 +118,10 @@ class _HomePageState extends State<HomePage> {
                                   child:
                                   GestureDetector(
                                     onTap: () {
+                                      Receipt receipt = new Receipt()..receiptTypeId = SaleExpenseType.Expense.index;
                                       Navigator.push(
                                         context,
-                                         MaterialPageRoute(builder: (context) => AddEditReiptForm(null)) 
+                                         MaterialPageRoute(builder: (context) => AddEditReiptForm(receipt))
                                       );
                                     },
                                     child: 

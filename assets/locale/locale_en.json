@@ -66,8 +66,8 @@
     },
     "main-screen": {
       "home-tab-label": "Home",
-      "receipts-tab-label": "Rceipts",
-      "groups-tab-label": "Groups",
+      "expenses-tab-label": "Expenses",
+      "sales-tab-label": "Sales",
       "functions-tab-label": "Features",
       "settings-tab-label": "Settings",
       "no-network" : "No network connection",
@@ -107,8 +107,10 @@
       "view-receipts-group-card-title": "View Receipt Groups"
     },
     "receipts-page": {
-      "unreviewed-tab-title": "Unreviewed",
-      "reviewed-tab-title": "Reviewed",
+      "unreviewed-button-text": "Unreviewed",
+      "reviewed-button-text": "Reviewed",
+      "archived-button-text": "Archived",
+      "groups-button-text": "Groups",
       "add-receipt-tooltip": "From Camera or Gallery",
       "add-receipt-manual-tooltip": "Manually Add Receipt",
       "failed-load-receipts-message": "Failed to load receipts: ",

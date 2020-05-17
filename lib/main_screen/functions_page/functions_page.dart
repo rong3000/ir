@@ -34,9 +34,6 @@ class _FunctionsPageState extends State<FunctionsPage> {
     return Scaffold(
       body: ListView(
         children: <Widget>[
-          FunctionCard(ArchivedReceiptsPage(userRepository: _userRepository),
-            allTranslations.text('app.functions-page.archived-receipts-title'),
-            allTranslations.text('app.functions-page.archived-receipts-description')),
           TaxReturnCard(userRepository: _userRepository),
           QuarterlyGroupCard(_userRepository)
         ],

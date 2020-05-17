@@ -33,6 +33,11 @@ enum ReportStatusType
   Deleted
 }
 
+enum SaleExpenseType {
+  Expense,
+  Sale
+}
+
 enum ReceiptSortType {
   UploadTime,
   ReceiptTime,
@@ -51,4 +56,19 @@ enum FiscYear
 {
   Current,
   Previous,
+}
+
+enum MainScreenPages {
+  home,
+  expenses,
+  sales,
+  functions,
+  settings
+}
+
+enum ReceiptsSubPages {
+  reviewed,
+  unreviewed,
+  archived,
+  groups
 }

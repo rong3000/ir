@@ -12,18 +12,18 @@ import '../add_edit_reciept_manual/add_edit_receipt_manual.dart';
 import 'package:intelligent_receipt/data_model/exception_handlers/unsupported_version.dart';
 import 'package:intelligent_receipt/data_model/http_statuscode.dart';
 import 'package:intelligent_receipt/main_screen/bloc/bloc.dart';
-import 'package:intelligent_receipt/data_model/GeneralUtility.dart';
-
 
 class UploadReceiptImage extends StatefulWidget {
   final UserRepository _userRepository;
   final String title;
+  final SaleExpenseType _saleExpenseType;
   File imageFile;
 
   UploadReceiptImage(
-      {Key key, @required UserRepository userRepository, this.title, this.imageFile})
+      {Key key, @required UserRepository userRepository, this.title, this.imageFile, @required SaleExpenseType saleExpenseType})
       : assert(userRepository != null),
         _userRepository = userRepository,
+        _saleExpenseType = saleExpenseType,
         super(key: key);
 
   @override
@@ -59,7 +59,7 @@ class _UploadReceiptImageState extends State<UploadReceiptImage> {
   }
 
   void _uploadReceipt(File imageFile) async {
-    _uploadReceiptFulture = _userRepository.receiptRepository.uploadReceiptImage(imageFile);
+    _uploadReceiptFulture = _userRepository.receiptRepository.uploadReceiptImage(imageFile, saleExpenseType: widget._saleExpenseType);
   }
 
   void showAlert(String message, AlertType alertType) {
@@ -218,7 +218,9 @@ class _UploadReceiptImageState extends State<UploadReceiptImage> {
                             else {
                               DataResult dataResult = snapshot.data;
                               if (dataResult.success) {
-                                BlocProvider.of<MainScreenBloc>(context).dispatch(ShowUnreviewedReceiptEvent());
+                                BlocProvider.of<MainScreenBloc>(context).dispatch(
+                                    GoToPageEvent(widget._saleExpenseType == SaleExpenseType.Expense ? MainScreenPages.expenses.index : MainScreenPages.sales.index, ReceiptsSubPages.unreviewed.index)
+                                );
                                 Receipt receipt = dataResult.obj as Receipt;
                                 if (receipt == null ||
                                     receipt.decodeStatus == DecodeStatusType.Unknown.index) {

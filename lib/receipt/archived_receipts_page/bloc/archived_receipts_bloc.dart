@@ -34,7 +34,7 @@ class ArchivedReceiptsBloc extends Bloc<ArchivedReceiptsEvent, ArchivedReceiptsS
   Stream<ArchivedReceiptsState> _getArchivedReceiptsMetaData(GetArchiveMetaData event) async* {
     yield GetArchiveDataLoading();
 
-    var result = await _receiptRepository.getArchivedReceiptMetaData();
+    var result = await _receiptRepository.getArchivedReceiptMetaData(event.saleExpenseType);
 
     if (result.success){
       yield GetArchiveMetaDataSuccessState(dataRange: result.obj);
@@ -46,7 +46,7 @@ class ArchivedReceiptsBloc extends Bloc<ArchivedReceiptsEvent, ArchivedReceiptsS
   Stream<ArchivedReceiptsState> _handleGetArchivedReceipts(GetArchivedReceipts event) async* {
     yield GetArchiveDataLoading();
 
-    var result = await _receiptRepository.getArchivedReceipts(event.yearMonth);
+    var result = await _receiptRepository.getArchivedReceipts(event.yearMonth, event.saleExpenseType);
 
     if (result.success){
       yield GetArchivedReceiptsSuccessState(receipts: result.obj);
