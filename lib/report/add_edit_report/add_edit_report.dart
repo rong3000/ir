@@ -506,7 +506,7 @@ class AddEditReportState extends State<AddEditReport> {
 
   void _onAddReceipts() {
     // Get candidate item list
-    List<ReceiptListItem> reviewedItems = _userRepository.receiptRepository.getReceiptItems(ReceiptStatusType.Reviewed);
+    List<ReceiptListItem> reviewedItems = _userRepository.receiptRepository.getReceiptItems(ReceiptStatusType.Reviewed, SaleExpenseType.values[_report.reportTypeId]);
     // Remove the items already included in the report's receipt list
     List<ReceiptListItem> candidateItems = reviewedItems.toSet().difference(_receiptList.toSet()).toList();
     Navigator.of(context).push(

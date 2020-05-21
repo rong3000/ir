@@ -10,8 +10,6 @@ import 'package:intelligent_receipt/main_screen/home_page/home_page.dart';
 import 'package:intelligent_receipt/main_screen/search_bar/search_bar.dart';
 import 'package:intelligent_receipt/main_screen/settings_page/check_update_screen/check_update_screen_ios.dart';
 import 'package:intelligent_receipt/main_screen/settings_page/settings_page.dart';
-import 'package:intelligent_receipt/main_screen/reports_page/reports_page.dart';
-import 'package:intelligent_receipt/main_screen/tax_return_page/tax_return_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intelligent_receipt/translations/global_translations.dart';
 import 'package:intelligent_receipt/user_repository.dart';
@@ -31,16 +29,11 @@ class MainScreenArguments {
 
 class MainScreen extends StatefulWidget {
   static const routeName = '/mainScreen';
-  static const homePageIndex = 0;
-  static const receiptsPageIndex = 1;
-  static const reportsPageIndex = 2;
-  static const functionsPageIndex = 3;
-  static const settingsPageIndex = 4;
 
   final UserRepository _userRepository;
   HomePage _homePage;
-  ReceiptsPage _receiptsPage;
-  ReportsPage _reportsPage;
+  ReceiptsPage _expensesPage;
+  ReceiptsPage _salesPage;
   FunctionsPage _functionsPage;
   SettingsPage _settingsPage;
 
@@ -51,8 +44,8 @@ class MainScreen extends StatefulWidget {
         _userRepository = userRepository,
         super(key: key) {
     _homePage = new HomePage(userRepository: userRepository);
-    _receiptsPage = new ReceiptsPage(userRepository: userRepository);
-    _reportsPage = new ReportsPage(userRepository: userRepository, reportStatusType: ReportStatusType.Active);
+    _expensesPage = new ReceiptsPage(userRepository: userRepository, saleExpenseType: SaleExpenseType.Expense);
+    _salesPage = new ReceiptsPage(userRepository: userRepository, saleExpenseType: SaleExpenseType.Sale);
     _functionsPage = new FunctionsPage(userRepository: userRepository, name: name);
     _settingsPage = new SettingsPage(userRepository: userRepository, name: name);
   }
@@ -65,8 +58,8 @@ class _MainScreenState extends State<MainScreen> {
   
   String get appTitle => allTranslations.text('app.title');
   String get homeTabLabel => allTranslations.text('app.main-screen.home-tab-label');
-  String get receiptsTabLabel => allTranslations.text('app.main-screen.receipts-tab-label');
-  String get groupsTabLabel => allTranslations.text('app.main-screen.groups-tab-label');
+  String get expensesTabLabel => allTranslations.text('app.main-screen.expenses-tab-label');
+  String get salesTabLabel => allTranslations.text('app.main-screen.sales-tab-label');
   String get functionsTabLabel => allTranslations.text('app.main-screen.functions-tab-label');
   String get settingsTabLabel => allTranslations.text('app.main-screen.settings-tab-label');
   String get noNetworkText => allTranslations.text('app.main-screen.no-network');
@@ -139,7 +132,7 @@ class _MainScreenState extends State<MainScreen> {
     final MainScreenArguments mainScreenArguments = ModalRoute.of(context).settings.arguments;
     if (mainScreenArguments != null) {
       _currentIndex = mainScreenArguments.pageIndex;
-      widget._receiptsPage.setTabPageIndex(mainScreenArguments.receiptTabIndex);
+      widget._expensesPage.setTabPageIndex(mainScreenArguments.receiptTabIndex);
     }
     // On Android, setup the Appcast.
     // On iOS, the default behavior will be to use the App Store version of
@@ -152,10 +145,15 @@ class _MainScreenState extends State<MainScreen> {
     return BlocListener(
       bloc: BlocProvider.of<MainScreenBloc>(context),
       listener: (BuildContext context, MainScreenState state) {
-        if ((state is ShowReviewedReceiptState) || (state is ShowUnreviewedReceiptState)) {
-          if (_currentIndex != MainScreen.receiptsPageIndex) {
-            widget._receiptsPage.setTabPageIndex((state is ShowReviewedReceiptState) ? ReceiptsPage.reviewedPageIndex : ReceiptsPage.unreviewedPageIndex);
-            jumpTo(MainScreen.receiptsPageIndex);
+        if ((state is GoToPageState)) {
+          GoToPageState goToPageState = state as GoToPageState;
+          if (_currentIndex != goToPageState.pageIndex) {
+            if (goToPageState.pageIndex == MainScreenPages.expenses.index) {
+              widget._expensesPage.setTabPageIndex(goToPageState.subPageIndex);
+            } else if (goToPageState.pageIndex == MainScreenPages.sales.index) {
+              widget._salesPage.setTabPageIndex(goToPageState.subPageIndex);
+            }
+            jumpTo(goToPageState.pageIndex);
             BlocProvider.of<MainScreenBloc>(context).dispatch(ResetToNormalEvent());
           }
         }
@@ -176,8 +174,8 @@ class _MainScreenState extends State<MainScreen> {
           },
           children: <Widget>[
             widget._homePage,
-            widget._receiptsPage,
-            widget._reportsPage,
+            widget._expensesPage,
+            widget._salesPage,
             widget._functionsPage,
             widget._settingsPage,
           ],
@@ -201,25 +199,25 @@ class _MainScreenState extends State<MainScreen> {
                     homeTabLabel,
                     style: TextStyle(
                         color:
-                            _currentIndex != MainScreen.homePageIndex ? _defaultColor : _activeColor),
+                            _currentIndex != MainScreenPages.home.index ? _defaultColor : _activeColor),
                   )),
               BottomNavigationBarItem(
                   icon: Icon(Icons.receipt, color: _defaultColor),
                   activeIcon: Icon(Icons.receipt, color: _activeColor),
                   title: Text(
-                    receiptsTabLabel,
+                    expensesTabLabel,
                     style: TextStyle(
                         color:
-                            _currentIndex != MainScreen.receiptsPageIndex ? _defaultColor : _activeColor),
+                            _currentIndex != MainScreenPages.expenses.index ? _defaultColor : _activeColor),
                   )),
               BottomNavigationBarItem(
-                  icon: Icon(Icons.insert_chart, color: _defaultColor),
-                  activeIcon: Icon(Icons.insert_chart, color: _activeColor),
+                  icon: Icon(Icons.monetization_on, color: _defaultColor),
+                  activeIcon: Icon(Icons.monetization_on, color: _activeColor),
                   title: Text(
-                    groupsTabLabel,
+                    salesTabLabel,
                     style: TextStyle(
                         color:
-                            _currentIndex != MainScreen.reportsPageIndex ? _defaultColor : _activeColor),
+                            _currentIndex != MainScreenPages.sales.index ? _defaultColor : _activeColor),
                   )),
               BottomNavigationBarItem(
                   icon: Icon(Icons.list, color: _defaultColor),
@@ -228,7 +226,7 @@ class _MainScreenState extends State<MainScreen> {
                     functionsTabLabel,
                     style: TextStyle(
                         color:
-                        _currentIndex != MainScreen.functionsPageIndex ? _defaultColor : _activeColor),
+                        _currentIndex != MainScreenPages.functions.index ? _defaultColor : _activeColor),
                   )),
               BottomNavigationBarItem(
                   icon: Icon(Icons.settings, color: _defaultColor),
@@ -237,7 +235,7 @@ class _MainScreenState extends State<MainScreen> {
                     settingsTabLabel,
                     style: TextStyle(
                         color:
-                            _currentIndex != MainScreen.settingsPageIndex ? _defaultColor : _activeColor),
+                            _currentIndex != MainScreenPages.settings.index ? _defaultColor : _activeColor),
                   )),
             ]),
         drawer: Drawer(

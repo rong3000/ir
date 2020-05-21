@@ -23,12 +23,13 @@ class ReportReceipt {
 @JsonSerializable()
 class Report {
   int id = 0;
+  int reportTypeId;
   int statusId;
   DateTime createDateTime;
   DateTime updateDateTime;
   String reportName = "";
   String description = "";
-  List<ReportReceipt> receipts;
+  List<ReportReceipt> receipts = new List<ReportReceipt>();
   double totalAmount;
   double taxAmount;
   String currencyCode = "";

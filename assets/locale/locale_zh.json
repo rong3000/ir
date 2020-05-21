@@ -66,8 +66,8 @@
     },
     "main-screen": {
       "home-tab-label": "首页",
-      "receipts-tab-label": "票据",
-      "groups-tab-label": "票据组",
+      "expenses-tab-label": "支出",
+      "sales-tab-label": "收入",
       "functions-tab-label": "功能",
       "settings-tab-label": "设置",
       "no-network" : "没有网络",
@@ -107,8 +107,10 @@
       "view-receipts-group-card-title": "查看添加的票据组"
     },
     "receipts-page": {
-      "unreviewed-tab-title": "没有审核的票据",
-      "reviewed-tab-title": "审核的票据",
+      "unreviewed-button-text": "未审核",
+      "reviewed-button-text": "已审核",
+      "archived-button-text": "已存档",
+      "groups-button-text": "票据组",
       "add-receipt-tooltip": "拍摄或从图片库选择",
       "add-receipt-manual-tooltip": "手动添加票据",
       "failed-load-receipts-message": "加载票据失败: ",

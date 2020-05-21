@@ -1,5 +1,6 @@
 
 import 'package:equatable/equatable.dart';
+import 'package:intelligent_receipt/data_model/enums.dart';
 import 'package:intelligent_receipt/data_model/receipt.dart';
 import 'package:meta/meta.dart';
 
@@ -9,7 +10,8 @@ abstract class ArchivedReceiptsEvent extends Equatable{
 }
 
 class GetArchiveMetaData extends ArchivedReceiptsEvent {
-  GetArchiveMetaData() : super();
+  final SaleExpenseType saleExpenseType;
+  GetArchiveMetaData(this.saleExpenseType) : super();
 
   @override
   String toString() => 'Get Archive Meta Data';
@@ -17,8 +19,9 @@ class GetArchiveMetaData extends ArchivedReceiptsEvent {
 
 class GetArchivedReceipts extends ArchivedReceiptsEvent {
   final String yearMonth;
+  final SaleExpenseType saleExpenseType;
   
-  GetArchivedReceipts(this.yearMonth) : super([yearMonth]);
+  GetArchivedReceipts(this.yearMonth, this.saleExpenseType) : super([yearMonth]);
 
   @override
   String toString() => 'Get Archived receipts for $yearMonth';

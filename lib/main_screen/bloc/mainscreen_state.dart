@@ -11,17 +11,10 @@ class NormalState extends MainScreenState {
   String toString() => 'NormalState';
 }
 
-class HomePageState extends MainScreenState {
+class GoToPageState extends MainScreenState {
+  final int pageIndex;
+  int subPageIndex = 0;
+  GoToPageState(@required this.pageIndex, this.subPageIndex);
   @override
-  String toString() => 'HomePageState';
-}
-
-class ShowUnreviewedReceiptState extends MainScreenState {
-  @override
-  String toString() => 'ShowUnreviewedReceiptState';
-}
-
-class ShowReviewedReceiptState extends MainScreenState {
-  @override
-  String toString() => 'ShowReviewedReceiptState';
+  String toString() => 'GoToPageState';
 }

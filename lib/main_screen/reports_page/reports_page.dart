@@ -9,51 +9,11 @@ import 'package:intelligent_receipt/translations/global_translations.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 import 'package:intelligent_receipt/data_model/report.dart';
 
-class ReportsPage_ extends StatelessWidget {
-  final UserRepository _userRepository;
-
-  ReportsPage_({Key key, @required UserRepository userRepository})
-      : assert(userRepository != null),
-        _userRepository = userRepository,
-        super(key: key) {}
-
-  @override
-  Widget build(BuildContext context) {
-    final _kTabPages = <Widget>[
-      ReportsPage(
-//          ReportsTabs(
-          userRepository: _userRepository,
-          reportStatusType: ReportStatusType.Active),
-      ReportsPage(
-//          ReportsTabs(
-          userRepository: _userRepository,
-          reportStatusType: ReportStatusType.Submitted),
-    ];
-    final _kTabs = <Tab>[
-      Tab(text: allTranslations.text('app.reports-page.active-groups-tab-label')),
-      Tab(text: allTranslations.text('app.reports-page.submitted-groups-tab-label')),
-    ];
-    return DefaultTabController(
-      length: _kTabs.length,
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.cyan,
-          title: TabBar(
-            tabs: _kTabs,
-          ),
-        ),
-        body: TabBarView(
-          children: _kTabPages,
-        ),
-      ),
-    );
-  }
-}
-
 //class ReportsTabs extends StatefulWidget {
 class ReportsPage extends StatefulWidget {
   final UserRepository _userRepository;
   final ReportStatusType _reportStatusType;
+  final SaleExpenseType _saleExpenseType;
   ReportList _reportList;
 
 //  ReportsTabs({
@@ -61,11 +21,13 @@ class ReportsPage extends StatefulWidget {
     Key key,
     @required UserRepository userRepository,
     @required ReportStatusType reportStatusType,
+    @required SaleExpenseType saleExpenseType
   })  : assert(userRepository != null),
         _userRepository = userRepository,
         _reportStatusType = reportStatusType,
+        _saleExpenseType = saleExpenseType,
         super(key: key) {
-    _reportList = ReportList(userRepository: _userRepository, reportStatusType: _reportStatusType);
+    _reportList = ReportList(userRepository: _userRepository, reportStatusType: _reportStatusType, saleExpenseType: saleExpenseType);
   }
 
   @override
@@ -79,6 +41,7 @@ class _ReportsPageState extends State<ReportsPage> {
 
   UserRepository get _userRepository => widget._userRepository;
   get _reportStatusType => widget._reportStatusType;
+  get _saleExpenseType => widget._saleExpenseType;
 
   void _showMessage() {
     showDialog<void>(
@@ -118,6 +81,7 @@ class _ReportsPageState extends State<ReportsPage> {
                   userRepository: _userRepository,
                   title: allTranslations.text('app.add-reports-page.title'),
                   report: new Report()
+                              ..reportTypeId = _saleExpenseType.index
               );
             }),
           );

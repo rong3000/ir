@@ -99,14 +99,17 @@ class _DateTimePicker extends StatelessWidget {
 class ReportList extends StatefulWidget {
   final UserRepository _userRepository;
   final ReportStatusType _reportStatusType;
+  final SaleExpenseType _saleExpenseType;
 
   ReportList({
     Key key,
     @required UserRepository userRepository,
     @required ReportStatusType reportStatusType,
+    @required SaleExpenseType saleExpenseType
   })  : assert(userRepository != null),
         _userRepository = userRepository,
         _reportStatusType = reportStatusType,
+        _saleExpenseType = saleExpenseType,
         super(key: key) {}
 
   @override
@@ -116,8 +119,6 @@ class ReportList extends StatefulWidget {
 class ReportListState extends State<ReportList> {
   final List<String> items = List<String>.generate(10000, (i) => "Item $i");
   ScrollController _scrollController = ScrollController();
-  List<Report> reports;
-  List<Report> selectedReports;
   bool sort;
   int start = 0;
   int end;
@@ -136,6 +137,7 @@ class ReportListState extends State<ReportList> {
 
   UserRepository get _userRepository => widget._userRepository;
   get _reportStatusType => widget._reportStatusType;
+  SaleExpenseType get _saleExpenseType => widget._saleExpenseType;
 
   String dropdown1Value = 'Free';
 
@@ -314,10 +316,6 @@ class ReportListState extends State<ReportList> {
                 children: <Widget>[
                   Expanded(
                     child: new ListTile(
-//                          leading: Icon(
-//                            Icons.edit,
-////                            color: Colors.white,
-//                          ),
                       title: GestureDetector(
                         onTap: () {
                           setState(() {
@@ -348,10 +346,6 @@ class ReportListState extends State<ReportList> {
                   ),
                   Expanded(
                     child: new ListTile(
-//                          leading: Icon(
-//                            Icons.edit,
-////                            color: Colors.white,
-//                          ),
                       title: GestureDetector(
                         onTap: () {
                           setState(() {
@@ -508,6 +502,7 @@ class ReportListState extends State<ReportList> {
                       List<Report> sortedReportItems =
                           _userRepository.reportRepository.getSortedReportItems(
                               _reportStatusType,
+                              _saleExpenseType,
                               sortingType,
                               ascending,
                               _fromDate,

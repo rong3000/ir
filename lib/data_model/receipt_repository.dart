@@ -39,11 +39,11 @@ class ReceiptRepository extends IRRepository {
     return receiptListItem;
   }
 
-  List<ReceiptListItem> getReceiptItems(ReceiptStatusType receiptStatus) {
+  List<ReceiptListItem> getReceiptItems(ReceiptStatusType receiptStatus, SaleExpenseType saleExpenseType) {
     List<ReceiptListItem> selectedReceipts = new List<ReceiptListItem>();
     _lock.synchronized(() {
       for (var i = 0; i < receipts.length; i++) {
-        if (receipts[i].statusId == receiptStatus.index) {
+        if ((receipts[i].statusId == receiptStatus.index) && (receipts[i].receiptTypeId == saleExpenseType.index)) {
           selectedReceipts.add(receipts[i]);
         }
       }
@@ -173,13 +173,13 @@ class ReceiptRepository extends IRRepository {
     return result;
   }
 
-  Future<DataResult> uploadReceiptImage(File imageFile, {receiptTypeId = 1}) async {
+  Future<DataResult> uploadReceiptImage(File imageFile, { @required SaleExpenseType saleExpenseType }) async {
     if ((userRepository == null) || (userRepository.userGuid == null)) {
       // Log an error
       return DataResult.fail(msg: "No user logged in.");
     }
 
-    var url = Urls.UploadReceiptImages + receiptTypeId.toString() + "/";
+    var url = Urls.UploadReceiptImages + saleExpenseType.index.toString() + "/";
     DataResult result = await uploadFile(
         url,
         await getToken(),
@@ -257,8 +257,13 @@ class ReceiptRepository extends IRRepository {
     return result;
   }
 
-  Future<DataResult> getArchivedReceiptMetaData() async {
-    var url = Urls.ArchiveReceiptMetaData;
+  Future<DataResult> getArchivedReceiptMetaData(SaleExpenseType saleExpenseType) async {
+    var params = {
+      'receiptType' : saleExpenseType.index.toString(),
+    };
+
+    var query = Uri(queryParameters: params).query;
+    var url = Urls.ArchiveReceiptMetaData  + '?' + query;
     var result = await webserviceGet(url, await getToken());
     
     if (result.success) {
@@ -269,13 +274,14 @@ class ReceiptRepository extends IRRepository {
     return result;    
   }
 
-  Future<DataResult> getArchivedReceipts(String yearMonth) async {
+  Future<DataResult> getArchivedReceipts(String yearMonth, SaleExpenseType saleExpenseType) async {
     var year = int.parse(yearMonth.substring(0,4));
     var month = int.parse(yearMonth.substring(4));
     var fromDate = DateTime(year, month);
     var toDate = DateTime(year, month + 1);//.add(Duration(days: -1));
     
     var params = {
+      'receiptType' : saleExpenseType.index.toString(),
       'statusType' : ReceiptStatusType.Archived.index.toString(),
       'fromDate': fromDate.toIso8601String(),
       'toDate': toDate.toIso8601String()

@@ -16,6 +16,7 @@ Map<String, dynamic> _$ReportReceiptToJson(ReportReceipt instance) =>
 Report _$ReportFromJson(Map<String, dynamic> json) {
   return Report()
     ..id = json['id'] as int
+    ..reportTypeId = json['reportTypeId'] as int
     ..statusId = json['statusId'] as int
     ..createDateTime = json['createDateTime'] == null
         ? null
@@ -42,6 +43,7 @@ Report _$ReportFromJson(Map<String, dynamic> json) {
 
 Map<String, dynamic> _$ReportToJson(Report instance) => <String, dynamic>{
       'id': instance.id,
+      'reportTypeId': instance.reportTypeId,
       'statusId': instance.statusId,
       'createDateTime': instance.createDateTime?.toIso8601String(),
       'updateDateTime': instance.updateDateTime?.toIso8601String(),

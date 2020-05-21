@@ -18,91 +18,102 @@ import 'package:vector_math/vector_math.dart' show radians;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intelligent_receipt/data_model/exception_handlers/unsupported_version.dart';
 import 'package:intelligent_receipt/data_model/http_statuscode.dart';
+import 'package:intelligent_receipt/receipt/archived_receipts_page/archived_receipts_page.dart';
+import 'package:intelligent_receipt/main_screen/reports_page/reports_page.dart';
 
 class ReceiptsPage extends StatefulWidget {
-  static const unreviewedPageIndex = 0;
-  static const reviewedPageIndex = 1;
-  static const totalTabPages = 2;
-
   final UserRepository _userRepository;
-  int _tabPageIndex = unreviewedPageIndex;
+  final SaleExpenseType _saleExpenseType;
+  int _subPageIndex = ReceiptsSubPages.reviewed.index;
 
-  ReceiptsPage({Key key, @required UserRepository userRepository})
+  ReceiptsPage({Key key, @required UserRepository userRepository, @required  SaleExpenseType saleExpenseType})
       : assert(userRepository != null),
         _userRepository = userRepository,
+        _saleExpenseType = saleExpenseType,
         super(key: key);
 
   void setTabPageIndex(int pageIndex) {
-    _tabPageIndex = pageIndex;
+    _subPageIndex = pageIndex;
   }
 
   @override
-  _ReceiptPageState createState() => new _ReceiptPageState(_tabPageIndex);
+  _ReceiptPageState createState() => new _ReceiptPageState(_subPageIndex);
 }
 
 class _ReceiptPageState extends State<ReceiptsPage> with SingleTickerProviderStateMixin {
-  TabController _tabController;
-  int _tabPageIndex;
+  int _subPageIndex;
 
   _ReceiptPageState(int tabPageIndex) {
-    _tabPageIndex = tabPageIndex;
+    _subPageIndex = tabPageIndex;
   }
 
   @override
   void initState() {
     super.initState();
-    _tabController = new TabController(vsync: this, length: ReceiptsPage.totalTabPages, initialIndex: _tabPageIndex);
   }
 
   @override
   void dispose() {
-    _tabController.dispose();
     super.dispose();
+  }
+
+  Widget _getFunctionButton(String buttonText, int subPageIndex) {
+    return RaisedButton(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(30.0),
+      ),
+      child: new Text(buttonText),
+      onPressed: () {
+        setState(() {
+          _subPageIndex = subPageIndex;
+          widget._subPageIndex = subPageIndex;
+        });
+      },
+      color: (subPageIndex == _subPageIndex) ? Colors.lightBlueAccent : Colors.white,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    final _kTabPages = <Widget>[
+    final _subPages = <Widget>[
       ReceiptsTabs(
           userRepository: widget._userRepository,
-          receiptStatusType: ReceiptStatusType.Uploaded),
+          receiptStatusType: ReceiptStatusType.Reviewed,
+          saleExpenseType: widget._saleExpenseType),
       ReceiptsTabs(
           userRepository: widget._userRepository,
-          receiptStatusType: ReceiptStatusType.Reviewed),
-    ];
-    final _kTabs = <Tab>[
-      Tab(text: allTranslations.text('app.receipts-page.unreviewed-tab-title')),
-      Tab(text: allTranslations.text('app.receipts-page.reviewed-tab-title')),
+          receiptStatusType: ReceiptStatusType.Uploaded,
+          saleExpenseType: widget._saleExpenseType),
+      ArchivedReceiptsPage(userRepository: widget._userRepository, saleExpenseType: widget._saleExpenseType),
+      ReportsPage(userRepository: widget._userRepository, reportStatusType: ReportStatusType.Active,
+          saleExpenseType: widget._saleExpenseType)
     ];
     return BlocListener(
       bloc: BlocProvider.of<MainScreenBloc>(context),
       listener: (BuildContext context, MainScreenState state) {
-        if (state is ShowUnreviewedReceiptState) {
-          _tabController.animateTo(ReceiptsPage.unreviewedPageIndex);
-          _tabPageIndex = ReceiptsPage.unreviewedPageIndex;
-          BlocProvider.of<MainScreenBloc>(context).dispatch(ResetToNormalEvent());
-        } else if (state is ShowReviewedReceiptState) {
-          _tabController.animateTo(ReceiptsPage.reviewedPageIndex);
-          _tabPageIndex = ReceiptsPage.reviewedPageIndex;
+        if (state is GoToPageState) {
+          GoToPageState goToPageState = state as GoToPageState;
+          _subPageIndex = goToPageState.subPageIndex;
+          widget._subPageIndex = _subPageIndex;
           BlocProvider.of<MainScreenBloc>(context).dispatch(ResetToNormalEvent());
         }
       },
-      child: DefaultTabController(
-        length: _kTabs.length,
-        child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: Colors.cyan,
-            title: TabBar(
-              tabs: _kTabs,
-              controller: _tabController,
-            ),
-          ),
-          body: TabBarView(
-            children: _kTabPages,
-            controller: _tabController,
+      child: Scaffold(
+        body: _subPages[_subPageIndex],
+        bottomNavigationBar: BottomAppBar(
+          color: Colors.white30,
+          child: new Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              _getFunctionButton(allTranslations.text('app.receipts-page.reviewed-button-text'), ReceiptsSubPages.reviewed.index),
+              _getFunctionButton(allTranslations.text('app.receipts-page.unreviewed-button-text'), ReceiptsSubPages.unreviewed.index),
+              _getFunctionButton(allTranslations.text('app.receipts-page.archived-button-text'), ReceiptsSubPages.archived.index),
+              _getFunctionButton(allTranslations.text('app.receipts-page.groups-button-text'), ReceiptsSubPages.groups.index),
+            ],
           ),
         ),
-      )
+      ),
     );
   }
 }
@@ -110,14 +121,17 @@ class _ReceiptPageState extends State<ReceiptsPage> with SingleTickerProviderSta
 class ReceiptsTabs extends StatefulWidget {
   final UserRepository _userRepository;
   final ReceiptStatusType _receiptStatusType;
+  final SaleExpenseType _saleExpenseType;
 
   ReceiptsTabs({
     Key key,
     @required UserRepository userRepository,
     @required ReceiptStatusType receiptStatusType,
+    @required SaleExpenseType saleExpenseType
   })  : assert(userRepository != null),
         _userRepository = userRepository,
         _receiptStatusType = receiptStatusType,
+        _saleExpenseType = saleExpenseType,
         super(key: key);
 
   @override
@@ -131,6 +145,7 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
 
   UserRepository get _userRepository => widget._userRepository;
   get _receiptStatusType => widget._receiptStatusType;
+  get _saleExpenseType => widget._saleExpenseType;
 
   void _showInSnackBar(String value, {IconData icon: Icons.error, color: Colors.red}) {
     _scaffoldKey.currentState.showSnackBar(SnackBar(
@@ -236,6 +251,7 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
       key: _scaffoldKey,
       floatingActionButton:  FancyFab(
         userRepository: _userRepository,
+        saleExpenseType: _saleExpenseType,
       ),
       //floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: Center(
@@ -259,7 +275,7 @@ class _ReceiptsTabsState extends State<ReceiptsTabs> {
                           if (snapshot.data.success) {
                             List<ReceiptListItem> ReceiptItems = _userRepository
                                 .receiptRepository
-                                .getReceiptItems(_receiptStatusType);
+                                .getReceiptItems(_receiptStatusType, _saleExpenseType);
 
                             List<ActionWithLabel> actions = [];
                             ActionWithLabel r = new ActionWithLabel();
@@ -317,15 +333,18 @@ class FancyFab extends StatefulWidget {
   final String tooltip;
   final IconData icon;
   final UserRepository _userRepository;
+  final SaleExpenseType _saleExpenseType;
 
   FancyFab(
       {Key key,
       @required UserRepository userRepository,
+      @required SaleExpenseType saleExpenseType,
       this.onPressed,
       this.tooltip,
       this.icon})
       : assert(userRepository != null),
         _userRepository = userRepository,
+        _saleExpenseType = saleExpenseType,
         super(key: key) {}
 
   @override
@@ -349,7 +368,8 @@ class _FancyFabState extends State<FancyFab>
       var ri = await ImagePicker.pickImage(source: source);
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => UploadReceiptImage(userRepository: _userRepository, title: allTranslations.text('app.snap-receipt-page.title'), imageFile: ri,)),
+        MaterialPageRoute(builder: (context) =>
+            UploadReceiptImage(userRepository: _userRepository, title: allTranslations.text('app.snap-receipt-page.title'), imageFile: ri, saleExpenseType: widget._saleExpenseType)),
       );
     }
   }
@@ -465,9 +485,10 @@ class _FancyFabState extends State<FancyFab>
         heroTag: "manually",
         onPressed: () {
           animate();
+          Receipt receipt = new Receipt()..receiptTypeId = widget._saleExpenseType.index;
           Navigator.of(context).push(
             MaterialPageRoute(builder: (context) {
-              return AddEditReiptForm(null);
+              return AddEditReiptForm(receipt);
             }),
           );
 //          setState(() {
@@ -501,14 +522,6 @@ class _FancyFabState extends State<FancyFab>
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       children: <Widget>[
-//        Transform(
-//          transform: Matrix4.translationValues(
-//            0.0,
-//            _translateButton.value * 3.0,
-//            0.0,
-//          ),
-//          child: add(),
-//        ),
         Transform(
           transform: Matrix4.translationValues(
             0.0,

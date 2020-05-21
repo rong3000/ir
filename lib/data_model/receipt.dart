@@ -28,7 +28,20 @@ class ReceiptListItem {
   String altCurrencyCode;
   double percentageOnWork = 100;
 
-  ReceiptListItem();
+  ReceiptListItem() {
+    id = 0;
+    receiptDatetime = DateTime.now();
+    receiptTypeId = 0;
+    productName = "";
+    taxInclusive = true;
+    totalAmount = 0;
+    taxAmount = 0;
+    companyName = "";
+    warrantyPeriod = 0;
+    notes = "";
+    categoryId = 1;
+    altTotalAmount = 0;
+  }
 
   factory ReceiptListItem.fromJason(Map<String, dynamic> json) => _$ReceiptListItemFromJson(json);
   Map<String, dynamic> toJson() => _$ReceiptListItemToJson(this);
