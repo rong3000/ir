@@ -4,6 +4,7 @@ import 'package:intelligent_receipt/data_model/enums.dart';
 import 'package:intelligent_receipt/data_model/receipt.dart';
 import 'package:intelligent_receipt/data_model/receipt_repository.dart';
 import 'package:intelligent_receipt/receipt/receipt_list/receipt_list.dart';
+import 'package:intelligent_receipt/report/add_receipts_screen/receipt_search_delegate.dart';
 import 'package:intelligent_receipt/translations/global_translations.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 
@@ -73,6 +74,16 @@ class _AddReceiptsScreenState extends State<AddReceiptsScreen> {
       key: _scaffoldKey,
       appBar: new AppBar(
         title: Text(allTranslations.text('app.add-receipts-screen.title')),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(
+              Icons.search,
+            ),
+            onPressed: () {
+              showSearch(context: context, delegate: ReceiptSearchDelegate(_userRepository, _receiptStatusType, _candidateItems, actions));
+            },
+          ),
+        ],
       ),
       body: OrientationBuilder(builder: (context, orientation) {
         if (!_userRepository.receiptRepository.receipts.isNotEmpty) {
