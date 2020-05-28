@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:intelligent_receipt/data_model/enums.dart';
 import 'package:intelligent_receipt/data_model/receipt.dart';
-import 'package:provider/provider.dart';
+import 'package:intelligent_receipt/receipt/receipt_list/receipt_list.dart';
+import 'package:intelligent_receipt/user_repository.dart';
+import 'package:intelligent_receipt/data_model/action_with_lable.dart';
 
-/// Delegate class to search pages in the list of
 class ReceiptSearchDelegate extends SearchDelegate<String> {
+  final UserRepository _userRepository;
+  final ReceiptStatusType _receiptStatusType;
   final List<ReceiptListItem> _candidateItems;
+  final List<ActionWithLabel> _actions;
 
-  ReceiptSearchDelegate(List<ReceiptListItem> candidateItems)
-      : _candidateItems = candidateItems,
-        super();
+  ReceiptSearchDelegate(UserRepository userRepository, ReceiptStatusType receiptStatusType, List<ReceiptListItem> candidateItems, List<ActionWithLabel> actions)
+      : _userRepository = userRepository, _receiptStatusType = receiptStatusType, _candidateItems = candidateItems, _actions = actions,
+      super();
 
   @override
   ThemeData appBarTheme(BuildContext context) => Theme.of(context);
@@ -36,23 +41,19 @@ class ReceiptSearchDelegate extends SearchDelegate<String> {
 
   @override
   Widget buildResults(BuildContext context) {
-    // Since we never call showResults() we don't need to impl this function.
     return Container();
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    Iterable<ReceiptListItem> suggestions = [];
+    Iterable<ReceiptListItem> suggestions = _candidateItems;
     if (this.query.isNotEmpty) {
-      Iterable<ReceiptListItem> suggestions = _candidateItems
+      suggestions = _candidateItems
           .where((receipt) =>
               (receipt.altTotalAmount.toString() ?? '')
                   .toLowerCase()
                   .contains(query.toLowerCase()) ||
               (receipt.productName ?? '')
-                  .toLowerCase()
-                  .contains(query.toLowerCase()) ||
-              (receipt.toString() ?? '')
                   .toLowerCase()
                   .contains(query.toLowerCase()) ||
               (receipt.companyName ?? '')
@@ -65,36 +66,17 @@ class ReceiptSearchDelegate extends SearchDelegate<String> {
   }
 
   Widget _buildSuggestionsList(Iterable<ReceiptListItem> suggestions) {
-    return ListView.builder(
-      itemCount: suggestions.length,
-      itemBuilder: (BuildContext context, int i) {
-        final route = suggestions.elementAt(i);
-        final routeGroup = kRouteNameToRouteGroup[route.routeName];
-        return ListTile(
-          leading: query.isEmpty ? Icon(Icons.history) : routeGroup.icon,
-          title: SubstringHighlight(
-            text: '${routeGroup.groupName}/${route.title}',
-            term: query,
-            textStyle: Theme.of(context)
-                .textTheme
-                .body1
-                .copyWith(fontWeight: FontWeight.bold),
-          ),
-          subtitle: route.description == null
-              ? null
-              : SubstringHighlight(
-                  text: route.description,
-                  term: query,
-                  textStyle: Theme.of(context).textTheme.body1,
-                ),
-          onTap: () {
-            Provider.of<MyAppSettings>(context, listen: false)
-                .addSearchHistory(route.routeName);
-            Navigator.of(context).popAndPushNamed(route.routeName);
-          },
-          trailing: Icon(Icons.keyboard_arrow_right),
-        );
-      },
-    );
+    return Column(children: <Widget>[
+      Flexible(
+        flex: 2,
+        fit: FlexFit.tight,
+        child: ReceiptList(
+          userRepository: _userRepository,
+          receiptStatusType: _receiptStatusType,
+          receiptItems: suggestions,
+          actions: _actions,
+        ),
+      )
+    ]);
   }
 }

@@ -80,7 +80,7 @@ class _AddReceiptsScreenState extends State<AddReceiptsScreen> {
               Icons.search,
             ),
             onPressed: () {
-              showSearch(context: context, delegate: ReceiptSearchDelegate(_candidateItems));
+              showSearch(context: context, delegate: ReceiptSearchDelegate(_userRepository, _receiptStatusType, _candidateItems, actions));
             },
           ),
         ],
