@@ -122,8 +122,8 @@ class ReceiptSearchDelegate extends SearchDelegate<String> {
       }
     }
 
-    List<ActionWithLabel> action_suggestion = [];
-    action_suggestion.add(ActionWithLabel()
+    List<ActionWithLabel> suggestionAction = [];
+    suggestionAction.add(ActionWithLabel()
       ..action = addAction
       ..label =
           allTranslations.text('app.add-receipts-screen.add-to-group-label'));
@@ -136,7 +136,7 @@ class ReceiptSearchDelegate extends SearchDelegate<String> {
           userRepository: _userRepository,
           receiptStatusType: _receiptStatusType,
           receiptItems: suggestions,
-          actions: action_suggestion,
+          actions: suggestionAction,
         ),
       )
     ]);
