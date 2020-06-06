@@ -30,7 +30,8 @@ ReceiptListItem _$ReceiptListItemFromJson(Map<String, dynamic> json) {
     ..decodeStatus = json['decodeStatus'] as int
     ..altTotalAmount = (json['altTotalAmount'] as num)?.toDouble()
     ..altCurrencyCode = json['altCurrencyCode'] as String
-    ..percentageOnWork = (json['percentageOnWork'] as num)?.toDouble();
+    ..percentageOnWork = (json['percentageOnWork'] as num)?.toDouble()
+    ..vendorId = json['vendorId'] as int;
 }
 
 Map<String, dynamic> _$ReceiptListItemToJson(ReceiptListItem instance) =>
@@ -53,7 +54,8 @@ Map<String, dynamic> _$ReceiptListItemToJson(ReceiptListItem instance) =>
       'decodeStatus': instance.decodeStatus,
       'altTotalAmount': instance.altTotalAmount,
       'altCurrencyCode': instance.altCurrencyCode,
-      'percentageOnWork': instance.percentageOnWork
+      'percentageOnWork': instance.percentageOnWork,
+      'vendorId': instance.vendorId
     };
 
 Receipt _$ReceiptFromJson(Map<String, dynamic> json) {
@@ -79,6 +81,7 @@ Receipt _$ReceiptFromJson(Map<String, dynamic> json) {
     ..altTotalAmount = (json['altTotalAmount'] as num)?.toDouble()
     ..altCurrencyCode = json['altCurrencyCode'] as String
     ..percentageOnWork = (json['percentageOnWork'] as num)?.toDouble()
+    ..vendorId = json['vendorId'] as int
     ..decodeStatus = json['decodeStatus'] as int
     ..imagePath = json['imagePath'] as String
     ..extractedContent = json['extractedContent'] as String
@@ -89,7 +92,8 @@ Receipt _$ReceiptFromJson(Map<String, dynamic> json) {
     ..imageFileExtension = json['imageFileExtension'] as String
     ..statusUpdateDatetime = json['statusUpdateDatetime'] == null
         ? null
-        : DateTime.parse(json['statusUpdateDatetime'] as String);
+        : DateTime.parse(json['statusUpdateDatetime'] as String)
+    ..productIds = (json['productIds'] as List)?.map((e) => e as int)?.toList();
 }
 
 Map<String, dynamic> _$ReceiptToJson(Receipt instance) => <String, dynamic>{
@@ -110,6 +114,7 @@ Map<String, dynamic> _$ReceiptToJson(Receipt instance) => <String, dynamic>{
       'altTotalAmount': instance.altTotalAmount,
       'altCurrencyCode': instance.altCurrencyCode,
       'percentageOnWork': instance.percentageOnWork,
+      'vendorId': instance.vendorId,
       'decodeStatus': instance.decodeStatus,
       'imagePath': instance.imagePath,
       'extractedContent': instance.extractedContent,
@@ -118,5 +123,6 @@ Map<String, dynamic> _$ReceiptToJson(Receipt instance) => <String, dynamic>{
       'statusName': instance.statusName,
       'image': instance.image,
       'imageFileExtension': instance.imageFileExtension,
-      'statusUpdateDatetime': instance.statusUpdateDatetime?.toIso8601String()
+      'statusUpdateDatetime': instance.statusUpdateDatetime?.toIso8601String(),
+      'productIds': instance.productIds
     };

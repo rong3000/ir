@@ -27,6 +27,7 @@ class ReceiptListItem {
   double altTotalAmount;
   String altCurrencyCode;
   double percentageOnWork = 100;
+  int vendorId;
 
   ReceiptListItem() {
     id = 0;
@@ -41,6 +42,7 @@ class ReceiptListItem {
     notes = "";
     categoryId = 1;
     altTotalAmount = 0;
+    vendorId = 0;
   }
 
   factory ReceiptListItem.fromJason(Map<String, dynamic> json) => _$ReceiptListItemFromJson(json);
@@ -58,6 +60,7 @@ class Receipt extends ReceiptListItem {
   String image;
   String imageFileExtension;
   DateTime statusUpdateDatetime;
+  List<int> productIds;
 
   Receipt() : super();
 
