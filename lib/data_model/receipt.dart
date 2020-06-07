@@ -28,6 +28,9 @@ class ReceiptListItem {
   String altCurrencyCode;
   double percentageOnWork = 100;
   int vendorId;
+  DateTime paymentDueDate;
+  int paymentStatusId;
+  int invoiceNum;
 
   ReceiptListItem() {
     id = 0;

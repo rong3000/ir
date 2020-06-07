@@ -31,7 +31,12 @@ ReceiptListItem _$ReceiptListItemFromJson(Map<String, dynamic> json) {
     ..altTotalAmount = (json['altTotalAmount'] as num)?.toDouble()
     ..altCurrencyCode = json['altCurrencyCode'] as String
     ..percentageOnWork = (json['percentageOnWork'] as num)?.toDouble()
-    ..vendorId = json['vendorId'] as int;
+    ..vendorId = json['vendorId'] as int
+    ..paymentDueDate = json['paymentDueDate'] == null
+        ? null
+        : DateTime.parse(json['paymentDueDate'] as String)
+    ..paymentStatusId = json['paymentStatusId'] as int
+    ..invoiceNum = json['invoiceNum'] as int;
 }
 
 Map<String, dynamic> _$ReceiptListItemToJson(ReceiptListItem instance) =>
@@ -55,7 +60,10 @@ Map<String, dynamic> _$ReceiptListItemToJson(ReceiptListItem instance) =>
       'altTotalAmount': instance.altTotalAmount,
       'altCurrencyCode': instance.altCurrencyCode,
       'percentageOnWork': instance.percentageOnWork,
-      'vendorId': instance.vendorId
+      'vendorId': instance.vendorId,
+      'paymentDueDate': instance.paymentDueDate?.toIso8601String(),
+      'paymentStatusId': instance.paymentStatusId,
+      'invoiceNum': instance.invoiceNum
     };
 
 Receipt _$ReceiptFromJson(Map<String, dynamic> json) {
@@ -82,6 +90,11 @@ Receipt _$ReceiptFromJson(Map<String, dynamic> json) {
     ..altCurrencyCode = json['altCurrencyCode'] as String
     ..percentageOnWork = (json['percentageOnWork'] as num)?.toDouble()
     ..vendorId = json['vendorId'] as int
+    ..paymentDueDate = json['paymentDueDate'] == null
+        ? null
+        : DateTime.parse(json['paymentDueDate'] as String)
+    ..paymentStatusId = json['paymentStatusId'] as int
+    ..invoiceNum = json['invoiceNum'] as int
     ..decodeStatus = json['decodeStatus'] as int
     ..imagePath = json['imagePath'] as String
     ..extractedContent = json['extractedContent'] as String
@@ -115,6 +128,9 @@ Map<String, dynamic> _$ReceiptToJson(Receipt instance) => <String, dynamic>{
       'altCurrencyCode': instance.altCurrencyCode,
       'percentageOnWork': instance.percentageOnWork,
       'vendorId': instance.vendorId,
+      'paymentDueDate': instance.paymentDueDate?.toIso8601String(),
+      'paymentStatusId': instance.paymentStatusId,
+      'invoiceNum': instance.invoiceNum,
       'decodeStatus': instance.decodeStatus,
       'imagePath': instance.imagePath,
       'extractedContent': instance.extractedContent,
