@@ -72,3 +72,19 @@ enum ReceiptsSubPages {
   archived,
   groups
 }
+
+enum VendorStatusType {
+  Active,
+  Deleted
+}
+
+enum ProductStatusType {
+  Active,
+  Deleted
+}
+
+enum PaymentStatusType {
+  FullyPaid,
+  PartiallyPaid,
+  Overdue
+}

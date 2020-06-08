@@ -68,22 +68,34 @@ class ReceiptSearchDelegate extends SearchDelegate<String> {
     ]);
   }
 
+  String _getCategoryName(ReceiptListItem receipt) {
+    if (receipt != null && receipt.categoryId != null) {
+      String categoryName = _userRepository.categoryRepository.getCategoryName(receipt.categoryId);
+      return (categoryName != null) ? categoryName.toLowerCase() : "";
+    }
+    return "";
+  }
+
   @override
   Widget buildSuggestions(BuildContext context) {
     Iterable<ReceiptListItem> suggestions = _candidateItems;
     if (this.query.isNotEmpty) {
+      String lowerCaseQuery = query.toLowerCase();
       suggestions = _candidateItems
           .where((receipt) =>
+              (_getCategoryName(receipt) ?? '')
+                  .contains(lowerCaseQuery) ||
+              (receipt.totalAmount.toString() ?? '')
+                  .contains(lowerCaseQuery) ||
               (receipt.altTotalAmount.toString() ?? '')
-                  .toLowerCase()
                   .contains(query.toLowerCase()) ||
               (receipt.productName ?? '')
                   .toLowerCase()
-                  .contains(query.toLowerCase()) ||
+                  .contains(lowerCaseQuery) ||
               (receipt.companyName ?? '')
                   .toLowerCase()
-                  .contains(query.toLowerCase()) ||
-              (receipt.notes ?? '').toLowerCase().contains(query.toLowerCase()))
+                  .contains(lowerCaseQuery) ||
+              (receipt.notes ?? '').toLowerCase().contains(lowerCaseQuery))
           .toList();
     }
     return _buildSuggestionsList(suggestions, context);

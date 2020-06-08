@@ -63,6 +63,16 @@ class Urls {
   // News Urls
   static String GetNewsItems = ServiceBaseUrl + "news/items";
   static String MarkNewsItemsRead = ServiceBaseUrl + "news/mark-read/";
+
+  // Vendor related APIs
+  static String GetVendors = ServiceBaseUrl + "Vendor/GetVendors";
+  static String AddOrUpdateVendor = ServiceBaseUrl + "Vendor/AddOrUpdateVendor/";
+  static String DeleteVendor = ServiceBaseUrl + "Vendor/DeleteVendor/";
+
+  // Product related APIs
+  static String GetProducts = ServiceBaseUrl + "Product/GetProducts";
+  static String AddOrUpdateProduct = ServiceBaseUrl + "Product/AddOrUpdateProduct/";
+  static String DeleteProduct = ServiceBaseUrl + "Product/DeleteProduct/";
 }
 
 const int default_timeout = 20000; // millisecons

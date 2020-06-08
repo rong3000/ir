@@ -15,7 +15,14 @@ class CategoryRepository extends IRRepository {
     categories = new List<Category>();
   }
 
-
+  String getCategoryName(int categoryId) {
+    for (int i = 0; i < categories.length; i++) {
+      if (categories[i].id == categoryId) {
+        return categories[i].categoryName;
+      }
+    }
+    return "";
+  }
 
   Future<DataResult> getCategoriesFromServer({bool forceRefresh = false}) async {
     if (_dataFetched && !forceRefresh) {
