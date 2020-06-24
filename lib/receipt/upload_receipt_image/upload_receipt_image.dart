@@ -219,7 +219,7 @@ class _UploadReceiptImageState extends State<UploadReceiptImage> {
                               DataResult dataResult = snapshot.data;
                               if (dataResult.success) {
                                 BlocProvider.of<MainScreenBloc>(context).dispatch(
-                                    GoToPageEvent(widget._saleExpenseType == SaleExpenseType.Expense ? MainScreenPages.expenses.index : MainScreenPages.sales.index, ReceiptsSubPages.unreviewed.index)
+                                    GoToPageEvent(widget._saleExpenseType == SaleExpenseType.Expense ? MainScreenPages.expenses.index : MainScreenPages.expenses.index, ReceiptsSubPages.unreviewed.index)
                                 );
                                 Receipt receipt = dataResult.obj as Receipt;
                                 if (receipt == null ||

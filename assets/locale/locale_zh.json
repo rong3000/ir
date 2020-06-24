@@ -66,8 +66,9 @@
     },
     "main-screen": {
       "home-tab-label": "首页",
-      "expenses-tab-label": "支出",
+      "expenses-tab-label": "票据",
       "sales-tab-label": "收入",
+      "groups-tab-label": "票据组",
       "functions-tab-label": "功能",
       "settings-tab-label": "设置",
       "no-network" : "没有网络",

@@ -57,15 +57,7 @@ class _ReceiptCardState extends State<ReceiptCard> {
 
   String _getTextShownInCategoryField(ReceiptListItem receipt) {
     String unknownText = allTranslations.text('app.receipt-card.unknown-category');
-    String text = _categoryRepository.categories
-        .singleWhere(
-          (c) =>
-              c.id ==
-              widget._receiptItem.categoryId,
-          orElse: () =>
-              Category()..categoryName = unknownText,
-        )
-        ?.categoryName;
+    String text = (receipt.categoryName != null && receipt.categoryName.isNotEmpty) ? receipt.categoryName : unknownText;
 
     if ((text == unknownText) && (receipt.statusId == ReceiptStatusType.Archived.index)){
       text = allTranslations.text('app.receipt-card.receipt-in-process-archived');
@@ -289,7 +281,7 @@ class _ReceiptCardState extends State<ReceiptCard> {
                                 _getTextShownInCategoryField(widget._receiptItem),
                                 style: TextStyle(fontSize: 12)
                                       .copyWith(color: Colors.black54)
-                                      .apply(fontSizeFactor: 0.85),
+                                      .apply(fontSizeFactor: (widget._receiptItem.categoryName != null && widget._receiptItem.categoryName.isNotEmpty) ? 1 : 0.85),
                                 minFontSize: 6,
                                 maxLines: 3,
                                 overflow: TextOverflow.ellipsis,

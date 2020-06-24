@@ -18,6 +18,7 @@ import 'email_verification.dart';
 import 'receipts_page/receipts_page.dart';
 import 'package:intelligent_receipt/data_model/network_connection/connection_status.dart';
 import 'package:intelligent_receipt/main_screen/receipts_page/receipts_page.dart';
+import 'package:intelligent_receipt/main_screen/reports_page/reports_page.dart';
 
 class MainScreenArguments {
   final int pageIndex;
@@ -33,7 +34,7 @@ class MainScreen extends StatefulWidget {
   final UserRepository _userRepository;
   HomePage _homePage;
   ReceiptsPage _expensesPage;
-  ReceiptsPage _salesPage;
+  ReportsPage _groupPage;
   FunctionsPage _functionsPage;
   SettingsPage _settingsPage;
 
@@ -45,7 +46,7 @@ class MainScreen extends StatefulWidget {
         super(key: key) {
     _homePage = new HomePage(userRepository: userRepository);
     _expensesPage = new ReceiptsPage(userRepository: userRepository, saleExpenseType: SaleExpenseType.Expense);
-    _salesPage = new ReceiptsPage(userRepository: userRepository, saleExpenseType: SaleExpenseType.Sale);
+    _groupPage = new ReportsPage(userRepository: userRepository, saleExpenseType: SaleExpenseType.Expense, reportStatusType: ReportStatusType.Active);
     _functionsPage = new FunctionsPage(userRepository: userRepository, name: name);
     _settingsPage = new SettingsPage(userRepository: userRepository, name: name);
   }
@@ -59,7 +60,7 @@ class _MainScreenState extends State<MainScreen> {
   String get appTitle => allTranslations.text('app.title');
   String get homeTabLabel => allTranslations.text('app.main-screen.home-tab-label');
   String get expensesTabLabel => allTranslations.text('app.main-screen.expenses-tab-label');
-  String get salesTabLabel => allTranslations.text('app.main-screen.sales-tab-label');
+  String get groupsTabLabel => allTranslations.text('app.main-screen.groups-tab-label');
   String get functionsTabLabel => allTranslations.text('app.main-screen.functions-tab-label');
   String get settingsTabLabel => allTranslations.text('app.main-screen.settings-tab-label');
   String get noNetworkText => allTranslations.text('app.main-screen.no-network');
@@ -150,8 +151,6 @@ class _MainScreenState extends State<MainScreen> {
           if (_currentIndex != goToPageState.pageIndex) {
             if (goToPageState.pageIndex == MainScreenPages.expenses.index) {
               widget._expensesPage.setTabPageIndex(goToPageState.subPageIndex);
-            } else if (goToPageState.pageIndex == MainScreenPages.sales.index) {
-              widget._salesPage.setTabPageIndex(goToPageState.subPageIndex);
             }
             jumpTo(goToPageState.pageIndex);
             BlocProvider.of<MainScreenBloc>(context).dispatch(ResetToNormalEvent());
@@ -175,7 +174,7 @@ class _MainScreenState extends State<MainScreen> {
           children: <Widget>[
             widget._homePage,
             widget._expensesPage,
-            widget._salesPage,
+            widget._groupPage,
             widget._functionsPage,
             widget._settingsPage,
           ],
@@ -211,13 +210,13 @@ class _MainScreenState extends State<MainScreen> {
                             _currentIndex != MainScreenPages.expenses.index ? _defaultColor : _activeColor),
                   )),
               BottomNavigationBarItem(
-                  icon: Icon(Icons.monetization_on, color: _defaultColor),
-                  activeIcon: Icon(Icons.monetization_on, color: _activeColor),
+                  icon: Icon(Icons.group_work, color: _defaultColor),
+                  activeIcon: Icon(Icons.group_work, color: _activeColor),
                   title: Text(
-                    salesTabLabel,
+                    groupsTabLabel,
                     style: TextStyle(
                         color:
-                            _currentIndex != MainScreenPages.sales.index ? _defaultColor : _activeColor),
+                            _currentIndex != MainScreenPages.groups.index ? _defaultColor : _activeColor),
                   )),
               BottomNavigationBarItem(
                   icon: Icon(Icons.list, color: _defaultColor),

@@ -293,7 +293,7 @@ class ReceiptListState extends State<ReceiptList> {
                 break;
               case ReceiptSortType.Category:
                 selectedReceipts
-                    .sort((a, b) => a.categoryId.compareTo(b.categoryId));
+                    .sort((a, b) => a.categoryName.compareTo(b.categoryName));
                 break;
               default:
                 break;
@@ -318,7 +318,7 @@ class ReceiptListState extends State<ReceiptList> {
                 break;
               case ReceiptSortType.Category:
                 selectedReceipts
-                    .sort((b, a) => a.categoryId.compareTo(b.categoryId));
+                    .sort((b, a) => a.categoryName.compareTo(b.categoryName));
                 break;
               default:
                 break;

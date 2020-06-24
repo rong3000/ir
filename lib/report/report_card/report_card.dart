@@ -120,7 +120,7 @@ class _ReportCardState extends State<ReportCard> {
                           Padding(
                             padding: const EdgeInsets.only(top: 0.0, bottom: 0.0),
                             child: AutoSizeText(
-                              '${widget._reportItem.description}',
+                              '${widget._reportItem.description ?? ""}',
                               style: TextStyle(fontSize: 12)
                                   .copyWith(color: Colors.black54)
                                   .apply(fontSizeFactor: 0.85),
@@ -170,6 +170,20 @@ class _ReportCardState extends State<ReportCard> {
                               ),
                             ),
                             Padding(
+                                padding: const EdgeInsets.only(top: 0.0, bottom: 0.0),
+                                child: Row(
+                                  children: <Widget>[
+                                    Text(
+                                      '${allTranslations.text('app.report-card.total-amount-prefix')}: ${currency != null ? currency.code: ''} ${currency != null ? currency.symbol: ''}${widget._reportItem.totalAmount.toStringAsFixed(2)}',
+                                      style: dateStyle
+                                          .copyWith(color: Colors.black54)
+                                          .apply(fontSizeFactor: 0.9),
+
+                                    ),
+                                  ],
+                                )
+                            ),
+                            Padding(
                               padding: const EdgeInsets.only(top: 0.0, bottom: 0.0),
                               child: Row(
                                 children: <Widget>[
@@ -178,13 +192,6 @@ class _ReportCardState extends State<ReportCard> {
                                     style: dateStyle
                                         .copyWith(color: Colors.black54)
                                         .apply(fontSizeFactor: 0.75),
-                                  ),
-                                  Text(
-                                    '  ${allTranslations.text('app.report-card.total-amount-prefix')}: ${currency != null ? currency.code: ''} ${currency != null ? currency.symbol: ''}${widget._reportItem.totalAmount.toStringAsFixed(2)}',
-                                    style: dateStyle
-                                        .copyWith(color: Colors.black54)
-                                        .apply(fontSizeFactor: 0.75),
-
                                   ),
                                 ],
                               )
