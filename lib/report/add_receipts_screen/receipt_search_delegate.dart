@@ -69,9 +69,8 @@ class ReceiptSearchDelegate extends SearchDelegate<String> {
   }
 
   String _getCategoryName(ReceiptListItem receipt) {
-    if (receipt != null && receipt.categoryId != null) {
-      String categoryName = _userRepository.categoryRepository.getCategoryName(receipt.categoryId);
-      return (categoryName != null) ? categoryName.toLowerCase() : "";
+    if (receipt != null && receipt.categoryName != null) {
+      return receipt.categoryName.toLowerCase();
     }
     return "";
   }

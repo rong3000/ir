@@ -85,8 +85,6 @@ class _ReceiptPageState extends State<ReceiptsPage> with SingleTickerProviderSta
           receiptStatusType: ReceiptStatusType.Uploaded,
           saleExpenseType: widget._saleExpenseType),
       ArchivedReceiptsPage(userRepository: widget._userRepository, saleExpenseType: widget._saleExpenseType),
-      ReportsPage(userRepository: widget._userRepository, reportStatusType: ReportStatusType.Active,
-          saleExpenseType: widget._saleExpenseType)
     ];
     return BlocListener(
       bloc: BlocProvider.of<MainScreenBloc>(context),
@@ -109,7 +107,6 @@ class _ReceiptPageState extends State<ReceiptsPage> with SingleTickerProviderSta
               _getFunctionButton(allTranslations.text('app.receipts-page.reviewed-button-text'), ReceiptsSubPages.reviewed.index),
               _getFunctionButton(allTranslations.text('app.receipts-page.unreviewed-button-text'), ReceiptsSubPages.unreviewed.index),
               _getFunctionButton(allTranslations.text('app.receipts-page.archived-button-text'), ReceiptsSubPages.archived.index),
-              _getFunctionButton(allTranslations.text('app.receipts-page.groups-button-text'), ReceiptsSubPages.groups.index),
             ],
           ),
         ),

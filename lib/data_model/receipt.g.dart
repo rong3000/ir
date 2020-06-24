@@ -10,7 +10,7 @@ ReceiptListItem _$ReceiptListItemFromJson(Map<String, dynamic> json) {
   return ReceiptListItem()
     ..id = json['id'] as int
     ..statusId = json['statusId'] as int
-    ..categoryId = json['categoryId'] as int
+    ..categoryName = json['categoryName'] as String
     ..receiptTypeId = json['receiptTypeId'] as int
     ..uploadDatetime = json['uploadDatetime'] == null
         ? null
@@ -36,14 +36,15 @@ ReceiptListItem _$ReceiptListItemFromJson(Map<String, dynamic> json) {
         ? null
         : DateTime.parse(json['paymentDueDate'] as String)
     ..paymentStatusId = json['paymentStatusId'] as int
-    ..invoiceNum = json['invoiceNum'] as int;
+    ..invoiceNum = json['invoiceNum'] as int
+    ..abnId = json['abnId'] as int;
 }
 
 Map<String, dynamic> _$ReceiptListItemToJson(ReceiptListItem instance) =>
     <String, dynamic>{
       'id': instance.id,
       'statusId': instance.statusId,
-      'categoryId': instance.categoryId,
+      'categoryName': instance.categoryName,
       'receiptTypeId': instance.receiptTypeId,
       'uploadDatetime': instance.uploadDatetime?.toIso8601String(),
       'receiptDatetime': instance.receiptDatetime?.toIso8601String(),
@@ -63,14 +64,15 @@ Map<String, dynamic> _$ReceiptListItemToJson(ReceiptListItem instance) =>
       'vendorId': instance.vendorId,
       'paymentDueDate': instance.paymentDueDate?.toIso8601String(),
       'paymentStatusId': instance.paymentStatusId,
-      'invoiceNum': instance.invoiceNum
+      'invoiceNum': instance.invoiceNum,
+      'abnId': instance.abnId
     };
 
 Receipt _$ReceiptFromJson(Map<String, dynamic> json) {
   return Receipt()
     ..id = json['id'] as int
     ..statusId = json['statusId'] as int
-    ..categoryId = json['categoryId'] as int
+    ..categoryName = json['categoryName'] as String
     ..receiptTypeId = json['receiptTypeId'] as int
     ..uploadDatetime = json['uploadDatetime'] == null
         ? null
@@ -95,6 +97,7 @@ Receipt _$ReceiptFromJson(Map<String, dynamic> json) {
         : DateTime.parse(json['paymentDueDate'] as String)
     ..paymentStatusId = json['paymentStatusId'] as int
     ..invoiceNum = json['invoiceNum'] as int
+    ..abnId = json['abnId'] as int
     ..decodeStatus = json['decodeStatus'] as int
     ..imagePath = json['imagePath'] as String
     ..extractedContent = json['extractedContent'] as String
@@ -112,7 +115,7 @@ Receipt _$ReceiptFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$ReceiptToJson(Receipt instance) => <String, dynamic>{
       'id': instance.id,
       'statusId': instance.statusId,
-      'categoryId': instance.categoryId,
+      'categoryName': instance.categoryName,
       'receiptTypeId': instance.receiptTypeId,
       'uploadDatetime': instance.uploadDatetime?.toIso8601String(),
       'receiptDatetime': instance.receiptDatetime?.toIso8601String(),
@@ -131,6 +134,7 @@ Map<String, dynamic> _$ReceiptToJson(Receipt instance) => <String, dynamic>{
       'paymentDueDate': instance.paymentDueDate?.toIso8601String(),
       'paymentStatusId': instance.paymentStatusId,
       'invoiceNum': instance.invoiceNum,
+      'abnId': instance.abnId,
       'decodeStatus': instance.decodeStatus,
       'imagePath': instance.imagePath,
       'extractedContent': instance.extractedContent,

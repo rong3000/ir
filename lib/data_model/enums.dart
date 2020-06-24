@@ -61,7 +61,7 @@ enum FiscYear
 enum MainScreenPages {
   home,
   expenses,
-  sales,
+  groups,
   functions,
   settings
 }
@@ -69,8 +69,7 @@ enum MainScreenPages {
 enum ReceiptsSubPages {
   reviewed,
   unreviewed,
-  archived,
-  groups
+  archived
 }
 
 enum VendorStatusType {
@@ -86,5 +85,6 @@ enum ProductStatusType {
 enum PaymentStatusType {
   FullyPaid,
   PartiallyPaid,
-  Overdue
+  Overdue,
+  Unknown
 }

@@ -68,9 +68,6 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
   _AddEditReiptFormState(this.receipt, this.isNew) {
     receiptCurrency = Currency();
     receiptCurrency.code = 'AUD';
-    if ((this.receipt.categoryId == null) || (this.receipt.categoryId < 1)) {
-      this.receipt.categoryId = 1;
-    }
   }
 
   @override
@@ -99,7 +96,9 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
           .then((value) {
         this.setState(() {
           categoryList = _userRepository.categoryRepository.categories;
-          receipt.categoryId = categoryList[0].id;
+          if (categoryList.length > 0) {
+            receipt.categoryName = categoryList[0].categoryName;
+          }
         });
       });
     }
@@ -213,15 +212,15 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
     return list;
   }
 
-  List<DropdownMenuItem<int>> _getCategorylist() {
-    var list = List<DropdownMenuItem<int>>();
+  List<DropdownMenuItem<String>> _getCategorylist() {
+    var list = List<DropdownMenuItem<String>>();
     for (var cat in categoryList) {
       list.add(
-        DropdownMenuItem<int>(value: cat.id, child: Text(cat.categoryName)),
+        DropdownMenuItem<String>(value: cat.categoryName, child: Text(cat.categoryName)),
       );
     }
-    if (!categoryList.any((c) => c.id == receipt.categoryId) && categoryList.length > 0){
-      receipt.categoryId = categoryList[0].id;
+    if (!categoryList.any((c) => c.categoryName == receipt.categoryName) && categoryList.length > 0){
+      receipt.categoryName = categoryList[0].categoryName;
     }
     return list;
   }
@@ -465,7 +464,7 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
           if (state.uploadSuccess) {
             Navigator.pop(context);
             BlocProvider.of<MainScreenBloc>(context).dispatch(
-                GoToPageEvent(this.receipt.receiptTypeId == SaleExpenseType.Expense.index ? MainScreenPages.expenses.index : MainScreenPages.sales.index, ReceiptsSubPages.reviewed.index));
+                GoToPageEvent(this.receipt.receiptTypeId == SaleExpenseType.Expense.index ? MainScreenPages.expenses.index : MainScreenPages.expenses.index, ReceiptsSubPages.reviewed.index));
           }
           if (state.deleteSuccess) {
             Navigator.of(context).pop();
@@ -650,17 +649,17 @@ class _AddEditReiptFormState extends State<AddEditReiptForm> {
                             ),
                           ],
                         ),
-                        DropdownButtonFormField<int>(
+                        DropdownButtonFormField<String>(
                           isDense: true,
                           decoration: InputDecoration(labelText: allTranslations.text('app.add-edit-manual-page.category-label')),
                           items: _getCategorylist(),
-                          value: receipt.categoryId,
-                          onSaved: (int value) {
-                            receipt.categoryId = value;
+                          value: receipt.categoryName,
+                          onSaved: (String value) {
+                            receipt.categoryName = value;
                           },
-                          onChanged: (int newValue) {
+                          onChanged: (String newValue) {
                             setState(() {
-                              receipt.categoryId = newValue;
+                              receipt.categoryName = newValue;
                             });
                           },
                         ),

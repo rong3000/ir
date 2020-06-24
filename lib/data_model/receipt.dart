@@ -1,3 +1,4 @@
+import 'package:intelligent_receipt/data_model/enums.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'receipt.g.dart';
@@ -10,7 +11,7 @@ part 'receipt.g.dart';
 class ReceiptListItem {
   int id;
   int statusId;
-  int categoryId;
+  String categoryName;
   int receiptTypeId;
   DateTime uploadDatetime;
   DateTime receiptDatetime;
@@ -31,6 +32,7 @@ class ReceiptListItem {
   DateTime paymentDueDate;
   int paymentStatusId;
   int invoiceNum;
+  int abnId;
 
   ReceiptListItem() {
     id = 0;
@@ -43,9 +45,13 @@ class ReceiptListItem {
     companyName = "";
     warrantyPeriod = 0;
     notes = "";
-    categoryId = 1;
+    categoryName = "";
     altTotalAmount = 0;
     vendorId = 0;
+    abnId = 0;
+    paymentStatusId = PaymentStatusType.Unknown.index;
+    invoiceNum = 0;
+    imagePath = "";
   }
 
   factory ReceiptListItem.fromJason(Map<String, dynamic> json) => _$ReceiptListItemFromJson(json);
@@ -55,7 +61,6 @@ class ReceiptListItem {
 @JsonSerializable()
 class Receipt extends ReceiptListItem {
   int decodeStatus;
-  String imagePath;
   String extractedContent;
   String decodedContent;
   String submittedContent;
@@ -65,7 +70,9 @@ class Receipt extends ReceiptListItem {
   DateTime statusUpdateDatetime;
   List<int> productIds;
 
-  Receipt() : super();
+  Receipt() : super() {
+    productIds = new List<int>();
+  }
 
   factory Receipt.fromJason(Map<String, dynamic> json) => _$ReceiptFromJson(json);
   Map<String, dynamic> toJson() => _$ReceiptToJson(this);
