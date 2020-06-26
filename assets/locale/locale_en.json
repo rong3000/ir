@@ -76,7 +76,7 @@
       "log-out" : "Log Out",
       "check-update" : "Check Update",
       "email-verification" : "Email Verification",
-      "view-archived-receipts": "View Archived Receipts"
+      "settings": "Settings"
     },
     "login-screen": {
       "create-account-label": "Create an Account",
@@ -169,7 +169,7 @@
     },
     "plan-screen": {
       "title": "License Information",
-      "free-license": "You are using a one year free license, which will end on 31/12/2020. Other licenses information will be available soon.",
+      "free-license": "You are using a free trial license, which will end on 31/12/2020. Other licenses information will be available soon.",
       "basic-plan-label": "Basic Plan",
       "basic-plan-label-subtitle": "With our basic plan, you can snap maximum 10 receipts per month and generate 2 groups.",
       "upgrade-now-label": "Upgrade Now",

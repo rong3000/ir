@@ -76,7 +76,7 @@
       "log-out" : "退出",
       "check-update" : "检查版本更新",
       "email-verification" : "电子邮件验证",
-      "view-archived-receipts": "查看存档的收据"
+      "settings": "设置"
     },
     "login-screen": {
       "create-account-label": "创建账户",
@@ -169,7 +169,7 @@
     },
     "plan-screen": {
       "title": "软件使用许可信息",
-      "free-license": "您正在使用一年免费的产品使用许可, 该许可将于2020年12月31日到期. 其它产品许可信息将会很快上线.",
+      "free-license": "您正在使用免费试用的产品使用许可, 该许可将于2020年12月31日到期. 其它产品许可信息将会很快上线.",
       "basic-plan-label": "Basic Plan",
       "basic-plan-label-subtitle": "With our basic plan, you can snap maximum 10 receipts per month and generate 2 groups.",
       "upgrade-now-label": "Upgrade Now",

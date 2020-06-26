@@ -94,7 +94,7 @@ class _ReportCardState extends State<ReportCard> {
             child: Container(
               height: MediaQuery.of(context).size.height * 0.14,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.max,
                 children: <Widget>[

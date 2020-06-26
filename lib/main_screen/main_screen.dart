@@ -259,15 +259,11 @@ class _MainScreenState extends State<MainScreen> {
                 },
               ),
              ListTile(
-               title: Text(allTranslations.text('app.main-screen.view-archived-receipts')),
+               title: Text(allTranslations.text('app.main-screen.settings')),
                onTap: () {
                  Navigator.of(context).pop();
-                 Navigator.of(context).push(
-                   MaterialPageRoute(builder: (context) {
-                     return ArchivedReceiptsPage(
-                         userRepository: _userRepository,
-                        );
-                   }),
+                 BlocProvider.of<MainScreenBloc>(context).dispatch(
+                     GoToPageEvent(MainScreenPages.settings.index, 0)
                  );
                },
              ),

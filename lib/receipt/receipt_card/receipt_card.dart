@@ -281,7 +281,7 @@ class _ReceiptCardState extends State<ReceiptCard> {
                                 _getTextShownInCategoryField(widget._receiptItem),
                                 style: TextStyle(fontSize: 12)
                                       .copyWith(color: Colors.black54)
-                                      .apply(fontSizeFactor: (widget._receiptItem.categoryName != null && widget._receiptItem.categoryName.isNotEmpty) ? 1 : 0.85),
+                                      .apply(fontSizeFactor: (widget._receiptItem.categoryName != null && widget._receiptItem.categoryName.isNotEmpty) ? 1.2 : 0.85),
                                 minFontSize: 6,
                                 maxLines: 3,
                                 overflow: TextOverflow.ellipsis,
