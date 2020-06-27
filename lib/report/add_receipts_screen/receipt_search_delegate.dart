@@ -28,7 +28,10 @@ class ReceiptSearchDelegate extends SearchDelegate<String> {
         super();
 
   @override
-  ThemeData appBarTheme(BuildContext context) => Theme.of(context);
+  ThemeData appBarTheme(BuildContext context) => ThemeData(
+    primaryColor: Colors.white,
+    primaryColorBrightness: Brightness.light,
+  );
 
   @override
   List<Widget> buildActions(BuildContext context) {
