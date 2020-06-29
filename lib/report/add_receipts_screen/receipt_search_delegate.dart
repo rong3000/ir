@@ -13,18 +13,25 @@ class ReceiptSearchDelegate extends SearchDelegate<String> {
   final List<ReceiptListItem> _candidateItems;
   final List<ActionWithLabel> _actions;
   final void Function(ReceiptListItem) _addReceiptToGroupFunc;
+  DateTime _fromDate = null;
+  DateTime _toDate = null;
 
   ReceiptSearchDelegate(
       UserRepository userRepository,
       ReceiptStatusType receiptStatusType,
       List<ReceiptListItem> candidateItems,
       List<ActionWithLabel> actions,
-      void Function(ReceiptListItem) addReceiptToGroupFunc)
+      void Function(ReceiptListItem) addReceiptToGroupFunc, {
+        DateTime fromDate : null,
+        DateTime toDate : null,
+      })
       : _userRepository = userRepository,
         _receiptStatusType = receiptStatusType,
         _candidateItems = candidateItems,
         _actions = actions,
         _addReceiptToGroupFunc = addReceiptToGroupFunc,
+        _fromDate = fromDate,
+        _toDate = toDate,
         super();
 
   @override
@@ -151,6 +158,8 @@ class ReceiptSearchDelegate extends SearchDelegate<String> {
           receiptStatusType: _receiptStatusType,
           receiptItems: suggestions,
           actions: suggestionAction,
+          fromDate: _fromDate,
+          toDate: _toDate,
         ),
       )
     ]);

@@ -119,7 +119,9 @@
       "failed-delete-receipt-message": "Failed to delete receipt: ",
       "failed-archive-receipt-message": "Failed to archive receipt: ",
 	  "archive-receipt-title": "Archive Receipt",
-	  "archive-receipt-message": "Archived receipt won't be listed in the Reviewed receipt list; you can go to 'View Archived Receipts' to view  all archived receipts and Un-Archive receipt there if you want.\n\nAre you sure to archive the receipt?",
+	  "archive-receipt-message": "Archived receipt will be listed in 'Archived' page; you can un-archive the receipt there.\n\nAre you sure to archive the receipt?",
+      "unarchive-receipt-title": "Un-archived Receipt",
+      "unarchive-receipt-message": "Un-archived receipt will be listed in 'Reviewed' page.\n\nAre you sure to un-archive the receipt?",
 	  "delete-receipt-title": "Delete Receipt",
 	  "delete-receipt-message": "Deleted receipt cannot be restored.\n\nAre you sure to delete the receipt?"
     },

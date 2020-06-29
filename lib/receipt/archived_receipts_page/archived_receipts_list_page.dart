@@ -47,9 +47,19 @@ class _ArchivedReceiptsListSate extends State<ArchivedReceiptsListPage> {
     super.initState();
   }
 
-  unArchiveAction(int receiptId) {
-    _hasChanges = true;
-    _archivedReceiptsBloc.dispatch(UnArchivedReceipt(receiptId));
+  Future<void> unArchiveAction(int receiptId) async {
+    var shouldUnachive = await showDialog<bool>(
+      context: context,
+      builder: ConfirmDialog.builder(context,
+          title: Text(allTranslations.text('app.receipts-page.unarchive-receipt-title')),
+          content: Text(allTranslations.text('app.receipts-page.unarchive-receipt-message'))
+      )
+    );
+
+    if (shouldUnachive) {
+      _hasChanges = true;
+      _archivedReceiptsBloc.dispatch(UnArchivedReceipt(receiptId));
+    }
   }
 
   Future<void> reviewAction(int receiptId) async {

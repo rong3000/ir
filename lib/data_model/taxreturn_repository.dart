@@ -23,6 +23,18 @@ class TaxReturnRepository extends IRRepository {
     return null;
   }
 
+  TaxReturn getTaxReturnByTaxReturnGroupId(int taxReturnGroupId) {
+    TaxReturn taxReturn = null;
+    for (int i = 0; i < taxReturns.length; i++) {
+      if (taxReturns[i].getReportByTaxReturnGroupId(taxReturnGroupId) != null) {
+        taxReturn = taxReturns[i];
+        break;
+      }
+    }
+
+    return taxReturn;
+  }
+
   Future<DataResult> getTaxReturns() async {
     DataResult result = new DataResult(false, "Unknown");
     await _lock.synchronized(() async {
