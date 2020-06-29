@@ -51,10 +51,10 @@ class ReceiptRepository extends IRRepository {
     return selectedReceipts;
   }
 
-  List<ReceiptListItem> getReceiptItemsBetweenDateRange(DateTime startDateTime, DateTime endDateTime) {
+  List<ReceiptListItem> getReceiptItemsBetweenDateRange(Set<ReceiptStatusType> statusTypes, DateTime startDateTime, DateTime endDateTime) {
     List<ReceiptListItem> selectedReceipts = new List<ReceiptListItem>();
     for (var i = 0; i < receipts.length; i++) {
-      if ((receipts[i].receiptDatetime.compareTo(startDateTime) >= 0) && (receipts[i].receiptDatetime.compareTo(endDateTime) <= 0)) {
+      if ((receipts[i].receiptDatetime.compareTo(startDateTime) >= 0) && (receipts[i].receiptDatetime.compareTo(endDateTime) <= 0) && statusTypes.contains(ReceiptStatusType.values[receipts[i].statusId])) {
         selectedReceipts.add(receipts[i]);
       }
     }

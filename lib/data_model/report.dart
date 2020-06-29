@@ -83,7 +83,10 @@ class Report {
     receipts.clear();
     QuarterlyGroup quarterlyGroup = userRepository.quarterlyGroupRepository.getQuarterGroupById(quarterlyGroupId);
     if (quarterlyGroup != null) {
-      List<ReceiptListItem> receiptItems = userRepository.receiptRepository.getReceiptItemsBetweenDateRange(quarterlyGroup.startDatetime, quarterlyGroup.endDatetime);
+      Set<ReceiptStatusType> statusTypes = new Set<ReceiptStatusType>();
+      statusTypes.add(ReceiptStatusType.Reviewed);
+      statusTypes.add(ReceiptStatusType.Archived);
+      List<ReceiptListItem> receiptItems = userRepository.receiptRepository.getReceiptItemsBetweenDateRange(statusTypes, quarterlyGroup.startDatetime, quarterlyGroup.endDatetime);
       for (int i = 0; i < receiptItems.length; i++) {
         receipts.add(new ReportReceipt(receiptId: receiptItems[i].id));
       }

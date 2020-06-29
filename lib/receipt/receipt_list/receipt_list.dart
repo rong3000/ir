@@ -15,6 +15,8 @@ class ReceiptList extends StatefulWidget {
   final List<ReceiptListItem> _receiptItems;
   final List<ActionWithLabel> _actions;
   final Future<void> Function() _forceGetReceiptsFromServer;
+  DateTime _fromDate = null;
+  DateTime _toDate = null;
 
   ReceiptList({
     Key key,
@@ -23,12 +25,16 @@ class ReceiptList extends StatefulWidget {
     @required List<ReceiptListItem> receiptItems,
     @required List<ActionWithLabel> actions,
     Future<void> Function() forceGetReceiptsFromServer,
+    DateTime fromDate : null,
+    DateTime toDate : null,
   })  : assert(userRepository != null),
         _userRepository = userRepository,
         _receiptStatusType = receiptStatusType,
         _receiptItems = receiptItems,
         _actions = actions,
         _forceGetReceiptsFromServer = forceGetReceiptsFromServer,
+        _fromDate = fromDate,
+        _toDate = toDate,
         super(key: key);
 
   @override
@@ -57,7 +63,6 @@ class ReceiptListState extends State<ReceiptList> {
 
   UserRepository get _userRepository => widget._userRepository;
   get _receiptStatusType => widget._receiptStatusType;
-  Lock _lock = new Lock();
 
   Future<Null> _selectFromDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
@@ -88,6 +93,12 @@ class ReceiptListState extends State<ReceiptList> {
     forceRefresh = true;
     ascending = false;
     super.initState();
+    if (widget._fromDate != null) {
+      _fromDate = widget._fromDate;
+    }
+    if (widget._toDate != null) {
+      _toDate = widget._toDate;
+    }
     if (_receiptStatusType == ReceiptStatusType.Uploaded) {
       sortingType = ReceiptSortType.UploadTime;
     } else {
@@ -265,68 +276,47 @@ class ReceiptListState extends State<ReceiptList> {
       DateTime fromDate,
       DateTime toDate) {
     List<ReceiptListItem> selectedReceipts = [];
-    _lock.synchronized(() {
-      for (var i = 0; i < receipts.length; i++) {
-        if (receipts[i].statusId == receiptStatus.index &&
-            receipts[i].uploadDatetime.isAfter(fromDate) &&
-            receipts[i]
-                .uploadDatetime
-                .isBefore(toDate.add(Duration(days: 1)))) {
+    for (var i = 0; i < receipts.length; i++) {
+      if (receiptStatus == ReceiptStatusType.Uploaded) {
+        if (receipts[i].uploadDatetime.isAfter(fromDate) &&
+            receipts[i].uploadDatetime.isBefore(
+                toDate.add(Duration(days: 1)))) {
           selectedReceipts.add(receipts[i]);
-          if (ascending) {
-            switch (type) {
-              case ReceiptSortType.UploadTime:
-                selectedReceipts.sort(
-                    (a, b) => a.uploadDatetime.compareTo(b.uploadDatetime));
-                break;
-              case ReceiptSortType.ReceiptTime:
-                selectedReceipts.sort(
-                    (a, b) => a.receiptDatetime.compareTo(b.receiptDatetime));
-                break;
-              case ReceiptSortType.CompanyName:
-                selectedReceipts
-                    .sort((a, b) => a.companyName.compareTo(b.companyName));
-                break;
-              case ReceiptSortType.Amount:
-                selectedReceipts
-                    .sort((a, b) => a.totalAmount.compareTo(b.totalAmount));
-                break;
-              case ReceiptSortType.Category:
-                selectedReceipts
-                    .sort((a, b) => a.categoryName.compareTo(b.categoryName));
-                break;
-              default:
-                break;
-            }
-          } else {
-            switch (type) {
-              case ReceiptSortType.UploadTime:
-                selectedReceipts.sort(
-                    (b, a) => a.uploadDatetime.compareTo(b.uploadDatetime));
-                break;
-              case ReceiptSortType.ReceiptTime:
-                selectedReceipts.sort(
-                    (b, a) => a.receiptDatetime.compareTo(b.receiptDatetime));
-                break;
-              case ReceiptSortType.CompanyName:
-                selectedReceipts
-                    .sort((b, a) => a.companyName.compareTo(b.companyName));
-                break;
-              case ReceiptSortType.Amount:
-                selectedReceipts
-                    .sort((b, a) => a.totalAmount.compareTo(b.totalAmount));
-                break;
-              case ReceiptSortType.Category:
-                selectedReceipts
-                    .sort((b, a) => a.categoryName.compareTo(b.categoryName));
-                break;
-              default:
-                break;
-            }
-          }
+        }
+      } else {
+        if (receipts[i].receiptDatetime.isAfter(fromDate) &&
+            receipts[i].receiptDatetime.isBefore(
+                toDate.add(Duration(days: 1)))) {
+          selectedReceipts.add(receipts[i]);
         }
       }
-    });
+    }
+
+    switch (type) {
+      case ReceiptSortType.UploadTime:
+        selectedReceipts.sort(
+            (a, b) => ascending ? a.uploadDatetime.compareTo(b.uploadDatetime) : b.uploadDatetime.compareTo(a.uploadDatetime));
+        break;
+      case ReceiptSortType.ReceiptTime:
+        selectedReceipts.sort(
+            (a, b) => ascending ? a.receiptDatetime.compareTo(b.receiptDatetime) : b.receiptDatetime.compareTo(a.receiptDatetime));
+        break;
+      case ReceiptSortType.CompanyName:
+        selectedReceipts
+            .sort((a, b) => ascending ? a.companyName.compareTo(b.companyName) : b.companyName.compareTo(a.companyName));
+        break;
+      case ReceiptSortType.Amount:
+        selectedReceipts
+            .sort((a, b) => ascending ? a.totalAmount.compareTo(b.totalAmount) : b.totalAmount.compareTo(a.totalAmount));
+        break;
+      case ReceiptSortType.Category:
+        selectedReceipts
+            .sort((a, b) => ascending ? a.categoryName.compareTo(b.categoryName) : b.categoryName.compareTo(a.categoryName));
+        break;
+      default:
+        break;
+    }
+
     return selectedReceipts;
   }
 

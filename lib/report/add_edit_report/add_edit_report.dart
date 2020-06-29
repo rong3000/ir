@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/gestures.dart' show DragStartBehavior;
 import 'package:intelligent_receipt/data_model/enums.dart';
 import 'package:intelligent_receipt/data_model/receipt_repository.dart';
+import 'package:intelligent_receipt/data_model/taxreturn.dart';
 import 'package:intelligent_receipt/report/add_edit_report/report_button.dart';
 import 'package:intelligent_receipt/report/add_receipts_screen/add_receipts_screen.dart';
 import 'package:intelligent_receipt/user_repository.dart';
@@ -305,103 +306,96 @@ class AddEditReportState extends State<AddEditReport> {
           key: _formKey,
           autovalidate: _autovalidate,
           onWillPop: _warnUserAboutInvalidData,
-          child: Scrollbar(
-            child: SingleChildScrollView(
-              dragStartBehavior: DragStartBehavior.down,
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  const SizedBox(height: 6.0),
-                  TextFormField(
-                    textCapitalization: TextCapitalization.words,
-                    decoration: InputDecoration(
-                      border: UnderlineInputBorder(),
-                      filled: true,
-                      icon: Icon(Icons.title),
-                      labelText: allTranslations.text('app.add-edit-report-page.group-name-label') + '*',
-                    ),
-                    initialValue: (_report != null) ? _report.reportName : "",
-                    validator: _validateGroupName,
-                    readOnly: !_report.isNormalReport(),
-                    onChanged: (String value) {
-                      _report.reportName = value;
-                    },
-                  ) ,
-                  const SizedBox(height: 6.0),
-                  TextFormField(
-                    decoration: InputDecoration(
-                      border: UnderlineInputBorder(),
-                      filled: true,
-                      icon: Icon(Icons.description),
-                      labelText: allTranslations.text('app.add-edit-report-page.description-label'),
-                    ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              const SizedBox(height: 6.0),
+              TextFormField(
+                textCapitalization: TextCapitalization.words,
+                decoration: InputDecoration(
+                  border: UnderlineInputBorder(),
+                  filled: true,
+                  icon: Icon(Icons.title),
+                  labelText: allTranslations.text('app.add-edit-report-page.group-name-label') + '*',
+                ),
+                initialValue: (_report != null) ? _report.reportName : "",
+                validator: _validateGroupName,
+                readOnly: !_report.isNormalReport(),
+                onChanged: (String value) {
+                  _report.reportName = value;
+                },
+              ) ,
+              const SizedBox(height: 6.0),
+              TextFormField(
+                decoration: InputDecoration(
+                  border: UnderlineInputBorder(),
+                  filled: true,
+                  icon: Icon(Icons.description),
+                  labelText: allTranslations.text('app.add-edit-report-page.description-label'),
+                ),
 
-                    initialValue: (_report != null) ? _report.description : "",
-                    onChanged: (String value) {
-                      _report.description = value;
-                    },
-                  ),
-                  const SizedBox(height: 6.0),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 1),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        FutureBuilder<ReportTotals> (
-                            future: _calcTotalAmountFuture,
-                            builder:
-                                (BuildContext context, AsyncSnapshot<ReportTotals> snapshot) {
-                              switch (snapshot.connectionState) {
-                                case ConnectionState.none:
-                                case ConnectionState.waiting:
-                                case ConnectionState.active:
-                                  return Text(_getTotalAmountText(_reportTotals));
-                                case ConnectionState.done:
-                                  return Text(_getTotalAmountText(snapshot.data));
-                              }
-                            }
-                        ),
-                      ],
+                initialValue: (_report != null) ? _report.description : "",
+                onChanged: (String value) {
+                  _report.description = value;
+                },
+              ),
+              const SizedBox(height: 6.0),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 1),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    FutureBuilder<ReportTotals> (
+                        future: _calcTotalAmountFuture,
+                        builder:
+                            (BuildContext context, AsyncSnapshot<ReportTotals> snapshot) {
+                          switch (snapshot.connectionState) {
+                            case ConnectionState.none:
+                            case ConnectionState.waiting:
+                            case ConnectionState.active:
+                              return Text(_getTotalAmountText(_reportTotals));
+                            case ConnectionState.done:
+                              return Text(_getTotalAmountText(snapshot.data));
+                          }
+                        }
                     ),
+                  ],
+                ),
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                //textDirection: TextDirection.rtl,
+                children: <Widget>[
+                  _report.quarterlyGroupId <= 0 ? Container() :
+                  ReportButton(
+                    onPressed: _onRepopulateQuarterReceipts,
+                    buttonName: allTranslations.text('app.add-edit-report-page.re-populate-quarterly-receipts'),
                   ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    //textDirection: TextDirection.rtl,
-                    children: <Widget>[
-                      _report.quarterlyGroupId <= 0 ? Container() :
-                      ReportButton(
-                        onPressed: _onRepopulateQuarterReceipts,
-                        buttonName: allTranslations.text('app.add-edit-report-page.re-populate-quarterly-receipts'),
-                      ),
-                      ReportButton(
-                        onPressed: _onAddReceipts,
-                        buttonName: allTranslations.text('app.add-edit-report-page.add-receipts-button-label'),
-                      ),
-                    ],
+                  ReportButton(
+                    onPressed: _onAddReceipts,
+                    buttonName: allTranslations.text('app.add-edit-report-page.add-receipts-button-label'),
                   ),
-                  Text(allTranslations.text('app.contact-screen.form-indication'),
-                    style: Theme.of(context).textTheme.caption,
-                  ),
-                  Container(
-                    height:
-                    MediaQuery.of(context).size.height - 300,
-                      child: Scrollbar(
-                        child: ListView.builder(
-                            itemCount: _receiptList.length,
-                            itemBuilder: (context, index) {
-                              return ReceiptCard(
-                                receiptItem: _receiptList[index],
-                                actions: actions,
-                              );
-                            }),
-                      )
-                  )
                 ],
               ),
-            ),
+              Text(allTranslations.text('app.contact-screen.form-indication'),
+                style: Theme.of(context).textTheme.caption,
+              ),
+              Flexible(
+                fit: FlexFit.tight,
+                child: Scrollbar(
+                  child: ListView.builder(
+                    itemCount: _receiptList.length,
+                    itemBuilder: (context, index) {
+                      return ReceiptCard(
+                        receiptItem: _receiptList[index],
+                        actions: actions,
+                      );
+                    }),
+                )
+              )
+            ],
           ),
         ),
       ),
@@ -496,7 +490,10 @@ class AddEditReportState extends State<AddEditReport> {
         _receiptList.clear();
         QuarterlyGroup quarterlyGroup = _userRepository.quarterlyGroupRepository.getQuarterGroupById(_report.quarterlyGroupId);
         if (quarterlyGroup != null ){
-          _receiptList = _userRepository.receiptRepository.getReceiptItemsBetweenDateRange(quarterlyGroup.startDatetime, quarterlyGroup.endDatetime);
+          Set<ReceiptStatusType> statusTypes = new Set<ReceiptStatusType>();
+          statusTypes.add(ReceiptStatusType.Reviewed);
+          statusTypes.add(ReceiptStatusType.Archived);
+          _receiptList = _userRepository.receiptRepository.getReceiptItemsBetweenDateRange(statusTypes, quarterlyGroup.startDatetime, quarterlyGroup.endDatetime);
         }
         _receiptItemsChanged = true;
         _calcTotalAmountFuture = _calculateTotalAmount();
@@ -506,15 +503,43 @@ class AddEditReportState extends State<AddEditReport> {
 
   void _onAddReceipts() {
     // Get candidate item list
-    List<ReceiptListItem> reviewedItems = _userRepository.receiptRepository.getReceiptItems(ReceiptStatusType.Reviewed, SaleExpenseType.values[_report.reportTypeId]);
+    DateTime startDateTime = null;
+    DateTime endDateTime = null;
+    List<ReceiptListItem> receiptItems = new List<ReceiptListItem>();
+    if (_report.quarterlyGroupId > 0) {
+      QuarterlyGroup quarterlyGroup = _userRepository.quarterlyGroupRepository.getQuarterGroupById(_report.quarterlyGroupId);
+      if (quarterlyGroup != null ){
+        Set<ReceiptStatusType> statusTypes = new Set<ReceiptStatusType>();
+        statusTypes.add(ReceiptStatusType.Reviewed);
+        statusTypes.add(ReceiptStatusType.Archived);
+        startDateTime = quarterlyGroup.startDatetime;
+        endDateTime = quarterlyGroup.endDatetime;
+        receiptItems = _userRepository.receiptRepository.getReceiptItemsBetweenDateRange(statusTypes, startDateTime, endDateTime);
+      }
+    } else if (_report.taxReturnGroupId > 0) {
+      TaxReturn taxReturn = _userRepository.taxReturnRepository.getTaxReturnByTaxReturnGroupId(_report.taxReturnGroupId);
+      if (taxReturn != null) {
+        Set<ReceiptStatusType> statusTypes = new Set<ReceiptStatusType>();
+        statusTypes.add(ReceiptStatusType.Reviewed);
+        statusTypes.add(ReceiptStatusType.Archived);
+        startDateTime = taxReturn.getStartDateTime();
+        endDateTime = taxReturn.getEndDatetime();
+        receiptItems = _userRepository.receiptRepository.getReceiptItemsBetweenDateRange(statusTypes, startDateTime, endDateTime);
+      }
+    } else {
+      receiptItems = _userRepository.receiptRepository.getReceiptItems(ReceiptStatusType.Reviewed, SaleExpenseType.values[_report.reportTypeId]);
+    }
+
     // Remove the items already included in the report's receipt list
-    List<ReceiptListItem> candidateItems = reviewedItems.toSet().difference(_receiptList.toSet()).toList();
+    List<ReceiptListItem> candidateItems = receiptItems.toSet().difference(_receiptList.toSet()).toList();
     Navigator.of(context).push(
       MaterialPageRoute(builder: (context) {
         return AddReceiptsScreen(
             userRepository: _userRepository,
             candidateItems: candidateItems,
-            addReceiptToGroupFunc: _addToReceiptList
+            addReceiptToGroupFunc: _addToReceiptList,
+            fromDate: startDateTime,
+            toDate: endDateTime
         );
       }),
     );

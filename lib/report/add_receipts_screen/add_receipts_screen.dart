@@ -12,12 +12,19 @@ class AddReceiptsScreen extends StatefulWidget {
   final UserRepository _userRepository;
   final List<ReceiptListItem> _candidateItems;
   final void Function(ReceiptListItem) _addReceiptToGroupFunc;
+  DateTime _fromDate = null;
+  DateTime _toDate = null;
+
   AddReceiptsScreen(
-      {Key key, @required UserRepository userRepository, @required List<ReceiptListItem> candidateItems, @required void Function(ReceiptListItem) addReceiptToGroupFunc})
+      {Key key, @required UserRepository userRepository, @required List<ReceiptListItem> candidateItems, @required void Function(ReceiptListItem) addReceiptToGroupFunc, DateTime fromDate : null,
+        DateTime toDate : null,
+      })
       : assert(userRepository != null),
         _userRepository = userRepository,
         _candidateItems = candidateItems,
         _addReceiptToGroupFunc = addReceiptToGroupFunc,
+        _fromDate = fromDate,
+        _toDate = toDate,
         super(key: key);
 
   @override
@@ -80,7 +87,7 @@ class _AddReceiptsScreenState extends State<AddReceiptsScreen> {
               Icons.search,
             ),
             onPressed: () {
-              showSearch(context: context, delegate: ReceiptSearchDelegate(_userRepository, _receiptStatusType, _candidateItems, actions, widget._addReceiptToGroupFunc));
+              showSearch(context: context, delegate: ReceiptSearchDelegate(_userRepository, _receiptStatusType, _candidateItems, actions, widget._addReceiptToGroupFunc, fromDate: widget._fromDate, toDate: widget._toDate));
             },
           ),
         ],
@@ -98,6 +105,8 @@ class _AddReceiptsScreenState extends State<AddReceiptsScreen> {
                 receiptStatusType: _receiptStatusType,
                 receiptItems: _candidateItems,
                 actions: actions,
+                fromDate: widget._fromDate,
+                toDate: widget._toDate
               ),
             )
           ]);

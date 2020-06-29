@@ -119,7 +119,9 @@
       "failed-delete-receipt-message": "删除票据失败: ",
       "failed-archive-receipt-message": "存档票据失败: ",
 	  "archive-receipt-title": "票据存档",
-	  "archive-receipt-message": "存档后的票据将不再显示在已审核的票据列表中，您可以到'查看存档的票据'中，查看所有存档的票据，并可以在那里撤销存档。\n\n确定存档票据吗？",
+	  "archive-receipt-message": "存档后的票据将会显示在'已存档'页面中; 您可以在那里撤销存档。\n\n确定存档票据吗？",
+      "unarchive-receipt-title": "撤销存档",
+      "unarchive-receipt-message": "撤销存档后, 票据将会显示在'已审核'页面中。\n\n确定撤销存档票据吗？",
 	  "delete-receipt-title": "删除票据",
 	  "delete-receipt-message": "删除的票据不可恢复。\n\n您确定删除票据吗？"
     },

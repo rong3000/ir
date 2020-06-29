@@ -160,6 +160,7 @@ class _ReportCardState extends State<ReportCard> {
                           mainAxisSize: MainAxisSize.max,
                           children: <Widget>[
                             // three line description
+                            widget._reportItem.isNormalReport() ?
                             Padding(
                               padding: const EdgeInsets.only(bottom: 0.0),
                               child: Text(
@@ -168,7 +169,7 @@ class _ReportCardState extends State<ReportCard> {
                                     .copyWith(color: Colors.black54)
                                     .apply(fontSizeFactor: 0.75),
                               ),
-                            ),
+                            ) : Container(),
                             Padding(
                                 padding: const EdgeInsets.only(top: 0.0, bottom: 0.0),
                                 child: Row(
