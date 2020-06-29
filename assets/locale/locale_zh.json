@@ -257,7 +257,7 @@
       "work-related-total-prefix": "工作相关总额",
       "work-related-tax-amount-prefix": "工作相关税费",
       "currency-code-prefix": "货币代码为",
-      "re-populate-quarterly-receipts": "自动获取季度票据列表",
+      "re-populate-quarterly-receipts": "自动获取票据列表",
       "re-populate-quarterly-receipts-description": "该操作将清除已选择的票据，并自动把该季度内所有的票据加入到该报告中. 您是否继续该操作?",
       "remove-label": "移除",
       "group-name-label": "票据组名",

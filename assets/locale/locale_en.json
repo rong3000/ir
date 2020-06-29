@@ -257,7 +257,7 @@
       "work-related-total-prefix": "work related total",
       "work-related-tax-amount-prefix": "work related GST total",
       "currency-code-prefix": "Currency code is",
-      "re-populate-quarterly-receipts": "Auto-generate Quarterly Receipts",
+      "re-populate-quarterly-receipts": "Auto-generate Receipts",
       "re-populate-quarterly-receipts-description": "This action will clear all selected receipts and automatically re-populate the receipts within this quarter. Will you continue?",
       "remove-label": "Remove",
       "group-name-label": "Group Name",
