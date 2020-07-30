@@ -309,6 +309,24 @@
       "tax-return-title": "Tax Return Report",
       "tax-return-description": "Select Tax Return report from the below list, and press 'View' button.",
       "tax-return-list": "List of Tax Returns"
+    },
+    "export-report" :{
+      "generating-report": "Generating report",
+      "writing-csv": "Writing to CSV",
+      "sending-email": "Sending email",
+      "email-sent": "Receipt group was sent successfully",
+      "email-sent-failed": "Failed to send report:",
+      "connect-internet": "Connect your device to the internet, and try again",
+      "export-report-title": "Export Receipt Group",
+      "export-report-description": "All the receipts in the receipt group will be exported to a CSV file, which will be emailed to someone who needs it. \nThis CSV file can be imported to Xero, Quickbooks via 'Importing Bills' functionality",
+      "select-company": "Select accounting company",
+      "enter-email": "Enter your email",
+      "please-enter-email": "please enter your email",
+      "enter-valid-email": "please enter a valid email",
+      "enter-subject": "Enter your email subject",
+      "please-enter-subject": "please enter email subject",
+      "enter-content": "Enter your email content",
+      "send-email": "Send Email"
     }
   },
   "words": {
