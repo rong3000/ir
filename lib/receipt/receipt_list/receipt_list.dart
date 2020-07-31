@@ -58,7 +58,7 @@ class ReceiptListState extends State<ReceiptList> {
   double dy2;
   bool ascending;
   ReceiptSortType sortingType;
-  DateTime _fromDate = DateTime.now().subtract(Duration(days: 180));
+  DateTime _fromDate = DateTime.now().subtract(Duration(days: 366 * 2));
   DateTime _toDate = DateTime.now();
 
   UserRepository get _userRepository => widget._userRepository;

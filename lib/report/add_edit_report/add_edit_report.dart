@@ -11,6 +11,7 @@ import 'package:intelligent_receipt/data_model/receipt_repository.dart';
 import 'package:intelligent_receipt/data_model/taxreturn.dart';
 import 'package:intelligent_receipt/report/add_edit_report/report_button.dart';
 import 'package:intelligent_receipt/report/add_receipts_screen/add_receipts_screen.dart';
+import 'package:intelligent_receipt/report/export_report/export_report.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 import 'package:intelligent_receipt/translations/global_translations.dart';
 
@@ -285,6 +286,16 @@ class AddEditReportState extends State<AddEditReport> {
 
     List<Widget> _getAppBarButtons() {
       List<Widget> buttons = new List<Widget>();
+      buttons.add(IconButton(
+          icon: const Icon(Icons.email),
+          onPressed:  () {
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) {
+                return ExportReport(userRepository: _userRepository, report: _report);
+              }),
+            );
+          }
+      ));
       buttons.add(IconButton(
         icon: const Icon(Icons.done),
         onPressed: _formSubmitting ? null : _handleSubmitted,

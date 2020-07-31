@@ -309,6 +309,24 @@
       "tax-return-title": "退税报告",
       "tax-return-description": "请从下拉列表中选择退税报告，然后点击'查看'按键",
       "tax-return-list": "退税报告列表"
+    },
+    "export-report" :{
+      "generating-report": "正在生成报告",
+      "writing-csv": "正在写CSV文件",
+      "sending-email": "发送邮件 ...",
+      "email-sent": "邮件发送成功",
+      "email-sent-failed": "邮件发送失败:",
+      "connect-internet": "请连接您的设备上网, 并重试",
+      "export-report-title": "导出票据组",
+      "export-report-description": "将该票据组中的所有票据导出到一个CSV文件, 并将其发送邮件给需要的人; 该CSV文件可以通过'Importing Bills'功能导入到Xero, Quickbooks.",
+      "select-company": "选择会计软件",
+      "enter-email": "输入您的邮箱",
+      "please-enter-email": "请输入您的邮箱",
+      "enter-valid-email": "请输入有效的邮箱",
+      "enter-subject": "输入您的邮件标题",
+      "please-enter-subject": "请输入您的邮件标题",
+      "enter-content": "输入您的邮件内容",
+      "send-email": "发送邮件"
     }
   },
   "words": {
