@@ -47,6 +47,11 @@ class LoginWithFacebookPressed extends LoginEvent {
   String toString() => 'LoginWithFacebookPressed';
 }
 
+class LoginWithApplePressed extends LoginEvent {
+  @override
+  String toString() => 'LoginWithApplePressed';
+}
+
 class LoginWithCredentialsPressed extends LoginEvent {
   final String email;
   final String password;

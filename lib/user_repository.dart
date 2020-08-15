@@ -14,6 +14,7 @@ import 'package:intelligent_receipt/data_model/report_repository.dart';
 import 'package:intelligent_receipt/data_model/setting_repository.dart';
 import 'package:intelligent_receipt/data_model/vendor_repository.dart';
 import 'package:intelligent_receipt/data_model/product_repository.dart';
+import 'package:apple_sign_in/apple_sign_in.dart';
 
 import 'data_model/webservice.dart';
 
@@ -72,14 +73,33 @@ Future<FirebaseUser> signInWithFacebook() async {
         await _facebookLogin.logIn(['email']);
 		
 		final AuthCredential credential = FacebookAuthProvider.getCredential(accessToken: result.accessToken.token);
-		
-    
+
+
     await _firebaseAuth.signInWithCredential(credential);
     currentUser = await _firebaseAuth.currentUser();
     userGuid = currentUser?.uid;
     postSignIn();
     return currentUser;
 }
+
+  Future<FirebaseUser> signInWithApple() async {
+    final AuthorizationResult appleResult = await AppleSignIn.performRequests([
+      AppleIdRequest(requestedScopes: [Scope.email, Scope.fullName])
+    ]);
+
+    if ((appleResult != null) && (appleResult.credential != null)) {
+      final AuthCredential credential = OAuthProvider(providerId: 'apple.com').getCredential(
+        accessToken: String.fromCharCodes(appleResult.credential.authorizationCode),
+        idToken: String.fromCharCodes(appleResult.credential.identityToken),
+      );
+
+      await _firebaseAuth.signInWithCredential(credential);
+    }
+    currentUser = await _firebaseAuth.currentUser();
+    userGuid = currentUser?.uid;
+    postSignIn();
+    return currentUser;
+  }
 
   Future<void> signInWithCredentials(String email, String password) async {
     AuthResult authResult = await _firebaseAuth.signInWithEmailAndPassword(
