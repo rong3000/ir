@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intelligent_receipt/login/apple_login_button.dart';
 import 'package:intelligent_receipt/login/forget_button.dart';
 import 'package:intelligent_receipt/translations/global_translations.dart';
 import 'package:intelligent_receipt/user_repository.dart';
 import 'package:intelligent_receipt/authentication_bloc/bloc.dart';
 import 'package:intelligent_receipt/login/login.dart';
+import 'package:apple_sign_in/apple_sign_in.dart';
 
 class LoginForm extends StatefulWidget {
   final UserRepository _userRepository;
@@ -22,6 +24,7 @@ class _LoginFormState extends State<LoginForm> {
   final TextEditingController _passwordController = TextEditingController();
 
   LoginBloc _loginBloc;
+  bool _supportsAppleSignIn = false;
 
   UserRepository get _userRepository => widget._userRepository;
 
@@ -45,6 +48,13 @@ class _LoginFormState extends State<LoginForm> {
     _loginBloc = BlocProvider.of<LoginBloc>(context);
     _emailController.addListener(_onEmailChanged);
     _passwordController.addListener(_onPasswordChanged);
+    AppleSignIn.isAvailable().then((value) {
+      if (value) {
+        setState(() {
+          _supportsAppleSignIn = true;
+        });
+      }
+    });
   }
 
   @override
@@ -148,6 +158,7 @@ class _LoginFormState extends State<LoginForm> {
 
                         GoogleLoginButton(disableButton: state.isSubmitting),
                         FacebookLoginButton(disableButton: state.isSubmitting),
+                        _supportsAppleSignIn ? AppleLoginButton(disableButton: state.isSubmitting) : Container(),
                         CreateAccountButton(userRepository: _userRepository, disableButton: state.isSubmitting),
                       ],
                     ),

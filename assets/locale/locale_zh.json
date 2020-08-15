@@ -84,6 +84,7 @@
       "forget-password-button-label": "忘记密码",
       "fb-signin-label": "使用Facebook账号登录",
       "google-signin-label": "使用Google账号登录",
+      "apple-signin-label": "使用Apple账号登录",
       "login-fail-message": "登录失败",
       "logging-in-status-message": "登录中...",
       "invalid-email-message": "无效邮箱",

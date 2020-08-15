@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:intelligent_receipt/login/login.dart';
@@ -42,6 +43,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       yield* _mapLoginWithGooglePressedToState();
     } else if (event is LoginWithFacebookPressed) {
       yield* _mapLoginWithFacebookPressedToState();
+    } else if (event is LoginWithApplePressed) {
+      yield* _mapLoginWithApplePressedToState();
     } else if (event is LoginWithCredentialsPressed) {
       yield* _mapLoginWithCredentialsPressedToState(
         email: event.email,
@@ -81,6 +84,20 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     try {
       await _userRepository.signInWithFacebook();
       yield LoginState.success();
+    } catch (e) {
+      yield LoginState.failure(_getErrorMsg(e.toString()));
+    }
+  }
+
+  Stream<LoginState> _mapLoginWithApplePressedToState() async* {
+    yield LoginState.submitting();
+    try {
+      var currentUser = await _userRepository.signInWithApple();
+      if (currentUser != null) {
+        yield LoginState.success();
+      } else {
+        yield LoginState.failure("");
+      }
     } catch (e) {
       yield LoginState.failure(_getErrorMsg(e.toString()));
     }

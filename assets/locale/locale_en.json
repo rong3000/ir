@@ -84,6 +84,7 @@
       "forget-password-button-label": "Forget Password",
       "fb-signin-label": "Sign in with Facebook",
       "google-signin-label": "Sign in with Google",
+      "apple-signin-label": "Sign in with Apple",
       "login-fail-message": "Login Failed",
       "logging-in-status-message": "Logging In...",
       "invalid-email-message": "Invalid Email",
