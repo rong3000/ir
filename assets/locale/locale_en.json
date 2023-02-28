@@ -1,0 +1,358 @@
+{
+  "app": {
+    "title": "Intelligent Receipt",
+    "common": {
+      "loading-status": "Loading...",
+      "value-required-validation": "Value Required",
+      "uploading-receipt-in-progess": "Uploading Receipt...",
+      "uploading-failed": "Upload Failed: ",
+      "deleting-in-progress": "Deleting Receipt...",
+      "deleting-failed": "Delete Failed: ",
+      "no-image-text": "No Image!",
+      "invalid-email-message": "Invalid Email",
+      "invalid-password-message": "At least one letter, one number and minimum 8 characters",
+      "password-mismatch-message": "Password is not the same as above",
+      "are-you-sure": "Are you sure"
+    },
+    "settings-page": {
+      "title": "Settings",
+      "preferences-menu-item-title": "Regional and Language (区域和语言)",
+      "currency-menu-item-title": "Default Currency",
+      "category-menu-item-title": "Categories",
+      "plan-info-menu-item-title": "License Information",
+      "check-update-menu-item-title": "Check update",
+      "document-knowledge-menu-item-title": "Documents & Knowledge Centre",
+      "invite-friend-menu-item-title": "Invite a Friend",
+      "contact-us-menu-item-title": "Contact Us",
+      "in-app-update-title": "In App Update",
+      "current-version-label": "Current installed version is ",
+      "new-version-available": "A new version is available for update",
+      "already-updated-label": "The app is already up to date.",
+      "immediate-update-label": "Perform immediate update",
+      "flexible-update-label": "Start flexible update",
+      "complete-flexible-update-label": "Complete flexible update",
+      "appStore-version-unavailable": "IR version in App Store is unavailable",
+      "playStore-version-unavailable": "IR version in Play Store is unavailable",
+      "current-appstore-version-label": "IR version in App Store is ",
+      "current-playstore-version-label": "IR version in Play Store is "
+    },
+    "preferences-page": {
+      "title": "Regional and Language",
+      "language-dropdown-label": "Select App Language(选择软件语言)",
+      "tax-percentage-label": "Tax(GST) Percentage (%)",
+      "tax-inclusive-lable": "Is tax(GST) included in total: ",
+      "tax-inclusive-saved-success": "Tax inclusive change was saved successfully.",
+      "tax-inclusive-saved-fail": "Failed to save tax inclusive: \n",
+      "tax-percentage-saved-success": "Tax percentage change was saved successfully.",
+      "tax-percentage-saved-fail": "Failed to save tax percentage: \n",
+      "tax-percentage-range": "Tax(GST) percentage must be between 0 and 100."
+    },
+    "currency-screen":{
+      "title": "Choose Currency"
+    },
+    "contact-screen":{
+      "name": "name",
+      "form-indication": "* indicates required field",
+      "success-line1": "Thanks ",
+      "success-line2": "Your message was sent successfully",
+      "fail-line1": "Failed to send message",
+      "fail-line2": "Error: ",
+      "email-required": "Email is required.",
+      "valid-email-required": "Please enter valid email address.",
+      "form-error": "This form has errors",
+      "form-leaving": "Really leave this form?",
+      "fix": "Please fix the errors in red before submitting.",
+      "sumbmitting": "Your message is being sent ..."
+    },
+    "main-screen": {
+      "home-tab-label": "Home",
+      "expenses-tab-label": "Receipts",
+      "sales-tab-label": "Sales",
+      "groups-tab-label": "Groups",
+      "functions-tab-label": "Features",
+      "settings-tab-label": "Settings",
+      "no-network" : "No network connection",
+      "network-recovered" : "Network connection recovered",
+      "log-out" : "Log Out",
+      "check-update" : "Check Update",
+      "email-verification" : "Email Verification",
+      "settings": "Settings"
+    },
+    "login-screen": {
+      "create-account-label": "Create an Account",
+      "login-button-label": "Login",
+      "forget-password-button-label": "Forget Password",
+      "fb-signin-label": "Sign in with Facebook",
+      "google-signin-label": "Sign in with Google",
+      "apple-signin-label": "Sign in with Apple",
+      "login-fail-message": "Login Failed",
+      "logging-in-status-message": "Logging In...",
+      "invalid-email-message": "Invalid Email",
+      "invalid-password-message": "Invalid Password"
+    },
+    "email-veri-screen": {
+      "verified": " is verified",
+      "unverified": " is not verified",
+      "veri-email-sent": "Verification Email sent",
+      "veri-email-sent-error": "An error occured while trying to send email verification",
+      "veri-email-sent-text": "We have sent you the email verification again, please check if it's in the SPAM mail if it cannot be found in your inbox.",
+      "resend-veri-email": "Resend Verification email",
+      "close": "Close"
+    },
+    "select-image-source-dialog": {
+      "title": "Select Image Source"
+    },
+    "home-page": {
+      "snap-receipt-card-title": "Snap Your (First) Receipt",
+      "manual-add-card-title": "Manually Add Your (First) Receipt",
+      "view-imported-receipts-card-title": "View Imported Receipts",
+      "view-receipts-group-card-title": "View Receipt Groups"
+    },
+    "receipts-page": {
+      "unreviewed-button-text": "Unreviewed",
+      "reviewed-button-text": "Reviewed",
+      "archived-button-text": "Archived",
+      "groups-button-text": "Groups",
+      "add-receipt-tooltip": "From Camera or Gallery",
+      "add-receipt-manual-tooltip": "Manually Add Receipt",
+      "failed-load-receipts-message": "Failed to load receipts: ",
+      "failed-review-receipt-message": "Failed to review receipt: ",
+      "failed-delete-receipt-message": "Failed to delete receipt: ",
+      "failed-archive-receipt-message": "Failed to archive receipt: ",
+	  "archive-receipt-title": "Archive Receipt",
+	  "archive-receipt-message": "Archived receipt will be listed in 'Archived' page; you can un-archive the receipt there.\n\nAre you sure to archive the receipt?",
+      "unarchive-receipt-title": "Un-archived Receipt",
+      "unarchive-receipt-message": "Un-archived receipt will be listed in 'Reviewed' page.\n\nAre you sure to un-archive the receipt?",
+	  "delete-receipt-title": "Delete Receipt",
+	  "delete-receipt-message": "Deleted receipt cannot be restored.\n\nAre you sure to delete the receipt?"
+    },
+
+    "snap-receipt-page": {
+      "title": "Snap new receipt"
+    },
+    "reports-list": {
+      "create-time": "Create Time",
+      "update-time": "Update Time",
+      "group-name": "Group Name",
+      "ascending": "Ascending",
+      "loading": "Loading ...",
+      "review": "Review",
+      "delete": "Delete",
+      "unknown": "Unknown",
+      "failed-load-groups-message": "Failed to load receipt groups: ",
+      "failed-delete-group-message": "Failed to delete receipt group: "
+    },
+    "reports-page": {
+      "active-groups-tab-label": "Active Groups",
+      "submitted-groups-tab-label": "Submitted Groups",
+      "archived-groups-page-label": "Archived Groups"
+    },
+    "add-reports-page": {
+      "title": "New Receipt Group"
+    },
+    "category-screen": {
+      "title": "Edit Categories",
+      "add-dialog-title": "Add New Category",
+      "search-label": "Search",
+      "modify-alert-title": "Modify/Delete Category"
+    },
+    "document-screen": {
+      "title": "Document & Knowledge Center",
+      "snap-receipt-process-label": "How to snap a receipt",
+      "archived-group-features-label": "What you can do with archived groups",
+      "receipt-group-information":"Information about receipt groups"
+    },
+    "credit-card-page": {
+      "title": "Credit Card",
+      "initial-name": "Your Name",
+      "expiry-label": "Expiry",
+      "cvv-label": "CVV",
+      "card-number-label": "Credit Card Number",
+      "card-name-label": "Name on card"
+    },
+    "plan-screen": {
+      "title": "License Information",
+      "free-license": "You are using a free trial license, which will end on 31/12/2020. Other licenses information will be available soon.",
+      "basic-plan-label": "Basic Plan",
+      "basic-plan-label-subtitle": "With our basic plan, you can snap maximum 10 receipts per month and generate 2 groups.",
+      "upgrade-now-label": "Upgrade Now",
+      "premium-plan-label": "Premium Plan",
+      "premium-plan-label-subtitle": "You will get unlimited snaps and groups."
+    },
+    "add-edit-manual-page": {
+      "edit-title": "Edit Receipt",
+      "new-title": "Create Receipt",
+      "select-new-image-label": "Select New Image",
+      "show-full-image-missing": "No Image!",
+      "purchase-date-label": "Purchase Date",
+      "total-amount-label": "Total Amount",
+      "currency-code-label": "Currency Code",
+      "gst-inclusive-label": "Is tax(GST) included in total?",
+      "category-label": "Category",
+      "vendor-label": "Shop/Vendor",
+      "product-name-label": "Product Name",
+      "warranty-period-label": "Warranty Period",
+      "notes-label": "Notes",
+      "enter-total-amount-label": "Enter Total Amount",
+      "tax-amount-label": "Tax(GST) Amount",
+      "invalid-tax-amount": "Invalid tax amount",
+      "percentage-on-work-label": "Work Related(%)",
+      "percentage-on-work-description": "Work-related percentage, will be used when calculating total and tax amount in tax return and quarterly activity reports.",
+      "invalid-percentage-on-work": "Should be between 0 and 100"
+    },
+    "receipt-card" : {
+      "unknown-category": "Click 'Review' button to select receipt category.",
+      "receipt-processed-review": "Click 'Review' button to verify and fulfill receipt data.",
+      "receipt-in-process-review": "Click 'Review' button to verify and fulfill receipt data.",
+      "receipt-in-process-archived": "Un-Archive to modify receipt data.",
+      "receipt-date-prefix": "Receipt Date",
+      "total-amount-prefix": "Total",
+      "uploaded-prefix": "Uploaded Date",
+      "unknown": "Unknown",
+      "unknown-vendor": "Unknown Vendor"
+    },
+    "receipt-list": {
+      "upload-time-menu-item": "Upload Time",
+      "receipt-time-menu-item": "Receipt Time",
+      "company-name-menu-item": "Company Name",
+      "amount-menu-item": "Amount",
+      "category-menu-item": "Category",
+      "unknown-menu-item": "Unknown",
+      "ascending-menu-item": "Ascending",
+      "toggle-ascending-menu-item": "Toggle Ascending"
+    },
+    "image-cropper" :{
+      "title": "Cropper"
+    },
+    "upload-result-dialog": {
+      "title": "Receipt has been saved",
+      "success-message": "Receipt is being listed in Receipts/Reviewed tab."
+    },
+    "delete-result-dialog": {
+      "title": "Delete Receipt",
+      "success-message": "Receipt was successfully deleted."
+    },
+    "upload-receipt-alert": {
+      "button-text": "OK, Got it"
+    },
+    "upload-receipt-screen": {
+      "review-now-label": "Review Now",
+      "review-later-label": "Review Later",
+      "press-to-start-label": "Press button to start",
+      "submitting-label": "Submitting receipt, will be ready soon ...",
+      "unknown-error-label": "Unknown error encountered when submitting the receipt, please resubmit the receipt.",
+      "error-prefix": "Error",
+      "extract-text-failed-message": "The receipt has been submitted, but failed to extract the text from the image. Please double check whether this is a valid receipt.\n\nPress 'Review Now' button to manually enter receipt information now.\nPress 'Review Later' button to review the receipt later, which is listed in 'Receipts\\Unreviewed' tab.",
+      "maybe-not-valid-message": "This maybe not a valid receipt. Please double check.\n\nPress 'Review Now' button to manually enter receipt information now.\nPress 'Review Later' button to review the receipt later, which is listed in 'Receipts\\Unreviewed' tab.",
+      "unrecognized-format-message": "The receipt image has been submitted.\n\nPress 'Review Now' button to manually enter receipt information now.\nPress 'Review Later' button to review the receipt later, which is listed in 'Receipts\\Unreviewed' tab.",
+      "recognized-success-message": "The receipt image has been submitted.\n\nPress 'Review Now' button to verify receipt information now.\nPress 'Review Later' button to review the receipt later, which is listed in 'Receipts\\Unreviewed' tab.",
+      "general-error-message": "Error encountered when submitting the receipt: "
+    },
+    "register-form": {
+      "registration-in-progress-label": "Registering...",
+      "registration-failed-label": "Registration Failed"
+    },
+    "add-edit-report-page" : {
+      "total-amount-prefix": "Total",
+      "tax-amount-prefix": "GST total",
+      "work-related-total-prefix": "work related total",
+      "work-related-tax-amount-prefix": "work related GST total",
+      "currency-code-prefix": "Currency code is",
+      "re-populate-quarterly-receipts": "Auto-generate Receipts",
+      "re-populate-quarterly-receipts-description": "This action will clear all selected receipts and automatically re-populate the receipts within this quarter. Will you continue?",
+      "remove-label": "Remove",
+      "group-name-label": "Group Name",
+      "description-label": "Description",
+      "add-receipts-button-label": "Add Receipts",
+      "save-group-button-label": "Save Group",
+      "archive-group-button-label": "Archive Group",
+      "group-name-required": "Group Name required"
+     },
+    "add-receipts-screen": {
+      "title": "Add Receipts to Group",
+      "receipt-added-success": "Receipt was added to group",
+      "receipt-added-fail": "Error: Receipt data not found, could not be added to group",
+      "add-to-group-label": "Add to Group"
+    },
+    "report-card": {
+      "total-amount-prefix": "Total",
+      "created-date-prefix": "Created",
+      "expenses-suffix": "Receipts"
+    },
+    "unsupported-version":{
+      "title" : "Version not supported",
+      "text" : "Your version of IR is not being supported, please upgrade now.",
+      "button" : "Upgrade Now",
+      "upgrade-result": "Upgrade Result",
+      "upgrade-succeeded": "Upgrade was succeeded",
+      "upgrade-failed-prefix": "Upgrade failed: ",
+      "unsupported-platform": "Unsupported platform",
+      "opening-app-store": "Opening App Store to download the latest version ..."
+    },
+    "archived-receipts-screen" :{
+      "title": "Archived Receipts",
+      "fail-load": "Failed to Load Archived Data",
+      "un-archive-label": "Un-Archive",
+      "fail-un-archive": "Failed, check network and try again"
+    },
+    "functions-page" :{
+      "archived-receipts-title": "Archived Receipts",
+      "archived-receipts-description": "View all archived receipts here; In the archived receipt list, you can un-archive some receipts by clicking 'un-archive' icon.",
+      "quarterly-report-title": "Quarterly Activety Report",
+      "quarterly-report-description": "Select quarterly report from the below list, and press 'View' button, system will automatically populate the quarter's receipts into the report; you can manually modify it afterwards.",
+      "quarterly-report-list": "List of Quarterly Reports",
+      "quarterly-report-view": "View",
+      "quarterly-report-edit-title": "View and Edit Quarterly Activety Report",
+      "quarterly-report-list-loading": "Loading quarterly reports",
+      "quarterly-report-list-loading-failed": "Failed to load quarterly reports: ",
+      "quarterly-report-loading-failed-title": "Failed to Load Quarterly Report",
+      "quarterly-report-loading-failed-message": "Failed reason: ",
+      "tax-return-title": "Tax Return Report",
+      "tax-return-description": "Select Tax Return report from the below list, and press 'View' button.",
+      "tax-return-list": "List of Tax Returns"
+    },
+    "export-report" :{
+      "generating-report": "Generating report",
+      "writing-csv": "Writing to CSV",
+      "sending-email": "Sending email",
+      "email-sent": "Receipt group was sent successfully",
+      "email-sent-failed": "Failed to send report:",
+      "connect-internet": "Connect your device to the internet, and try again",
+      "export-report-title": "Export Receipt Group",
+      "export-report-description": "All the receipts in the receipt group will be exported to a CSV file, which will be emailed to someone who needs it. \nThis CSV file can be imported to Xero, Quickbooks via 'Importing Bills' functionality",
+      "select-company": "Select accounting company",
+      "enter-email": "Enter your email",
+      "please-enter-email": "please enter your email",
+      "enter-valid-email": "please enter a valid email",
+      "enter-subject": "Enter your email subject",
+      "please-enter-subject": "please enter email subject",
+      "enter-content": "Enter your email content",
+      "send-email": "Send Email"
+    }
+  },
+  "words": {
+    "email": "Email",
+    "password": "Password",
+    "login": "Login",
+    "camera": "Camera",
+    "gallery": "Gallery",
+    "review": "Review",
+    "archive": "Archive",
+    "delete": "Delete",
+    "add": "Add",
+    "toggle": "Toggle",
+    "ok": "OK",
+    "cancel": "Cancel",
+    "rename": "Rename",
+    "search": "Search",
+    "continue": "Continue",
+    "close": "Close",
+    "months": "months",
+    "years": "years",
+    "register": "Register",
+    "re-enter-password": "Confirm Password",
+    "message": "Message",
+    "submit": "Submit",
+    "save": "Save"
+  }
+}
