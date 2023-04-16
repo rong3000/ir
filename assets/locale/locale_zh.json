@@ -88,7 +88,8 @@
       "login-fail-message": "登录失败",
       "logging-in-status-message": "登录中...",
       "invalid-email-message": "无效邮箱",
-      "invalid-password-message": "无效密码"
+      "invalid-password-message": "无效密码",
+      "show-privacy-label": "显示隐私政策"
     },
     "email-veri-screen": {
       "verified": " 已验证",
@@ -172,7 +173,7 @@
     },
     "plan-screen": {
       "title": "软件使用许可信息",
-      "free-license": "您正在使用免费试用的产品使用许可, 该许可将于2020年12月31日到期. 其它产品许可信息将会很快上线.",
+      "free-license": "您正在使用免费试用的产品使用许可. 其它产品许可信息将会很快上线.",
       "basic-plan-label": "Basic Plan",
       "basic-plan-label-subtitle": "With our basic plan, you can snap maximum 10 receipts per month and generate 2 groups.",
       "upgrade-now-label": "Upgrade Now",

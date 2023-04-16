@@ -7,6 +7,7 @@ import 'package:intelligent_receipt/user_repository.dart';
 import 'package:intelligent_receipt/authentication_bloc/bloc.dart';
 import 'package:intelligent_receipt/login/login.dart';
 import 'package:apple_sign_in/apple_sign_in.dart';
+import 'package:intelligent_receipt/login/show_policy_button.dart';
 
 class LoginForm extends StatefulWidget {
   final UserRepository _userRepository;
@@ -160,6 +161,7 @@ class _LoginFormState extends State<LoginForm> {
                         FacebookLoginButton(disableButton: state.isSubmitting),
                         _supportsAppleSignIn ? AppleLoginButton(disableButton: state.isSubmitting) : Container(),
                         CreateAccountButton(userRepository: _userRepository, disableButton: state.isSubmitting),
+                        ShowPolicyButton()
                       ],
                     ),
                   ),

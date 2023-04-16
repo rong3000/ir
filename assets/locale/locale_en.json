@@ -88,7 +88,8 @@
       "login-fail-message": "Login Failed",
       "logging-in-status-message": "Logging In...",
       "invalid-email-message": "Invalid Email",
-      "invalid-password-message": "Invalid Password"
+      "invalid-password-message": "Invalid Password",
+      "show-privacy-label": "Show Privacy Policy"
     },
     "email-veri-screen": {
       "verified": " is verified",
@@ -172,7 +173,7 @@
     },
     "plan-screen": {
       "title": "License Information",
-      "free-license": "You are using a free trial license, which will end on 31/12/2020. Other licenses information will be available soon.",
+      "free-license": "You are using a free trial license. Other licenses information will be available soon.",
       "basic-plan-label": "Basic Plan",
       "basic-plan-label-subtitle": "With our basic plan, you can snap maximum 10 receipts per month and generate 2 groups.",
       "upgrade-now-label": "Upgrade Now",
