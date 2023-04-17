@@ -76,7 +76,8 @@
       "log-out" : "退出",
       "check-update" : "检查版本更新",
       "email-verification" : "电子邮件验证",
-      "settings": "设置"
+      "settings": "设置",
+      "privacy-policy": "显示隐私政策"
     },
     "login-screen": {
       "create-account-label": "创建账户",

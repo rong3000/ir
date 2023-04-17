@@ -76,7 +76,8 @@
       "log-out" : "Log Out",
       "check-update" : "Check Update",
       "email-verification" : "Email Verification",
-      "settings": "Settings"
+      "settings": "Settings",
+      "privacy-policy": "Show Privacy Policy"
     },
     "login-screen": {
       "create-account-label": "Create an Account",

@@ -28,7 +28,7 @@ class ShowPrivacyPolicy extends StatefulWidget {
 }
 
 class _ShowPrivacyPolicyState extends State<ShowPrivacyPolicy> {
-  final String url = 'asset:///privacy_policy.html';
+  final String url = 'assets/privacy_policy.html';
   String privacyPolicyHtml = '';
 
   @override

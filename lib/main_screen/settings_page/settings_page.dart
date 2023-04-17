@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:intelligent_receipt/main_screen/settings_page/catergories_menu_card.dart';
 import 'package:intelligent_receipt/main_screen/settings_page/contact_menu_card.dart';
+import 'package:intelligent_receipt/main_screen/settings_page/privacy_policy_card.dart';
 import 'package:intelligent_receipt/main_screen/settings_page/currency_menu_card.dart';
 import 'package:intelligent_receipt/main_screen/settings_page/document_knowledge_menu_card.dart';
 import 'package:intelligent_receipt/main_screen/settings_page/invite_friend_menu_card.dart';
@@ -60,6 +61,7 @@ class _SettingsPageState extends State<SettingsPage> {
             //DocumentKnowledgeMenuCard(),
             //InviteFriendMenuCard(),
             ContactMenuCard(userRepository: _userRepository),
+            PrivacyPolicyCard()
           ],
         ),
       );

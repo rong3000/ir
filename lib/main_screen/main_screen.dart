@@ -19,6 +19,7 @@ import 'receipts_page/receipts_page.dart';
 import 'package:intelligent_receipt/data_model/network_connection/connection_status.dart';
 import 'package:intelligent_receipt/main_screen/receipts_page/receipts_page.dart';
 import 'package:intelligent_receipt/main_screen/reports_page/reports_page.dart';
+import 'package:intelligent_receipt/login/show_policy_button.dart';
 
 class MainScreenArguments {
   final int pageIndex;
@@ -285,6 +286,16 @@ class _MainScreenState extends State<MainScreen> {
                       return Platform.isIOS ? CheckUpdateScreenIos(
                       ): CheckUpdateScreenIos(
                       );
+                    }),
+                  );
+                },
+              ),
+              ListTile(
+                title: Text(allTranslations.text('app.main-screen.privacy-policy')),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) {
+                      return ShowPrivacyPolicy();
                     }),
                   );
                 },
