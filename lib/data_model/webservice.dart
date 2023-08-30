@@ -12,7 +12,7 @@ export 'data_result.dart';
 class Urls {
 //  static String ServiceBaseUrl = "http://13.211.158.115:3001/";
 //  static String ServiceBaseUrl = "http://192.168.1.11/";
-  static String ServiceBaseUrl = "https://irwebapp.azurewebsites.net:443/";
+  static String ServiceBaseUrl = "https://api.ireceipts.au:443/";
   static String ExchangeRateBaseUrl = "https://api.exchangeratesapi.io/";
 
   // Receipt related APIs
@@ -22,7 +22,7 @@ class Urls {
   static String UpdateReceiptListItem = ServiceBaseUrl + "Receipt/UpdateReceiptListItem";
   static String UploadReceiptImages = ServiceBaseUrl + "Receipt/UploadReceiptImages/";
   static String DeleteReceipts = ServiceBaseUrl + "Receipt/DeleteReceipts";
-  static String GetImage = "https://www.ireceipts.au/" + "Receipt/GetImage";
+  static String GetImage = "https://api.ireceipts.au/" + "Receipt/GetImage";
   static String AddReceipts = ServiceBaseUrl + "Receipt/AddReceipts";
   static String ArchiveReceipt = ServiceBaseUrl + "Receipt/archive/";
   static String UnArchiveReceipt = ServiceBaseUrl + "Receipt/unarchive/";
