@@ -1,16 +1,7 @@
-# intelligent_receipt
-
 Intelligent Receipt
 
-## Getting Started
+# This is a SPA for taking photos of receipts, recognising and managing them
+Android app version can be downloaded by searching “Intelligent Receipt” in google play store, or visit https://play.google.com/store/apps/details?id=com.superiortech.intelligent_receipt
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.dev/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+Project page: http://superiortech.com.au/intelligent_receipt.php
+Web SPA version please visit https://ireceipts.au
